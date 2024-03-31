@@ -1,8 +1,15 @@
+buildscript {
+    ext {
+        restdocsApiSpecVersion = '0.17.1'
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
 }
 
 group = 'com.onetuks'
@@ -10,6 +17,24 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     sourceCompatibility = '17'
+}
+
+jar {
+    enabled = false
+}
+
+openapi3 {
+    servers = [
+            { url = "http://localhost:8080" },
+            { url = "http://server:8080" }
+//            { url = "https://서버url" }
+    ]
+    title = "Navita"
+    description = "나비타"
+    version = "1"
+    format = "json" // (json / yaml)
+    outputDirectory = "src/main/resources/static"
+    outputFileNamePrefix = "swagger"
 }
 
 configurations {
@@ -27,18 +52,52 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Netty/Resolver/DNS/Native/MacOS
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.90.Final:osx-aarch_64'
+
+    // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Lombok
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+
+    // MySQL
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+//    // Spring Security
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    testImplementation 'org.springframework.security:spring-security-test'
+
+    // RestDocs
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Rest Docs API Spec
+    testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
+
+    // Swagger UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // TestContainers
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:junit-jupiter'
+
+    // Arch-Unit
+    testImplementation 'com.tngtech.archunit:archunit:1.1.0'
+
 }
 
 tasks.named('test') {
@@ -50,3 +109,32 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+//sonar {
+//    properties {
+//        property("sonar.host.url", "http://localhost:9000")
+//        property("sonar.login", "sqp_4074232e4c9d2f63d5f4f9274c32c5a9420a2694")
+//        property("sonar.sources", "src/main/java")
+//        property("sonar.tests", "src/test/java")
+//        property("sonar.sourceEncoding", "UTF-8")
+//        property("sonar.projectKey", "navita-server")
+//        property("sonar.projectName", "navita-server")
+//        property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
+//    }
+//}
+//
+//spotless {
+//    java {
+//        googleJavaFormat()
+//
+//        removeUnusedImports()
+//        trimTrailingWhitespace() // 불필요한 공백 트림
+//        indentWithSpaces(4) // 들여쓰기 4칸
+//        endWithNewline() // 파일 끝에 개행 추가
+//    }
+//}
+//
+//tasks.register("addGitPreCommitHook", Copy) {
+//    from 'script/pre-commit'
+//    into '.git/hooks'
+//}
