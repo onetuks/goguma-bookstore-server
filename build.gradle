@@ -6,6 +6,7 @@ plugins {
     id 'com.epages.restdocs-api-spec' version '0.17.1'
     id 'jacoco'
     id 'org.sonarqube' version '4.0.0.2929'
+    id 'com.diffplug.spotless' version '6.21.0'
 }
 
 group = 'com.onetuks'
@@ -186,18 +187,18 @@ sonar {
     }
 }
 
-//spotless {
-//    java {
-//        googleJavaFormat()
-//
-//        removeUnusedImports()
-//        trimTrailingWhitespace() // 불필요한 공백 트림
-//        indentWithSpaces(4) // 들여쓰기 4칸
-//        endWithNewline() // 파일 끝에 개행 추가
-//    }
-//}
-//
-//tasks.register("addGitPreCommitHook", Copy) {
-//    from 'script/pre-commit'
-//    into '.git/hooks'
-//}
+spotless {
+    java {
+        googleJavaFormat()
+
+        removeUnusedImports()
+        trimTrailingWhitespace() // 불필요한 공백 트림
+        indentWithSpaces(4) // 들여쓰기 4칸
+        endWithNewline() // 파일 끝에 개행 추가
+    }
+}
+
+tasks.register("addGitPreCommitHook", Copy) {
+    from 'script/pre-commit'
+    into '.git/hooks'
+}
