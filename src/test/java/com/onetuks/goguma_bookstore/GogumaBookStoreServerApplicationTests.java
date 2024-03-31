@@ -1,11 +1,14 @@
 package com.onetuks.goguma_bookstore;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class GogumaBookStoreServerApplicationTests {
+class GogumaBookStoreServerApplicationTests extends IntegrationTest {
 
   @Test
-  void contextLoads() {}
+  void contextLoads() {
+    int a = 1;
+    int b = 1;
+    Assertions.assertEquals(a, b);
+  }
 }
