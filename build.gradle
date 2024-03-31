@@ -1,15 +1,9 @@
-buildscript {
-    ext {
-        restdocsApiSpecVersion = '0.17.1'
-    }
-}
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+    id 'com.epages.restdocs-api-spec' version '0.17.1'
 }
 
 group = 'com.onetuks'
@@ -29,8 +23,8 @@ openapi3 {
             { url = "http://server:8080" }
 //            { url = "https://서버url" }
     ]
-    title = "Navita"
-    description = "나비타"
+    title = "Goguma-Bookstore-Server-API"
+    description = "고구마서점 API"
     version = "1"
     format = "json" // (json / yaml)
     outputDirectory = "src/main/resources/static"
