@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
     id 'com.epages.restdocs-api-spec' version '0.17.1'
+    id 'jacoco'
 }
 
 group = 'com.onetuks'
@@ -15,6 +16,10 @@ java {
 
 jar {
     enabled = false
+}
+
+jacoco {
+    toolVersion = '0.8.8'
 }
 
 openapi3 {
@@ -97,12 +102,66 @@ dependencies {
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
+
+    jacoco {}
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+
+        xml.destination(file("build/jacoco/jacoco.xml"))
+        html.destination(file("build/jacoco/jacoco.html"))
+    }
+
+    finalizedBy(tasks.jacocoTestCoverageVerification)
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+
+            // 클래스 당 커버리지 50% 이상
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal.valueOf(0.5)
+            }
+
+            // 클래스 당 100줄 미만
+            limit {
+                counter = "LINE"
+                value = "TOTALCOUNT"
+                maximum = BigDecimal.valueOf(100)
+            }
+
+            limit {
+                counter = 'COMPLEXITY'
+                minimum = 0.5
+            }
+
+            excludes = List.of(
+                    "Q*",
+                    "*.global.*",
+                    "*.auth.*",
+                    "*.controller.*",
+                    "*Application",
+                    "com.onetuks.dayonetest.MyCalculatorApplication",
+            )
+        }
+    }
+}
+
 
 //sonar {
 //    properties {
