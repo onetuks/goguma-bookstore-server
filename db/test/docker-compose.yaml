@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  local-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: goguma-bookstore
+      MYSQL_ROOT_PASSWORD: root1234!
+    ports:
+      - '3306'
+  local-db-migrate:
+    image: flyway/flyway:7
+    restart: always
+    environment:
+      FLYWAY_DB_URL: jdbc:mysql://local-db/goguma-bookstore
+      FLYWAY_DB_USER: root
+      FLYWAY_DB_PASSWORD: root1234!
+    command: migrate
+    volumes:
+      - ../flyway.conf:/flyway/conf/flyway.conf
+      - ../migration:/flyway/sql
