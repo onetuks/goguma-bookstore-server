@@ -32,7 +32,7 @@ openapi3 {
     ]
     title = "Goguma-Bookstore-Server-API"
     description = "고구마서점 API"
-    version = "1"
+    version = getVersion()
     format = "json" // (json / yaml)
     outputDirectory = "src/main/resources/static"
     outputFileNamePrefix = "swagger"
@@ -55,7 +55,7 @@ ext {
 dependencies {
 
     // Netty/Resolver/DNS/Native/MacOS
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.90.Final:osx-aarch_64'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.106.Final:osx-aarch_64'
 
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -84,10 +84,10 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     // Rest Docs API Spec
-    testImplementation "com.epages:restdocs-api-spec-mockmvc:0.17.1"
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.0'
 
     // Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -97,7 +97,7 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
 
     // Arch-Unit
-    testImplementation 'com.tngtech.archunit:archunit:1.1.0'
+    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
 
 }
 
