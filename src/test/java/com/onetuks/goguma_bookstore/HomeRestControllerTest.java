@@ -1,18 +1,19 @@
 package com.onetuks.goguma_bookstore;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class ControllerTest extends IntegrationTest {
+class HomeRestControllerTest extends IntegrationTest {
 
-  @Autowired private TestController testController;
+  @Autowired private HomeRestController homeRestController;
 
   @Test
-  void homeTest() {
+  void home() {
     // Given & When
-    String result = testController.home();
+    String result = homeRestController.home();
 
     // Then
     assertThat(result).isEqualTo("home");

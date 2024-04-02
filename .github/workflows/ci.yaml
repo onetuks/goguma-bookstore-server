@@ -28,13 +28,19 @@ jobs:
               - 'build.gradle'
               - 'src/**'
 
-      - name: JDK 설치
+      - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: zulu
           cache: 'gradle'
+
+      - name: application.yaml Creation
+        if: steps.changes.outputs.application == 'true'
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > src/main/resources/application.yaml
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
