@@ -58,6 +58,7 @@ public class IntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
+      properties.put("spring.datasource.password", "root1234!");
 
       var redistHost = redis.getHost();
       var redistPort = redis.getFirstMappedPort();
