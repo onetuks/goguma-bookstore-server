@@ -4,8 +4,8 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.EXPIRED_REFRES
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenExpiredException;
 import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;
-import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenCacheRepository;
 import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenProvider;
+import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenRepository;
 import com.onetuks.goguma_bookstore.auth.service.dto.LogoutResult;
 import com.onetuks.goguma_bookstore.auth.service.dto.RefreshResult;
 import io.jsonwebtoken.Claims;
@@ -16,12 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
   private final AuthTokenProvider authTokenProvider;
-  private final AuthTokenCacheRepository authTokenCacheRepository;
+  private final AuthTokenRepository authTokenRepository;
 
-  public AuthService(
-      AuthTokenProvider authTokenProvider, AuthTokenCacheRepository refreshTokenCacheRepository) {
+  public AuthService(AuthTokenProvider authTokenProvider, AuthTokenRepository authTokenRepository) {
     this.authTokenProvider = authTokenProvider;
-    this.authTokenCacheRepository = refreshTokenCacheRepository;
+    this.authTokenRepository = authTokenRepository;
   }
 
   @Transactional
@@ -29,7 +28,7 @@ public class AuthService {
     AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, memberId);
     AuthToken refreshToken = authTokenProvider.provideRefreshToken();
 
-    authTokenCacheRepository.save(accessToken.getToken(), refreshToken.getToken());
+    authTokenRepository.save(accessToken.getToken(), refreshToken.getToken());
 
     return accessToken;
   }
@@ -41,7 +40,7 @@ public class AuthService {
 
     validateRefreshToken(accessToken.getToken());
 
-    authTokenCacheRepository.delete(accessToken.getToken());
+    authTokenRepository.delete(accessToken.getToken());
     AuthToken newAccessToken = saveAccessToken(loginId, socialId);
 
     return RefreshResult.of(newAccessToken.getToken(), loginId);
@@ -49,13 +48,13 @@ public class AuthService {
 
   @Transactional
   public LogoutResult logout(AuthToken authToken) {
-    authTokenCacheRepository.delete(authToken.getToken());
+    authTokenRepository.delete(authToken.getToken());
     return new LogoutResult(true);
   }
 
   @Transactional(readOnly = true)
   public boolean isLogout(String accessToken) {
-    return authTokenCacheRepository.findRefreshToken(accessToken).isEmpty();
+    return authTokenRepository.findRefreshToken(accessToken).isEmpty();
   }
 
   private void validateRefreshToken(String accessToken) {
@@ -68,7 +67,7 @@ public class AuthService {
 
   private AuthToken findRefreshToken(String accessToken) {
     String refreshToken =
-        authTokenCacheRepository
+        authTokenRepository
             .findRefreshToken(accessToken)
             .orElseThrow(() -> new TokenExpiredException(EXPIRED_REFRESH_TOKEN));
 
