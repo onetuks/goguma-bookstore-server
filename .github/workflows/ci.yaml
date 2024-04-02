@@ -28,13 +28,25 @@ jobs:
               - 'build.gradle'
               - 'src/**'
 
-      - name: JDK 설치
+      - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: zulu
           cache: 'gradle'
+
+      - name: Install Docker Compose
+        if: steps.changes.outputs.application == 'true'
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: application.yaml Creation
+        if: steps.changes.outputs.application == 'true'
+        run: |
+          echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > src/main/resources/application.yaml
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
