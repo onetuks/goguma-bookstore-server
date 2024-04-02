@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore;
 
+import com.redis.testcontainers.RedisContainer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 public class IntegrationTest {
 
   static DockerComposeContainer rdbms;
+  static RedisContainer redis;
 
   static {
     rdbms =
@@ -36,7 +38,10 @@ public class IntegrationTest {
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
                     .withStartupTimeout(Duration.ofSeconds(300)));
 
+    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
+
     rdbms.start();
+    redis.start();
   }
 
   static class IntegrationTestInitializer
@@ -52,6 +57,12 @@ public class IntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
+
+      var redistHost = redis.getHost();
+      var redistPort = redis.getFirstMappedPort();
+
+      properties.put("spring.data.redis.host", redistHost);
+      properties.put("spring.data.redis.port", String.valueOf(redistPort));
 
       TestPropertyValues.of(properties).applyTo(applicationContext);
     }
