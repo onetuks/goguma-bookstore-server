@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 @Ignore
@@ -21,12 +21,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 @ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
 public class IntegrationTest {
 
-  static DockerComposeContainer rdbms;
+  static ComposeContainer rdbms;
+
   static RedisContainer redis;
 
   static {
     rdbms =
-        new DockerComposeContainer(new File("db/test/docker-compose.yaml"))
+        new ComposeContainer(new File("db/test/docker-compose.yaml"))
             .withExposedService(
                 "local-db",
                 3306,
