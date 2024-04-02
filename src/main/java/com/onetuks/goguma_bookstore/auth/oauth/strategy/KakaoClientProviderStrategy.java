@@ -1,13 +1,13 @@
 package com.onetuks.goguma_bookstore.auth.oauth.strategy;
 
-import static com.onetuks.happyparkingserver.global.error.ErrorCode.OAUTH_CLIENT_SERVER_ERROR;
-import static com.onetuks.happyparkingserver.global.error.ErrorCode.UNAUTHORIZED_TOKEN;
+import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OAUTH_CLIENT_SERVER_ERROR;
+import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_TOKEN;
 
-import com.onetuks.happyparkingserver.auth.exception.TokenValidFailedException;
-import com.onetuks.happyparkingserver.auth.model.Member;
-import com.onetuks.happyparkingserver.auth.model.vo.ClientProvider;
-import com.onetuks.happyparkingserver.auth.model.vo.RoleType;
-import com.onetuks.happyparkingserver.auth.oauth.dto.KakaoUser;
+import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
+import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.KakaoUser;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

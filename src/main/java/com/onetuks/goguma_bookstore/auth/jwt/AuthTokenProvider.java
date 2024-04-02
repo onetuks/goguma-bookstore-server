@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.jwt;
 
-import static com.onetuks.happyparkingserver.auth.model.vo.RoleType.USER;
+import static com.onetuks.goguma_bookstore.auth.model.vo.RoleType.USER;
 
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -23,9 +23,9 @@ public class AuthTokenProvider {
     this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
   }
 
-  public AuthToken provideAccessToken(String socialId, Long memberId) {
+  public AuthToken provideAccessToken(String socialId, Long loginId) {
     return new AuthToken(
-        socialId, memberId, USER.getRoleName(), getExpiryDate(accessTokenExpiryPeriod), key);
+        socialId, loginId, USER.getRoleName(), getExpiryDate(accessTokenExpiryPeriod), key);
   }
 
   public AuthToken provideRefreshToken() {

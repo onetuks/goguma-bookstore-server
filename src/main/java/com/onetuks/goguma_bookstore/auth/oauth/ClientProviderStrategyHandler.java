@@ -1,9 +1,9 @@
 package com.onetuks.goguma_bookstore.auth.oauth;
 
-import com.onetuks.happyparkingserver.auth.model.vo.ClientProvider;
-import com.onetuks.happyparkingserver.auth.oauth.strategy.ClientProviderStrategy;
-import com.onetuks.happyparkingserver.auth.oauth.strategy.GoogleClientProviderStrategy;
-import com.onetuks.happyparkingserver.auth.oauth.strategy.KakaoClientProviderStrategy;
+import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.goguma_bookstore.auth.oauth.strategy.GoogleClientProviderStrategy;
+import com.onetuks.goguma_bookstore.auth.oauth.strategy.KakaoClientProviderStrategy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;

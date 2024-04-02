@@ -4,8 +4,8 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.onetuks.happyparkingserver.auth.model.vo.ClientProvider;
-import com.onetuks.happyparkingserver.auth.model.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -26,9 +26,9 @@ public class Member {
 
   @Id
   @GeneratedValue(strategy = IDENTITY)
-  private Long id;
+  private Long memberId;
 
-  @Column(name = "nickname", nullable = false)
+  @Column(name = "nickname", nullable = true)
   private String nickname;
 
   @Column(name = "social_id", nullable = false)
@@ -39,7 +39,7 @@ public class Member {
   private ClientProvider clientProvider;
 
   @Enumerated(value = STRING)
-  @Column(name = "role", nullable = false)
+  @Column(name = "role_type", nullable = false)
   private RoleType roleType;
 
   private Member(

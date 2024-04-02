@@ -1,21 +1,21 @@
 package com.onetuks.goguma_bookstore.auth.controller;
 
-import static com.onetuks.happyparkingserver.auth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
+import static com.onetuks.goguma_bookstore.auth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 
-import com.onetuks.happyparkingserver.auth.controller.dto.LoginResponse;
-import com.onetuks.happyparkingserver.auth.controller.dto.LogoutResponse;
-import com.onetuks.happyparkingserver.auth.controller.dto.RefreshResponse;
-import com.onetuks.happyparkingserver.auth.jwt.AuthHeaderUtil;
-import com.onetuks.happyparkingserver.auth.jwt.AuthToken;
-import com.onetuks.happyparkingserver.auth.jwt.AuthTokenProvider;
-import com.onetuks.happyparkingserver.auth.model.vo.ClientProvider;
-import com.onetuks.happyparkingserver.auth.service.AuthService;
-import com.onetuks.happyparkingserver.auth.service.OAuth2ClientService;
-import com.onetuks.happyparkingserver.auth.service.dto.LoginResult;
-import com.onetuks.happyparkingserver.auth.service.dto.LogoutResult;
-import com.onetuks.happyparkingserver.auth.service.dto.RefreshResult;
-import com.onetuks.happyparkingserver.auth.util.MemberId;
+import com.onetuks.goguma_bookstore.auth.controller.dto.LoginResponse;
+import com.onetuks.goguma_bookstore.auth.controller.dto.LogoutResponse;
+import com.onetuks.goguma_bookstore.auth.controller.dto.RefreshResponse;
+import com.onetuks.goguma_bookstore.auth.jwt.AuthHeaderUtil;
+import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;
+import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenProvider;
+import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.service.AuthService;
+import com.onetuks.goguma_bookstore.auth.service.OAuth2ClientService;
+import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
+import com.onetuks.goguma_bookstore.auth.service.dto.LogoutResult;
+import com.onetuks.goguma_bookstore.auth.service.dto.RefreshResult;
+import com.onetuks.goguma_bookstore.auth.util.LoginId;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -62,11 +62,11 @@ public class AuthRestController {
 
   @PutMapping(path = "/refresh")
   public ResponseEntity<RefreshResponse> refreshToken(
-      HttpServletRequest request, @MemberId Long memberId) {
+      HttpServletRequest request, @LoginId Long loginId) {
     String accessToken = AuthHeaderUtil.extractAuthToken(request);
     AuthToken authToken = authTokenProvider.convertToAuthToken(accessToken);
 
-    RefreshResult authRefreshResult = authService.updateAccessToken(authToken, memberId);
+    RefreshResult authRefreshResult = authService.updateAccessToken(authToken, loginId);
 
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(authRefreshResult));
   }

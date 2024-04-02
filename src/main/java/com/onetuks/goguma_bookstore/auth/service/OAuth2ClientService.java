@@ -1,12 +1,12 @@
 package com.onetuks.goguma_bookstore.auth.service;
 
-import com.onetuks.happyparkingserver.auth.jwt.AuthToken;
-import com.onetuks.happyparkingserver.auth.model.Member;
-import com.onetuks.happyparkingserver.auth.model.vo.ClientProvider;
-import com.onetuks.happyparkingserver.auth.oauth.ClientProviderStrategyHandler;
-import com.onetuks.happyparkingserver.auth.oauth.strategy.ClientProviderStrategy;
-import com.onetuks.happyparkingserver.auth.repository.MemberRepository;
-import com.onetuks.happyparkingserver.auth.service.dto.LoginResult;
+import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;
+import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.oauth.ClientProviderStrategyHandler;
+import com.onetuks.goguma_bookstore.auth.oauth.strategy.ClientProviderStrategy;
+import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,12 +40,12 @@ public class OAuth2ClientService {
         memberRepository.findBySocialIdAndClientProvider(socialId, oAuth2Provider);
     Member savedMember = optionalMember.orElseGet(() -> memberRepository.save(clientMember));
 
-    AuthToken newAuthToken = authService.saveAccessToken(savedMember.getId(), socialId);
+    AuthToken newAuthToken = authService.saveAccessToken(savedMember.getMemberId(), socialId);
 
     return LoginResult.of(
         newAuthToken.getToken(),
         optionalMember.isEmpty(),
-        savedMember.getId(),
+        savedMember.getMemberId(),
         savedMember.getNickname());
   }
 }

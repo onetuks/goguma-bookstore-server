@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.controller.dto;
 
-import com.onetuks.happyparkingserver.auth.service.dto.LogoutResult;
+import com.onetuks.goguma_bookstore.auth.service.dto.LogoutResult;
 
 public record LogoutResponse(boolean isLogout) {
 

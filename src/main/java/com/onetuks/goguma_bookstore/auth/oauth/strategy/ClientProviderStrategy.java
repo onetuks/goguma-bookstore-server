@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.oauth.strategy;
 
-import com.onetuks.happyparkingserver.auth.model.Member;
+import com.onetuks.goguma_bookstore.auth.model.Member;
 
 public interface ClientProviderStrategy {
 

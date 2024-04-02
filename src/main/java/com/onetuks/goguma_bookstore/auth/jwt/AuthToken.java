@@ -22,7 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class AuthToken {
 
   protected static final String AUTHORITIES_KEY = "role";
-  protected static final String MEMBER_ID_KEY = "memberId";
+  protected static final String LOGIN_ID_KEY = "loginId";
 
   @Getter private final String token;
   private final Key key;
@@ -32,8 +32,8 @@ public class AuthToken {
     this.key = key;
   }
 
-  AuthToken(String socialId, Long memberId, String role, Date expiryDate, Key key) {
-    this.token = createAccessToken(socialId, memberId, role, expiryDate, key);
+  AuthToken(String socialId, Long loginId, String role, Date expiryDate, Key key) {
+    this.token = createAccessToken(socialId, loginId, role, expiryDate, key);
     this.key = key;
   }
 
@@ -46,7 +46,7 @@ public class AuthToken {
     Claims claims = getTokenClaims();
 
     String[] roles = {claims.get(AUTHORITIES_KEY).toString()};
-    int memberId = (int) claims.get(MEMBER_ID_KEY);
+    int loginId = (int) claims.get(LOGIN_ID_KEY);
 
     List<SimpleGrantedAuthority> authorities =
         Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
@@ -54,7 +54,7 @@ public class AuthToken {
     CustomUserDetails customUserDetails =
         CustomUserDetails.builder()
             .socialId(claims.getSubject())
-            .memberId((long) memberId)
+            .loginId((long) loginId)
             .authorities(authorities)
             .build();
 
@@ -88,10 +88,10 @@ public class AuthToken {
   }
 
   private String createAccessToken(
-      String socialId, Long memberId, String role, Date expiry, Key key) {
+      String socialId, Long loginId, String role, Date expiry, Key key) {
     return Jwts.builder()
         .setSubject(socialId)
-        .claim(MEMBER_ID_KEY, memberId)
+        .claim(LOGIN_ID_KEY, loginId)
         .claim(AUTHORITIES_KEY, role)
         .signWith(key, SignatureAlgorithm.HS256)
         .setExpiration(expiry)

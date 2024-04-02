@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.jwt;
 
-import com.onetuks.happyparkingserver.auth.service.AuthService;
+import com.onetuks.goguma_bookstore.auth.service.AuthService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

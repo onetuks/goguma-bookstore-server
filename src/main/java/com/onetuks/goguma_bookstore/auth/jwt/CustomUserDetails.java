@@ -11,14 +11,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-  private final Long memberId;
+  private final Long loginId;
   private final String socialId;
   private final List<? extends GrantedAuthority> authorities;
 
   @Builder
   public CustomUserDetails(
-      Long memberId, String socialId, List<? extends GrantedAuthority> authorities) {
-    this.memberId = memberId;
+      Long loginId, String socialId, List<? extends GrantedAuthority> authorities) {
+    this.loginId = loginId;
     this.socialId = socialId;
     this.authorities = authorities;
   }
@@ -32,21 +32,21 @@ public class CustomUserDetails implements UserDetails {
       return false;
     }
     var that = (CustomUserDetails) obj;
-    return Objects.equals(this.memberId, that.memberId)
+    return Objects.equals(this.loginId, that.loginId)
         && Objects.equals(this.socialId, that.socialId)
         && Objects.equals(this.authorities, that.authorities);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(memberId, socialId, authorities);
+    return Objects.hash(loginId, socialId, authorities);
   }
 
   @Override
   public String toString() {
     return "CustomUserDetails["
-        + "memberId="
-        + memberId
+        + "loginId="
+        + loginId
         + ", "
         + "socialId="
         + socialId
