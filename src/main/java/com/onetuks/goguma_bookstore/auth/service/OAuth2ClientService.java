@@ -46,6 +46,6 @@ public class OAuth2ClientService {
         newAuthToken.getToken(),
         optionalMember.isEmpty(),
         savedMember.getMemberId(),
-        savedMember.getNickname());
+        savedMember.getName());
   }
 }

@@ -6,6 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
 import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
+import com.onetuks.goguma_bookstore.order.model.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -13,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,8 +30,8 @@ public class Member {
   @GeneratedValue(strategy = IDENTITY)
   private Long memberId;
 
-  @Column(name = "nickname", nullable = true)
-  private String nickname;
+  @Column(name = "name", nullable = false)
+  private String name;
 
   @Column(name = "social_id", nullable = false)
   private String socialId;
@@ -42,16 +44,46 @@ public class Member {
   @Column(name = "role_type", nullable = false)
   private RoleType roleType;
 
-  private Member(
-      String nickname, String socialId, ClientProvider clientProvider, RoleType roleType) {
-    this.nickname = nickname;
+  @Column(name = "nickname")
+  private String nickname;
+
+  @Column(name = "profile_img")
+  private String profileImg;
+
+  @Column(name = "default_address")
+  private String defaultAddress;
+
+  @Column(name = "default_address_detail")
+  private String defaultAddressDetail;
+
+  @Enumerated(value = STRING)
+  @Column(name = "default_cash_receipt_type")
+  private CashReceiptType defaultCashReceiptType;
+
+  @Column(name = "default_cash_receipt_number")
+  private String defaultCashReceiptNumber;
+
+  @Builder
+  public Member(
+      String name,
+      String socialId,
+      ClientProvider clientProvider,
+      RoleType roleType,
+      String nickname,
+      String profileImg,
+      String defaultAddress,
+      String defaultAddressDetail,
+      CashReceiptType defaultCashReceiptType,
+      String defaultCashReceiptNumber) {
+    this.name = name;
     this.socialId = socialId;
     this.clientProvider = clientProvider;
     this.roleType = roleType;
-  }
-
-  public static Member of(
-      String nickname, String socialId, ClientProvider clientProvider, RoleType roleType) {
-    return new Member(nickname, socialId, clientProvider, roleType);
+    this.nickname = nickname;
+    this.profileImg = profileImg;
+    this.defaultAddress = defaultAddress;
+    this.defaultAddressDetail = defaultAddressDetail;
+    this.defaultCashReceiptType = defaultCashReceiptType;
+    this.defaultCashReceiptNumber = defaultCashReceiptNumber;
   }
 }
