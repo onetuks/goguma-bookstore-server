@@ -46,6 +46,7 @@ jobs:
       - name: application.yaml Creation
         if: steps.changes.outputs.application == 'true'
         run: |
+          mkdir -p src/main/resources
           echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > src/main/resources/application.yaml
 
       - name: Gradle Build
