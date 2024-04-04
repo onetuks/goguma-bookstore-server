@@ -41,10 +41,9 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
             .bodyToMono(GoogleUser.class)
             .block();
 
+    Objects.requireNonNull(googleUser);
+
     return Member.of(
-        Objects.requireNonNull(googleUser).getName(),
-        googleUser.getSub(),
-        ClientProvider.GOOGLE,
-        RoleType.USER);
+        googleUser.getName(), googleUser.getSub(), ClientProvider.GOOGLE, RoleType.USER);
   }
 }
