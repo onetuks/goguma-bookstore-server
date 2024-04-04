@@ -60,6 +60,14 @@ public class AuthRestController {
     return ResponseEntity.status(OK).body(LoginResponse.from(loginResult));
   }
 
+  @PostMapping(path = "/naver")
+  public ResponseEntity<LoginResponse> naverLogin(HttpServletRequest request) {
+    LoginResult loginResult =
+        oAuth2ClientService.login(ClientProvider.NAVER, request.getHeader(HEADER_AUTHORIZATION));
+
+    return ResponseEntity.status(OK).body(LoginResponse.from(loginResult));
+  }
+
   @PutMapping(path = "/refresh")
   public ResponseEntity<RefreshResponse> refreshToken(
       HttpServletRequest request, @LoginId Long loginId) {
