@@ -22,7 +22,7 @@ public class GoogleClientConfig {
         .clientSecret(clientSecret)
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
         .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
+        .redirectUri("http://localhost:8080/login/oauth2/code/google")
         .scope("profile", "email")
         .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
         .tokenUri("https://www.googleapis.com/oauth2/v4/token")

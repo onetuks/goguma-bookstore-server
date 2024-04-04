@@ -7,7 +7,7 @@ import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
 import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
 import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
-import com.onetuks.goguma_bookstore.auth.oauth.dto.GoogleUser;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.NaverUser;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -15,20 +15,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
-public class GoogleClientProviderStrategy implements ClientProviderStrategy {
+public class NaverClientProviderStrategy implements ClientProviderStrategy {
 
   private final WebClient webClient;
 
-  public GoogleClientProviderStrategy(WebClient webClient) {
+  public NaverClientProviderStrategy(WebClient webClient) {
     this.webClient = webClient;
   }
 
   @Override
   public Member getUserData(String accessToken) {
-    GoogleUser googleUser =
+    NaverUser naverUser =
         webClient
             .get()
-            .uri("https://www.googleapis.com/oauth2/v3/userinfo")
+            .uri("https://openapi.naver.com/v1/nid/me")
             .headers(httpHeaders -> httpHeaders.set("Authorization", accessToken))
             .retrieve()
             .onStatus(
@@ -38,12 +38,16 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
                     Mono.error(new TokenValidFailedException(OAUTH_CLIENT_SERVER_ERROR)))
-            .bodyToMono(GoogleUser.class)
+            .bodyToMono(NaverUser.class)
             .block();
 
-    Objects.requireNonNull(googleUser);
+    Objects.requireNonNull(naverUser);
+    Objects.requireNonNull(naverUser.getResponse());
 
     return Member.of(
-        googleUser.getName(), googleUser.getSub(), ClientProvider.GOOGLE, RoleType.USER);
+        naverUser.getResponse().getName(),
+        naverUser.getResponse().getId(),
+        ClientProvider.NAVER,
+        RoleType.USER);
   }
 }

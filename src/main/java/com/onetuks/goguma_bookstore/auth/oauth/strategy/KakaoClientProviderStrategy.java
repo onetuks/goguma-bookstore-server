@@ -41,8 +41,10 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
             .bodyToMono(KakaoUser.class)
             .block();
 
+    Objects.requireNonNull(kakaoUser);
+
     return Member.of(
-        Objects.requireNonNull(kakaoUser).getProperties().getNickname(),
+        kakaoUser.getProperties().getNickname(),
         String.valueOf(kakaoUser.getId()),
         ClientProvider.KAKAO,
         RoleType.USER);
