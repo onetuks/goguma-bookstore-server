@@ -43,7 +43,11 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
     Objects.requireNonNull(googleUser);
 
-    return Member.of(
-        googleUser.getName(), googleUser.getSub(), ClientProvider.GOOGLE, RoleType.USER);
+    return Member.builder()
+        .name(googleUser.getName())
+        .socialId(googleUser.getSub())
+        .clientProvider(ClientProvider.GOOGLE)
+        .roleType(RoleType.USER)
+        .build();
   }
 }

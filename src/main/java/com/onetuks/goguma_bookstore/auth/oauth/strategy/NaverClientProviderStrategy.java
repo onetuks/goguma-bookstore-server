@@ -44,10 +44,11 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
     Objects.requireNonNull(naverUser);
     Objects.requireNonNull(naverUser.getResponse());
 
-    return Member.of(
-        naverUser.getResponse().getName(),
-        naverUser.getResponse().getId(),
-        ClientProvider.NAVER,
-        RoleType.USER);
+    return Member.builder()
+        .name(naverUser.getResponse().getName())
+        .socialId(naverUser.getResponse().getId())
+        .clientProvider(ClientProvider.NAVER)
+        .roleType(RoleType.USER)
+        .build();
   }
 }
