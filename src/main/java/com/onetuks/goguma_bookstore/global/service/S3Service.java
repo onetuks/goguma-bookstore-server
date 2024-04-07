@@ -4,18 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 public class S3Service {
 
-  private static final Logger log = LoggerFactory.getLogger(S3Service.class);
   private final S3Client s3Client;
 
   public S3Service(S3Client s3Client) {
@@ -24,22 +23,14 @@ public class S3Service {
 
   public void putFile(String bucket, String key, File file) {
     s3Client.putObject(
-        req -> {
-          req.bucket(bucket);
-          req.key(key);
-        },
-        RequestBody.fromFile(file));
+        PutObjectRequest.builder().bucket(bucket).key(key).build(), RequestBody.fromFile(file));
   }
 
   public File getFile(String bucket, String key) {
-    File file = new File("build/output/getFile.txt");
+    File file = new File("build/output/api-docs.json");
 
     ResponseInputStream<GetObjectResponse> res =
-        s3Client.getObject(
-            req -> {
-              req.bucket(bucket);
-              req.key(key);
-            });
+        s3Client.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build());
 
     try {
       FileUtils.writeByteArrayToFile(file, res.readAllBytes());

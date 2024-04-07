@@ -22,7 +22,7 @@ public class S3Config {
   @Value("${aws.access-key-id}")
   private String accessKeyId;
 
-  @Value("${aws.secretaccess-key}")
+  @Value("${aws.secret-access-key}")
   private String secretAccessKey;
 
   @Bean

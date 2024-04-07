@@ -150,7 +150,9 @@ tasks.jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "**/Q*",
-                    "**/global/*",
+                    "**/global/config/*",
+                    "**/global/error/*",
+                    "**/model/*",
                     "**/auth/*",
                     "**/controller/*",
                     "**/GogumaBookStoreServerApplication.class"
@@ -186,8 +188,10 @@ tasks.jacocoTestCoverageVerification {
 
             excludes = [
                     "Q*",
-                    "*.global.*",
+                    "*.global.config.*",
+                    "*.global.error.*",
                     "*.auth.*",
+                    "*.model.*",
                     "*.controller.*",
                     "com.onetuks.goguma_bookstore.GogumaBookStoreServerApplication"
             ]
