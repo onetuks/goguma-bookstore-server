@@ -23,6 +23,6 @@ class FileURIProviderServiceTest extends IntegrationTest {
     String result = fileURIProviderService.provideFileURI(fileType, id);
 
     // Then
-    assertThat(result).isEqualTo(fileType.getDirectoryPath() + id + fileType.getFileExtension());
+    assertThat(result).isEqualTo(fileType.getDirectoryPath() + id);
   }
 }
