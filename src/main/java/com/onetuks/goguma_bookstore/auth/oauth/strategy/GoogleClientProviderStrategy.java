@@ -5,9 +5,9 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_T
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.GoogleUser;
+import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,11 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
     Objects.requireNonNull(googleUser);
 
-    return Member.of(
-        googleUser.getName(), googleUser.getSub(), ClientProvider.GOOGLE, RoleType.USER);
+    return Member.builder()
+        .name(googleUser.getName())
+        .socialId(googleUser.getSub())
+        .clientProvider(ClientProvider.GOOGLE)
+        .roleType(RoleType.USER)
+        .build();
   }
 }

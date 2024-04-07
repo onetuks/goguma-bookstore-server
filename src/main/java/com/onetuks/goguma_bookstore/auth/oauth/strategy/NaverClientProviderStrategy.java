@@ -5,9 +5,9 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_T
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.NaverUser;
+import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -44,10 +44,11 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
     Objects.requireNonNull(naverUser);
     Objects.requireNonNull(naverUser.getResponse());
 
-    return Member.of(
-        naverUser.getResponse().getName(),
-        naverUser.getResponse().getId(),
-        ClientProvider.NAVER,
-        RoleType.USER);
+    return Member.builder()
+        .name(naverUser.getResponse().getName())
+        .socialId(naverUser.getResponse().getId())
+        .clientProvider(ClientProvider.NAVER)
+        .roleType(RoleType.USER)
+        .build();
   }
 }

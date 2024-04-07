@@ -2,11 +2,11 @@ package com.onetuks.goguma_bookstore.auth.service;
 
 import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
 import com.onetuks.goguma_bookstore.auth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.goguma_bookstore.auth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
 import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
+import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +46,6 @@ public class OAuth2ClientService {
         newAuthToken.getToken(),
         optionalMember.isEmpty(),
         savedMember.getMemberId(),
-        savedMember.getNickname());
+        savedMember.getName());
   }
 }

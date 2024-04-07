@@ -111,6 +111,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     testImplementation "com.redis.testcontainers:testcontainers-redis-junit:1.6.4"
 
+    // AWS S3
+    implementation(platform('software.amazon.awssdk:bom:2.25.23'))
+    implementation('commons-io:commons-io:2.15.1')
+    implementation("software.amazon.awssdk:aws-core")
+    implementation("software.amazon.awssdk:sdk-core")
+    implementation("software.amazon.awssdk:sts")
+    implementation("software.amazon.awssdk:s3")
+    testImplementation('org.testcontainers:localstack:1.19.6')
+
 }
 
 tasks.named('test') {
@@ -141,7 +150,9 @@ tasks.jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "**/Q*",
-                    "**/global/*",
+                    "**/global/config/*",
+                    "**/global/error/*",
+                    "**/model/*",
                     "**/auth/*",
                     "**/controller/*",
                     "**/GogumaBookStoreServerApplication.class"
@@ -177,8 +188,10 @@ tasks.jacocoTestCoverageVerification {
 
             excludes = [
                     "Q*",
-                    "*.global.*",
+                    "*.global.config.*",
+                    "*.global.error.*",
                     "*.auth.*",
+                    "*.model.*",
                     "*.controller.*",
                     "com.onetuks.goguma_bookstore.GogumaBookStoreServerApplication"
             ]

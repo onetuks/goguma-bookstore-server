@@ -6,6 +6,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -13,7 +15,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
+import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
 
 @Ignore
 @SpringBootTest
@@ -22,8 +27,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 public class IntegrationTest {
 
   static ComposeContainer rdbms;
-
   static RedisContainer redis;
+  static LocalStackContainer aws;
 
   static {
     rdbms =
@@ -41,12 +46,20 @@ public class IntegrationTest {
 
     redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
 
+    aws =
+        new LocalStackContainer(DockerImageName.parse("localstack/localstack:1.2"))
+            .withServices(Service.S3)
+            .withStartupTimeout(Duration.ofSeconds(600));
+
     rdbms.start();
     redis.start();
+    aws.start();
   }
 
   static class IntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
@@ -65,6 +78,15 @@ public class IntegrationTest {
 
       properties.put("spring.data.redis.host", redistHost);
       properties.put("spring.data.redis.port", String.valueOf(redistPort));
+
+      try {
+        aws.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
+
+        properties.put("aws.endpoint", String.valueOf(aws.getEndpoint()));
+        properties.put("aws.bucket-name", "test-bucket");
+      } catch (Exception e) {
+        log.info("aws test initialize failed");
+      }
 
       TestPropertyValues.of(properties).applyTo(applicationContext);
     }

@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.auth.model.vo;
+package com.onetuks.goguma_bookstore.auth.vo;
 
 public enum ClientProvider {
   KAKAO,

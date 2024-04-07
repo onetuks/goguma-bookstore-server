@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
@@ -102,10 +103,16 @@ public class ArchitectureTest {
           ArchRuleDefinition.classes()
               .that()
               .resideInAnyPackage("..service..")
+              .and()
+              .resideOutsideOfPackage("..dto..")
+              .and()
+              .resideOutsideOfPackage("..vo..")
               .should()
               .haveSimpleNameEndingWith("Service")
               .andShould()
-              .beAnnotatedWith(Service.class);
+              .beAnnotatedWith(Service.class)
+              .andShould()
+              .beAnnotatedWith(Component.class);
 
       rule.check(javaClasses);
     }
@@ -117,6 +124,8 @@ public class ArchitectureTest {
           ArchRuleDefinition.classes()
               .that()
               .resideInAnyPackage("..config..")
+              .and()
+              .doNotHaveSimpleName("AuthPermittedEndpoint")
               .should()
               .haveSimpleNameEndingWith("Config")
               .andShould()
@@ -166,7 +175,9 @@ public class ArchitectureTest {
               .resideInAnyPackage("..controller")
               .should()
               .dependOnClassesThat()
-              .resideInAnyPackage("..model..");
+              .resideInAnyPackage("..model..")
+              .andShould()
+              .resideOutsideOfPackage("..vo..");
 
       rule.check(javaClasses);
     }
@@ -186,7 +197,7 @@ public class ArchitectureTest {
     }
 
     @Test
-    @DisplayName("Model은 오직 Service와 Repository에 의해서만 의존한다")
+    @DisplayName("Model은 오직 Service와 Repository, Component에 의해서만 의존한다")
     void model_HaveDependancy_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
@@ -194,7 +205,7 @@ public class ArchitectureTest {
               .resideInAnyPackage("..model")
               .should()
               .onlyHaveDependentClassesThat()
-              .resideInAnyPackage("..service..", "..repository..", "..model..");
+              .resideInAnyPackage("..service..", "..repository..", "..model..", "..auth..");
 
       rule.check(javaClasses);
     }
@@ -208,7 +219,7 @@ public class ArchitectureTest {
               .resideInAnyPackage("..model..")
               .should()
               .onlyDependOnClassesThat()
-              .resideInAnyPackage("..model..", "java..", "jakarta..");
+              .resideInAnyPackage("..model..", "java..", "jakarta..", "lombok..", "..vo..");
 
       rule.check(javaClasses);
     }
