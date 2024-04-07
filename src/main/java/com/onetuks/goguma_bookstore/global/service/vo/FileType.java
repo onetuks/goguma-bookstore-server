@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.global.service;
+package com.onetuks.goguma_bookstore.global.service.vo;
 
 import lombok.Getter;
 

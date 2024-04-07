@@ -34,7 +34,7 @@ public class SecurityConfig {
     return http.authorizeHttpRequests(
             request ->
                 request
-                    .requestMatchers(AuthPermitedEndpoint.ENDPOINTS)
+                    .requestMatchers(AuthPermittedEndpoint.ENDPOINTS)
                     .permitAll()
                     .anyRequest()
                     .authenticated())

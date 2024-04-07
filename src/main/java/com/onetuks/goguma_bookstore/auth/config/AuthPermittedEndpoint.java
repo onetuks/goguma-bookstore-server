@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.auth.config;
 
-public class AuthPermitedEndpoint {
+public class AuthPermittedEndpoint {
 
-  private AuthPermitedEndpoint() {}
+  private AuthPermittedEndpoint() {}
 
   protected static final String[] ENDPOINTS =
       new String[] {

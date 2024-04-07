@@ -4,8 +4,8 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.onetuks.goguma_bookstore.auth.model.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.model.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.order.model.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
