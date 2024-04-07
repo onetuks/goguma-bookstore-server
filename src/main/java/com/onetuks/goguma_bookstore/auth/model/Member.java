@@ -6,7 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
-import com.onetuks.goguma_bookstore.order.model.CashReceiptType;
+import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -47,8 +47,8 @@ public class Member {
   @Column(name = "nickname")
   private String nickname;
 
-  @Column(name = "profile_img")
-  private String profileImg;
+  @Column(name = "profile_img_uri")
+  private String profileImgUri;
 
   @Column(name = "default_address")
   private String defaultAddress;
@@ -70,7 +70,7 @@ public class Member {
       ClientProvider clientProvider,
       RoleType roleType,
       String nickname,
-      String profileImg,
+      String profileImgUri,
       String defaultAddress,
       String defaultAddressDetail,
       CashReceiptType defaultCashReceiptType,
@@ -80,7 +80,7 @@ public class Member {
     this.clientProvider = clientProvider;
     this.roleType = roleType;
     this.nickname = nickname;
-    this.profileImg = profileImg;
+    this.profileImgUri = profileImgUri;
     this.defaultAddress = defaultAddress;
     this.defaultAddressDetail = defaultAddressDetail;
     this.defaultCashReceiptType = defaultCashReceiptType;

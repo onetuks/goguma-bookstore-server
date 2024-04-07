@@ -42,4 +42,21 @@ public class BookStatics {
     this.favoriteCount = (Long) Objects.requireNonNullElse(favoriteCount, 0);
     this.viewCount = (Long) Objects.requireNonNullElse(viewCount, 0);
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookStatics that = (BookStatics) o;
+    return Objects.equals(bookStaticsId, that.bookStaticsId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(bookStaticsId);
+  }
 }

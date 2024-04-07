@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.author.model;
+package com.onetuks.goguma_bookstore.author_debut.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,5 +44,22 @@ public class AuthorStatics {
     this.subscribeCount = (Long) Objects.requireNonNullElse(subscribeCount, 0);
     this.bookCount = (Long) Objects.requireNonNullElse(bookCount, 0);
     this.restockCount = (Long) Objects.requireNonNullElse(restockCount, 0);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AuthorStatics that = (AuthorStatics) o;
+    return Objects.equals(authorStaticsId, that.authorStaticsId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(authorStaticsId);
   }
 }

@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.author.model;
+package com.onetuks.goguma_bookstore.author_debut.model;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,8 +34,8 @@ public class Author {
   @JoinColumn(name = "member_id", unique = true)
   private Member member;
 
-  @Column(name = "profile_img", nullable = false)
-  private String profileImg;
+  @Column(name = "profile_img_uri", nullable = false)
+  private String profileImgUri;
 
   @Column(name = "nickname", nullable = false)
   private String nickname;
@@ -42,11 +43,11 @@ public class Author {
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
-  @Column(name = "escrow_service", nullable = false)
-  private String escrowService;
+  @Column(name = "escrow_service_uri", nullable = false)
+  private String escrowServiceUri;
 
-  @Column(name = "mail_order_sales", nullable = false)
-  private String mailOrderSales;
+  @Column(name = "mail_order_sales_uri", nullable = false)
+  private String mailOrderSalesUri;
 
   @OneToOne(
       mappedBy = "author",
@@ -57,17 +58,34 @@ public class Author {
   @Builder
   public Author(
       Member member,
-      String profileImg,
+      String profileImgUri,
       String nickname,
       String introduction,
-      String escrowService,
-      String mailOrderSales) {
+      String escrowServiceUri,
+      String mailOrderSalesUri) {
     this.member = member;
-    this.profileImg = profileImg;
+    this.profileImgUri = profileImgUri;
     this.nickname = nickname;
     this.introduction = introduction;
-    this.escrowService = escrowService;
-    this.mailOrderSales = mailOrderSales;
+    this.escrowServiceUri = escrowServiceUri;
+    this.mailOrderSalesUri = mailOrderSalesUri;
     this.authorStatics = AuthorStatics.builder().author(this).build();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Author author = (Author) o;
+    return Objects.equals(authorId, author.authorId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(authorId);
   }
 }

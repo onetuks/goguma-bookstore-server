@@ -1,6 +1,8 @@
 package com.onetuks.goguma_bookstore.order.model;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.goguma_bookstore.order.vo.PaymentClient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -84,5 +87,22 @@ public class Order {
     this.cashReceiptNumber = cashReceiptNumber;
     this.orderedDate = orderedDate;
     this.paymentDate = paymentDate;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Order order = (Order) o;
+    return Objects.equals(orderId, order.orderId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(orderId);
   }
 }

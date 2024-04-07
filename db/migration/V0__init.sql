@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS members
     client_provider VARCHAR(255) NOT NULL COMMENT '로그인 클라이언트',
     role_type enum('USER', 'AUTHOR', 'ADMIN') NOT NULL COMMENT '멤버 타입',
     nickname VARCHAR(255) COMMENT '멤버 닉네임',
-    profile_img VARCHAR(255) COMMENT '멤버 프로필',
+    profile_img_uri VARCHAR(255) COMMENT '멤버 프로필',
     default_address VARCHAR(255) COMMENT '기본 배송지',
     default_address_detail VARCHAR(255) COMMENT '기본 배송지 상세',
     default_cash_receipt_type ENUM('PERSON', 'COMPANY') COMMENT '기본 현금영수증 타입',
@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS authors
 (
     author_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '작가 식별자',
     member_id BIGINT NOT NULL UNIQUE COMMENT '멤버 식별자',
-    profile_img VARCHAR(255) NOT NULL DEFAULT '' COMMENT '작가 프로필', # TODO DEFAULT PROFILE IMAGE URI
+    profile_img_uri VARCHAR(255) NOT NULL DEFAULT '' COMMENT '작가 프로필', # TODO DEFAULT PROFILE IMAGE URI
     nickname VARCHAR(255) NOT NULL COMMENT '필명',
     introduction VARCHAR(255) NOT NULL COMMENT '한줄소개',
-    escrow_service VARCHAR(255) NOT NULL COMMENT '구매안전증',
-    mail_order_sales VARCHAR(255) NOT NULL COMMENT '통신판매증',
+    escrow_service_uri VARCHAR(255) NOT NULL COMMENT '구매안전증',
+    mail_order_sales_uri VARCHAR(255) NOT NULL COMMENT '통신판매증',
     PRIMARY KEY (author_id),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS registrations
     author_id BIGINT NOT NULL COMMENT '작가 식별자',
     approval_result BOOLEAN NOT NULL DEFAULT FALSE COMMENT '승인여부',
     approval_memo VARCHAR(255) NOT NULL DEFAULT '' COMMENT '승인메모',
-    cover_img VARCHAR(255) NOT NULL COMMENT '도서 표지',
+    cover_img_uri VARCHAR(255) NOT NULL COMMENT '도서 표지',
     title VARCHAR(255) NOT NULL COMMENT '도서명',
     summary VARCHAR(255) NOT NULL COMMENT '줄거리',
     price BIGINT NOT NULL DEFAULT 0 COMMENT '도서가격',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS registrations
     isbn VARCHAR(255) NOT NULL COMMENT 'isbn',
     publisher VARCHAR(255) NOT NULL COMMENT '출판사',
     promotion BOOLEAN NOT NULL DEFAULT FALSE COMMENT '프로모션 선택 여부',
-    sample VARCHAR(255) NOT NULL COMMENT '샘플 PDF 파일',
+    sample_uri VARCHAR(255) NOT NULL COMMENT '샘플 PDF 파일',
     PRIMARY KEY (registration_id),
     FOREIGN KEY (author_id) REFERENCES authors(author_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS books
     book_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '도서 식별자',
     author_id BIGINT NOT NULL COMMENT '작가 식별자',
     author_nickname VARCHAR(255) NOT NULL COMMENT '작가 닉네임',
-    cover_img VARCHAR(255) NOT NULL COMMENT '도서 표지',
+    cover_img_uri VARCHAR(255) NOT NULL COMMENT '도서 표지',
     title VARCHAR(255) NOT NULL COMMENT '도서명',
-    category ENUM('ETC', 'NOBEL', 'ESSEY') NOT NULL DEFAULT 'ETC' COMMENT '도서 카테고리',
+    category ENUM('ETC', 'NOBEL', 'ESSEY', 'CARTOON') NOT NULL DEFAULT 'ETC' COMMENT '도서 카테고리',
     summary VARCHAR(255) NOT NULL COMMENT '줄거리',
     price BIGINT NOT NULL DEFAULT 0 COMMENT '도서가격',
     stock_count BIGINT NOT NULL DEFAULT 0 COMMENT '재고수량',
