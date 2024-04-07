@@ -14,6 +14,7 @@ public enum ErrorCode {
   INVALID_TYPE_VALUE_ERROR("G006", "타입이 유효하지 않습니다."),
   NOT_FOUND_ENTITY("G007", "엔티티를 찾을 수 없습니다."),
   UTIL_NOT_CONSTRUCTOR("G008", "유틸클래스는 생성자를 호출할 수 없습니다."),
+  FILE_NOT_FOUND("G009", "해당 파일을 찾을 수 없습니다."),
 
   ILLEGAL_ARGUMENT_ERROR("E001", "잘못된 입력입니다."),
   ILLEGAL_STATE_ERROR("E002", "잘못된 상태입니다"),

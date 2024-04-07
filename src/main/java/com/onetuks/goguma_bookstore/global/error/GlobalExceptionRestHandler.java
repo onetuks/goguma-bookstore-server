@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore.global.error;
 
+import static com.onetuks.goguma_bookstore.global.error.ErrorCode.FILE_NOT_FOUND;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_ARGUMENT_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_STATE_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INTERNAL_SERVER_ERROR;
@@ -10,6 +11,7 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_BODY_M
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_PARAM_MISSING_ERROR;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.UncheckedIOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -27,6 +29,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionRestHandler {
+
+  /** [Exception] S3에서 찾고자 하는 파일을 찾지 못했을 경우 */
+  @ExceptionHandler(UncheckedIOException.class)
+  protected ResponseEntity<ErrorResponse> handleUncheckedIOException(UncheckedIOException e) {
+    log.warn("Handle UncheckedIOException", e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(FILE_NOT_FOUND, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+  }
 
   /** [Exception] 객체 혹은 파라미터의 데이터 값이 유효하지 않은 경우 */
   @ExceptionHandler(MethodArgumentNotValidException.class)
