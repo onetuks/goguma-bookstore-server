@@ -1,13 +1,14 @@
 package com.onetuks.goguma_bookstore.fixture;
 
+import com.onetuks.goguma_bookstore.author_debut.model.Author;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.MockMultipartFileInfo;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 
 public class RegistrationFixture {
 
-  public static Registration create() {
+  public static Registration create(Author author) {
     return Registration.builder()
-        .author(AuthorFixture.create())
+        .author(author)
         .approvalResult(Boolean.FALSE)
         .approvalMemo("통판신고증 누락함 다시 해주세요.")
         .coverImgUri(MockMultipartFileInfo.BOOK_COVER.getFileName())

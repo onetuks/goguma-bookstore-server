@@ -7,8 +7,7 @@ import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.MockMultipartFi
 
 public class BookFixture {
 
-  public static Book create() {
-    Author author = AuthorFixture.create();
+  public static Book create(Author author) {
     return Book.builder()
         .author(author)
         .authorNickname(author.getNickname())
