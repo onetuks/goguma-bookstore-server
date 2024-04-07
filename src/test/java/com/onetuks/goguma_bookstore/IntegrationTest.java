@@ -82,7 +82,8 @@ public class IntegrationTest {
       try {
         aws.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
 
-        properties.put("aws.endpoint", aws.getEndpoint().toString());
+        properties.put("aws.endpoint", String.valueOf(aws.getEndpoint()));
+        properties.put("aws.bucket-name", "test-bucket");
       } catch (Exception e) {
         log.info("aws test initialize failed");
       }

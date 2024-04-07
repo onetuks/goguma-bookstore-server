@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.global.config;
 
 import java.net.URI;
 import java.util.List;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +17,13 @@ import software.amazon.awssdk.services.s3.S3Client;
 @Configuration
 public class S3Config {
 
+  @Getter
   @Value("${aws.endpoint}")
   private String endpoint;
+
+  @Getter
+  @Value("${aws.bucket-name}")
+  private String bucketName;
 
   @Value("${aws.access-key-id}")
   private String accessKeyId;
