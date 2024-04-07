@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS authors
     profile_img_uri VARCHAR(255) NOT NULL DEFAULT '' COMMENT '작가 프로필', # TODO DEFAULT PROFILE IMAGE URI
     nickname VARCHAR(255) NOT NULL COMMENT '필명',
     introduction VARCHAR(255) NOT NULL COMMENT '한줄소개',
-    escrow_service_uri VARCHAR(255) NOT NULL COMMENT '구매안전증',
-    mail_order_sales_uri VARCHAR(255) NOT NULL COMMENT '통신판매증',
+    escrow_service_uri VARCHAR(255) COMMENT '구매안전증',
+    mail_order_sales_uri VARCHAR(255) COMMENT '통신판매증',
     PRIMARY KEY (author_id),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE = InnoDB

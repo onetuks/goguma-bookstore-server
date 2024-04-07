@@ -43,10 +43,10 @@ public class Author {
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
-  @Column(name = "escrow_service_uri", nullable = false)
+  @Column(name = "escrow_service_uri")
   private String escrowServiceUri;
 
-  @Column(name = "mail_order_sales_uri", nullable = false)
+  @Column(name = "mail_order_sales_uri")
   private String mailOrderSalesUri;
 
   @OneToOne(

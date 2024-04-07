@@ -9,4 +9,8 @@ public class FileURIProviderService {
   public String provideFileURI(FileType fileType, Long id) {
     return fileType.getDirectoryPath() + id;
   }
+
+  public String provideDefaultProfileURI() {
+    return FileType.PROFILES.getDirectoryPath() + "default-profile.png";
+  }
 }

@@ -34,17 +34,6 @@ class S3ServiceTest extends IntegrationTest {
     assertThat(result).hasSize(expected.getSize());
   }
 
-  //  @Test
-  //  @DisplayName("존재하지 않는 파일을 업로드하려고 하면 예외가 발생한다.")
-  //  void s3PutNonExistentFileTest() throws IOException {
-  //    // Given
-  //    MultipartFile nonExistentFile = MultipartFileFixture.createFile("non-existent-file");
-  //
-  //    // When & Then
-  //    assertThatThrownBy(() -> s3Service.putFile(nonExistentFile.getName(), nonExistentFile))
-  //        .isInstanceOf(UncheckedIOException.class);
-  //  }
-
   @Test
   @DisplayName("S3에 있는 파일을 성공적으로 제거한다.")
   void s3DeleteFileSuccessTest() throws IOException {
