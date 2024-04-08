@@ -50,6 +50,8 @@ class S3ServiceTest extends IntegrationTest {
     // Then
     assertThatThrownBy(() -> s3Service.getFile(expected.getName()))
         .isInstanceOf(NoSuchKeyException.class);
+
+    MultipartFileFixture.deleteFile(expected.getName());
   }
 
   @Test

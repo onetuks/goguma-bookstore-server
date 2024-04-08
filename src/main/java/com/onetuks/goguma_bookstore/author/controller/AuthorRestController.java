@@ -7,9 +7,11 @@ import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorMailOrderSalesSubmitResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +72,29 @@ public class AuthorRestController {
     AuthorEscrowServiceHandOverResult result =
         authorService.editAuthorEscrowService(authorId, escrowServiceFile);
     AuthorEscrowServiceHandOverResponse response = AuthorEscrowServiceHandOverResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 통신판매신고증 전송
+   *
+   * @param loginId
+   * @param authorId
+   * @param mailOrderSalesFile
+   * @return
+   */
+  @PatchMapping(
+      path = "/enrollment/{authorId}/main-order-sales",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorMailOrderSalesSubmitResponse> submitMailOrderSales(
+      @LoginId Long loginId,
+      @PathVariable(name = "authorId") Long authorId,
+      @RequestPart(name = "mail-order-sales") MultipartFile mailOrderSalesFile) {
+    AuthorMailOrderSalesSubmitResult result =
+        authorService.editAuthorMailOrderSales(loginId, authorId, mailOrderSalesFile);
+    AuthorMailOrderSalesSubmitResponse response = AuthorMailOrderSalesSubmitResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

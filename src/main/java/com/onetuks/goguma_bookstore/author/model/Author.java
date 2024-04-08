@@ -90,8 +90,14 @@ public class Author {
     return this.mailOrderSales.getMailOrderSalesUrl();
   }
 
-  public void handOverEscrowService(String escrowServiceUri) {
+  public String handOverEscrowService(String escrowServiceUri) {
     this.escrowService = new EscrowService(escrowServiceUri);
+    return this.getEscrowServiceUrl();
+  }
+
+  public String submitMailOrderSales(String mailOrderSalesUri) {
+    this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
+    return this.getMailOrderSalesUrl();
   }
 
   @Override

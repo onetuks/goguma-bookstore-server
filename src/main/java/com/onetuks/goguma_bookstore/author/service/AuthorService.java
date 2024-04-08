@@ -8,6 +8,7 @@ import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
@@ -56,9 +57,25 @@ public class AuthorService {
     String uri = fileURIProviderService.provideFileURI(FileType.ESCROWS, authorId);
     s3Service.putFile(uri, escrowServiceFile);
 
-    getById(authorId).handOverEscrowService(uri);
+    String escrowServiceUrl = getById(authorId).handOverEscrowService(uri);
 
-    return new AuthorEscrowServiceHandOverResult(uri);
+    return new AuthorEscrowServiceHandOverResult(escrowServiceUrl);
+  }
+
+  @Transactional
+  public AuthorMailOrderSalesSubmitResult editAuthorMailOrderSales(
+      long loginId, long authorId, MultipartFile mailOrderSalesFile) {
+    Author author = getById(authorId);
+    if (author.getMember().getMemberId() != loginId) {
+      throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
+    }
+
+    String uri = fileURIProviderService.provideFileURI(FileType.MAIL_ORDER_SALES, authorId);
+    s3Service.putFile(uri, mailOrderSalesFile);
+
+    String mailOrderSalesUrl = author.submitMailOrderSales(uri);
+
+    return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
 
   private Member getUserMember(long loginId) {

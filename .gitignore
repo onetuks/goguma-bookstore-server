@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 .idea/
 src/main/resources/application.yaml
-src/main/resources/static/swagger.json
+src/main/resources/static/
 
 ### STS ###
 .apt_generated

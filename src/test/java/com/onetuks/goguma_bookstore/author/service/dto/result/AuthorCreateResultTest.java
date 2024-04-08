@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
@@ -24,7 +25,7 @@ class AuthorCreateResultTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    Member member = memberRepository.save(MemberFixture.create());
+    Member member = memberRepository.save(MemberFixture.create(RoleType.USER));
     author = authorJpaRepository.save(AuthorFixture.create(member));
   }
 
