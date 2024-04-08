@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.author.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.onetuks.goguma_bookstore.auth.util.LoginId;
+import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;

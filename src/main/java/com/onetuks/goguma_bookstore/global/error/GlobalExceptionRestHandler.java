@@ -7,6 +7,7 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INTERNAL_SERVE
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INVALID_INPUT_VALUE_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INVALID_METHOD_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.NOT_FOUND_ENTITY;
+import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ONLY_FOR_ADMIN_METHOD;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_BODY_MISSING_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_PARAM_MISSING_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +33,14 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionRestHandler {
+
+  @ExceptionHandler(AccessDeniedException.class)
+  protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+    log.warn("Handle AccessDeniedException", e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(ONLY_FOR_ADMIN_METHOD, e.getMessage());
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+  }
 
   @ExceptionHandler(NoSuchKeyException.class)
   protected ResponseEntity<ErrorResponse> handleNoSuchKeyException(NoSuchKeyException e) {

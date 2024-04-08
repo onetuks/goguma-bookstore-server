@@ -25,7 +25,10 @@ public enum ErrorCode {
   UNAUTHORIZED_TOKEN("L003", "인증되지 않은 토큰입니다."),
   OAUTH_CLIENT_SERVER_ERROR("L004", "oauth 클라이언트 서버 에러입니다."),
   IS_LOGOUT_TOKEN("L005", "이미 로그아웃한 토큰입니다."),
-  EMPTY_HEADER_AUTHORIZATION("L006", "헤더에 Authorization이 존재하지 않습니다.");
+  EMPTY_HEADER_AUTHORIZATION("L006", "헤더에 Authorization이 존재하지 않습니다."),
+
+  // Role
+  ONLY_FOR_ADMIN_METHOD("R001", "오직 관리자만 접근 가능한 api 입니다.");
 
   private final String code;
   private final String message;
