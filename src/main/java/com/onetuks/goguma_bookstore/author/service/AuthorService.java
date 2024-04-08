@@ -7,11 +7,14 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
+import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthorService {
@@ -34,7 +37,7 @@ public class AuthorService {
   }
 
   @Transactional
-  public AuthorCreateResult createAuthorDebut(long loginId, AuthorCreateParam param) {
+  public AuthorCreateResult createAuthorEnrollment(long loginId, AuthorCreateParam param) {
     Author temporaryAuthor =
         authorJpaRepository.save(
             Author.builder()
@@ -47,6 +50,17 @@ public class AuthorService {
     return AuthorCreateResult.from(temporaryAuthor);
   }
 
+  @Transactional
+  public AuthorEscrowServiceHandOverResult editAuthorEscrowService(
+      Long authorId, MultipartFile escrowServiceFile) {
+    String uri = fileURIProviderService.provideFileURI(FileType.ESCROWS, authorId);
+    s3Service.putFile(uri, escrowServiceFile);
+
+    getById(authorId).handOverEscrowService(uri);
+
+    return new AuthorEscrowServiceHandOverResult(uri);
+  }
+
   private Member getUserMember(long loginId) {
     Member member =
         memberRepository
@@ -57,5 +71,11 @@ public class AuthorService {
       throw new IllegalStateException("이미 작가인 멤버입니다.");
     }
     return member;
+  }
+
+  private Author getById(long authorId) {
+    return authorJpaRepository
+        .findById(authorId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 }

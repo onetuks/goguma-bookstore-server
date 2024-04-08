@@ -2,18 +2,25 @@ package com.onetuks.goguma_bookstore.author.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/authors")
@@ -38,9 +45,32 @@ public class AuthorRestController {
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorCreateResponse> createEnrollRequest(
       @LoginId Long loginId, @Valid @RequestBody AuthorCreateRequest request) {
-    AuthorCreateResult result = authorService.createAuthorDebut(loginId, request.to());
+    AuthorCreateResult result = authorService.createAuthorEnrollment(loginId, request.to());
     AuthorCreateResponse response = AuthorCreateResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  /**
+   * 구매안전서비스확인증 발급
+   *
+   * @param adminId
+   * @param authorId
+   * @param escrowServiceFile
+   * @return
+   */
+  @PatchMapping(
+      path = "/enrollment/{authorId}/escrow-service",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorEscrowServiceHandOverResponse> handOverEscrowService(
+      @AdminId Long adminId,
+      @PathVariable("authorId") Long authorId,
+      @RequestPart(name = "escrow-service-file") MultipartFile escrowServiceFile) {
+    AuthorEscrowServiceHandOverResult result =
+        authorService.editAuthorEscrowService(authorId, escrowServiceFile);
+    AuthorEscrowServiceHandOverResponse response = AuthorEscrowServiceHandOverResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }
