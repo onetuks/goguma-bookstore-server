@@ -5,8 +5,8 @@ import static com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.MockMult
 import static com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.MockMultipartFileInfo.PROFILE;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.author_debut.model.Author;
-import com.onetuks.goguma_bookstore.author_debut.service.dto.param.AuthorDebutCreateParam;
+import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 
 public class AuthorFixture {
 
@@ -18,10 +18,11 @@ public class AuthorFixture {
         .introduction("유튜브 대통령")
         .escrowServiceUri(ESCROW.getFileName())
         .mailOrderSalesUri(MAIL_ORDER_SALES.getFileName())
+        .enrollPassed(false)
         .build();
   }
 
-  public static AuthorDebutCreateParam createCreationParam() {
-    return new AuthorDebutCreateParam("빠선생님", "유튜브 대통령");
+  public static AuthorCreateParam createCreationParam() {
+    return new AuthorCreateParam("빠선생님", "유튜브 대통령");
   }
 }

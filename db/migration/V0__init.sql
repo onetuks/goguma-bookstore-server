@@ -20,11 +20,12 @@ CREATE TABLE IF NOT EXISTS authors
 (
     author_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '작가 식별자',
     member_id BIGINT NOT NULL UNIQUE COMMENT '멤버 식별자',
-    profile_img_uri VARCHAR(255) NOT NULL DEFAULT '' COMMENT '작가 프로필', # TODO DEFAULT PROFILE IMAGE URI
+    profile_img_uri VARCHAR(255) NOT NULL DEFAULT '' COMMENT '작가 프로필',
     nickname VARCHAR(255) NOT NULL COMMENT '필명',
     introduction VARCHAR(255) NOT NULL COMMENT '한줄소개',
     escrow_service_uri VARCHAR(255) COMMENT '구매안전증',
     mail_order_sales_uri VARCHAR(255) COMMENT '통신판매증',
+    enroll_passed BOOLEAN NOT NULL DEFAULT FALSE COMMENT '입점 승인 여부',
     PRIMARY KEY (author_id),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE = InnoDB

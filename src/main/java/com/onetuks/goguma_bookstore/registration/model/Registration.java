@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.model;
 
-import com.onetuks.goguma_bookstore.author_debut.model.Author;
+import com.onetuks.goguma_bookstore.author.model.Author;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

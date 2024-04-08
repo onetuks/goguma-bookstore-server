@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.author_debut.model.Author;
+import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.model.Category;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.MockMultipartFileInfo;

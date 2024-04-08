@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.subscribe.model;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.author_debut.model.Author;
+import com.onetuks.goguma_bookstore.author.model.Author;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
