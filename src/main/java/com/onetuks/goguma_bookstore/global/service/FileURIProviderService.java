@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class FileURIProviderService {
 
   public String provideFileURI(FileType fileType, Long id) {
-    return fileType.getDirectoryPath() + id;
+    return fileType.getDirectoryPath() + id + fileType.getFileExtension();
   }
 
   public String provideDefaultProfileURI() {

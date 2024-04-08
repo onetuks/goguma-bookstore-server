@@ -3,8 +3,12 @@ package com.onetuks.goguma_bookstore.author.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.author.model.vo.EscrowService;
+import com.onetuks.goguma_bookstore.author.model.vo.MailOrderSales;
+import com.onetuks.goguma_bookstore.author.model.vo.ProfileImg;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,8 +38,7 @@ public class Author {
   @JoinColumn(name = "member_id", unique = true)
   private Member member;
 
-  @Column(name = "profile_img_uri", nullable = false)
-  private String profileImgUri;
+  @Embedded private ProfileImg profileImg;
 
   @Column(name = "nickname", nullable = false)
   private String nickname;
@@ -43,11 +46,9 @@ public class Author {
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
-  @Column(name = "escrow_service_uri")
-  private String escrowServiceUri;
+  @Embedded private EscrowService escrowService;
 
-  @Column(name = "mail_order_sales_uri")
-  private String mailOrderSalesUri;
+  @Embedded private MailOrderSales mailOrderSales;
 
   @Column(name = "enroll_passed", nullable = false)
   private Boolean enrollPassed;
@@ -68,13 +69,29 @@ public class Author {
       String mailOrderSalesUri,
       Boolean enrollPassed) {
     this.member = member;
-    this.profileImgUri = profileImgUri;
+    this.profileImg = new ProfileImg(profileImgUri);
     this.nickname = nickname;
     this.introduction = introduction;
-    this.escrowServiceUri = escrowServiceUri;
-    this.mailOrderSalesUri = mailOrderSalesUri;
+    this.escrowService = new EscrowService(escrowServiceUri);
+    this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
     this.enrollPassed = Objects.requireNonNullElse(enrollPassed, Boolean.FALSE);
     this.authorStatics = AuthorStatics.builder().author(this).build();
+  }
+
+  public String getProfileImgUrl() {
+    return this.profileImg.getProfileImgUrl();
+  }
+
+  public String getEscrowServiceUrl() {
+    return this.escrowService.getEscrowServiceUrl();
+  }
+
+  public String getMailOrderSalesUrl() {
+    return this.mailOrderSales.getMailOrderSalesUrl();
+  }
+
+  public void handOverEscrowService(String escrowServiceUri) {
+    this.escrowService = new EscrowService(escrowServiceUri);
   }
 
   @Override

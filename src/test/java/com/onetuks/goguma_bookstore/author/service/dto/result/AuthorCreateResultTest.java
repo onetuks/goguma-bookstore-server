@@ -9,6 +9,7 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class AuthorCreateResultTest extends IntegrationTest {
   private Author author;
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws IOException {
     Member member = memberRepository.save(MemberFixture.create());
     author = authorJpaRepository.save(AuthorFixture.create(member));
   }
@@ -36,6 +37,6 @@ class AuthorCreateResultTest extends IntegrationTest {
     // Then
     assertThat(result)
         .hasFieldOrPropertyWithValue("authorId", author.getAuthorId())
-        .hasFieldOrPropertyWithValue("profileImgUri", author.getProfileImgUri());
+        .hasFieldOrPropertyWithValue("profileImgUrl", author.getProfileImgUrl());
   }
 }
