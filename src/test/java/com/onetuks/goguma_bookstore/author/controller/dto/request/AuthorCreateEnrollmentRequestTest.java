@@ -6,7 +6,7 @@ import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorCreateRequestTest {
+class AuthorCreateEnrollmentRequestTest {
 
   @Test
   @DisplayName("정상적인 값으로 객체 생성 성공한다.")
@@ -16,7 +16,8 @@ class AuthorCreateRequestTest {
     String introduction = "빡친감자";
 
     // When
-    AuthorCreateRequest result = new AuthorCreateRequest(nickname, introduction);
+    AuthorCreateEnrollmentRequest result =
+        new AuthorCreateEnrollmentRequest(nickname, introduction);
 
     // Then
     assertThat(result)
@@ -33,7 +34,7 @@ class AuthorCreateRequestTest {
     String introduction = "빡친감자";
 
     // When
-    AuthorCreateParam result = new AuthorCreateRequest(nickname, introduction).to();
+    AuthorCreateParam result = new AuthorCreateEnrollmentRequest(nickname, introduction).to();
 
     // Then
     assertThat(result.nickname()).isEqualTo(nickname);

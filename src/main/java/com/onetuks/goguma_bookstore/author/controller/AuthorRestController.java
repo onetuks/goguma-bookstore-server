@@ -4,12 +4,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
-import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateRequest;
-import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateEnrollmentRequest;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateEnrollmentResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorMailOrderSalesSubmitResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import jakarta.validation.Valid;
@@ -45,16 +45,17 @@ public class AuthorRestController {
       path = "/enrollment",
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorCreateResponse> createEnrollRequest(
-      @LoginId Long loginId, @Valid @RequestBody AuthorCreateRequest request) {
-    AuthorCreateResult result = authorService.createAuthorEnrollment(loginId, request.to());
-    AuthorCreateResponse response = AuthorCreateResponse.from(result);
+  public ResponseEntity<AuthorCreateEnrollmentResponse> requestEnrollment(
+      @LoginId Long loginId, @Valid @RequestBody AuthorCreateEnrollmentRequest request) {
+    AuthorCreateEnrollmentResult result =
+        authorService.createAuthorEnrollment(loginId, request.to());
+    AuthorCreateEnrollmentResponse response = AuthorCreateEnrollmentResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**
-   * 구매안전서비스확인증 발급
+   * 구매안전서비스확인증 발급 - only for admin
    *
    * @param adminId
    * @param authorId
@@ -95,6 +96,30 @@ public class AuthorRestController {
     AuthorMailOrderSalesSubmitResult result =
         authorService.editAuthorMailOrderSales(loginId, authorId, mailOrderSalesFile);
     AuthorMailOrderSalesSubmitResponse response = AuthorMailOrderSalesSubmitResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 입접 신청 결과 전달 - only for admin
+   *
+   * @param adminId
+   * @param authorId
+   * @param request
+   * @return
+   */
+  @PatchMapping(
+      path = "/enrollment/{authorId}/result",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorEnrollmentResultReportResponse> reportEnrollmentResult(
+      @AdminId Long adminId,
+      @PathVariable(name = "authorId") Long authorId,
+      @RequestBody @Valid AuthorEnrollmentResultReportRequest request) {
+    AuthorEnrollmentResultReportResult result =
+        authorService.editAuthorEnrollmentResult(authorId, request.to());
+    AuthorEnrollmentResultReportResponse response =
+        AuthorEnrollmentResultReportResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

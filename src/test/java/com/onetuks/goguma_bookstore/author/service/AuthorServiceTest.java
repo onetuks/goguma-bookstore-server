@@ -9,7 +9,7 @@ import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
@@ -44,7 +44,7 @@ class AuthorServiceTest extends IntegrationTest {
     AuthorCreateParam param = AuthorFixture.createCreationParam();
 
     // When
-    AuthorCreateResult result =
+    AuthorCreateEnrollmentResult result =
         authorService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // Then
@@ -71,7 +71,7 @@ class AuthorServiceTest extends IntegrationTest {
   void editAuthorEscrowService() throws IOException {
     // Given
     AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateResult createResult =
+    AuthorCreateEnrollmentResult createResult =
         authorService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     MultipartFile escrowServiceFile =
         MultipartFileFixture.createFile(FileType.ESCROWS, createResult.authorId());
@@ -91,7 +91,7 @@ class AuthorServiceTest extends IntegrationTest {
   void editAuthorMailOrderSalesTest() throws IOException {
     // Given
     AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateResult createResult =
+    AuthorCreateEnrollmentResult createResult =
         authorService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     MultipartFile mailOrderSalesFile =
         MultipartFileFixture.createFile(FileType.MAIL_ORDER_SALES, createResult.authorId());
@@ -112,7 +112,7 @@ class AuthorServiceTest extends IntegrationTest {
   void editAuthorMailOrderSalesExceptionTest() throws IOException {
     // Given
     AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateResult createResult =
+    AuthorCreateEnrollmentResult createResult =
         authorService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     MultipartFile mailOrderSalesFile =
         MultipartFileFixture.createFile(FileType.ESCROWS, createResult.authorId());

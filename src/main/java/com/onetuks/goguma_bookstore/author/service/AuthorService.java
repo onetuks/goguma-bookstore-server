@@ -6,7 +6,7 @@ import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
@@ -38,7 +38,8 @@ public class AuthorService {
   }
 
   @Transactional
-  public AuthorCreateResult createAuthorEnrollment(long loginId, AuthorCreateParam param) {
+  public AuthorCreateEnrollmentResult createAuthorEnrollment(
+      long loginId, AuthorCreateParam param) {
     Author temporaryAuthor =
         authorJpaRepository.save(
             Author.builder()
@@ -48,7 +49,7 @@ public class AuthorService {
                 .introduction(param.introduction())
                 .build());
 
-    return AuthorCreateResult.from(temporaryAuthor);
+    return AuthorCreateEnrollmentResult.from(temporaryAuthor);
   }
 
   @Transactional
@@ -77,6 +78,10 @@ public class AuthorService {
 
     return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
+
+  @Transactional
+  public AuthorEnrollmentResultReportResult editAuthorEnrollmentResult(
+      long authorId, AuthorEnrollmentResultReportRequest request) {}
 
   private Member getUserMember(long loginId) {
     Member member =

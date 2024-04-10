@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthorCreateResultTest extends IntegrationTest {
+class AuthorCreateEnrollmentResultTest extends IntegrationTest {
 
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private MemberRepository memberRepository;
@@ -33,7 +33,7 @@ class AuthorCreateResultTest extends IntegrationTest {
   @DisplayName("작가 엔티티에서 작가 생성 객체로 변환한다.")
   void from() {
     // When
-    AuthorCreateResult result = AuthorCreateResult.from(author);
+    AuthorCreateEnrollmentResult result = AuthorCreateEnrollmentResult.from(author);
 
     // Then
     assertThat(result)
