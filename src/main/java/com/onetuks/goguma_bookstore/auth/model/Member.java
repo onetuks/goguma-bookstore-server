@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -85,5 +86,32 @@ public class Member {
     this.defaultAddressDetail = defaultAddressDetail;
     this.defaultCashReceiptType = defaultCashReceiptType;
     this.defaultCashReceiptNumber = defaultCashReceiptNumber;
+  }
+
+  public RoleType grantAuthorRole() {
+    this.roleType = RoleType.AUTHOR;
+    return this.roleType;
+  }
+
+  public RoleType revokeAuthorRole() {
+    this.roleType = RoleType.USER;
+    return this.roleType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Member member = (Member) o;
+    return Objects.equals(memberId, member.memberId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(memberId);
   }
 }

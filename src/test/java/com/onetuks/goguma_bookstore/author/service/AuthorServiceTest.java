@@ -8,8 +8,11 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
+import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
@@ -27,6 +30,7 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Autowired private AuthorService authorService;
   @Autowired private MemberRepository memberRepository;
+  @Autowired private AuthorJpaRepository authorJpaRepository;
 
   private Member userMember;
   private Member authorMember;
@@ -125,5 +129,41 @@ class AuthorServiceTest extends IntegrationTest {
         .isInstanceOf(IllegalArgumentException.class);
 
     MultipartFileFixture.deleteFile(mailOrderSalesFile.getName());
+  }
+
+  @Test
+  @DisplayName("입점 심사를 승인하면 입점 승인 여부가 참이 되고, 해당 멤버의 역할이 작가가 된다.")
+  void editAuthorEnrollmentJudgeApprovalTest() {
+    // Given
+    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
+    AuthorCreateEnrollmentResult createResult =
+        authorService.createAuthorEnrollment(userMember.getMemberId(), createParam);
+
+    // When
+    AuthorEnrollmentJudgeResult result =
+        authorService.editAuthorEnrollmentJudge(createResult.authorId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.enrollmentPassed()).isTrue(),
+        () -> assertThat(result.memberId()).isEqualTo(userMember.getMemberId()),
+        () -> assertThat(result.roleType()).isEqualTo(RoleType.AUTHOR));
+  }
+
+  @Test
+  @DisplayName("입점 심사 승인을 취소하면 입점 승인 여부가 거짓이 되고, 해당 멤버의 역할이 독자가 된다.")
+  void editAuthorEnrollmentJudgeDeniedTest() throws IOException {
+    // Given
+    Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
+
+    // When
+    AuthorEnrollmentJudgeResult result =
+        authorService.editAuthorEnrollmentJudge(save.getAuthorId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.enrollmentPassed()).isFalse(),
+        () -> assertThat(result.memberId()).isEqualTo(authorMember.getMemberId()),
+        () -> assertThat(result.roleType()).isEqualTo(RoleType.USER));
   }
 }

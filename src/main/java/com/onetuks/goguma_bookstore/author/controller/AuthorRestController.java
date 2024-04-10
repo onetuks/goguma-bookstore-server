@@ -6,10 +6,12 @@ import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateEnrollmentRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateEnrollmentResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentJudgeResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorMailOrderSalesSubmitResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import jakarta.validation.Valid;
@@ -101,25 +103,20 @@ public class AuthorRestController {
   }
 
   /**
-   * 입접 신청 결과 전달 - only for admin
+   * 입접 심사 - only for admin todo 해당 멤버에게 알람 보내기
    *
    * @param adminId
    * @param authorId
-   * @param request
    * @return
    */
   @PatchMapping(
       path = "/enrollment/{authorId}/result",
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorEnrollmentResultReportResponse> reportEnrollmentResult(
-      @AdminId Long adminId,
-      @PathVariable(name = "authorId") Long authorId,
-      @RequestBody @Valid AuthorEnrollmentResultReportRequest request) {
-    AuthorEnrollmentResultReportResult result =
-        authorService.editAuthorEnrollmentResult(authorId, request.to());
-    AuthorEnrollmentResultReportResponse response =
-        AuthorEnrollmentResultReportResponse.from(result);
+  public ResponseEntity<AuthorEnrollmentJudgeResponse> judgeEnrollment(
+      @AdminId Long adminId, @PathVariable(name = "authorId") Long authorId) {
+    AuthorEnrollmentJudgeResult result = authorService.editAuthorEnrollmentJudge(authorId);
+    AuthorEnrollmentJudgeResponse response = AuthorEnrollmentJudgeResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

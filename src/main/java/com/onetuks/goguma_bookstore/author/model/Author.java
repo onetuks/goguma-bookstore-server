@@ -50,8 +50,8 @@ public class Author {
 
   @Embedded private MailOrderSales mailOrderSales;
 
-  @Column(name = "enroll_passed", nullable = false)
-  private Boolean enrollPassed;
+  @Column(name = "enrollment_passed", nullable = false)
+  private Boolean enrollmentPassed;
 
   @OneToOne(
       mappedBy = "author",
@@ -67,14 +67,14 @@ public class Author {
       String introduction,
       String escrowServiceUri,
       String mailOrderSalesUri,
-      Boolean enrollPassed) {
+      Boolean enrollmentPassed) {
     this.member = member;
     this.profileImg = new ProfileImg(profileImgUri);
     this.nickname = nickname;
     this.introduction = introduction;
     this.escrowService = new EscrowService(escrowServiceUri);
     this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
-    this.enrollPassed = Objects.requireNonNullElse(enrollPassed, Boolean.FALSE);
+    this.enrollmentPassed = Objects.requireNonNullElse(enrollmentPassed, Boolean.FALSE);
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
@@ -98,6 +98,11 @@ public class Author {
   public String submitMailOrderSales(String mailOrderSalesUri) {
     this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
     return this.getMailOrderSalesUrl();
+  }
+
+  public boolean convertEnrollmentJudgeStatus() {
+    this.enrollmentPassed = !enrollmentPassed;
+    return this.enrollmentPassed;
   }
 
   @Override

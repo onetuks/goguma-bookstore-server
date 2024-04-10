@@ -20,7 +20,7 @@ public class AuthorFixture {
         .mailOrderSalesUri(
             MultipartFileFixture.createFile(FileType.MAIL_ORDER_SALES, member.getMemberId())
                 .getName())
-        .enrollPassed(false)
+        .enrollmentPassed(true)
         .build();
   }
 
