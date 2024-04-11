@@ -95,6 +95,21 @@ public class Author {
     return this.enrollmentInfo.getEnrollmentAt();
   }
 
+  public Author updateProfileImgUri(String profileImgUri) {
+    this.profileImg = new ProfileImg(profileImgUri);
+    return this;
+  }
+
+  public Author updateNickname(String nickname) {
+    this.nickname = nickname;
+    return this;
+  }
+
+  public Author updateIntroduction(String introduction) {
+    this.introduction = introduction;
+    return this;
+  }
+
   public String updateEscrowService(String escrowServiceUri) {
     this.enrollmentInfo = enrollmentInfo.setEscrowService(escrowServiceUri);
     return this.getEscrowServiceUrl();
