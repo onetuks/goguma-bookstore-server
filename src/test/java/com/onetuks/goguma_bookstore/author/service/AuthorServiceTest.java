@@ -23,6 +23,8 @@ import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -248,5 +250,45 @@ class AuthorServiceTest extends IntegrationTest {
                 authorService.findAuthorEnrollmentDetails(
                     authorMember.getMemberId(), createResult.authorId()))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  @DisplayName("아직 입점 신청이 완료되지 않은 모든 작가 지망생 상세 정보를 조회한다.")
+  void findAllAuthorEnrollmentDetailsTest() throws IOException {
+    // Given
+    List<Member> members =
+        List.of(
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.AUTHOR),
+            MemberFixture.create(RoleType.AUTHOR));
+
+    List<Author> authors =
+        authorJpaRepository.saveAll(
+            memberRepository.saveAll(members).stream()
+                .map(
+                    member -> {
+                      try {
+                        return AuthorFixture.create(member);
+                      } catch (IOException e) {
+                        // ignore
+                      }
+                      return null;
+                    })
+                .filter(Objects::nonNull)
+                .toList());
+
+    // When
+    List<AuthorEnrollmentDetailsResult> results = authorService.findAllAuthorEnrollmentDetails();
+
+    // Then
+    assertThat(results)
+        .hasSize(3)
+        .allSatisfy(
+            result -> {
+              assertThat(result.enrollmentPassed()).isFalse();
+              assertThat(result.roleType()).isEqualTo(RoleType.USER);
+            });
   }
 }

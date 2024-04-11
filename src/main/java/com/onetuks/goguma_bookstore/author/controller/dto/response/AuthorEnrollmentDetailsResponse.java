@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
+import java.util.List;
 
 public record AuthorEnrollmentDetailsResponse(
     long authorId,
@@ -13,6 +14,15 @@ public record AuthorEnrollmentDetailsResponse(
     String escrowServiceUrl,
     String mailOrderSalesUrl,
     boolean enrollmentPassed) {
+
+  public record AuthorEnrollmentDetailsResponses(List<AuthorEnrollmentDetailsResponse> responses) {
+
+    public static AuthorEnrollmentDetailsResponses from(
+        List<AuthorEnrollmentDetailsResult> results) {
+      return new AuthorEnrollmentDetailsResponses(
+          results.stream().map(AuthorEnrollmentDetailsResponse::from).toList());
+    }
+  }
 
   public static AuthorEnrollmentDetailsResponse from(AuthorEnrollmentDetailsResult result) {
     return new AuthorEnrollmentDetailsResponse(

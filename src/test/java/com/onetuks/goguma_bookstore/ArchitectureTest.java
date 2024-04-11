@@ -74,7 +74,9 @@ public class ArchitectureTest extends IntegrationTest {
               .that()
               .resideInAnyPackage("..response..")
               .should()
-              .haveSimpleNameEndingWith("Response");
+              .haveSimpleNameEndingWith("Response")
+              .orShould()
+              .haveSimpleNameEndingWith("Responses");
 
       rule.check(javaClasses);
     }

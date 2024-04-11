@@ -25,6 +25,7 @@ import org.testcontainers.utility.DockerImageName;
 @Transactional
 @ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
 public class IntegrationTest {
+  // todo 한 번에 모든 bean 을 다 주입받아서 모든 테스트 클래스가 사용한다면 어떨까?
 
   static ComposeContainer rdbms;
   static RedisContainer redis;

@@ -7,6 +7,7 @@ import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateEnrollmentRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateEnrollmentResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentJudgeResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorMailOrderSalesSubmitResponse;
@@ -17,6 +18,7 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJu
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -140,6 +142,16 @@ public class AuthorRestController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
+  /**
+   * 작가 등록 상세 조회
+   *
+   * @param loginId : 본인 확인용
+   * @param authorId : 작가 등록 식별자
+   * @return authorId, authorName, authorEmail, authorPhone, authorProfileImageUrl,
+   *     authorProfileDescription, authorEnrollmentStatus, authorEnrollmentDate,
+   *     authorEnrollmentJudgeDate, authorEnrollmentJudgeResult, authorEscrowServiceUrl,
+   *     authorMailOrderSalesUrl
+   */
   @GetMapping(path = "/enrollment/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
       @LoginId Long loginId, @PathVariable(name = "authorId") Long authorId) {
@@ -148,5 +160,14 @@ public class AuthorRestController {
     AuthorEnrollmentDetailsResponse response = AuthorEnrollmentDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/enrollment", produces = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorEnrollmentDetailsResponses> getAllAuthorEnrollmentDetails(
+      @AdminId Long adminId) {
+    List<AuthorEnrollmentDetailsResult> results = authorService.findAllAuthorEnrollmentDetails();
+    AuthorEnrollmentDetailsResponses responses = AuthorEnrollmentDetailsResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 }

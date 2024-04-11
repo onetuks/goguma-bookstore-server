@@ -15,6 +15,7 @@ import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,6 +109,13 @@ public class AuthorService {
     checkIllegalArgument(author, loginId);
 
     return AuthorEnrollmentDetailsResult.from(author);
+  }
+
+  @Transactional(readOnly = true)
+  public List<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails() {
+    return authorJpaRepository.findAuthorsByEnrollmentPassedFalse().stream()
+        .map(AuthorEnrollmentDetailsResult::from)
+        .toList();
   }
 
   private Member getUserMemberById(long loginId) {
