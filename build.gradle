@@ -213,8 +213,8 @@ sonar {
             property("sonar.sources", "src/main/java")
             property("sonar.tests", "src/test/java")
             property("sonar.sourceEncoding", "UTF-8")
-            property("sonar.projectKey", "goguma-store-server")
-            property("sonar.projectName", "goguma-store-server")
+            property("sonar.projectKey", "goguma-bookstore")
+            property("sonar.projectName", "goguma-bookstore")
             property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
         }
     } else {

@@ -2,11 +2,12 @@ package com.onetuks.goguma_bookstore.author.controller.dto.request;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorCreateEnrollmentRequestTest {
+class AuthorCreateEnrollmentRequestTest extends IntegrationTest {
 
   @Test
   @DisplayName("정상적인 값으로 객체 생성 성공한다.")

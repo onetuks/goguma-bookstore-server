@@ -3,10 +3,11 @@ package com.onetuks.goguma_bookstore.author.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import org.junit.jupiter.api.Test;
 
-class AuthorEscrowServiceHandOverResponseTest {
+class AuthorEscrowServiceHandOverResponseTest extends IntegrationTest {
 
   @Test
   void fromTest() {
