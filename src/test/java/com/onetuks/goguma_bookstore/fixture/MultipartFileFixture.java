@@ -51,6 +51,6 @@ public class MultipartFileFixture {
   }
 
   private static Path getTempFilePath(String fileName) {
-    return Paths.get("src/main/resources/static" + fileName);
+    return Paths.get("src/test/resources/static" + fileName);
   }
 }

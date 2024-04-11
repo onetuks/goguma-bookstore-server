@@ -6,10 +6,6 @@ build/
 !**/src/test/**/build/
 .idea/
 src/main/resources/application.yaml
-src/main/resources/static/swagger.json
-src/main/resources/static/**/*.pdf
-src/main/resources/static/**/*.png
-src/main/resources/static/**/*.jpg
 
 ### STS ###
 .apt_generated
