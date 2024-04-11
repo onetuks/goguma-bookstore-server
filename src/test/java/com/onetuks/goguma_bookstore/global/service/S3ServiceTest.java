@@ -32,8 +32,6 @@ class S3ServiceTest extends IntegrationTest {
     File result = s3Service.getFile(expected.getName());
 
     assertThat(result).hasSize(expected.getSize());
-
-    MultipartFileFixture.deleteFile(expected.getName());
   }
 
   @Test
@@ -50,8 +48,6 @@ class S3ServiceTest extends IntegrationTest {
     // Then
     assertThatThrownBy(() -> s3Service.getFile(expected.getName()))
         .isInstanceOf(NoSuchKeyException.class);
-
-    MultipartFileFixture.deleteFile(expected.getName());
   }
 
   @Test

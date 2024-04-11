@@ -30,7 +30,5 @@ class AuthorMailOrderSalesSubmitResponseTest extends IntegrationTest {
 
     // Then
     assertThat(result.mailOrderSalesUrl()).contains(mailOrderSalesFile.getName());
-
-    MultipartFileFixture.deleteFile(mailOrderSalesFile.getName());
   }
 }

@@ -92,8 +92,6 @@ class AuthorServiceTest extends IntegrationTest {
 
     // Then
     assertThat(result.escrowServiceUrl()).contains(escrowServiceFile.getName());
-
-    MultipartFileFixture.deleteFile(escrowServiceFile.getName());
   }
 
   @Test
@@ -113,8 +111,6 @@ class AuthorServiceTest extends IntegrationTest {
 
     // Then
     assertThat(result.mailOrderSalesUrl()).contains(mailOrderSalesFile.getName());
-
-    MultipartFileFixture.deleteFile(mailOrderSalesFile.getName());
   }
 
   @Test
@@ -133,8 +129,6 @@ class AuthorServiceTest extends IntegrationTest {
                 authorService.updateAuthorMailOrderSales(
                     authorMember.getMemberId(), createResult.authorId(), mailOrderSalesFile))
         .isInstanceOf(IllegalArgumentException.class);
-
-    MultipartFileFixture.deleteFile(mailOrderSalesFile.getName());
   }
 
   @Test

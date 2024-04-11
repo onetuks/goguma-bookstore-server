@@ -26,7 +26,5 @@ class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
 
     // Then
     assertThat(result.authorId()).isEqualTo(resultObject.authorId());
-
-    MultipartFileFixture.deleteFile(fileName);
   }
 }

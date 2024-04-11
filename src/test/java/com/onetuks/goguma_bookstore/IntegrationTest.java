@@ -1,11 +1,13 @@
 package com.onetuks.goguma_bookstore;
 
+import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.redis.testcontainers.RedisContainer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,11 @@ public class IntegrationTest {
   static ComposeContainer rdbms;
   static RedisContainer redis;
   static LocalStackContainer aws;
+
+  @AfterEach
+  void tearDown() {
+    MultipartFileFixture.deleteAllStaticTestFiles();
+  }
 
   static {
     rdbms =
