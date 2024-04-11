@@ -7,6 +7,7 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
@@ -54,34 +55,33 @@ public class AuthorService {
   }
 
   @Transactional
-  public AuthorEscrowServiceHandOverResult editAuthorEscrowService(
+  public AuthorEscrowServiceHandOverResult updateAuthorEscrowService(
       Long authorId, MultipartFile escrowServiceFile) {
     String uri = fileURIProviderService.provideFileURI(FileType.ESCROWS, authorId);
     s3Service.putFile(uri, escrowServiceFile);
 
-    String escrowServiceUrl = getAuthorById(authorId).handOverEscrowService(uri);
+    String escrowServiceUrl = getAuthorById(authorId).updateEscrowService(uri);
 
     return new AuthorEscrowServiceHandOverResult(escrowServiceUrl);
   }
 
   @Transactional
-  public AuthorMailOrderSalesSubmitResult editAuthorMailOrderSales(
+  public AuthorMailOrderSalesSubmitResult updateAuthorMailOrderSales(
       long loginId, long authorId, MultipartFile mailOrderSalesFile) {
     Author author = getAuthorById(authorId);
-    if (author.getMember().getMemberId() != loginId) {
-      throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
-    }
+
+    checkIllegalArgument(author, loginId);
 
     String uri = fileURIProviderService.provideFileURI(FileType.MAIL_ORDER_SALES, authorId);
     s3Service.putFile(uri, mailOrderSalesFile);
 
-    String mailOrderSalesUrl = author.submitMailOrderSales(uri);
+    String mailOrderSalesUrl = author.updateMailOrderSales(uri);
 
     return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
 
   @Transactional
-  public AuthorEnrollmentJudgeResult editAuthorEnrollmentJudge(long authorId) {
+  public AuthorEnrollmentJudgeResult updateAuthorEnrollmentJudge(long authorId) {
     Author author = getAuthorById(authorId);
     Member member = author.getMember();
 
@@ -90,6 +90,24 @@ public class AuthorService {
         enrollmentJudgeStatus ? member.grantAuthorRole() : member.revokeAuthorRole();
 
     return new AuthorEnrollmentJudgeResult(enrollmentJudgeStatus, member.getMemberId(), roleType);
+  }
+
+  @Transactional
+  public void deleteAuthorEnrollment(long loginId, long authorId) {
+    Author author = getAuthorById(authorId);
+
+    checkIllegalArgument(author, loginId);
+
+    authorJpaRepository.deleteById(authorId);
+  }
+
+  @Transactional(readOnly = true)
+  public AuthorEnrollmentDetailsResult findAuthorEnrollmentDetails(long loginId, long authorId) {
+    Author author = getAuthorById(authorId);
+
+    checkIllegalArgument(author, loginId);
+
+    return AuthorEnrollmentDetailsResult.from(author);
   }
 
   private Member getUserMemberById(long loginId) {
@@ -108,5 +126,11 @@ public class AuthorService {
     return authorJpaRepository
         .findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
+  }
+
+  private void checkIllegalArgument(Author author, long loginId) {
+    if (author.getMember().getMemberId() != loginId) {
+      throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
+    }
   }
 }

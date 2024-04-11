@@ -90,12 +90,12 @@ public class Author {
     return this.mailOrderSales.getMailOrderSalesUrl();
   }
 
-  public String handOverEscrowService(String escrowServiceUri) {
+  public String updateEscrowService(String escrowServiceUri) {
     this.escrowService = new EscrowService(escrowServiceUri);
     return this.getEscrowServiceUrl();
   }
 
-  public String submitMailOrderSales(String mailOrderSalesUri) {
+  public String updateMailOrderSales(String mailOrderSalesUri) {
     this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
     return this.getMailOrderSalesUrl();
   }
