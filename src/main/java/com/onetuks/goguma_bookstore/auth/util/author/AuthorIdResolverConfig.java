@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.auth.util;
+package com.onetuks.goguma_bookstore.auth.util.author;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -6,11 +6,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class LoginIdResolverConfig implements WebMvcConfigurer {
+public class AuthorIdResolverConfig implements WebMvcConfigurer {
 
-  private final LoginIdResolver resolver;
+  private final AuthorIdResolver resolver;
 
-  public LoginIdResolverConfig(LoginIdResolver resolver) {
+  public AuthorIdResolverConfig(AuthorIdResolver resolver) {
     this.resolver = resolver;
   }
 

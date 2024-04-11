@@ -6,6 +6,8 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,14 +40,15 @@ public class Book {
   @Column(name = "author_nickname", nullable = false)
   private String authorNickname;
 
-  @Column(name = "cover_img", nullable = false)
-  private String coverImg;
+  @Column(name = "cover_img_uri", nullable = false)
+  private String coverImgUri;
 
   @Column(name = "title", nullable = false)
   private String title;
 
+  @Enumerated(value = EnumType.STRING)
   @Column(name = "category", nullable = false)
-  private String category;
+  private Category category;
 
   @Column(name = "summary", nullable = false)
   private String summary;
@@ -74,9 +78,9 @@ public class Book {
   public Book(
       Author author,
       String authorNickname,
-      String coverImg,
+      String coverImgUri,
       String title,
-      String category,
+      Category category,
       String summary,
       Long price,
       Long stockCount,
@@ -85,7 +89,7 @@ public class Book {
       Boolean promotion) {
     this.author = author;
     this.authorNickname = authorNickname;
-    this.coverImg = coverImg;
+    this.coverImgUri = coverImgUri;
     this.title = title;
     this.category = category;
     this.summary = summary;
@@ -95,5 +99,22 @@ public class Book {
     this.publisher = publisher;
     this.promotion = promotion;
     this.bookStatics = BookStatics.builder().book(this).build();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Book book = (Book) o;
+    return Objects.equals(bookId, book.bookId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(bookId);
   }
 }

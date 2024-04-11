@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.auth.util;
+package com.onetuks.goguma_bookstore.auth.util.login;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
 import jakarta.annotation.Nonnull;

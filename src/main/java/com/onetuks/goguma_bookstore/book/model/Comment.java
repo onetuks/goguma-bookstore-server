@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,5 +50,22 @@ public class Comment {
     this.member = member;
     this.title = title;
     this.content = content;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Comment comment = (Comment) o;
+    return Objects.equals(commentId, comment.commentId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(commentId);
   }
 }

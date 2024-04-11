@@ -1,11 +1,13 @@
 package com.onetuks.goguma_bookstore;
 
+import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.redis.testcontainers.RedisContainer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +27,16 @@ import org.testcontainers.utility.DockerImageName;
 @Transactional
 @ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
 public class IntegrationTest {
+  // todo 한 번에 모든 bean 을 다 주입받아서 모든 테스트 클래스가 사용한다면 어떨까?
 
   static ComposeContainer rdbms;
   static RedisContainer redis;
   static LocalStackContainer aws;
+
+  @AfterEach
+  void tearDown() {
+    MultipartFileFixture.deleteAllStaticTestFiles();
+  }
 
   static {
     rdbms =

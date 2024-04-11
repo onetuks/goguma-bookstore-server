@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,22 @@ public class Subscribe {
   public Subscribe(Member member, Author author) {
     this.member = member;
     this.author = author;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Subscribe subscribe = (Subscribe) o;
+    return Objects.equals(subscribeId, subscribe.subscribeId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(subscribeId);
   }
 }

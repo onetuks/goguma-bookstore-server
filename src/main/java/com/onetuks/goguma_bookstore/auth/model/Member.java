@@ -6,7 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
-import com.onetuks.goguma_bookstore.order.model.CashReceiptType;
+import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,8 +48,8 @@ public class Member {
   @Column(name = "nickname")
   private String nickname;
 
-  @Column(name = "profile_img")
-  private String profileImg;
+  @Column(name = "profile_img_uri")
+  private String profileImgUri;
 
   @Column(name = "default_address")
   private String defaultAddress;
@@ -70,7 +71,7 @@ public class Member {
       ClientProvider clientProvider,
       RoleType roleType,
       String nickname,
-      String profileImg,
+      String profileImgUri,
       String defaultAddress,
       String defaultAddressDetail,
       CashReceiptType defaultCashReceiptType,
@@ -80,10 +81,37 @@ public class Member {
     this.clientProvider = clientProvider;
     this.roleType = roleType;
     this.nickname = nickname;
-    this.profileImg = profileImg;
+    this.profileImgUri = profileImgUri;
     this.defaultAddress = defaultAddress;
     this.defaultAddressDetail = defaultAddressDetail;
     this.defaultCashReceiptType = defaultCashReceiptType;
     this.defaultCashReceiptNumber = defaultCashReceiptNumber;
+  }
+
+  public RoleType grantAuthorRole() {
+    this.roleType = RoleType.AUTHOR;
+    return this.roleType;
+  }
+
+  public RoleType revokeAuthorRole() {
+    this.roleType = RoleType.USER;
+    return this.roleType;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Member member = (Member) o;
+    return Objects.equals(memberId, member.memberId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(memberId);
   }
 }

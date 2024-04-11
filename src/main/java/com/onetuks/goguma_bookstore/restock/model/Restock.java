@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,5 +43,22 @@ public class Restock {
   public Restock(Member member, Book book) {
     this.member = member;
     this.book = book;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Restock restock = (Restock) o;
+    return Objects.equals(restockId, restock.restockId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(restockId);
   }
 }

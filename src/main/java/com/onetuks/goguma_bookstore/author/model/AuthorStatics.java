@@ -41,8 +41,25 @@ public class AuthorStatics {
   @Builder
   public AuthorStatics(Author author, Long subscribeCount, Long bookCount, Long restockCount) {
     this.author = author;
-    this.subscribeCount = (Long) Objects.requireNonNullElse(subscribeCount, 0);
-    this.bookCount = (Long) Objects.requireNonNullElse(bookCount, 0);
-    this.restockCount = (Long) Objects.requireNonNullElse(restockCount, 0);
+    this.subscribeCount = Objects.requireNonNullElse(subscribeCount, 0L);
+    this.bookCount = Objects.requireNonNullElse(bookCount, 0L);
+    this.restockCount = Objects.requireNonNullElse(restockCount, 0L);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AuthorStatics that = (AuthorStatics) o;
+    return Objects.equals(authorStaticsId, that.authorStaticsId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(authorStaticsId);
   }
 }

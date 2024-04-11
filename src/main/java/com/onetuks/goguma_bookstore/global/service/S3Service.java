@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -25,10 +26,14 @@ public class S3Service {
     this.s3Config = s3Config;
   }
 
-  public void putFile(String uri, File file) {
-    s3Client.putObject(
-        PutObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build(),
-        RequestBody.fromFile(file));
+  public void putFile(String uri, MultipartFile file) {
+    try {
+      s3Client.putObject(
+          PutObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build(),
+          RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
   public File getFile(String uri) {
