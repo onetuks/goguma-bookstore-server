@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS authors
     escrow_service_uri VARCHAR(255) COMMENT '구매안전증',
     mail_order_sales_uri VARCHAR(255) COMMENT '통신판매증',
     enrollment_passed BOOLEAN NOT NULL DEFAULT FALSE COMMENT '입점 승인 여부',
+    enrollment_at DATETIME NOT NULL DEFAULT NOW() COMMENT '입점 신청일',
     PRIMARY KEY (author_id),
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE = InnoDB

@@ -23,6 +23,7 @@ import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
@@ -254,7 +255,7 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("아직 입점 신청이 완료되지 않은 모든 작가 지망생 상세 정보를 조회한다.")
-  void findAllAuthorEnrollmentDetailsTest() throws IOException {
+  void findAllAuthorEnrollmentDetailsTest() {
     // Given
     List<Member> members =
         List.of(
@@ -290,5 +291,41 @@ class AuthorServiceTest extends IntegrationTest {
               assertThat(result.enrollmentPassed()).isFalse();
               assertThat(result.roleType()).isEqualTo(RoleType.USER);
             });
+  }
+
+  @Test
+  @DisplayName("2주간 작가 입점 과정을 지속하지 않은 작가 지망생 정보를 제거한다.")
+  void deleteAbandonedAuthorEnrollmentTest() {
+    // Given
+    List<Member> members =
+        List.of(
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.AUTHOR),
+            MemberFixture.create(RoleType.AUTHOR));
+
+    authorJpaRepository.saveAll(
+        memberRepository.saveAll(members).stream()
+            .map(
+                member -> {
+                  try {
+                    return AuthorFixture.createWithEnrollmentAt(
+                        member, LocalDateTime.now().minusWeeks(2).minusHours(1));
+                  } catch (IOException e) {
+                    // ignore
+                  }
+                  return null;
+                })
+            .filter(Objects::nonNull)
+            .toList());
+
+    // When
+    authorService.deleteAbandonedAuthorEnrollment();
+
+    // Then
+    List<AuthorEnrollmentDetailsResult> results = authorService.findAllAuthorEnrollmentDetails();
+
+    assertThat(results).isEmpty();
   }
 }

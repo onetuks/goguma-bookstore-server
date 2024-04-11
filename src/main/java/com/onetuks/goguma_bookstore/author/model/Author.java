@@ -3,8 +3,7 @@ package com.onetuks.goguma_bookstore.author.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.author.model.vo.EscrowService;
-import com.onetuks.goguma_bookstore.author.model.vo.MailOrderSales;
+import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.model.vo.ProfileImg;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -17,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,12 +46,7 @@ public class Author {
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
-  @Embedded private EscrowService escrowService;
-
-  @Embedded private MailOrderSales mailOrderSales;
-
-  @Column(name = "enrollment_passed", nullable = false)
-  private Boolean enrollmentPassed;
+  @Embedded private EnrollmentInfo enrollmentInfo;
 
   @OneToOne(
       mappedBy = "author",
@@ -65,16 +60,18 @@ public class Author {
       String profileImgUri,
       String nickname,
       String introduction,
-      String escrowServiceUri,
-      String mailOrderSalesUri,
-      Boolean enrollmentPassed) {
+      EnrollmentInfo enrollmentInfo) {
     this.member = member;
     this.profileImg = new ProfileImg(profileImgUri);
     this.nickname = nickname;
     this.introduction = introduction;
-    this.escrowService = new EscrowService(escrowServiceUri);
-    this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
-    this.enrollmentPassed = Objects.requireNonNullElse(enrollmentPassed, Boolean.FALSE);
+    this.enrollmentInfo =
+        Objects.requireNonNullElse(
+            enrollmentInfo,
+            EnrollmentInfo.builder()
+                .enrollmentPassed(false)
+                .enrollmentAt(LocalDateTime.now())
+                .build());
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
@@ -83,26 +80,34 @@ public class Author {
   }
 
   public String getEscrowServiceUrl() {
-    return this.escrowService.getEscrowServiceUrl();
+    return this.enrollmentInfo.getEscrowService().getEscrowServiceUrl();
   }
 
   public String getMailOrderSalesUrl() {
-    return this.mailOrderSales.getMailOrderSalesUrl();
+    return this.enrollmentInfo.getMailOrderSales().getMailOrderSalesUrl();
+  }
+
+  public boolean getEnrollmentPassed() {
+    return this.enrollmentInfo.getEnrollmentPassed();
+  }
+
+  public LocalDateTime getEnrollmentAt() {
+    return this.enrollmentInfo.getEnrollmentAt();
   }
 
   public String updateEscrowService(String escrowServiceUri) {
-    this.escrowService = new EscrowService(escrowServiceUri);
+    this.enrollmentInfo = enrollmentInfo.setEscrowService(escrowServiceUri);
     return this.getEscrowServiceUrl();
   }
 
   public String updateMailOrderSales(String mailOrderSalesUri) {
-    this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
+    this.enrollmentInfo = enrollmentInfo.setMailOrderSales(mailOrderSalesUri);
     return this.getMailOrderSalesUrl();
   }
 
   public boolean convertEnrollmentJudgeStatus() {
-    this.enrollmentPassed = !enrollmentPassed;
-    return this.enrollmentPassed;
+    this.enrollmentInfo = enrollmentInfo.convertEnrollmentPassedStatus();
+    return this.getEnrollmentInfo().getEnrollmentPassed();
   }
 
   @Override

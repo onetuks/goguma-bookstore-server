@@ -15,7 +15,9 @@ import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,14 @@ public class AuthorService {
     this.memberRepository = memberRepository;
     this.s3Service = s3Service;
     this.fileURIProviderService = fileURIProviderService;
+  }
+
+  /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
+  @Scheduled(cron = "0 0 4 * * ?")
+  @Transactional
+  public void deleteAbandonedAuthorEnrollment() {
+    LocalDateTime twoWeeksAgo = LocalDateTime.now().minusWeeks(2);
+    authorJpaRepository.deleteAuthorsByNotPassedAndEnrollmentAtForTwoWeeks(twoWeeksAgo);
   }
 
   @Transactional
@@ -113,7 +123,7 @@ public class AuthorService {
 
   @Transactional(readOnly = true)
   public List<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails() {
-    return authorJpaRepository.findAuthorsByEnrollmentPassedFalse().stream()
+    return authorJpaRepository.findAuthorsByEnrollmentInfo_EnrollmentPassedFalse().stream()
         .map(AuthorEnrollmentDetailsResult::from)
         .toList();
   }

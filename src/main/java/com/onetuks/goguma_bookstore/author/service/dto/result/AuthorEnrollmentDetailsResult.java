@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.author.service.dto.result;
 
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
+import java.time.LocalDateTime;
 
 public record AuthorEnrollmentDetailsResult(
     long authorId,
@@ -12,7 +13,8 @@ public record AuthorEnrollmentDetailsResult(
     String introduction,
     String escrowServiceUrl,
     String mailOrderSalesUrl,
-    boolean enrollmentPassed) {
+    boolean enrollmentPassed,
+    LocalDateTime enrollmentAt) {
 
   public static AuthorEnrollmentDetailsResult from(Author author) {
     return new AuthorEnrollmentDetailsResult(
@@ -24,6 +26,7 @@ public record AuthorEnrollmentDetailsResult(
         author.getIntroduction(),
         author.getEscrowServiceUrl(),
         author.getMailOrderSalesUrl(),
-        author.getEnrollmentPassed());
+        author.getEnrollmentPassed(),
+        author.getEnrollmentAt());
   }
 }
