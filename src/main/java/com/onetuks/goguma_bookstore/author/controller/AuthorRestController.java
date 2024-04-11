@@ -147,10 +147,8 @@ public class AuthorRestController {
    *
    * @param loginId : 본인 확인용
    * @param authorId : 작가 등록 식별자
-   * @return authorId, authorName, authorEmail, authorPhone, authorProfileImageUrl,
-   *     authorProfileDescription, authorEnrollmentStatus, authorEnrollmentDate,
-   *     authorEnrollmentJudgeDate, authorEnrollmentJudgeResult, authorEscrowServiceUrl,
-   *     authorMailOrderSalesUrl
+   * @return authorId, memberId, roleType, profileImgUrl, nickname, introduction, escrowServiceUrl,
+   *     mailOrderSalesUrl, enrollmentPassed, enrollmentAt
    */
   @GetMapping(path = "/enrollment/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
@@ -162,6 +160,13 @@ public class AuthorRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 모든 작가 등록 상세 조회 - only for admin
+   *
+   * @param adminId : 관리자 확인용
+   * @return authorId, memberId, roleType, profileImgUrl, nickname, introduction, *
+   *     escrowServiceUrl, mailOrderSalesUrl, enrollmentPassed, enrollmentAt
+   */
   @GetMapping(path = "/enrollment", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponses> getAllAuthorEnrollmentDetails(
       @AdminId Long adminId) {
