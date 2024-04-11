@@ -216,6 +216,8 @@ sonar {
             property("sonar.projectKey", "goguma-bookstore")
             property("sonar.projectName", "goguma-bookstore")
             property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
+            property("sonar.coverage.exclusions",
+                    "**/Q*,**/global/config/**,**/global/error/**,**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
         }
     } else {
         println ".env file not exists"

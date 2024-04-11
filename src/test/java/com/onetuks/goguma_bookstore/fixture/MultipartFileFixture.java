@@ -36,7 +36,7 @@ public class MultipartFileFixture {
               try {
                 Files.walk(path)
                     .filter(Files::isRegularFile)
-                    .filter(filePath -> !filePath.toString().startsWith("mock"))
+                    .filter(filePath -> !filePath.toString().contains("mock"))
                     .forEach(
                         filePath -> {
                           try {
