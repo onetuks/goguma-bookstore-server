@@ -36,10 +36,11 @@ public class MultipartFileFixture {
               try {
                 Files.walk(path)
                     .filter(Files::isRegularFile)
+                    .filter(filePath -> !filePath.toString().startsWith("mock"))
                     .forEach(
-                        path1 -> {
+                        filePath -> {
                           try {
-                            Files.delete(path1);
+                            Files.delete(filePath);
                           } catch (IOException e) {
                             log.info("Failed to delete static test files.", e);
                           }
