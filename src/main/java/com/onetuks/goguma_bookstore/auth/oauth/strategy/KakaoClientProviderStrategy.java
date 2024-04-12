@@ -44,6 +44,7 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
     Objects.requireNonNull(kakaoUser);
 
     return UserData.builder()
+        .name(kakaoUser.getProperties().getNickname())
         .socialId(String.valueOf(kakaoUser.getId()))
         .clientProvider(ClientProvider.KAKAO)
         .roleType(RoleType.USER)

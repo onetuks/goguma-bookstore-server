@@ -2,16 +2,13 @@ package com.onetuks.goguma_bookstore.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
-import java.security.Key;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import javax.crypto.SecretKey;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,46 +22,35 @@ public class AuthToken {
   protected static final String LOGIN_ID_KEY = "loginId";
 
   @Getter private final String token;
-  private final Key key;
+  private final SecretKey secretKey;
 
-  AuthToken(String token, Key key) {
+  AuthToken(String token, SecretKey secretKey) {
     this.token = token;
-    this.key = key;
+    this.secretKey = secretKey;
   }
 
-  AuthToken(String socialId, Long loginId, String role, Date expiryDate, Key key) {
-    this.token = createAccessToken(socialId, loginId, role, expiryDate, key);
-    this.key = key;
-  }
-
-  AuthToken(Date expiryDate, Key key) {
-    this.token = createRefreshToken(expiryDate, key);
-    this.key = key;
+  public String getSocialId() {
+    return getTokenClaims().getSubject();
   }
 
   public Authentication getAuthentication() {
     Claims claims = getTokenClaims();
 
-    String[] roles = {claims.get(AUTHORITIES_KEY).toString()};
-    int loginId = (int) claims.get(LOGIN_ID_KEY);
+    String socialId = claims.getSubject();
+    Long loginId = ((Integer) claims.get(LOGIN_ID_KEY)).longValue();
 
+    String[] roles = {claims.get(AUTHORITIES_KEY).toString()};
     List<SimpleGrantedAuthority> authorities =
         Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
 
     CustomUserDetails customUserDetails =
         CustomUserDetails.builder()
-            .socialId(claims.getSubject())
-            .loginId((long) loginId)
+            .socialId(socialId)
+            .loginId(loginId)
             .authorities(authorities)
             .build();
 
     return new UsernamePasswordAuthenticationToken(customUserDetails, this, authorities);
-  }
-
-  public Claims getTokenClaims() {
-    JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
-
-    return jwtParser.parseClaimsJws(token).getBody();
   }
 
   public boolean isValidTokenClaims() {
@@ -87,25 +73,7 @@ public class AuthToken {
     return claims.isPresent();
   }
 
-  private String createAccessToken(
-      String socialId, Long loginId, String role, Date expiry, Key key) {
-    return Jwts.builder()
-        .setSubject(socialId)
-        .claim(LOGIN_ID_KEY, loginId)
-        .claim(AUTHORITIES_KEY, role)
-        .signWith(key, SignatureAlgorithm.HS256)
-        .setExpiration(expiry)
-        .compact();
-  }
-
-  private String createRefreshToken(Date expiry, Key key) {
-    Claims claims = Jwts.claims();
-
-    return Jwts.builder()
-        .setClaims(claims)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(expiry)
-        .signWith(key, SignatureAlgorithm.HS256)
-        .compact();
+  private Claims getTokenClaims() {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
   }
 }

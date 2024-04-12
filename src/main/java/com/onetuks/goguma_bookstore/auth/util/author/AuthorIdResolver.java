@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.auth.util.author;
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,8 @@ public class AuthorIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return Objects.equals(parameter.getParameterType(), Long.class);
+    return Arrays.stream(parameter.getParameterAnnotations())
+        .anyMatch(annotation -> annotation.annotationType().equals(AuthorId.class));
   }
 
   @Override
@@ -41,7 +43,7 @@ public class AuthorIdResolver implements HandlerMethodArgumentResolver {
   }
 
   private boolean isAdminOrAuthorRole(GrantedAuthority grantedAuthority) {
-    return Objects.equals(grantedAuthority.getAuthority(), RoleType.AUTHOR.getRoleName())
-        || Objects.equals(grantedAuthority.getAuthority(), RoleType.ADMIN.getRoleName());
+    return Objects.equals(grantedAuthority.getAuthority(), RoleType.AUTHOR.name())
+        || Objects.equals(grantedAuthority.getAuthority(), RoleType.ADMIN.name());
   }
 }

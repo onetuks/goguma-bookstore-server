@@ -2,11 +2,11 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.4'
     id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'com.epages.restdocs-api-spec' version '0.17.1'
+    id 'org.asciidoctor.jvm.convert' version '4.0.2'
+    id 'com.epages.restdocs-api-spec' version '0.19.2'
     id 'jacoco'
-    id 'org.sonarqube' version '4.0.0.2929'
-    id 'com.diffplug.spotless' version '6.21.0'
+    id 'org.sonarqube' version '5.0.0.4638'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'com.onetuks'
@@ -25,11 +25,11 @@ jacoco {
 }
 
 openapi3 {
-    servers = [
+    servers = List.of(
             { url = "http://localhost:8080" },
             { url = "http://server:8080" }
 //            { url = "https://서버url" }
-    ]
+    )
     title = "Goguma-Bookstore-Server-API"
     description = "고구마서점 API"
     version = getVersion()
@@ -55,7 +55,7 @@ ext {
 dependencies {
 
     // Netty/Resolver/DNS/Native/MacOS
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.106.Final:osx-aarch_64'
+    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
 
     // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -80,7 +80,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     // Rest Docs API Spec
-    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.0'
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
     // Swagger UI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
@@ -103,22 +103,22 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     // JWT
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
 
     // REDIS
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    testImplementation "com.redis.testcontainers:testcontainers-redis-junit:1.6.4"
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.4'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 
     // AWS S3
-    implementation(platform('software.amazon.awssdk:bom:2.25.23'))
-    implementation('commons-io:commons-io:2.15.1')
-    implementation("software.amazon.awssdk:aws-core")
-    implementation("software.amazon.awssdk:sdk-core")
-    implementation("software.amazon.awssdk:sts")
-    implementation("software.amazon.awssdk:s3")
-    testImplementation('org.testcontainers:localstack:1.19.6')
+    implementation(platform('software.amazon.awssdk:bom:2.25.30'))
+    implementation('commons-io:commons-io:2.16.1')
+    implementation('software.amazon.awssdk:aws-core:2.25.30')
+    implementation('software.amazon.awssdk:sdk-core:2.25.30')
+    implementation('software.amazon.awssdk:sts:2.25.23')
+    implementation('software.amazon.awssdk:s3:2.25.27')
+    testImplementation('org.testcontainers:localstack')
 
 }
 

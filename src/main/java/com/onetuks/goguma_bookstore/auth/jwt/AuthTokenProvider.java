@@ -1,15 +1,23 @@
 package com.onetuks.goguma_bookstore.auth.jwt;
 
+import static com.onetuks.goguma_bookstore.auth.jwt.AuthToken.AUTHORITIES_KEY;
+import static com.onetuks.goguma_bookstore.auth.jwt.AuthToken.LOGIN_ID_KEY;
 import static com.onetuks.goguma_bookstore.global.vo.auth.RoleType.USER;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Jwts.SIG;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthTokenProvider {
+
+  @Value("${jwt.issuer}")
+  private String issuer;
 
   @Value("${jwt.accessTokenExpiryPeriod}")
   private long accessTokenExpiryPeriod;
@@ -17,26 +25,41 @@ public class AuthTokenProvider {
   @Value("${jwt.refreshTokenExpiryPeriod}")
   private long refreshTokenExpiryPeriod;
 
-  private final Key key;
+  private final SecretKey secretKey;
 
   public AuthTokenProvider(@Value("${jwt.tokenSecretKey}") String secretKey) {
-    this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
   }
 
   public AuthToken provideAccessToken(String socialId, Long loginId) {
     return new AuthToken(
-        socialId, loginId, USER.getRoleName(), getExpiryDate(accessTokenExpiryPeriod), key);
+        createToken(socialId, loginId, USER.name(), getExpiryDate(accessTokenExpiryPeriod)),
+        secretKey);
   }
 
-  public AuthToken provideRefreshToken() {
-    return new AuthToken(getExpiryDate(refreshTokenExpiryPeriod), key);
+  public AuthToken provideRefreshToken(String socialId, Long loginId) {
+    return new AuthToken(
+        createToken(socialId, loginId, USER.name(), getExpiryDate(refreshTokenExpiryPeriod)),
+        secretKey);
   }
 
   public AuthToken convertToAuthToken(String token) {
-    return new AuthToken(token, key);
+    return new AuthToken(token, secretKey);
   }
 
   private Date getExpiryDate(long expiryPeriod) {
     return new Date(System.currentTimeMillis() + expiryPeriod);
+  }
+
+  private String createToken(String socialId, Long loginId, String role, Date expiry) {
+    return Jwts.builder()
+        .subject(socialId)
+        .claim(LOGIN_ID_KEY, loginId)
+        .claim(AUTHORITIES_KEY, role)
+        .signWith(secretKey, SIG.HS256)
+        .expiration(expiry)
+        .issuer(issuer)
+        .issuedAt(new Date(System.currentTimeMillis()))
+        .compact();
   }
 }

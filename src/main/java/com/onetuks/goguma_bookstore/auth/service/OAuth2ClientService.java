@@ -37,7 +37,7 @@ public class OAuth2ClientService {
 
     MemberCreateResult savedMember = memberService.saveMemberIfNotExists(clientMember);
 
-    AuthToken newAuthToken = authService.saveAccessToken(savedMember.memberId(), socialId);
+    AuthToken newAuthToken = authService.saveAccessToken(socialId, savedMember.memberId());
 
     return LoginResult.of(
         newAuthToken.getToken(),
