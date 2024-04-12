@@ -15,7 +15,7 @@ class AuthorDetailsResponseTest extends IntegrationTest {
   void fromTest() {
     // Given
     AuthorDetailsResult expected =
-        new AuthorDetailsResult(1_000L, "mock-profile.png", "빠니보틀", "유튜브 대통령");
+        new AuthorDetailsResult(1_000L, "mock-profile.png", "빠니보틀", "유튜브 대통령", 101, 102, 103);
 
     // When
     AuthorDetailsResponse result = AuthorDetailsResponse.from(expected);
@@ -25,6 +25,9 @@ class AuthorDetailsResponseTest extends IntegrationTest {
         () -> assertThat(result.authorId()).isEqualTo(expected.authorId()),
         () -> assertThat(result.profileImgUrl()).isEqualTo(expected.profileImgUrl()),
         () -> assertThat(result.nickname()).isEqualTo(expected.nickname()),
-        () -> assertThat(result.introduction()).isEqualTo(expected.introduction()));
+        () -> assertThat(result.introduction()).isEqualTo(expected.introduction()),
+        () -> assertThat(result.subscribeCount()).isEqualTo(101),
+        () -> assertThat(result.bookCount()).isEqualTo(102),
+        () -> assertThat(result.restockCount()).isEqualTo(103));
   }
 }

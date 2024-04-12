@@ -36,6 +36,9 @@ class AuthorDetailsResultTest extends IntegrationTest {
         () -> assertThat(result.authorId()).isEqualTo(savedAuthor.getAuthorId()),
         () -> assertThat(result.profileImgUrl()).isEqualTo(savedAuthor.getProfileImgUrl()),
         () -> assertThat(result.nickname()).isEqualTo(savedAuthor.getNickname()),
-        () -> assertThat(result.introduction()).isEqualTo(savedAuthor.getIntroduction()));
+        () -> assertThat(result.introduction()).isEqualTo(savedAuthor.getIntroduction()),
+        () -> assertThat(result.subscribeCount()).isZero(),
+        () -> assertThat(result.bookCount()).isZero(),
+        () -> assertThat(result.restockCount()).isZero());
   }
 }

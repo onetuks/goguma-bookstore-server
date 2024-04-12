@@ -4,11 +4,23 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResul
 import java.util.List;
 
 public record AuthorDetailsResponse(
-    long authorId, String profileImgUrl, String nickname, String introduction) {
+    long authorId,
+    String profileImgUrl,
+    String nickname,
+    String introduction,
+    long subscribeCount,
+    long bookCount,
+    long restockCount) {
 
   public static AuthorDetailsResponse from(AuthorDetailsResult result) {
     return new AuthorDetailsResponse(
-        result.authorId(), result.profileImgUrl(), result.nickname(), result.introduction());
+        result.authorId(),
+        result.profileImgUrl(),
+        result.nickname(),
+        result.introduction(),
+        result.subscribeCount(),
+        result.bookCount(),
+        result.restockCount());
   }
 
   public record AuthorDetailsResponses(List<AuthorDetailsResponse> responses) {

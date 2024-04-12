@@ -62,7 +62,8 @@ public class AuthorRestController {
    * 작가 프로필 단건 조회
    *
    * @param authorId : 작가 아이디
-   * @return authorId, profileImgUrl, nickname, introduction
+   * @return authorId, profileImgUrl, nickname, introduction, subscribeCount, bookCount,
+   *     restockCount
    */
   @GetMapping(path = "/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorDetailsResponse> getAuthorDetails(
@@ -73,6 +74,12 @@ public class AuthorRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 작가 프로필 다건 조회
+   *
+   * @return authorId, profileImgUrl, nickname, introduction, subscribeCount, bookCount,
+   *     restockCount
+   */
   @GetMapping(produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorDetailsResponses> getAllAuthorDetails() {
     List<AuthorDetailsResult> results = authorService.findAllAuthorDetails();
