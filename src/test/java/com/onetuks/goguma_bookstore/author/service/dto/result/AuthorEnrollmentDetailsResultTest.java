@@ -26,7 +26,7 @@ class AuthorEnrollmentDetailsResultTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() {
-    member = memberJpaRepository.save(MemberFixture.createUserData(RoleType.AUTHOR));
+    member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
   }
 
   @Test

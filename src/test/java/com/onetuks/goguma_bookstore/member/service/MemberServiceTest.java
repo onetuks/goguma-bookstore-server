@@ -7,6 +7,7 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("새로운 멤버를 생성한다.")
   void saveMemberIfNotExists_NotExistsMember_Test() {
     // Given
-    UserData userData = MemberFixture.createUserData();
+    UserData userData = MemberFixture.createUserData(RoleType.USER);
 
     // When
     MemberCreateResult result = memberService.saveMemberIfNotExists(userData);
@@ -38,7 +39,7 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("이미 존재하는 멤버는 따로 생성하지 않고 해당 멤버를 반환한다.")
   void saveMemberIfNotExists_ExistsMember_Test() {
     // Given
-    UserData userData = MemberFixture.createUserData();
+    UserData userData = MemberFixture.createUserData(RoleType.USER);
     memberService.saveMemberIfNotExists(userData);
 
     // When

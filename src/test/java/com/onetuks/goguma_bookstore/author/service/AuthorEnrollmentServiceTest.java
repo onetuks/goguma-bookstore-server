@@ -43,8 +43,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() {
-    userMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.USER));
-    authorMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.AUTHOR));
+    userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
   }
 
   @Test
@@ -255,11 +255,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given
     List<Member> members =
         List.of(
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.AUTHOR),
-            MemberFixture.createUserData(RoleType.AUTHOR));
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.AUTHOR),
+            MemberFixture.create(RoleType.AUTHOR));
 
     List<Author> authors =
         authorJpaRepository.saveAll(
@@ -296,11 +296,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given
     List<Member> members =
         List.of(
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.AUTHOR),
-            MemberFixture.createUserData(RoleType.AUTHOR));
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.AUTHOR),
+            MemberFixture.create(RoleType.AUTHOR));
 
     authorJpaRepository.saveAll(
         memberJpaRepository.saveAll(members).stream()

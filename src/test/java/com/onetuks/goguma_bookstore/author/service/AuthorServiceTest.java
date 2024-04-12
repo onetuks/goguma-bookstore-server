@@ -40,11 +40,11 @@ class AuthorServiceTest extends IntegrationTest {
   void setUp() {
     List<Member> members =
         List.of(
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.USER),
-            MemberFixture.createUserData(RoleType.AUTHOR),
-            MemberFixture.createUserData(RoleType.AUTHOR));
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.USER),
+            MemberFixture.create(RoleType.AUTHOR),
+            MemberFixture.create(RoleType.AUTHOR));
 
     authors =
         authorJpaRepository.saveAll(

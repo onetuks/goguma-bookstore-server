@@ -25,7 +25,7 @@ class AuthorCreateEnrollmentResultTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    Member member = memberJpaRepository.save(MemberFixture.createUserData(RoleType.USER));
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     author = authorJpaRepository.save(AuthorFixture.create(member));
   }
 

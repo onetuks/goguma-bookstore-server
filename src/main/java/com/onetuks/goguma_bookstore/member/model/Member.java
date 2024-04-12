@@ -4,10 +4,11 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -31,19 +32,7 @@ public class Member {
   @GeneratedValue(strategy = IDENTITY)
   private Long memberId;
 
-  @Column(name = "name", nullable = false)
-  private String name;
-
-  @Column(name = "social_id", nullable = false)
-  private String socialId;
-
-  @Enumerated(value = STRING)
-  @Column(name = "client_provider", nullable = false)
-  private ClientProvider clientProvider;
-
-  @Enumerated(value = STRING)
-  @Column(name = "role_type", nullable = false)
-  private RoleType roleType;
+  @Embedded private AuthInfo authInfo;
 
   @Column(name = "nickname")
   private String nickname;
@@ -64,38 +53,41 @@ public class Member {
   @Column(name = "default_cash_receipt_number")
   private String defaultCashReceiptNumber;
 
+  @Column(name = "alarm_permission", nullable = false)
+  private Boolean alarmPermission;
+
   @Builder
   public Member(
-      String name,
-      String socialId,
-      ClientProvider clientProvider,
-      RoleType roleType,
+      AuthInfo authInfo,
       String nickname,
       String profileImgUri,
       String defaultAddress,
       String defaultAddressDetail,
       CashReceiptType defaultCashReceiptType,
-      String defaultCashReceiptNumber) {
-    this.name = name;
-    this.socialId = socialId;
-    this.clientProvider = clientProvider;
-    this.roleType = roleType;
+      String defaultCashReceiptNumber,
+      Boolean alarmPermission) {
+    this.authInfo = authInfo;
     this.nickname = nickname;
     this.profileImgUri = profileImgUri;
     this.defaultAddress = defaultAddress;
     this.defaultAddressDetail = defaultAddressDetail;
     this.defaultCashReceiptType = defaultCashReceiptType;
     this.defaultCashReceiptNumber = defaultCashReceiptNumber;
+    this.alarmPermission = alarmPermission;
+  }
+
+  public RoleType getRoleType() {
+    return this.authInfo.getRoleType();
   }
 
   public RoleType grantAuthorRole() {
-    this.roleType = RoleType.AUTHOR;
-    return this.roleType;
+    this.authInfo = authInfo.changeRole(RoleType.AUTHOR);
+    return getRoleType();
   }
 
   public RoleType revokeAuthorRole() {
-    this.roleType = RoleType.USER;
-    return this.roleType;
+    this.authInfo = authInfo.changeRole(RoleType.USER);
+    return getRoleType();
   }
 
   @Override

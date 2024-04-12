@@ -66,7 +66,7 @@ public class IntegrationTest {
   static class IntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {

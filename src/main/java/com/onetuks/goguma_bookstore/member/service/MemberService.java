@@ -5,6 +5,7 @@ import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
+import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class MemberService {
   @Transactional
   public MemberCreateResult saveMemberIfNotExists(UserData userData) {
     Optional<Member> optionalMember =
-        memberJpaRepository.findBySocialIdAndClientProvider(
+        memberJpaRepository.findByAuthInfoSocialIdAndAuthInfoClientProvider(
             userData.socialId(), userData.clientProvider());
 
     return MemberCreateResult.from(
@@ -33,11 +34,9 @@ public class MemberService {
             () ->
                 memberJpaRepository.save(
                     Member.builder()
-                        .name(userData.name())
-                        .socialId(userData.socialId())
-                        .clientProvider(userData.clientProvider())
-                        .roleType(userData.roleType())
+                        .authInfo(AuthInfo.from(userData))
                         .profileImgUri(fileURIProviderService.provideDefaultProfileURI())
+                        .alarmPermission(true)
                         .build())),
         optionalMember.isEmpty());
   }

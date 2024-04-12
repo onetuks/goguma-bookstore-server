@@ -25,7 +25,7 @@ class AuthorDetailsResultTest extends IntegrationTest {
   @DisplayName("작가 프로필 엔티티에서 결과 객체로 변환한다.")
   void fromTest() throws IOException {
     // Given
-    Member authorMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.AUTHOR));
+    Member authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     Author savedAuthor = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When

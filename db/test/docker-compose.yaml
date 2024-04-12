@@ -11,7 +11,6 @@ services:
 
   local-db-migrate:
     image: flyway/flyway:7
-    restart: always
     environment:
       FLYWAY_DB_URL: jdbc:mysql://local-db/goguma-bookstore
       FLYWAY_DB_USER: root
