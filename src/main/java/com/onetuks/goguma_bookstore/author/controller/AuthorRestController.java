@@ -4,12 +4,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorEditRequest;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorDetailsResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEditResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +43,15 @@ public class AuthorRestController {
     AuthorEditResult result =
         authorService.updateAuthorProfile(loginAuthorId, authorId, request.to(), profileImg);
     AuthorEditResponse response = AuthorEditResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/{authorId}", produces = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorDetailsResponse> getAuthorDetail(
+      @PathVariable(name = "authorId") Long authorId) {
+    AuthorDetailsResult result = authorService.findAuthorDetails(authorId);
+    AuthorDetailsResponse response = AuthorDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

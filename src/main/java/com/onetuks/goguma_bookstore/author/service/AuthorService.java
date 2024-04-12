@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.author.service;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
@@ -50,6 +51,11 @@ public class AuthorService {
     s3Service.putFile(newProfileImgUri, profileImg);
 
     return AuthorEditResult.from(author);
+  }
+
+  @Transactional(readOnly = true)
+  public AuthorDetailsResult findAuthorDetails(long authorId) {
+    return AuthorDetailsResult.from(getAuthorById(authorId));
   }
 
   private Author getAuthorById(long authorId) {

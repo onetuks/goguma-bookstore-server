@@ -6,11 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -30,7 +31,7 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Autowired private AuthorService authorService;
 
-  @Autowired private MemberRepository memberRepository;
+  @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
 
   private List<Author> authors;
@@ -47,7 +48,7 @@ class AuthorServiceTest extends IntegrationTest {
 
     authors =
         authorJpaRepository.saveAll(
-            memberRepository.saveAll(members).stream()
+            memberJpaRepository.saveAll(members).stream()
                 .map(
                     member -> {
                       try {
@@ -100,5 +101,22 @@ class AuthorServiceTest extends IntegrationTest {
                 authorService.updateAuthorProfile(
                     author1.getAuthorId(), author0.getAuthorId(), param, profileImg))
         .isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  @DisplayName("작가 프로필 정보 조회한다.")
+  void findAuthorDetailsTest() {
+    // Given
+    Author author = authors.get(0);
+
+    // When
+    AuthorDetailsResult result = authorService.findAuthorDetails(author.getAuthorId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
+        () -> assertThat(result.profileImgUrl()).isEqualTo(author.getProfileImgUrl()),
+        () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
+        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
   }
 }
