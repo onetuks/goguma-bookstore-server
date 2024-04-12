@@ -119,4 +119,31 @@ class AuthorServiceTest extends IntegrationTest {
         () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
         () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
   }
+
+  @Test
+  @DisplayName("작가 프로필 다건 조회한다.")
+  void findAllAuthorDetailsTest() {
+    // Given & When
+    List<AuthorDetailsResult> results = authorService.findAllAuthorDetails();
+
+    // Then
+    List<Long> memberIds =
+        authors.stream().map(author -> author.getMember().getMemberId()).toList();
+    List<Long> authorIds = authors.stream().map(Author::getAuthorId).toList();
+
+    assertThat(results)
+        .hasSize(2)
+        .allSatisfy(
+            result -> {
+              assertThat(result.authorId()).isIn(authorIds);
+              assertThat(result.nickname()).isEqualTo("빠선생님");
+              assertThat(result.introduction()).contains("대통령");
+              assertThat(
+                      memberIds.stream()
+                          .anyMatch(
+                              memberId ->
+                                  result.profileImgUrl().contains(String.valueOf(memberId))))
+                  .isTrue();
+            });
+  }
 }

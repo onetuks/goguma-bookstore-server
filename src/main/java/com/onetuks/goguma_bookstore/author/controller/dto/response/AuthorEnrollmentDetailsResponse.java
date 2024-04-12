@@ -17,15 +17,6 @@ public record AuthorEnrollmentDetailsResponse(
     boolean enrollmentPassed,
     LocalDateTime enrollmentAt) {
 
-  public record AuthorEnrollmentDetailsResponses(List<AuthorEnrollmentDetailsResponse> responses) {
-
-    public static AuthorEnrollmentDetailsResponses from(
-        List<AuthorEnrollmentDetailsResult> results) {
-      return new AuthorEnrollmentDetailsResponses(
-          results.stream().map(AuthorEnrollmentDetailsResponse::from).toList());
-    }
-  }
-
   public static AuthorEnrollmentDetailsResponse from(AuthorEnrollmentDetailsResult result) {
     return new AuthorEnrollmentDetailsResponse(
         result.authorId(),
@@ -38,5 +29,14 @@ public record AuthorEnrollmentDetailsResponse(
         result.mailOrderSalesUrl(),
         result.enrollmentPassed(),
         result.enrollmentAt());
+  }
+
+  public record AuthorEnrollmentDetailsResponses(List<AuthorEnrollmentDetailsResponse> responses) {
+
+    public static AuthorEnrollmentDetailsResponses from(
+        List<AuthorEnrollmentDetailsResult> results) {
+      return new AuthorEnrollmentDetailsResponses(
+          results.stream().map(AuthorEnrollmentDetailsResponse::from).toList());
+    }
   }
 }

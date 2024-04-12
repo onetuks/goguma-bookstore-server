@@ -9,10 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface AuthorJpaRepository extends JpaRepository<Author, Long> {
 
-  List<Author> findAuthorsByEnrollmentInfo_EnrollmentPassedFalse();
+  List<Author> findAuthorsByEnrollmentInfoEnrollmentPassedFalse();
 
   @Modifying
   @Query(
       "DELETE FROM Author a WHERE a.enrollmentInfo.enrollmentPassed = false AND a.enrollmentInfo.enrollmentAt <= :twoWeeksAgo")
   void deleteAuthorsByNotPassedAndEnrollmentAtForTwoWeeks(LocalDateTime twoWeeksAgo);
+
+  List<Author> findAuthorsByEnrollmentInfoEnrollmentPassedTrue();
 }

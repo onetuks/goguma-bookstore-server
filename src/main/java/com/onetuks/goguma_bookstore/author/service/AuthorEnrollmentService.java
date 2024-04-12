@@ -123,7 +123,7 @@ public class AuthorEnrollmentService {
 
   @Transactional(readOnly = true)
   public List<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails() {
-    return authorJpaRepository.findAuthorsByEnrollmentInfo_EnrollmentPassedFalse().stream()
+    return authorJpaRepository.findAuthorsByEnrollmentInfoEnrollmentPassedFalse().stream()
         .map(AuthorEnrollmentDetailsResult::from)
         .toList();
   }
