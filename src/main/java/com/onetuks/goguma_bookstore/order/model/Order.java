@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.order.model;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import com.onetuks.goguma_bookstore.order.vo.PaymentClient;
 import jakarta.persistence.Column;

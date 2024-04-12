@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.time.LocalDateTime;
 import java.util.List;
 

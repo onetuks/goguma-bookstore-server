@@ -1,12 +1,12 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Random;

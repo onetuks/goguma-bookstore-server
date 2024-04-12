@@ -6,9 +6,6 @@ import static org.assertj.core.api.Assertions.catchException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
@@ -21,6 +18,9 @@ import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -43,8 +43,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() {
-    userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-    authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    userMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.USER));
+    authorMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.AUTHOR));
   }
 
   @Test
@@ -255,11 +255,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given
     List<Member> members =
         List.of(
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.AUTHOR),
-            MemberFixture.create(RoleType.AUTHOR));
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.AUTHOR),
+            MemberFixture.createUserData(RoleType.AUTHOR));
 
     List<Author> authors =
         authorJpaRepository.saveAll(
@@ -296,11 +296,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given
     List<Member> members =
         List.of(
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.AUTHOR),
-            MemberFixture.create(RoleType.AUTHOR));
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.AUTHOR),
+            MemberFixture.createUserData(RoleType.AUTHOR));
 
     authorJpaRepository.saveAll(
         memberJpaRepository.saveAll(members).stream()

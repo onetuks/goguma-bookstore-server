@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.auth.vo;
+package com.onetuks.goguma_bookstore.member.vo;
 
 import lombok.Getter;
 

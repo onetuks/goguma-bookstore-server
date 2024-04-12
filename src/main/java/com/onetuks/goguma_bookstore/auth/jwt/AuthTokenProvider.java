@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.jwt;
 
-import static com.onetuks.goguma_bookstore.auth.vo.RoleType.USER;
+import static com.onetuks.goguma_bookstore.member.vo.RoleType.USER;
 
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;

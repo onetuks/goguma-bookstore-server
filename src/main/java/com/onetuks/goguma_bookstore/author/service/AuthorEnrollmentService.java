@@ -1,8 +1,5 @@
 package com.onetuks.goguma_bookstore.author.service;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
@@ -14,6 +11,9 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSal
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;

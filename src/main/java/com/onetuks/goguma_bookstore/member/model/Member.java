@@ -1,11 +1,11 @@
-package com.onetuks.goguma_bookstore.auth.model;
+package com.onetuks.goguma_bookstore.member.model;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
-import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
+import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

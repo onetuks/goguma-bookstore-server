@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.restock.model;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.book.model.Book;
+import com.onetuks.goguma_bookstore.member.model.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

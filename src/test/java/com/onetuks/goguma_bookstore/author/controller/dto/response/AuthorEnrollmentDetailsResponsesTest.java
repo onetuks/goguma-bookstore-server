@@ -3,10 +3,10 @@ package com.onetuks.goguma_bookstore.author.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

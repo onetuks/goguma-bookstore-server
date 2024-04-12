@@ -4,10 +4,10 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OAUTH_CLIENT_S
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_TOKEN;
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
-import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.KakaoUser;
-import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public Member getUserData(String accessToken) {
+  public UserData getUserData(String accessToken) {
     KakaoUser kakaoUser =
         webClient
             .get()
@@ -43,7 +43,7 @@ public class KakaoClientProviderStrategy implements ClientProviderStrategy {
 
     Objects.requireNonNull(kakaoUser);
 
-    return Member.builder()
+    return UserData.builder()
         .socialId(String.valueOf(kakaoUser.getId()))
         .clientProvider(ClientProvider.KAKAO)
         .roleType(RoleType.USER)

@@ -1,7 +1,7 @@
-package com.onetuks.goguma_bookstore.auth.repository;
+package com.onetuks.goguma_bookstore.member.repository;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

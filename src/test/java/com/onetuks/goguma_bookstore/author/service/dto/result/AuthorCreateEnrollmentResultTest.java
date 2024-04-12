@@ -3,13 +3,13 @@ package com.onetuks.goguma_bookstore.author.service.dto.result;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,7 +25,7 @@ class AuthorCreateEnrollmentResultTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() throws IOException {
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    Member member = memberJpaRepository.save(MemberFixture.createUserData(RoleType.USER));
     author = authorJpaRepository.save(AuthorFixture.create(member));
   }
 

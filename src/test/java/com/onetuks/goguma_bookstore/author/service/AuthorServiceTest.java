@@ -5,9 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
@@ -17,6 +14,9 @@ import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,11 +40,11 @@ class AuthorServiceTest extends IntegrationTest {
   void setUp() {
     List<Member> members =
         List.of(
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.USER),
-            MemberFixture.create(RoleType.AUTHOR),
-            MemberFixture.create(RoleType.AUTHOR));
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.USER),
+            MemberFixture.createUserData(RoleType.AUTHOR),
+            MemberFixture.createUserData(RoleType.AUTHOR));
 
     authors =
         authorJpaRepository.saveAll(

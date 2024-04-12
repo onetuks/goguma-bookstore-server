@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class AuthorDetailsResultTest extends IntegrationTest {
   @DisplayName("작가 프로필 엔티티에서 결과 객체로 변환한다.")
   void fromTest() throws IOException {
     // Given
-    Member authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    Member authorMember = memberJpaRepository.save(MemberFixture.createUserData(RoleType.AUTHOR));
     Author savedAuthor = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When

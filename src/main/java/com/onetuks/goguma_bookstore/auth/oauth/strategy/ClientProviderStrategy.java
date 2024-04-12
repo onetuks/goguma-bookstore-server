@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.auth.oauth.strategy;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 
 public interface ClientProviderStrategy {
 
-  Member getUserData(String accessToken);
+  UserData getUserData(String accessToken);
 }
