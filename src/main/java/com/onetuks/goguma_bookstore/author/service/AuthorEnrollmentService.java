@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.service;
 
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
@@ -26,18 +26,18 @@ import org.springframework.web.multipart.MultipartFile;
 public class AuthorEnrollmentService {
 
   private final AuthorJpaRepository authorJpaRepository;
-  private final MemberRepository memberRepository;
+  private final MemberJpaRepository memberJpaRepository;
 
   private final S3Service s3Service;
   private final FileURIProviderService fileURIProviderService;
 
   public AuthorEnrollmentService(
       AuthorJpaRepository authorJpaRepository,
-      MemberRepository memberRepository,
+      MemberJpaRepository memberJpaRepository,
       S3Service s3Service,
       FileURIProviderService fileURIProviderService) {
     this.authorJpaRepository = authorJpaRepository;
-    this.memberRepository = memberRepository;
+    this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
     this.fileURIProviderService = fileURIProviderService;
   }
@@ -130,7 +130,7 @@ public class AuthorEnrollmentService {
 
   private Member getUserMemberById(long loginId) {
     Member member =
-        memberRepository
+        memberJpaRepository
             .findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 

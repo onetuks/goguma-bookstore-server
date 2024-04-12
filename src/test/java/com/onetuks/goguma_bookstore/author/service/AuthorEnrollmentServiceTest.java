@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
@@ -35,7 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @Autowired private AuthorEnrollmentService authorEnrollmentService;
-  @Autowired private MemberRepository memberRepository;
+  @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
 
   private Member userMember;
@@ -43,8 +43,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @BeforeEach
   void setUp() {
-    userMember = memberRepository.save(MemberFixture.create(RoleType.USER));
-    authorMember = memberRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
   }
 
   @Test
@@ -263,7 +263,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     List<Author> authors =
         authorJpaRepository.saveAll(
-            memberRepository.saveAll(members).stream()
+            memberJpaRepository.saveAll(members).stream()
                 .map(
                     member -> {
                       try {
@@ -303,7 +303,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             MemberFixture.create(RoleType.AUTHOR));
 
     authorJpaRepository.saveAll(
-        memberRepository.saveAll(members).stream()
+        memberJpaRepository.saveAll(members).stream()
             .map(
                 member -> {
                   try {

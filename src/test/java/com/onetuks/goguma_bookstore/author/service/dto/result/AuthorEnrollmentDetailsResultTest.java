@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
@@ -19,14 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class AuthorEnrollmentDetailsResultTest extends IntegrationTest {
 
-  @Autowired private MemberRepository memberRepository;
+  @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
 
   private Member member;
 
   @BeforeEach
   void setUp() {
-    member = memberRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
   }
 
   @Test

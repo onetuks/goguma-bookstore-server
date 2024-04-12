@@ -4,7 +4,7 @@ import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;
 import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.goguma_bookstore.auth.oauth.strategy.ClientProviderStrategy;
-import com.onetuks.goguma_bookstore.auth.repository.MemberRepository;
+import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
 import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
 import java.util.Optional;
@@ -16,15 +16,15 @@ public class OAuth2ClientService {
 
   private final ClientProviderStrategyHandler clientProviderStrategyHandler;
   private final AuthService authService;
-  private final MemberRepository memberRepository;
+  private final MemberJpaRepository memberJpaRepository;
 
   public OAuth2ClientService(
       ClientProviderStrategyHandler clientProviderStrategyHandler,
       AuthService authService,
-      MemberRepository memberRepository) {
+      MemberJpaRepository memberJpaRepository) {
     this.clientProviderStrategyHandler = clientProviderStrategyHandler;
     this.authService = authService;
-    this.memberRepository = memberRepository;
+    this.memberJpaRepository = memberJpaRepository;
   }
 
   @Transactional
@@ -37,8 +37,8 @@ public class OAuth2ClientService {
     ClientProvider oAuth2Provider = clientMember.getClientProvider();
 
     Optional<Member> optionalMember =
-        memberRepository.findBySocialIdAndClientProvider(socialId, oAuth2Provider);
-    Member savedMember = optionalMember.orElseGet(() -> memberRepository.save(clientMember));
+        memberJpaRepository.findBySocialIdAndClientProvider(socialId, oAuth2Provider);
+    Member savedMember = optionalMember.orElseGet(() -> memberJpaRepository.save(clientMember));
 
     AuthToken newAuthToken = authService.saveAccessToken(savedMember.getMemberId(), socialId);
 
