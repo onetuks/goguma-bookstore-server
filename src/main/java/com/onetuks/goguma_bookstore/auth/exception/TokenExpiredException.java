@@ -4,11 +4,12 @@ import com.onetuks.goguma_bookstore.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class TokenExpiredException extends IllegalStateException {
+public class TokenExpiredException extends TokenException {
 
   private final ErrorCode errorCode;
 
   public TokenExpiredException(ErrorCode errorCode) {
+    super(errorCode);
     this.errorCode = errorCode;
   }
 }

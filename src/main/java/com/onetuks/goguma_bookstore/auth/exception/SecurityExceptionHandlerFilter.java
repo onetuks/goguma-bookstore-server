@@ -25,11 +25,7 @@ public class SecurityExceptionHandlerFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       filterChain.doFilter(request, response);
-    } catch (TokenExpiredException e) {
-      setErrorResponse(e.getErrorCode(), response);
-    } catch (TokenValidFailedException e) {
-      setErrorResponse(e.getErrorCode(), response);
-    } catch (TokenIsLogoutException e) {
+    } catch (TokenExpiredException | TokenValidFailedException | TokenIsLogoutException e) {
       setErrorResponse(e.getErrorCode(), response);
     }
   }
