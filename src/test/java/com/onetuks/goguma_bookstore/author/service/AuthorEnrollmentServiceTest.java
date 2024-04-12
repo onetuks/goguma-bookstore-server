@@ -18,14 +18,13 @@ import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -261,20 +260,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             MemberFixture.create(RoleType.AUTHOR),
             MemberFixture.create(RoleType.AUTHOR));
 
-    List<Author> authors =
-        authorJpaRepository.saveAll(
-            memberJpaRepository.saveAll(members).stream()
-                .map(
-                    member -> {
-                      try {
-                        return AuthorFixture.create(member);
-                      } catch (IOException e) {
-                        // ignore
-                      }
-                      return null;
-                    })
-                .filter(Objects::nonNull)
-                .toList());
+    authorJpaRepository.saveAll(
+        memberJpaRepository.saveAll(members).stream().map(AuthorFixture::create).toList());
 
     // When
     List<AuthorEnrollmentDetailsResult> results =
@@ -305,16 +292,9 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     authorJpaRepository.saveAll(
         memberJpaRepository.saveAll(members).stream()
             .map(
-                member -> {
-                  try {
-                    return AuthorFixture.createWithEnrollmentAt(
-                        member, LocalDateTime.now().minusWeeks(2).minusHours(1));
-                  } catch (IOException e) {
-                    // ignore
-                  }
-                  return null;
-                })
-            .filter(Objects::nonNull)
+                member ->
+                    AuthorFixture.createWithEnrollmentAt(
+                        member, LocalDateTime.now().minusWeeks(2).minusHours(1)))
             .toList());
 
     // When

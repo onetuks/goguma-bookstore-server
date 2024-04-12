@@ -5,9 +5,9 @@ import com.onetuks.goguma_bookstore.auth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 import com.onetuks.goguma_bookstore.auth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
 import com.onetuks.goguma_bookstore.member.service.MemberService;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

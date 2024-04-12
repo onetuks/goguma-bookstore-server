@@ -14,13 +14,12 @@ import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
 import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,16 +49,9 @@ class AuthorServiceTest extends IntegrationTest {
         authorJpaRepository.saveAll(
             memberJpaRepository.saveAll(members).stream()
                 .map(
-                    member -> {
-                      try {
-                        return AuthorFixture.createWithEnrollmentAt(
-                            member, LocalDateTime.now().minusWeeks(2).minusHours(1));
-                      } catch (IOException e) {
-                        // ignore
-                      }
-                      return null;
-                    })
-                .filter(Objects::nonNull)
+                    member ->
+                        AuthorFixture.createWithEnrollmentAt(
+                            member, LocalDateTime.now().minusWeeks(2).minusHours(1)))
                 .toList());
   }
 
@@ -136,7 +128,7 @@ class AuthorServiceTest extends IntegrationTest {
         .allSatisfy(
             result -> {
               assertThat(result.authorId()).isIn(authorIds);
-              assertThat(result.nickname()).isEqualTo("빠선생님");
+              assertThat(result.nickname()).contains("빠선생님");
               assertThat(result.introduction()).contains("대통령");
               assertThat(
                       memberIds.stream()

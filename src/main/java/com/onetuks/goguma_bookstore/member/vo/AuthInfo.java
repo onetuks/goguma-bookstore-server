@@ -3,6 +3,8 @@ package com.onetuks.goguma_bookstore.member.vo;
 import static jakarta.persistence.EnumType.STRING;
 
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;

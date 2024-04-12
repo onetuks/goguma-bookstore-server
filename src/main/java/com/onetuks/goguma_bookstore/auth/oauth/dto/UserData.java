@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.auth.oauth.dto;
 
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import lombok.Builder;
 
 @Builder

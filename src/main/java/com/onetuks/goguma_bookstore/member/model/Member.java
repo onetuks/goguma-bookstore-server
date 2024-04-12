@@ -3,10 +3,12 @@ package com.onetuks.goguma_bookstore.member.model;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImg;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultAddressInfo;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
+import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
-import com.onetuks.goguma_bookstore.member.vo.DefaultAddressInfo;
-import com.onetuks.goguma_bookstore.member.vo.DefaultCashReceiptInfo;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -33,11 +35,9 @@ public class Member {
 
   @Embedded private AuthInfo authInfo;
 
-  @Column(name = "nickname")
-  private String nickname;
+  @Embedded private Nickname nickname;
 
-  @Column(name = "profile_img_uri")
-  private String profileImgUri;
+  @Embedded private ProfileImg profileImg;
 
   @Column(name = "alarm_permission", nullable = false)
   private Boolean alarmPermission;
@@ -55,11 +55,15 @@ public class Member {
       DefaultAddressInfo defaultAddressInfo,
       DefaultCashReceiptInfo defaultCashReceiptType) {
     this.authInfo = authInfo;
-    this.nickname = nickname;
-    this.profileImgUri = profileImgUri;
+    this.nickname = new Nickname(nickname);
+    this.profileImg = new ProfileImg(profileImgUri);
     this.alarmPermission = Objects.requireNonNullElse(alarmPermission, true);
     this.defaultAddressInfo = defaultAddressInfo;
     this.defaultCashReceiptType = defaultCashReceiptType;
+  }
+
+  public String getNickname() {
+    return this.nickname.getNicknameValue();
   }
 
   public RoleType getRoleType() {
@@ -74,6 +78,16 @@ public class Member {
   public RoleType revokeAuthorRole() {
     this.authInfo = authInfo.changeRole(RoleType.USER);
     return getRoleType();
+  }
+
+  public Member updateNickname(String nickname) {
+    this.nickname = new Nickname(nickname);
+    return this;
+  }
+
+  public Member updateAlarmPermission(boolean alarmPermission) {
+    this.alarmPermission = alarmPermission;
+    return this;
   }
 
   @Override

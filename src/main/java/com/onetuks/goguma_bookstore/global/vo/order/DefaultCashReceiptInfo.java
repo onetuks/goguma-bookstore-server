@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.member.vo;
+package com.onetuks.goguma_bookstore.global.vo.order;
 
 import static jakarta.persistence.EnumType.STRING;
 

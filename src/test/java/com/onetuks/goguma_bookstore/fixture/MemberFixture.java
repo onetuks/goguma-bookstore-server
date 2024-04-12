@@ -1,21 +1,20 @@
 package com.onetuks.goguma_bookstore.fixture;
 
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultAddressInfo;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.member.vo.DefaultAddressInfo;
-import com.onetuks.goguma_bookstore.member.vo.DefaultCashReceiptInfo;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
-import java.util.Random;
 
 public class MemberFixture {
 
   public static Member create(RoleType roleType) {
     return Member.builder()
         .authInfo(createAuthInfo(roleType))
-        .nickname("빡친감자")
+        .nickname("빡친감자" + UUIDProvider.getUUID())
         .alarmPermission(true)
         .defaultAddressInfo(
             DefaultAddressInfo.builder()
@@ -32,8 +31,8 @@ public class MemberFixture {
 
   public static UserData createUserData(RoleType roleType) {
     return UserData.builder()
-        .name("빠니보틀")
-        .socialId(String.valueOf(new Random().longs(1, 1_024)))
+        .name("빠니보틀" + UUIDProvider.getUUID())
+        .socialId(UUIDProvider.getUUID())
         .clientProvider(ClientProvider.NAVER)
         .roleType(roleType)
         .build();

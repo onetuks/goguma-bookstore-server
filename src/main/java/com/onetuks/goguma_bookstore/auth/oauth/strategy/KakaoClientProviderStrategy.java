@@ -6,8 +6,8 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_T
 import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.KakaoUser;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

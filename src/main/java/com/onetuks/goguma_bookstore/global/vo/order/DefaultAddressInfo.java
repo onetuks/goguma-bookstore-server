@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.member.vo;
+package com.onetuks.goguma_bookstore.global.vo.order;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

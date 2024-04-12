@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.author.model.vo;
+package com.onetuks.goguma_bookstore.global.vo.file;
 
 import com.onetuks.goguma_bookstore.global.service.vo.File;
 import jakarta.persistence.Column;

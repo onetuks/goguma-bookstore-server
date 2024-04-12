@@ -3,7 +3,8 @@ package com.onetuks.goguma_bookstore.author.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
-import com.onetuks.goguma_bookstore.author.model.vo.ProfileImg;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImg;
+import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,7 +42,7 @@ public class Author {
   @Embedded private ProfileImg profileImg;
 
   @Column(name = "nickname", nullable = false)
-  private String nickname;
+  private Nickname nickname;
 
   @Column(name = "introduction", nullable = false)
   private String introduction;
@@ -63,7 +64,7 @@ public class Author {
       EnrollmentInfo enrollmentInfo) {
     this.member = member;
     this.profileImg = new ProfileImg(profileImgUri);
-    this.nickname = nickname;
+    this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.enrollmentInfo =
         Objects.requireNonNullElse(
@@ -73,6 +74,10 @@ public class Author {
                 .enrollmentAt(LocalDateTime.now())
                 .build());
     this.authorStatics = AuthorStatics.builder().author(this).build();
+  }
+
+  public String getNickname() {
+    return this.nickname.getNicknameValue();
   }
 
   public String getProfileImgUrl() {
@@ -101,7 +106,7 @@ public class Author {
   }
 
   public Author updateNickname(String nickname) {
-    this.nickname = nickname;
+    this.nickname = new Nickname(nickname);
     return this;
   }
 

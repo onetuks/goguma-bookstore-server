@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.auth.util.admin;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.nio.file.AccessDeniedException;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;

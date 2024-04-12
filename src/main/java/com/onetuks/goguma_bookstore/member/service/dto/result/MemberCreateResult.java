@@ -1,9 +1,9 @@
 package com.onetuks.goguma_bookstore.member.service.dto.result;
 
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
-import com.onetuks.goguma_bookstore.member.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.member.vo.RoleType;
 
 public record MemberCreateResult(
     long memberId,

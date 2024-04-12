@@ -1,5 +1,7 @@
 package com.onetuks.goguma_bookstore.author.model.vo;
 
+import com.onetuks.goguma_bookstore.global.vo.file.EscrowService;
+import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSales;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
