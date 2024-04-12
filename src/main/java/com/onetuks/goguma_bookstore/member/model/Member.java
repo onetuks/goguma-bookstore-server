@@ -1,16 +1,15 @@
 package com.onetuks.goguma_bookstore.member.model;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
+import com.onetuks.goguma_bookstore.member.vo.DefaultAddressInfo;
+import com.onetuks.goguma_bookstore.member.vo.DefaultCashReceiptInfo;
 import com.onetuks.goguma_bookstore.member.vo.RoleType;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -40,40 +39,27 @@ public class Member {
   @Column(name = "profile_img_uri")
   private String profileImgUri;
 
-  @Column(name = "default_address")
-  private String defaultAddress;
-
-  @Column(name = "default_address_detail")
-  private String defaultAddressDetail;
-
-  @Enumerated(value = STRING)
-  @Column(name = "default_cash_receipt_type")
-  private CashReceiptType defaultCashReceiptType;
-
-  @Column(name = "default_cash_receipt_number")
-  private String defaultCashReceiptNumber;
-
   @Column(name = "alarm_permission", nullable = false)
   private Boolean alarmPermission;
+
+  @Embedded private DefaultAddressInfo defaultAddressInfo;
+
+  @Embedded private DefaultCashReceiptInfo defaultCashReceiptType;
 
   @Builder
   public Member(
       AuthInfo authInfo,
       String nickname,
       String profileImgUri,
-      String defaultAddress,
-      String defaultAddressDetail,
-      CashReceiptType defaultCashReceiptType,
-      String defaultCashReceiptNumber,
-      Boolean alarmPermission) {
+      Boolean alarmPermission,
+      DefaultAddressInfo defaultAddressInfo,
+      DefaultCashReceiptInfo defaultCashReceiptType) {
     this.authInfo = authInfo;
     this.nickname = nickname;
     this.profileImgUri = profileImgUri;
-    this.defaultAddress = defaultAddress;
-    this.defaultAddressDetail = defaultAddressDetail;
+    this.alarmPermission = Objects.requireNonNullElse(alarmPermission, true);
+    this.defaultAddressInfo = defaultAddressInfo;
     this.defaultCashReceiptType = defaultCashReceiptType;
-    this.defaultCashReceiptNumber = defaultCashReceiptNumber;
-    this.alarmPermission = alarmPermission;
   }
 
   public RoleType getRoleType() {

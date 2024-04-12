@@ -36,7 +36,6 @@ public class MemberService {
                     Member.builder()
                         .authInfo(AuthInfo.from(userData))
                         .profileImgUri(fileURIProviderService.provideDefaultProfileURI())
-                        .alarmPermission(true)
                         .build())),
         optionalMember.isEmpty());
   }
