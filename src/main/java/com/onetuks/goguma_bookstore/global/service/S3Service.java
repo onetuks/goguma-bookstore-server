@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -26,6 +27,7 @@ public class S3Service {
     this.s3Config = s3Config;
   }
 
+  @Transactional
   public void putFile(String uri, MultipartFile file) {
     try {
       s3Client.putObject(
@@ -36,6 +38,7 @@ public class S3Service {
     }
   }
 
+  @Transactional(readOnly = true)
   public File getFile(String uri) {
     File file = new File("build/output/" + uri);
 
@@ -52,6 +55,7 @@ public class S3Service {
     }
   }
 
+  @Transactional
   public void deleteFile(String uri) {
     s3Client.deleteObject(
         DeleteObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build());

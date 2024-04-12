@@ -1,6 +1,7 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.model.Member;
@@ -11,33 +12,29 @@ import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import java.io.IOException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthorCreateEnrollmentResultTest extends IntegrationTest {
+class AuthorEditResultTest extends IntegrationTest {
 
-  @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private MemberJpaRepository memberJpaRepository;
-
-  private Author author;
-
-  @BeforeEach
-  void setUp() throws IOException {
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-    author = authorJpaRepository.save(AuthorFixture.create(member));
-  }
+  @Autowired private AuthorJpaRepository authorJpaRepository;
 
   @Test
-  @DisplayName("작가 엔티티에서 작가 생성 객체로 변환한다.")
-  void from() {
+  @DisplayName("작가 프로필 수정 엔티티에서 결과 객체로 변환한다.")
+  void fromTest() throws IOException {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    Author author = authorJpaRepository.save(AuthorFixture.create(member));
+
     // When
-    AuthorCreateEnrollmentResult result = AuthorCreateEnrollmentResult.from(author);
+    AuthorEditResult result = AuthorEditResult.from(author);
 
     // Then
-    assertThat(result)
-        .hasFieldOrPropertyWithValue("authorId", author.getAuthorId())
-        .hasFieldOrPropertyWithValue("profileImgUrl", author.getProfileImgUrl());
+    assertAll(
+        () -> assertThat(result.profileImgUrl()).isEqualTo(author.getProfileImgUrl()),
+        () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
+        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
   }
 }
