@@ -4,8 +4,11 @@ import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,5 +41,19 @@ public class MemberService {
                         .profileImgUri(fileURIProviderService.provideDefaultProfileURI())
                         .build())),
         optionalMember.isEmpty());
+  }
+
+  @Transactional
+  public MemberEntryInfoResult entryMemberInfo(long memberId, MemberEntryInfoParam param) {
+    return MemberEntryInfoResult.from(
+        getMemberById(memberId)
+            .updateNickname(param.nickname())
+            .updateAlarmPermission(param.alarmPermission()));
+  }
+
+  private Member getMemberById(long memberId) {
+    return memberJpaRepository
+        .findById(memberId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
   }
 }
