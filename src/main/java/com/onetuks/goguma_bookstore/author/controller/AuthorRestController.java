@@ -10,6 +10,8 @@ import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEditRes
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -52,7 +54,11 @@ public class AuthorRestController {
       @Valid @RequestBody AuthorEditRequest request,
       @RequestPart(name = "profileImg", required = false) MultipartFile profileImg) {
     AuthorEditResult result =
-        authorService.updateAuthorProfile(loginAuthorId, authorId, request.to(), profileImg);
+        authorService.updateAuthorProfile(
+            loginAuthorId,
+            authorId,
+            request.to(),
+            CustomFile.of(loginAuthorId, FileType.PROFILES, profileImg));
     AuthorEditResponse response = AuthorEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

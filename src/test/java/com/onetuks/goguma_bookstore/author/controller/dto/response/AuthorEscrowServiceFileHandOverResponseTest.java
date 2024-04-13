@@ -7,7 +7,7 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import org.junit.jupiter.api.Test;
 
-class AuthorEscrowServiceHandOverResponseTest extends IntegrationTest {
+class AuthorEscrowServiceFileHandOverResponseTest extends IntegrationTest {
 
   @Test
   void fromTest() {

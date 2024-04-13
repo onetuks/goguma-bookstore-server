@@ -21,7 +21,7 @@ public class MemberFixture {
                 .defaultAddress("강원도 춘천시")
                 .defaultAddressDetail("어딘가")
                 .build())
-        .defaultCashReceiptType(
+        .defaultCashReceiptInfo(
             DefaultCashReceiptInfo.builder()
                 .defaultCashReceiptType(CashReceiptType.PERSON)
                 .defaultCashReceiptNumber("1234-1234")

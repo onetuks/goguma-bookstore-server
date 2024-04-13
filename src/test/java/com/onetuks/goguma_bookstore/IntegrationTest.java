@@ -54,7 +54,7 @@ public class IntegrationTest {
     //    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
 
     aws =
-        new LocalStackContainer(DockerImageName.parse("localstack/localstack:1.2"))
+        new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(Service.S3)
             .withStartupTimeout(Duration.ofSeconds(600));
 

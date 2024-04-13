@@ -4,11 +4,12 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.ProfileImg;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.global.vo.order.DefaultAddressInfo;
 import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
 import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
+import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -37,33 +38,57 @@ public class Member {
 
   @Embedded private Nickname nickname;
 
-  @Embedded private ProfileImg profileImg;
+  @Embedded private ProfileImgFile profileImgFile;
 
   @Column(name = "alarm_permission", nullable = false)
   private Boolean alarmPermission;
 
   @Embedded private DefaultAddressInfo defaultAddressInfo;
 
-  @Embedded private DefaultCashReceiptInfo defaultCashReceiptType;
+  @Embedded private DefaultCashReceiptInfo defaultCashReceiptInfo;
 
   @Builder
   public Member(
       AuthInfo authInfo,
       String nickname,
-      String profileImgUri,
+      ProfileImgFile profileImgFile,
       Boolean alarmPermission,
       DefaultAddressInfo defaultAddressInfo,
-      DefaultCashReceiptInfo defaultCashReceiptType) {
+      DefaultCashReceiptInfo defaultCashReceiptInfo) {
     this.authInfo = authInfo;
     this.nickname = new Nickname(nickname);
-    this.profileImg = new ProfileImg(profileImgUri);
+    this.profileImgFile = profileImgFile;
     this.alarmPermission = Objects.requireNonNullElse(alarmPermission, true);
     this.defaultAddressInfo = defaultAddressInfo;
-    this.defaultCashReceiptType = defaultCashReceiptType;
+    this.defaultCashReceiptInfo = defaultCashReceiptInfo;
   }
 
   public String getNickname() {
     return this.nickname.getNicknameValue();
+  }
+
+  public String getProfileImgUrl() {
+    if (this.profileImgFile == null) {
+      return null;
+    }
+
+    return this.profileImgFile.getProfileImgUrl();
+  }
+
+  public String getDefaultAddress() {
+    return this.defaultAddressInfo.getDefaultAddress();
+  }
+
+  public String getDefaultAddressDetail() {
+    return this.defaultAddressInfo.getDefaultAddressDetail();
+  }
+
+  public CashReceiptType getDefaultCashReceiptType() {
+    return this.defaultCashReceiptInfo.getDefaultCashReceiptType();
+  }
+
+  public String getDefaultCashReceiptNumber() {
+    return this.defaultCashReceiptInfo.getDefaultCashReceiptNumber();
   }
 
   public RoleType getRoleType() {
@@ -87,6 +112,23 @@ public class Member {
 
   public Member updateAlarmPermission(boolean alarmPermission) {
     this.alarmPermission = alarmPermission;
+    return this;
+  }
+
+  public Member updateProfileImgFile(ProfileImgFile profileImgFile) {
+    this.profileImgFile = profileImgFile;
+    return this;
+  }
+
+  public Member updateDefaultAddressInfo(String defaultAddress, String defaultAddressDetail) {
+    this.defaultAddressInfo = new DefaultAddressInfo(defaultAddress, defaultAddressDetail);
+    return this;
+  }
+
+  public Member updateDefaultCashReceiptInfo(
+      CashReceiptType defaultCashReceiptType, String defaultCashReceiptNumber) {
+    this.defaultCashReceiptInfo =
+        new DefaultCashReceiptInfo(defaultCashReceiptType, defaultCashReceiptNumber);
     return this;
   }
 

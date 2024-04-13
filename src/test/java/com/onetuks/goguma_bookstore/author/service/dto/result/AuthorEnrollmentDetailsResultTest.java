@@ -11,7 +11,6 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ class AuthorEnrollmentDetailsResultTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 엔티티에서 입점 심사 상세 결과 객체로 변환한다.")
-  void from() throws IOException {
+  void fromTest() {
     // Given
     Author save = authorJpaRepository.save(AuthorFixture.create(member));
 

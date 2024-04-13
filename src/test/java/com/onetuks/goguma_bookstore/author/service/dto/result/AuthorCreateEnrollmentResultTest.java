@@ -10,7 +10,6 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,7 @@ class AuthorCreateEnrollmentResultTest extends IntegrationTest {
   private Author author;
 
   @BeforeEach
-  void setUp() throws IOException {
+  void setUp() {
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     author = authorJpaRepository.save(AuthorFixture.create(member));
   }

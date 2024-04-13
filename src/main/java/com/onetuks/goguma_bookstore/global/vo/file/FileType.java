@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.global.service.vo;
+package com.onetuks.goguma_bookstore.global.vo.file;
 
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;

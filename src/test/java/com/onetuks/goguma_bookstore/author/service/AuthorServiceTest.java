@@ -11,20 +11,19 @@ import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
+import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
-import com.onetuks.goguma_bookstore.global.service.vo.FileType;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
 
 class AuthorServiceTest extends IntegrationTest {
 
@@ -57,17 +56,16 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 정보를 수정한다.")
-  void updateAuthorProfileTest() throws IOException {
+  void updateAuthorProfileTest() {
     // Given
     Author author = authors.get(0);
     AuthorEditParam param = new AuthorEditParam("빠니보틀", "유튜브 대통령");
-    MultipartFile profileImg =
-        MultipartFileFixture.createFile(FileType.PROFILES, author.getAuthorId());
+    CustomFile customFile = CustomFileFixture.create(author.getAuthorId(), FileType.PROFILES);
 
     // When
     AuthorEditResult result =
         authorService.updateAuthorProfile(
-            author.getAuthorId(), author.getAuthorId(), param, profileImg);
+            author.getAuthorId(), author.getAuthorId(), param, customFile);
 
     // Then
     assertAll(
@@ -79,19 +77,18 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다.")
-  void updateAuthorProfile_NotSameAuthorId_ExceptionTest() throws IOException {
+  void updateAuthorProfile_NotSameAuthorId_ExceptionTest() {
     // Given
     Author author0 = authors.get(0);
     Author author1 = authors.get(1);
     AuthorEditParam param = new AuthorEditParam("빠니보틀", "유튜브 대통령");
-    MultipartFile profileImg =
-        MultipartFileFixture.createFile(FileType.PROFILES, author0.getAuthorId());
+    CustomFile customFile = CustomFileFixture.create(author0.getAuthorId(), FileType.PROFILES);
 
     // When & Then
     assertThatThrownBy(
             () ->
                 authorService.updateAuthorProfile(
-                    author1.getAuthorId(), author0.getAuthorId(), param, profileImg))
+                    author1.getAuthorId(), author0.getAuthorId(), param, customFile))
         .isInstanceOf(IllegalArgumentException.class);
   }
 

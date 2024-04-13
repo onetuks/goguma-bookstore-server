@@ -11,7 +11,6 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ class AuthorEditResultTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 수정 엔티티에서 결과 객체로 변환한다.")
-  void fromTest() throws IOException {
+  void fromTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     Author author = authorJpaRepository.save(AuthorFixture.create(member));
