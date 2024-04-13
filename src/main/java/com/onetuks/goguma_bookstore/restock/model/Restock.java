@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.restock.model;
 
 import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.member.model.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,11 +32,11 @@ public class Restock {
   @Column(name = "restock_id", nullable = false)
   private Long restockId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", nullable = false)
   private Member member;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "book_id", nullable = false)
   private Book book;
 

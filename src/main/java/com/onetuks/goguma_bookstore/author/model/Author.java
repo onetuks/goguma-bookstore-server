@@ -37,7 +37,7 @@ public class Author {
   @Column(name = "author_id", nullable = false)
   private Long authorId;
 
-  @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", unique = true)
   private Member member;
 

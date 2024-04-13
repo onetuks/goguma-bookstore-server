@@ -2,13 +2,15 @@ package com.onetuks.goguma_bookstore.subscribe.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.member.model.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
@@ -30,11 +32,11 @@ public class Subscribe {
   @Column(name = "subscribe_id", nullable = false)
   private Long subscribeId;
 
-  @OneToOne(orphanRemoval = true)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @OneToOne(orphanRemoval = true)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "author_id")
   private Author author;
 
