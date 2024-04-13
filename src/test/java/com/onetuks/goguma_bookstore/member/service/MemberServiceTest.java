@@ -64,14 +64,14 @@ class MemberServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("회원가입 정보를 업데이트한다.")
-  void entryMemberInfo_Test() {
+  void updateMemberInfo_Test() {
     // Given
     UserData userData = MemberFixture.createUserData(RoleType.USER);
     MemberCreateResult savedMember = memberService.saveMemberIfNotExists(userData);
     MemberEntryInfoParam param = new MemberEntryInfoParam("빠니보틀니", true);
 
     // When
-    MemberEntryInfoResult result = memberService.entryMemberInfo(savedMember.memberId(), param);
+    MemberEntryInfoResult result = memberService.updateMemberInfo(savedMember.memberId(), param);
 
     // Then
     assertAll(
@@ -82,7 +82,7 @@ class MemberServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("중복된 닉네임이 있는 경우 예외를 던진다.")
-  void entryMemberInfo_DuplicatedNickname_ExceptionTest() {
+  void updateMemberInfo_DuplicatedNickname_ExceptionTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     memberJpaRepository.flush();
@@ -94,7 +94,7 @@ class MemberServiceTest extends IntegrationTest {
     // When & Then
     assertThatThrownBy(
             () -> {
-              memberService.entryMemberInfo(createResult.memberId(), param);
+              memberService.updateMemberInfo(createResult.memberId(), param);
               memberJpaRepository.flush();
             })
         .isInstanceOf(DataIntegrityViolationException.class);

@@ -3,17 +3,24 @@ package com.onetuks.goguma_bookstore.member.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberEntryInfoRequest;
+import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberProfileEditRequest;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberEntryInfoResponse;
+import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberProfileEditResponse;
 import com.onetuks.goguma_bookstore.member.service.MemberService;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/members")
@@ -32,11 +39,36 @@ public class MemberRestController {
    * @param request : 회원가입 정보
    * @return memberId, nickname, alarmPermission
    */
-  @PatchMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+  @PatchMapping(
+      path = "/entry",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberEntryInfoResponse> entryMemberInfo(
       @LoginId Long memberId, @RequestBody @Valid MemberEntryInfoRequest request) {
-    MemberEntryInfoResult result = memberService.entryMemberInfo(memberId, request.to());
+    MemberEntryInfoResult result = memberService.updateMemberInfo(memberId, request.to());
     MemberEntryInfoResponse response = MemberEntryInfoResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 회원 프로필 수정
+   *
+   * @param memberId : 로그인한 회원 ID
+   * @param request : 수정할 회원 프로필 정보
+   * @param profileImg : 프로필 이미지
+   * @return memberId, nickname, alarmPermission, profileImgUri, defaultAddress,
+   *     defaultAddressDetail, defaultCashReceiptType, defaultCashReceiptNumber
+   */
+  @PatchMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<MemberProfileEditResponse> editMemberProfile(
+      @LoginId Long memberId,
+      @RequestBody @Valid MemberProfileEditRequest request,
+      @RequestPart(value = "profileImg", required = false) MultipartFile profileImg) {
+    MemberProfileEditResult result =
+        memberService.updateMemberProfile(
+            memberId, request.to(), CustomFile.of(memberId, FileType.PROFILES, profileImg));
+    MemberProfileEditResponse response = MemberProfileEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

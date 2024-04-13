@@ -1,12 +1,15 @@
 package com.onetuks.goguma_bookstore.member.service;
 
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
-import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
+import com.onetuks.goguma_bookstore.global.service.S3Service;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberProfileEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -17,13 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
   private final MemberJpaRepository memberJpaRepository;
+  private final S3Service s3Service;
 
-  private final FileURIProviderService fileURIProviderService;
-
-  public MemberService(
-      MemberJpaRepository memberJpaRepository, FileURIProviderService fileURIProviderService) {
+  public MemberService(MemberJpaRepository memberJpaRepository, S3Service s3Service) {
     this.memberJpaRepository = memberJpaRepository;
-    this.fileURIProviderService = fileURIProviderService;
+    this.s3Service = s3Service;
   }
 
   @Transactional
@@ -38,17 +39,32 @@ public class MemberService {
                 memberJpaRepository.save(
                     Member.builder()
                         .authInfo(AuthInfo.from(userData))
-                        .profileImgUri(fileURIProviderService.provideDefaultProfileURI())
+                        .profileImgFile(CustomFile.of().toProfileImgFile())
                         .build())),
         optionalMember.isEmpty());
   }
 
   @Transactional
-  public MemberEntryInfoResult entryMemberInfo(long memberId, MemberEntryInfoParam param) {
+  public MemberEntryInfoResult updateMemberInfo(long memberId, MemberEntryInfoParam param) {
     return MemberEntryInfoResult.from(
         getMemberById(memberId)
             .updateNickname(param.nickname())
             .updateAlarmPermission(param.alarmPermission()));
+  }
+
+  @Transactional
+  public MemberProfileEditResult updateMemberProfile(
+      long memberId, MemberProfileEditParam param, CustomFile customFile) {
+    s3Service.putFile(customFile);
+
+    return MemberProfileEditResult.from(
+        getMemberById(memberId)
+            .updateNickname(param.nickname())
+            .updateProfileImgFile(customFile.toProfileImgFile())
+            .updateAlarmPermission(param.alarmPermission())
+            .updateDefaultAddressInfo(param.defaultAddress(), param.defaultAddressDetail())
+            .updateDefaultCashReceiptInfo(
+                param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
   }
 
   private Member getMemberById(long memberId) {
