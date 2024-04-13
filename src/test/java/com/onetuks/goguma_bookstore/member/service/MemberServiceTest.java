@@ -99,4 +99,22 @@ class MemberServiceTest extends IntegrationTest {
             })
         .isInstanceOf(DataIntegrityViolationException.class);
   }
+
+  @Test
+  @DisplayName("회원탈퇴한다.")
+  void deletMemberTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    String token =
+        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTc1MTk1Nzc5NTA1NTg4NDczMjYiLCJsb2dpbklkIjozLCJyb2xlIjoiVVNFUiIsImV4cCI6MTcxMzAzOTU4NiwiaXNzIjoiZ29ndW1hIiwiaWF0IjoxNzEyOTUzMTg2fQ.oIxlLpioIkXI_Qr32HMuABHXyLjZQqYAclORQ8RZ7AI";
+    memberJpaRepository.flush();
+
+    // When
+    memberService.deleteMember(member.getMemberId(), token);
+
+    // Then
+    boolean result = memberJpaRepository.existsById(member.getMemberId());
+
+    assertThat(result).isFalse();
+  }
 }

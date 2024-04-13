@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.member.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.onetuks.goguma_bookstore.auth.jwt.AuthHeaderUtil;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
@@ -12,9 +13,11 @@ import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberProfile
 import com.onetuks.goguma_bookstore.member.service.MemberService;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,5 +74,19 @@ public class MemberRestController {
     MemberProfileEditResponse response = MemberProfileEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 회원 탈퇴
+   *
+   * @param memberId : 로그인한 회원 ID
+   * @param request : HttpServletRequest
+   * @return void
+   */
+  @DeleteMapping
+  public ResponseEntity<Void> withdrawMember(@LoginId Long memberId, HttpServletRequest request) {
+    memberService.deleteMember(memberId, AuthHeaderUtil.extractAuthToken(request));
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

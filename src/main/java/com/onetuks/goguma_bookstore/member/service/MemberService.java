@@ -10,6 +10,7 @@ import com.onetuks.goguma_bookstore.member.service.dto.param.MemberProfileEditPa
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
+import com.onetuks.goguma_bookstore.member.service.event.WithdrawalEventPublisher;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -21,10 +22,15 @@ public class MemberService {
 
   private final MemberJpaRepository memberJpaRepository;
   private final S3Service s3Service;
+  private final WithdrawalEventPublisher withdrawalEventPublisher;
 
-  public MemberService(MemberJpaRepository memberJpaRepository, S3Service s3Service) {
+  public MemberService(
+      MemberJpaRepository memberJpaRepository,
+      S3Service s3Service,
+      WithdrawalEventPublisher withdrawalEventPublisher) {
     this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
+    this.withdrawalEventPublisher = withdrawalEventPublisher;
   }
 
   @Transactional
@@ -65,6 +71,13 @@ public class MemberService {
             .updateDefaultAddressInfo(param.defaultAddress(), param.defaultAddressDetail())
             .updateDefaultCashReceiptInfo(
                 param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
+  }
+
+  @Transactional
+  public void deleteMember(long memberId, String token) {
+    withdrawalEventPublisher.publishWithdrawalEvent(token);
+
+    memberJpaRepository.deleteById(memberId);
   }
 
   private Member getMemberById(long memberId) {
