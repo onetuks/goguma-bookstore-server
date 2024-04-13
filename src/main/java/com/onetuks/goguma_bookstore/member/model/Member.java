@@ -76,10 +76,18 @@ public class Member {
   }
 
   public String getDefaultAddress() {
+    if (this.defaultAddressInfo == null) {
+      return null;
+    }
+
     return this.defaultAddressInfo.getDefaultAddress();
   }
 
   public String getDefaultAddressDetail() {
+    if (this.defaultAddressInfo == null) {
+      return null;
+    }
+
     return this.defaultAddressInfo.getDefaultAddressDetail();
   }
 

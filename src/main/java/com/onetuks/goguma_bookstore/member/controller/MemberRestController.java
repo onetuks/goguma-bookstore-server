@@ -6,11 +6,14 @@ import com.onetuks.goguma_bookstore.auth.jwt.AuthHeaderUtil;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberEntryInfoRequest;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberProfileEditRequest;
+import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberDefaultAddressEditResponse;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberEntryInfoResponse;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberProfileEditResponse;
 import com.onetuks.goguma_bookstore.member.service.MemberService;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import jakarta.servlet.http.HttpServletRequest;
@@ -88,5 +91,18 @@ public class MemberRestController {
     memberService.deleteMember(memberId, AuthHeaderUtil.extractAuthToken(request));
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  @PatchMapping(
+      path = "/default-address",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<MemberDefaultAddressEditResponse> editDefaultAddress(
+      @LoginId Long memberId, @RequestBody @Valid MemberDefaultAddressEditRequest request) {
+    MemberDefaultAddressEditResult result =
+        memberService.updateDetaultAddress(memberId, request.to());
+    MemberDefaultAddressEditResponse response = MemberDefaultAddressEditResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

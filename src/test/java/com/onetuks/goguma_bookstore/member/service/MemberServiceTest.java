@@ -10,8 +10,10 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -116,5 +118,23 @@ class MemberServiceTest extends IntegrationTest {
     boolean result = memberJpaRepository.existsById(member.getMemberId());
 
     assertThat(result).isFalse();
+  }
+
+  @Test
+  @DisplayName("멤버 기본 배송지를 수정한다.")
+  void updateDetaultAddressTest() {
+    // Given
+    Member save = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    MemberDefaultAddressEditParam param =
+        new MemberDefaultAddressEditParam("강원도 춘천시 중앙로", "킹갓 빠니보틀 생가");
+
+    // When
+    MemberDefaultAddressEditResult result =
+        memberService.updateDetaultAddress(save.getMemberId(), param);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.defaultAddress()).isEqualTo(param.defaultAddress()),
+        () -> assertThat(result.defaultAddressDetail()).isEqualTo(param.defaultAddressDetail()));
   }
 }
