@@ -51,7 +51,7 @@ public class AuthorService {
         .toList();
   }
 
-  private Author getAuthorById(long authorId) {
+  public Author getAuthorById(long authorId) {
     return authorJpaRepository
         .findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."));

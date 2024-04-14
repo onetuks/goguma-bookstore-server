@@ -1,7 +1,10 @@
 package com.onetuks.goguma_bookstore.registration.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
+import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,8 +40,7 @@ public class Registration {
   @Column(name = "approval_memo", nullable = false)
   private String approvalMemo;
 
-  @Column(name = "cover_img_uri", nullable = false)
-  private String coverImgUri;
+  @Embedded private CoverImgFile coverImgFile;
 
   @Column(name = "title", nullable = false)
   private String title;
@@ -61,15 +63,14 @@ public class Registration {
   @Column(name = "promotion", nullable = false)
   private Boolean promotion;
 
-  @Column(name = "sample_uri", nullable = false)
-  private String sampleUri;
+  @Embedded private SampleFile sampleFile;
 
   @Builder
   public Registration(
       Author author,
       Boolean approvalResult,
       String approvalMemo,
-      String coverImgUri,
+      CoverImgFile coverImgFile,
       String title,
       String summary,
       Long price,
@@ -77,11 +78,11 @@ public class Registration {
       String isbn,
       String publisher,
       Boolean promotion,
-      String sampleUri) {
+      SampleFile sampleFile) {
     this.author = author;
     this.approvalResult = approvalResult;
     this.approvalMemo = approvalMemo;
-    this.coverImgUri = coverImgUri;
+    this.coverImgFile = coverImgFile;
     this.title = title;
     this.summary = summary;
     this.price = price;
@@ -89,7 +90,15 @@ public class Registration {
     this.isbn = isbn;
     this.publisher = publisher;
     this.promotion = promotion;
-    this.sampleUri = sampleUri;
+    this.sampleFile = sampleFile;
+  }
+
+  public String getCoverImgUrl() {
+    return coverImgFile.getCoverImgUrl();
+  }
+
+  public String getSampleUrl() {
+    return sampleFile.getSampleUrl();
   }
 
   @Override

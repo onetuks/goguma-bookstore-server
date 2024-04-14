@@ -100,7 +100,7 @@ public class AuthorEnrollmentRestController {
   public ResponseEntity<AuthorMailOrderSalesSubmitResponse> submitMailOrderSales(
       @LoginId Long loginId,
       @PathVariable(name = "authorId") Long authorId,
-      @RequestPart(name = "mail-order-sales") MultipartFile mailOrderSalesFile) {
+      @RequestPart(name = "mail-order-sales-file") MultipartFile mailOrderSalesFile) {
     AuthorMailOrderSalesSubmitResult result =
         authorEnrollmentService.updateAuthorMailOrderSales(
             loginId,

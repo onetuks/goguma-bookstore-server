@@ -41,7 +41,7 @@ public class AuthorRestController {
    * @param loginAuthorId : 로그인한 작가 ID
    * @param authorId : 수정할 작가 ID
    * @param request : 작가 프로필 수정 내용
-   * @param profileImg : 작가 프로필 수정 이미지 (같은 이미지여도 덮어쓰기)
+   * @param profileImgFile : 작가 프로필 수정 이미지 (같은 이미지여도 덮어쓰기)
    * @return authorId, profileImgUrl, nickname, introduction
    */
   @PatchMapping(
@@ -52,13 +52,13 @@ public class AuthorRestController {
       @AuthorId Long loginAuthorId,
       @PathVariable(name = "authorId") Long authorId,
       @Valid @RequestBody AuthorEditRequest request,
-      @RequestPart(name = "profileImg", required = false) MultipartFile profileImg) {
+      @RequestPart(name = "profile-img-file", required = false) MultipartFile profileImgFile) {
     AuthorEditResult result =
         authorService.updateAuthorProfile(
             loginAuthorId,
             authorId,
             request.to(),
-            CustomFile.of(loginAuthorId, FileType.PROFILES, profileImg));
+            CustomFile.of(loginAuthorId, FileType.PROFILES, profileImgFile));
     AuthorEditResponse response = AuthorEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
