@@ -113,6 +113,28 @@ public class Registration {
     return this;
   }
 
+  public Registration updateRegistration(
+      String title,
+      String summary,
+      Long price,
+      Long stockCount,
+      String isbn,
+      String publisher,
+      Boolean promotion,
+      CoverImgFile coverImgFile,
+      SampleFile sampleFile) {
+    this.title = title;
+    this.summary = summary;
+    this.price = price;
+    this.stockCount = stockCount;
+    this.isbn = isbn;
+    this.publisher = publisher;
+    this.promotion = promotion;
+    this.coverImgFile = coverImgFile;
+    this.sampleFile = sampleFile;
+    return this;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

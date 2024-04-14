@@ -1,12 +1,15 @@
 package com.onetuks.goguma_bookstore.registration.service;
 
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
+import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +19,15 @@ public class RegistrationService {
 
   private final RegistrationJpaRepository registrationJpaRepository;
   private final AuthorService authorService;
+  private final S3Service s3Service;
 
   public RegistrationService(
-      RegistrationJpaRepository registrationJpaRepository, AuthorService authorService) {
+      RegistrationJpaRepository registrationJpaRepository,
+      AuthorService authorService,
+      S3Service s3Service) {
     this.registrationJpaRepository = registrationJpaRepository;
     this.authorService = authorService;
+    this.s3Service = s3Service;
   }
 
   @Transactional
@@ -29,6 +36,13 @@ public class RegistrationService {
       RegistrationCreateParam param,
       CustomFile coverImgFile,
       CustomFile sampleFile) {
+    if (coverImgFile.isNullFile() || sampleFile.isNullFile()) {
+      throw new IllegalArgumentException("신간 등록에 필요한 파일이 존재하지 않습니다.");
+    }
+
+    s3Service.putFile(coverImgFile);
+    s3Service.putFile(sampleFile);
+
     return RegistrationCreateResult.from(
         registrationJpaRepository.save(
             Registration.builder()
@@ -45,11 +59,35 @@ public class RegistrationService {
                 .build()));
   }
 
+  @Transactional
   public RegistrationInspectionResult updateRegistrationApproval(
       long registrationId, RegistrationInspectionParam param) {
     return RegistrationInspectionResult.from(
         getRegistrationById(registrationId)
             .updateApprovalInfo(param.approvalResult(), param.approvalMemo()));
+  }
+
+  @Transactional
+  public RegistrationEditResult updateRegistration(
+      long registrationId,
+      RegistrationEditParam param,
+      CustomFile coverImgFile,
+      CustomFile sampleFile) {
+    s3Service.putFile(coverImgFile);
+    s3Service.putFile(sampleFile);
+
+    return RegistrationEditResult.from(
+        getRegistrationById(registrationId)
+            .updateRegistration(
+                param.title(),
+                param.summary(),
+                param.price(),
+                param.stockCount(),
+                param.isbn(),
+                param.publisher(),
+                param.promotion(),
+                coverImgFile.toCoverImgFile(),
+                sampleFile.toSampleFile()));
   }
 
   private Registration getRegistrationById(long registrationId) {

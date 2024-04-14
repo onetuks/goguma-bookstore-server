@@ -5,11 +5,14 @@ import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationCreateRequest;
+import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationInspectionRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationCreateResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationEditResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,7 +38,7 @@ public class RegistrationRestController {
   }
 
   /**
-   * 신간 등록을 요청 - 작가용
+   * 신간 등록 신청 - 작가용
    *
    * @param authorId : 로그인한 작가 아이디
    * @param request : 신간 등록 요청 정보
@@ -82,6 +85,27 @@ public class RegistrationRestController {
     RegistrationInspectionResult result =
         registrationService.updateRegistrationApproval(registrationId, request.to());
     RegistrationInspectionResponse response = RegistrationInspectionResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @PatchMapping(
+      path = "/{registrationId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegistrationEditResponse> editRegistration(
+      @AuthorId Long authorId,
+      @PathVariable(name = "registrationId") Long registrationId,
+      @RequestBody @Valid RegistrationEditRequest request,
+      @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
+      @RequestPart(name = "sample-file") MultipartFile sampleFile) {
+    RegistrationEditResult result =
+        registrationService.updateRegistration(
+            registrationId,
+            request.to(),
+            CustomFile.of(authorId, FileType.BOOK_COVERS, coverImgFile),
+            CustomFile.of(authorId, FileType.BOOK_SAMPLES, sampleFile));
+    RegistrationEditResponse response = RegistrationEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
