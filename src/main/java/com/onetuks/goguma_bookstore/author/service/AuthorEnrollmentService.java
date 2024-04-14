@@ -16,12 +16,10 @@ import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 public class AuthorEnrollmentService {
 
@@ -49,12 +47,8 @@ public class AuthorEnrollmentService {
         .forEach(
             author -> {
               if (author.getEnrollmentAt().isBefore(twoWeeksAgo)) {
-                try {
-                  s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
-                  authorJpaRepository.delete(author);
-                } catch (Exception e) {
-                  log.warn("작가 입점 신청 삭제 중 오류가 발생했습니다. - authorId : {}", author.getAuthorId());
-                }
+                s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
+                authorJpaRepository.delete(author);
               }
             });
   }

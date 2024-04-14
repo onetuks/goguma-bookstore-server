@@ -88,6 +88,40 @@ class RegistrationServiceTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("신간 등록을 요청할 때 커버 이미지 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoCoverImgFile_ExceptionTest() {
+    // Given
+    RegistrationCreateParam param =
+        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
+    CustomFile coverImgFile = CustomFileFixture.createNullFile();
+    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(), param, coverImgFile, sampleFile));
+  }
+
+  @Test
+  @DisplayName("신간 등록을 요청할 때 샘플 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoSampleFile_ExceptionTest() {
+    // Given
+    RegistrationCreateParam param =
+        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
+    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
+    CustomFile sampleFile = CustomFileFixture.createNullFile();
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(), param, coverImgFile, sampleFile));
+  }
+
+  @Test
   @DisplayName("신간등록을 검수한다.")
   void updateRegistrationApprovalTest() {
     // Given

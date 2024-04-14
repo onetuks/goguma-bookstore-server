@@ -84,6 +84,18 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("존재하지 않는 멤버가 입점 신청하는 경우 예외를 던진다.")
+  void createAuthorEnrollment_NotExistsMember_ExceptionTest() {
+    // Given
+    AuthorCreateParam param = AuthorFixture.createCreationParam();
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class,
+        () -> authorEnrollmentService.createAuthorEnrollment(1_454_020L, param));
+  }
+
+  @Test
   @DisplayName("구매안전서비스확인증을 부여한다.")
   void updateAuthorEscrowService() {
     // Given
@@ -332,7 +344,10 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             .map(
                 member ->
                     AuthorFixture.createWithEnrollmentAt(
-                        member, LocalDateTime.now().minusWeeks(2).minusHours(1)))
+                        member,
+                        member.getMemberId() % 2 == 0
+                            ? LocalDateTime.now().minusWeeks(2).minusHours(1)
+                            : LocalDateTime.now().minusWeeks(1).plusHours(1)))
             .toList());
 
     // When
@@ -342,6 +357,6 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     List<AuthorEnrollmentDetailsResult> results =
         authorEnrollmentService.findAllAuthorEnrollmentDetails();
 
-    assertThat(results).isEmpty();
+    assertThat(results).hasSize(1);
   }
 }
