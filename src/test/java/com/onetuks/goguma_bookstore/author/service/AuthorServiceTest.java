@@ -19,6 +19,7 @@ import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -142,5 +143,41 @@ class AuthorServiceTest extends IntegrationTest {
                                   result.profileImgUrl().contains(String.valueOf(memberId))))
                   .isTrue();
             });
+  }
+
+  @Test
+  @DisplayName("존재하지 않는 작가의 아이디로 조회할 때 예외가 발생한다.")
+  void getAuthorById_NotExistAuthorId_ExceptionTest() {
+    // Given
+    long notExistAuthorId = 1_213_300L;
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class, () -> authorService.findAuthorDetails(notExistAuthorId));
+  }
+
+  @Test
+  @DisplayName("멤버 아이디로 작가 아이디를 조회한다.")
+  void getAuthorIdByMemberIdTest() {
+    // Given
+    Author author = authors.get(0);
+
+    // When
+    Long authorId = authorService.getAuthorIdByMemberId(author.getMember().getMemberId());
+
+    // Then
+    assertThat(authorId).isEqualTo(author.getAuthorId());
+  }
+
+  @Test
+  @DisplayName("작가 입점을 하지 않은 멤버 아이디로 작가 아이디 조회 시 예외가 발생한다.")
+  void getAuthorIdByMemberId_NotAuthor_ExceptionTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class,
+        () -> authorService.getAuthorIdByMemberId(member.getMemberId()));
   }
 }

@@ -11,5 +11,5 @@ public interface AuthorJpaRepository extends JpaRepository<Author, Long> {
 
   List<Author> findAuthorsByEnrollmentInfoEnrollmentPassedTrue();
 
-  Optional<Long> findAuthorIdByMemberMemberId(long memberId);
+  Optional<Author> findByMemberMemberId(long memberId);
 }
