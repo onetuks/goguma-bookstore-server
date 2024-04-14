@@ -17,8 +17,6 @@ class RegistrationEditResponseTest extends IntegrationTest {
     RegistrationEditResult editResult =
         new RegistrationEditResult(
             1L,
-            true,
-            "승인",
             "coverImgUrl",
             "title",
             "summary",
@@ -35,8 +33,6 @@ class RegistrationEditResponseTest extends IntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(editResult.registrationId()),
-        () -> assertThat(result.approvalResult()).isEqualTo(editResult.approvalResult()),
-        () -> assertThat(result.approvalMemo()).isEqualTo(editResult.approvalMemo()),
         () -> assertThat(result.coverImgUrl()).isEqualTo(editResult.coverImgUrl()),
         () -> assertThat(result.title()).isEqualTo(editResult.title()),
         () -> assertThat(result.summary()).isEqualTo(editResult.summary()),

@@ -4,8 +4,6 @@ import com.onetuks.goguma_bookstore.registration.service.dto.result.Registration
 
 public record RegistrationEditResponse(
     long registrationId,
-    boolean approvalResult,
-    String approvalMemo,
     String coverImgUrl,
     String title,
     String summary,
@@ -19,8 +17,6 @@ public record RegistrationEditResponse(
   public static RegistrationEditResponse from(RegistrationEditResult result) {
     return new RegistrationEditResponse(
         result.registrationId(),
-        result.approvalResult(),
-        result.approvalMemo(),
         result.coverImgUrl(),
         result.title(),
         result.summary(),

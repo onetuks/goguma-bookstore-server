@@ -4,8 +4,6 @@ import com.onetuks.goguma_bookstore.registration.model.Registration;
 
 public record RegistrationEditResult(
     long registrationId,
-    boolean approvalResult,
-    String approvalMemo,
     String coverImgUrl,
     String title,
     String summary,
@@ -19,8 +17,6 @@ public record RegistrationEditResult(
   public static RegistrationEditResult from(Registration registration) {
     return new RegistrationEditResult(
         registration.getRegistrationId(),
-        registration.getApprovalResult(),
-        registration.getApprovalMemo(),
         registration.getCoverImgUrl(),
         registration.getTitle(),
         registration.getSummary(),

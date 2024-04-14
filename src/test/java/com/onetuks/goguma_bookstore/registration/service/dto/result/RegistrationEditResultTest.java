@@ -38,8 +38,6 @@ class RegistrationEditResultTest extends IntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(registration.getRegistrationId()),
-        () -> assertThat(result.approvalResult()).isEqualTo(registration.getApprovalResult()),
-        () -> assertThat(result.approvalMemo()).isEqualTo(registration.getApprovalMemo()),
         () -> assertThat(result.coverImgUrl()).isEqualTo(registration.getCoverImgUrl()),
         () -> assertThat(result.title()).isEqualTo(registration.getTitle()),
         () -> assertThat(result.summary()).isEqualTo(registration.getSummary()),
