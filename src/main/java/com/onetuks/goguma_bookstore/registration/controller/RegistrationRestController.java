@@ -28,6 +28,15 @@ public class RegistrationRestController {
     this.registrationService = registrationService;
   }
 
+  /**
+   * 신간 등록을 요청
+   *
+   * @param authorId : 로그인한 작가 아이디
+   * @param request : 신간 등록 요청 정보
+   * @param coverImgFile : 신간 표지 이미지 파일
+   * @param sampleFile : 신간 샘플 파일
+   * @return ResponseEntity<RegistrationPostResponse>
+   */
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)

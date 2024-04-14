@@ -1,6 +1,7 @@
 package com.onetuks.goguma_bookstore.auth.util.author;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
+import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
@@ -17,6 +18,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class AuthorIdResolver implements HandlerMethodArgumentResolver {
+
+  private final AuthorService authorService;
+
+  public AuthorIdResolver(AuthorService authorService) {
+    this.authorService = authorService;
+  }
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
@@ -39,7 +46,9 @@ public class AuthorIdResolver implements HandlerMethodArgumentResolver {
       throw new AccessDeniedException("Only Admin or Author Role can access this method.");
     }
 
-    return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
+    Long loginId = ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
+
+    return authorService.getAuthorIdByMemberId(loginId);
   }
 
   private boolean isAdminOrAuthorRole(GrantedAuthority grantedAuthority) {

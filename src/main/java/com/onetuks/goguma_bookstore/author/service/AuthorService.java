@@ -56,4 +56,10 @@ public class AuthorService {
         .findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."));
   }
+
+  public Long getAuthorIdByMemberId(long loginId) {
+    return authorJpaRepository
+        .findAuthorIdByMemberMemberId(loginId)
+        .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."));
+  }
 }
