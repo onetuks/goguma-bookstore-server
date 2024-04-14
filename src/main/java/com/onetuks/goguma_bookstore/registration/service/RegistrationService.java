@@ -4,8 +4,10 @@ import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationPostParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationPostResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +24,15 @@ public class RegistrationService {
   }
 
   @Transactional
-  public RegistrationPostResult createRegistration(
-      long authorId, RegistrationPostParam param, CustomFile coverImgFile, CustomFile sampleFile) {
-    return RegistrationPostResult.from(
+  public RegistrationCreateResult createRegistration(
+      long authorId,
+      RegistrationCreateParam param,
+      CustomFile coverImgFile,
+      CustomFile sampleFile) {
+    return RegistrationCreateResult.from(
         registrationJpaRepository.save(
             Registration.builder()
                 .author(authorService.getAuthorById(authorId))
-                .approvalResult(false)
-                .approvalMemo("신간 등록 검수 중입니다.")
                 .coverImgFile(coverImgFile.toCoverImgFile())
                 .title(param.title())
                 .summary(param.summary())
@@ -40,5 +43,18 @@ public class RegistrationService {
                 .promotion(param.promotion())
                 .sampleFile(sampleFile.toSampleFile())
                 .build()));
+  }
+
+  public RegistrationInspectionResult updateRegistrationApproval(
+      long registrationId, RegistrationInspectionParam param) {
+    return RegistrationInspectionResult.from(
+        getRegistrationById(registrationId)
+            .updateApprovalInfo(param.approvalResult(), param.approvalMemo()));
+  }
+
+  private Registration getRegistrationById(long registrationId) {
+    return registrationJpaRepository
+        .findById(registrationId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 신간등록이 존재하지 않습니다."));
   }
 }

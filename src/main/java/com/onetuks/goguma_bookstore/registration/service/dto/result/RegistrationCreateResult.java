@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.registration.service.dto.result;
 
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 
-public record RegistrationPostResult(
+public record RegistrationCreateResult(
     long registrationId,
     boolean approvalResult,
     String approvalMemo,
@@ -16,8 +16,8 @@ public record RegistrationPostResult(
     boolean promotion,
     String sampleUrl) {
 
-  public static RegistrationPostResult from(Registration registration) {
-    return new RegistrationPostResult(
+  public static RegistrationCreateResult from(Registration registration) {
+    return new RegistrationCreateResult(
         registration.getRegistrationId(),
         registration.getApprovalResult(),
         registration.getApprovalMemo(),

@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.registration.model;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
+import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -34,11 +35,7 @@ public class Registration {
   @JoinColumn(name = "author_id", nullable = false)
   private Author author;
 
-  @Column(name = "approval_result", nullable = false)
-  private Boolean approvalResult;
-
-  @Column(name = "approval_memo", nullable = false)
-  private String approvalMemo;
+  @Embedded private ApprovalInfo approvalInfo;
 
   @Embedded private CoverImgFile coverImgFile;
 
@@ -68,8 +65,7 @@ public class Registration {
   @Builder
   public Registration(
       Author author,
-      Boolean approvalResult,
-      String approvalMemo,
+      ApprovalInfo approvalInfo,
       CoverImgFile coverImgFile,
       String title,
       String summary,
@@ -80,8 +76,10 @@ public class Registration {
       Boolean promotion,
       SampleFile sampleFile) {
     this.author = author;
-    this.approvalResult = approvalResult;
-    this.approvalMemo = approvalMemo;
+    this.approvalInfo =
+        Objects.requireNonNullElse(
+            approvalInfo,
+            ApprovalInfo.builder().approvalResult(false).approvalMemo("신간 등록 검수 중입니다.").build());
     this.coverImgFile = coverImgFile;
     this.title = title;
     this.summary = summary;
@@ -93,12 +91,26 @@ public class Registration {
     this.sampleFile = sampleFile;
   }
 
+  public boolean getApprovalResult() {
+    return approvalInfo.getApprovalResult();
+  }
+
+  public String getApprovalMemo() {
+    return approvalInfo.getApprovalMemo();
+  }
+
   public String getCoverImgUrl() {
     return coverImgFile.getCoverImgUrl();
   }
 
   public String getSampleUrl() {
     return sampleFile.getSampleUrl();
+  }
+
+  public Registration updateApprovalInfo(boolean approvalResult, String approvalMemo) {
+    this.approvalInfo =
+        ApprovalInfo.builder().approvalResult(approvalResult).approvalMemo(approvalMemo).build();
+    return this;
   }
 
   @Override

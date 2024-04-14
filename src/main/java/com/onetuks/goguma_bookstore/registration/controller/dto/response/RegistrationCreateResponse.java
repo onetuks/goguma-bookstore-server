@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationPostResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 
-public record RegistrationPostResponse(
+public record RegistrationCreateResponse(
     long registrationId,
     boolean approvalResult,
     String approvalMemo,
@@ -16,8 +16,8 @@ public record RegistrationPostResponse(
     boolean promotion,
     String sampleUrl) {
 
-  public static RegistrationPostResponse from(RegistrationPostResult result) {
-    return new RegistrationPostResponse(
+  public static RegistrationCreateResponse from(RegistrationCreateResult result) {
+    return new RegistrationCreateResponse(
         result.registrationId(),
         result.approvalResult(),
         result.approvalMemo(),

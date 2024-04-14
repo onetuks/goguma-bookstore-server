@@ -19,7 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class RegistrationPostResultTest extends IntegrationTest {
+class RegistrationCreateResultTest extends IntegrationTest {
 
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
   @Autowired private MemberJpaRepository memberJpaRepository;
@@ -40,7 +40,7 @@ class RegistrationPostResultTest extends IntegrationTest {
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    RegistrationPostResult result = RegistrationPostResult.from(save);
+    RegistrationCreateResult result = RegistrationCreateResult.from(save);
 
     // Then
     assertAll(

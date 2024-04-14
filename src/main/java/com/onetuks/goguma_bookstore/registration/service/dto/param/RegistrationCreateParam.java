@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.service.dto.param;
 
-public record RegistrationPostParam(
+public record RegistrationCreateParam(
     String title,
     String summary,
     long price,

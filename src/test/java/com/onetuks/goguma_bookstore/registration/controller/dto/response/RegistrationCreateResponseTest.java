@@ -4,18 +4,18 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationPostResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationPostResponseTest extends IntegrationTest {
+class RegistrationCreateResponseTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 신청 결과 객체에서 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    RegistrationPostResult postResult =
-        new RegistrationPostResult(
+    RegistrationCreateResult postResult =
+        new RegistrationCreateResult(
             23L,
             false,
             "검수 중입니다.",
@@ -30,7 +30,7 @@ class RegistrationPostResponseTest extends IntegrationTest {
             "https://sample.url.pdf");
 
     // When
-    RegistrationPostResponse result = RegistrationPostResponse.from(postResult);
+    RegistrationCreateResponse result = RegistrationCreateResponse.from(postResult);
 
     // Then
     assertAll(
