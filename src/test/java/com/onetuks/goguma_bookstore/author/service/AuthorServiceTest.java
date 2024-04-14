@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.author.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
@@ -85,11 +85,11 @@ class AuthorServiceTest extends IntegrationTest {
     CustomFile customFile = CustomFileFixture.create(author0.getAuthorId(), FileType.PROFILES);
 
     // When & Then
-    assertThatThrownBy(
-            () ->
-                authorService.updateAuthorProfile(
-                    author1.getAuthorId(), author0.getAuthorId(), param, customFile))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            authorService.updateAuthorProfile(
+                author1.getAuthorId(), author0.getAuthorId(), param, customFile));
   }
 
   @Test

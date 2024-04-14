@@ -1,24 +1,30 @@
 package com.onetuks.goguma_bookstore.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberProfileEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,12 +104,39 @@ class MemberServiceTest extends IntegrationTest {
     MemberEntryInfoParam param = new MemberEntryInfoParam(member.getNickname(), true);
 
     // When & Then
-    assertThatThrownBy(
-            () -> {
-              memberService.updateMemberInfo(createResult.memberId(), param);
-              memberJpaRepository.flush();
-            })
-        .isInstanceOf(DataIntegrityViolationException.class);
+    assertThrows(
+        DataIntegrityViolationException.class,
+        () -> {
+          memberService.updateMemberInfo(createResult.memberId(), param);
+          memberJpaRepository.flush();
+        });
+  }
+
+  @Test
+  @DisplayName("회원 프로필을 수정한다.")
+  void updateMemberProfileTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    MemberProfileEditParam param =
+        new MemberProfileEditParam(
+            "빠니보틀니", true, "강원도 춘천시 중앙로", "킹갓 빠니보틀 생가", CashReceiptType.PERSON, "010-0101-0101");
+    CustomFile customFile = CustomFileFixture.create(member.getMemberId(), FileType.PROFILES);
+
+    // When
+    MemberProfileEditResult result =
+        memberService.updateMemberProfile(member.getMemberId(), param, customFile);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
+        () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
+        () -> assertThat(result.alarmPermission()).isEqualTo(param.alarmPermission()),
+        () -> assertThat(result.defaultAddress()).isEqualTo(param.defaultAddress()),
+        () -> assertThat(result.defaultAddressDetail()).isEqualTo(param.defaultAddressDetail()),
+        () -> assertThat(result.defaultCashReceiptType()).isEqualTo(param.defaultCashReceiptType()),
+        () ->
+            assertThat(result.defaultCashReceiptNumber())
+                .isEqualTo(param.defaultCashReceiptNumber()));
   }
 
   @Test
@@ -186,5 +219,16 @@ class MemberServiceTest extends IntegrationTest {
         () ->
             assertThat(result.defaultCashReceiptNumber())
                 .isEqualTo(member.getDefaultCashReceiptNumber()));
+  }
+
+  @Test
+  @DisplayName("존재하지 않는 멤버 조회 시 실패한다.")
+  void getMemberInfo_NotExistsMember_ExceptionTest() {
+    // Given
+    long notExistsMemberId = 999L;
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class, () -> memberService.getMemberInfo(notExistsMemberId));
   }
 }

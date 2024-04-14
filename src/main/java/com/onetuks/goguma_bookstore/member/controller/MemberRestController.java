@@ -141,6 +141,13 @@ public class MemberRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 멤버 정보 조회
+   *
+   * @param memberId : 조회할 멤버 아이디
+   * @return memberId, nickname, alarmPermission, profileImgUri, defaultAddress,
+   *     defaultAddressDetail, defaultCashReceiptType, defaultCashReceiptNumber
+   */
   @GetMapping(path = "/{memberId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberInfoResponse> getMemberInfo(
       @PathVariable(name = "memberId") Long memberId) {

@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.global.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
@@ -22,7 +22,7 @@ class S3ServiceTest extends IntegrationTest {
   @DisplayName("파일이 성공적으로 S3에 업로드된다.")
   void s3PutFileSuccessTest() {
     // Given
-    long memberId = 1_000L;
+    long memberId = 1_0000L;
     CustomFile customFile = CustomFileFixture.create(memberId, FileType.PROFILES);
 
     // When
@@ -37,6 +37,19 @@ class S3ServiceTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("파일이 없는 경우 파일 저장 로직을 실행하지 않고 바로 메소드가 종료된다.")
+  void s3PutFile_NullFile_ReturnTest() {
+    // Given
+    CustomFile customFile = CustomFileFixture.createNullFile();
+
+    // When
+    s3Service.putFile(customFile);
+
+    // Then
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
+  }
+
+  @Test
   @DisplayName("S3에 있는 파일을 성공적으로 제거한다.")
   void s3DeleteFileSuccessTest() {
     // Given
@@ -48,8 +61,7 @@ class S3ServiceTest extends IntegrationTest {
     s3Service.deleteFile(customFile.getUri());
 
     // Then
-    assertThatThrownBy(() -> s3Service.getFile(customFile.getUri()))
-        .isInstanceOf(NoSuchKeyException.class);
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
   }
 
   @Test
@@ -62,6 +74,6 @@ class S3ServiceTest extends IntegrationTest {
     s3Service.deleteFile(uri);
 
     // Then
-    assertThatThrownBy(() -> s3Service.getFile(uri)).isInstanceOf(NoSuchKeyException.class);
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(uri));
   }
 }

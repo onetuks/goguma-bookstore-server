@@ -2,9 +2,9 @@ package com.onetuks.goguma_bookstore.author.service;
 
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.MAIL_ORDER_SALES;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
@@ -71,9 +71,9 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     AuthorCreateParam param = AuthorFixture.createCreationParam();
 
     // When & Then
-    assertThatThrownBy(
-            () -> authorEnrollmentService.createAuthorEnrollment(authorMember.getMemberId(), param))
-        .isInstanceOf(IllegalStateException.class);
+    assertThrows(
+        IllegalStateException.class,
+        () -> authorEnrollmentService.createAuthorEnrollment(authorMember.getMemberId(), param));
   }
 
   @Test
@@ -125,11 +125,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
         CustomFileFixture.create(createResult.authorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
 
     // When & Then
-    assertThatThrownBy(
-            () ->
-                authorEnrollmentService.updateAuthorMailOrderSales(
-                    authorMember.getMemberId(), createResult.authorId(), mailOrderSalesFile))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            authorEnrollmentService.updateAuthorMailOrderSales(
+                authorMember.getMemberId(), createResult.authorId(), mailOrderSalesFile));
   }
 
   @Test
@@ -205,11 +205,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When & Then
-    assertThatThrownBy(
-            () ->
-                authorEnrollmentService.deleteAuthorEnrollment(
-                    userMember.getMemberId(), save.getAuthorId()))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            authorEnrollmentService.deleteAuthorEnrollment(
+                userMember.getMemberId(), save.getAuthorId()));
   }
 
   @Test
@@ -242,11 +242,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
 
     // When & Then
-    assertThatThrownBy(
-            () ->
-                authorEnrollmentService.findAuthorEnrollmentDetails(
-                    authorMember.getMemberId(), createResult.authorId()))
-        .isInstanceOf(IllegalArgumentException.class);
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            authorEnrollmentService.findAuthorEnrollmentDetails(
+                authorMember.getMemberId(), createResult.authorId()));
   }
 
   @Test
