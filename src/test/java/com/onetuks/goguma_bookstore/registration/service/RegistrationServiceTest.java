@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.registration.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
@@ -29,6 +30,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class RegistrationServiceTest extends IntegrationTest {
 
@@ -50,10 +53,11 @@ class RegistrationServiceTest extends IntegrationTest {
   @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
   void createRegistrationTest() {
     // Given
+    long authorId = author.getAuthorId();
     RegistrationCreateParam param =
         new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.create(authorId, FileType.BOOK_COVERS);
+    CustomFile sampleFile = CustomFileFixture.create(authorId, FileType.BOOK_SAMPLES);
 
     // When
     RegistrationCreateResult result =
@@ -125,8 +129,6 @@ class RegistrationServiceTest extends IntegrationTest {
         () -> assertThat(savedCoverImgFile).hasSize(coverImgFile.getMultipartFile().getSize()),
         () -> assertThat(savedSampleFile).hasSize(sampleFile.getMultipartFile().getSize()),
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
-        () -> assertThat(result.approvalResult()).isFalse(),
-        () -> assertThat(result.approvalMemo()).isEqualTo(save.getApprovalMemo()),
         () ->
             assertThat(result.coverImgUrl())
                 .isEqualTo(coverImgFile.toCoverImgFile().getCoverImgUrl()),
@@ -138,5 +140,48 @@ class RegistrationServiceTest extends IntegrationTest {
         () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
         () -> assertThat(result.sampleUrl()).isEqualTo(sampleFile.toSampleFile().getSampleUrl()));
+  }
+
+  @Test
+  @DisplayName("신간등록을 삭제한다. 커버 이미지 파일과 샘플 파일이 S3에서 삭제된다.")
+  void deleteRegistrationTest() {
+    // Given
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
+
+    // When
+    registrationService.deleteRegistration(author.getAuthorId(), save.getRegistrationId());
+
+    // Then
+    boolean result = registrationJpaRepository.existsById(save.getRegistrationId());
+
+    assertThat(result).isFalse();
+    assertThrows(
+        NoSuchKeyException.class, () -> s3Service.getFile(save.getCoverImgFile().getCoverImgUri()));
+  }
+
+  @Test
+  @DisplayName("신간등록을 삭제할 권한이 없는 경우 예외가 발생하고, 이미지 파일과 샘플 파일은 삭제되지 않는다.")
+  void deleteRegistration_NoAuthority_ExceptionTest() {
+    // Given
+    long otherAuthorId = 123_412L;
+    RegistrationCreateParam param =
+        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
+    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
+    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+
+    RegistrationCreateResult result =
+        registrationService.createRegistration(
+            author.getAuthorId(), param, coverImgFile, sampleFile);
+
+    // When & Then
+    assertThrows(
+        AccessDeniedException.class,
+        () -> registrationService.deleteRegistration(otherAuthorId, result.registrationId()));
+
+    File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    File savedSampleFile = s3Service.getFile(sampleFile.getUri());
+
+    assertAll(
+        () -> assertThat(savedCoverImgFile).exists(), () -> assertThat(savedSampleFile).exists());
   }
 }

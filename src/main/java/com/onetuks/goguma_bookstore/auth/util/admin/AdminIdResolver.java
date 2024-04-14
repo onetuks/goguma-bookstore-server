@@ -2,10 +2,10 @@ package com.onetuks.goguma_bookstore.auth.util.admin;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.author.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
+import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateEnrollmentRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateEnrollmentResponse;
@@ -88,7 +89,7 @@ public class AuthorEnrollmentRestController {
   /**
    * 통신판매신고증 전송
    *
-   * @param loginId : 본인 확인용
+   * @param loginAuthorId : 본인 확인용
    * @param authorId : 작가 등록 식별자
    * @param mailOrderSalesFile : 통판신고증 PDF 파일
    * @return mailOrderSalesUrl
@@ -98,12 +99,12 @@ public class AuthorEnrollmentRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorMailOrderSalesSubmitResponse> submitMailOrderSales(
-      @LoginId Long loginId,
+      @AuthorId Long loginAuthorId,
       @PathVariable(name = "authorId") Long authorId,
       @RequestPart(name = "mail-order-sales-file") MultipartFile mailOrderSalesFile) {
     AuthorMailOrderSalesSubmitResult result =
         authorEnrollmentService.updateAuthorMailOrderSales(
-            loginId,
+            loginAuthorId,
             authorId,
             CustomFile.of(authorId, FileType.MAIL_ORDER_SALES, mailOrderSalesFile));
     AuthorMailOrderSalesSubmitResponse response = AuthorMailOrderSalesSubmitResponse.from(result);
@@ -134,14 +135,14 @@ public class AuthorEnrollmentRestController {
   /**
    * 입점 신청 취소
    *
-   * @param loginId : 본인 확인용
+   * @param loginAuthorId : 본인 확인용
    * @param authorId : 작가 등록 식별자
    * @return void
    */
   @DeleteMapping(path = "/{authorId}")
   public ResponseEntity<Void> cancelAuthorEnrollment(
-      @LoginId Long loginId, @PathVariable(name = "authorId") Long authorId) {
-    authorEnrollmentService.deleteAuthorEnrollment(loginId, authorId);
+      @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
+    authorEnrollmentService.deleteAuthorEnrollment(loginAuthorId, authorId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -149,16 +150,16 @@ public class AuthorEnrollmentRestController {
   /**
    * 작가 등록 상세 조회
    *
-   * @param loginId : 본인 확인용
+   * @param loginAuthorId : 본인 확인용
    * @param authorId : 작가 등록 식별자
    * @return authorId, memberId, roleType, profileImgUrl, nickname, introduction, escrowServiceUrl,
    *     mailOrderSalesUrl, enrollmentPassed, enrollmentAt
    */
   @GetMapping(path = "/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
-      @LoginId Long loginId, @PathVariable(name = "authorId") Long authorId) {
+      @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
     AuthorEnrollmentDetailsResult result =
-        authorEnrollmentService.findAuthorEnrollmentDetails(loginId, authorId);
+        authorEnrollmentService.findAuthorEnrollmentDetails(loginAuthorId, authorId);
     AuthorEnrollmentDetailsResponse response = AuthorEnrollmentDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
