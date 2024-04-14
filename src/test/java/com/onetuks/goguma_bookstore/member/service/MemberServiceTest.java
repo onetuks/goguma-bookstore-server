@@ -11,10 +11,13 @@ import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,5 +139,25 @@ class MemberServiceTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.defaultAddress()).isEqualTo(param.defaultAddress()),
         () -> assertThat(result.defaultAddressDetail()).isEqualTo(param.defaultAddressDetail()));
+  }
+
+  @Test
+  @DisplayName("기본 현금영수증 정보를 수정한다.")
+  void updateDefaultCashReceiptInfoTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    MemberDefaultCashReceiptEditParam param =
+        new MemberDefaultCashReceiptEditParam(CashReceiptType.PERSON, "010-0101-0101");
+
+    // When
+    MemberDefaultCashReceiptEditResult result =
+        memberService.updateDefaultCashReceipt(member.getMemberId(), param);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.defaultCashReceiptType()).isEqualTo(param.defaultCashReceiptType()),
+        () ->
+            assertThat(result.defaultCashReciptNumber())
+                .isEqualTo(param.defaultCashReceiptNumber()));
   }
 }

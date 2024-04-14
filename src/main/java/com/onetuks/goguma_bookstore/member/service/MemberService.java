@@ -6,10 +6,12 @@ import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
+import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberProfileEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.member.service.event.WithdrawalEventPublisher;
@@ -90,6 +92,15 @@ public class MemberService {
             .updateDefaultAddressInfo(
                 memberDefaultAddressParam.defaultAddress(),
                 memberDefaultAddressParam.defaultAddressDetail()));
+  }
+
+  @Transactional
+  public MemberDefaultCashReceiptEditResult updateDefaultCashReceipt(
+      long memberId, MemberDefaultCashReceiptEditParam param) {
+    return MemberDefaultCashReceiptEditResult.from(
+        getMemberById(memberId)
+            .updateDefaultCashReceiptInfo(
+                param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
   }
 
   private Member getMemberById(long memberId) {
