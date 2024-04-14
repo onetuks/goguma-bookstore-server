@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -89,6 +90,17 @@ public class RegistrationRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 신간 등록 수정 - 작가용
+   *
+   * @param authorId : 로그인한 작가 아이디
+   * @param registrationId : 신간 등록 아이디
+   * @param request : 신간 등록 수정 요청 정보
+   * @param coverImgFile : 신간 표지 이미지 파일
+   * @param sampleFile : 신간 샘플 파일
+   * @return registrationId, title, summary, price, stockCount, isbn, publisher, coverImgUrl,
+   *     sampleUrl
+   */
   @PatchMapping(
       path = "/{registrationId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -108,5 +120,20 @@ public class RegistrationRestController {
     RegistrationEditResponse response = RegistrationEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 신간 등록 삭제 - 작가용
+   *
+   * @param authorId : 로그인한 작가 아이디
+   * @param registrationId : 신간 등록 아이디
+   * @return Void
+   */
+  @DeleteMapping(path = "/{registrationId}")
+  public ResponseEntity<Void> removeRegistration(
+      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+    registrationService.deleteRegistration(authorId, registrationId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

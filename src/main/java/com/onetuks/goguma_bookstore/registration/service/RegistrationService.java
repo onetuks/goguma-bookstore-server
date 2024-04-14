@@ -11,6 +11,7 @@ import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationI
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +89,20 @@ public class RegistrationService {
                 param.promotion(),
                 coverImgFile.toCoverImgFile(),
                 sampleFile.toSampleFile()));
+  }
+
+  @Transactional
+  public void deleteRegistration(long authorId, long registrationId) {
+    Registration registration = getRegistrationById(registrationId);
+
+    if (registration.getAuthor().getAuthorId() != authorId) {
+      throw new AccessDeniedException("해당 신간등록을 삭제할 권한이 없습니다.");
+    }
+
+    s3Service.deleteFile(registration.getCoverImgFile().getCoverImgUri());
+    s3Service.deleteFile(registration.getSampleFile().getSampleUri());
+
+    registrationJpaRepository.delete(registration);
   }
 
   private Registration getRegistrationById(long registrationId) {
