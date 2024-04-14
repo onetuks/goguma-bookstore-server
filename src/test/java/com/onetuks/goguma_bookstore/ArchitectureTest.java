@@ -82,6 +82,32 @@ public class ArchitectureTest extends IntegrationTest {
     }
 
     @Test
+    @DisplayName("result 패키지 안에 있는 클래스는 Result 로 끝난다.")
+    void result_ClassNamePostfix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.classes()
+              .that()
+              .resideInAnyPackage("..result..")
+              .should()
+              .haveSimpleNameEndingWith("Result");
+
+      rule.check(javaClasses);
+    }
+
+    @Test
+    @DisplayName("param 패키지 안에 있는 클래스는 Param 로 끝난다.")
+    void param_ClassNamePostfix_Test() {
+      ArchRule rule =
+          ArchRuleDefinition.classes()
+              .that()
+              .resideInAnyPackage("..param..")
+              .should()
+              .haveSimpleNameEndingWith("Param");
+
+      rule.check(javaClasses);
+    }
+
+    @Test
     @DisplayName("repository 패키지 안에 있는 클래스는 Repository 로 끝나고, 인터페이스이다.")
     void repository_ClassNamePostfix_Test() {
       ArchRule rule =
@@ -107,6 +133,10 @@ public class ArchitectureTest extends IntegrationTest {
               .resideOutsideOfPackage("..dto..")
               .and()
               .resideOutsideOfPackage("..vo..")
+              .and()
+              .resideOutsideOfPackage("..event..")
+              .and()
+              .resideOutsideOfPackage("..listener..")
               .should()
               .haveSimpleNameEndingWith("Service")
               .andShould()

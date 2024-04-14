@@ -1,5 +1,7 @@
 package com.onetuks.goguma_bookstore.author.model.vo;
 
+import com.onetuks.goguma_bookstore.global.vo.file.EscrowServiceFile;
+import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSalesFile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
@@ -14,9 +16,9 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class EnrollmentInfo {
 
-  @Embedded private EscrowService escrowService;
+  @Embedded private EscrowServiceFile escrowServiceFile;
 
-  @Embedded private MailOrderSales mailOrderSales;
+  @Embedded private MailOrderSalesFile mailOrderSalesFile;
 
   @Column(name = "enrollment_passed", nullable = false)
   private Boolean enrollmentPassed;
@@ -26,37 +28,40 @@ public class EnrollmentInfo {
 
   @Builder
   public EnrollmentInfo(
-      String escrowServiceUri,
-      String mailOrderSalesUri,
+      EscrowServiceFile escrowServiceFile,
+      MailOrderSalesFile mailOrderSalesFile,
       Boolean enrollmentPassed,
       LocalDateTime enrollmentAt) {
-    this.escrowService = new EscrowService(escrowServiceUri);
-    this.mailOrderSales = new MailOrderSales(mailOrderSalesUri);
+    this.escrowServiceFile = escrowServiceFile;
+    this.mailOrderSalesFile = mailOrderSalesFile;
     this.enrollmentPassed = enrollmentPassed;
     this.enrollmentAt = enrollmentAt;
   }
 
-  public EnrollmentInfo setEscrowService(String escrowServiceUri) {
-    return new EnrollmentInfo(
-        escrowServiceUri,
-        this.mailOrderSales.getMailOrderSalesUri(),
-        this.enrollmentPassed,
-        LocalDateTime.now());
+  public EnrollmentInfo setEscrowServiceFile(EscrowServiceFile escrowServiceFile) {
+    return EnrollmentInfo.builder()
+        .escrowServiceFile(escrowServiceFile)
+        .mailOrderSalesFile(getMailOrderSalesFile())
+        .enrollmentPassed(getEnrollmentPassed())
+        .enrollmentAt(LocalDateTime.now())
+        .build();
   }
 
-  public EnrollmentInfo setMailOrderSales(String mailOrderSalesUri) {
-    return new EnrollmentInfo(
-        this.escrowService.getEscrowServiceUri(),
-        mailOrderSalesUri,
-        this.enrollmentPassed,
-        LocalDateTime.now());
+  public EnrollmentInfo setMailOrderSalesFile(MailOrderSalesFile mailOrderSalesFile) {
+    return EnrollmentInfo.builder()
+        .escrowServiceFile(getEscrowServiceFile())
+        .mailOrderSalesFile(mailOrderSalesFile)
+        .enrollmentPassed(getEnrollmentPassed())
+        .enrollmentAt(LocalDateTime.now())
+        .build();
   }
 
   public EnrollmentInfo convertEnrollmentPassedStatus() {
-    return new EnrollmentInfo(
-        this.escrowService.getEscrowServiceUri(),
-        this.mailOrderSales.getMailOrderSalesUri(),
-        !this.enrollmentPassed,
-        LocalDateTime.now());
+    return EnrollmentInfo.builder()
+        .escrowServiceFile(getEscrowServiceFile())
+        .mailOrderSalesFile(getMailOrderSalesFile())
+        .enrollmentPassed(!getEnrollmentPassed())
+        .enrollmentAt(LocalDateTime.now())
+        .build();
   }
 }

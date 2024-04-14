@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
-import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
-import com.onetuks.goguma_bookstore.global.service.vo.FileType;
-import java.io.IOException;
+import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +14,14 @@ class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
 
   @Test
   @DisplayName("생성 결과 객체에서 생성 응답 객체로 변환한다.")
-  void from() throws IOException {
+  void fromTest() {
     // Given
     long authorId = 1_000L;
-    String fileName = MultipartFileFixture.createFile(FileType.PROFILES, authorId).getName();
+    ProfileImgFile profileImgFile =
+        CustomFileFixture.create(authorId, FileType.PROFILES).toProfileImgFile();
     AuthorCreateEnrollmentResult resultObject =
-        new AuthorCreateEnrollmentResult(authorId, fileName, "빠니보틀", "빡친감자");
+        new AuthorCreateEnrollmentResult(
+            authorId, profileImgFile.getProfileImgUrl(), "빠니보틀", "빡친감자");
 
     // When
     AuthorCreateEnrollmentResponse result = AuthorCreateEnrollmentResponse.from(resultObject);

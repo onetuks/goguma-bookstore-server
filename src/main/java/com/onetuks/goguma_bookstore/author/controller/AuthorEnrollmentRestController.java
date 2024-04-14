@@ -17,6 +17,8 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDe
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -76,7 +78,8 @@ public class AuthorEnrollmentRestController {
       @PathVariable("authorId") Long authorId,
       @RequestPart(name = "escrow-service-file") MultipartFile escrowServiceFile) {
     AuthorEscrowServiceHandOverResult result =
-        authorEnrollmentService.updateAuthorEscrowService(authorId, escrowServiceFile);
+        authorEnrollmentService.updateAuthorEscrowService(
+            authorId, CustomFile.of(authorId, FileType.ESCROWS, escrowServiceFile));
     AuthorEscrowServiceHandOverResponse response = AuthorEscrowServiceHandOverResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -99,7 +102,10 @@ public class AuthorEnrollmentRestController {
       @PathVariable(name = "authorId") Long authorId,
       @RequestPart(name = "mail-order-sales") MultipartFile mailOrderSalesFile) {
     AuthorMailOrderSalesSubmitResult result =
-        authorEnrollmentService.updateAuthorMailOrderSales(loginId, authorId, mailOrderSalesFile);
+        authorEnrollmentService.updateAuthorMailOrderSales(
+            loginId,
+            authorId,
+            CustomFile.of(authorId, FileType.MAIL_ORDER_SALES, mailOrderSalesFile));
     AuthorMailOrderSalesSubmitResponse response = AuthorMailOrderSalesSubmitResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

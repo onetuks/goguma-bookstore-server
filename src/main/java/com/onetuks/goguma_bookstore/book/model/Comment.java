@@ -1,6 +1,7 @@
 package com.onetuks.goguma_bookstore.book.model;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,7 +31,7 @@ public class Comment {
   @Column(name = "comment_id", nullable = false)
   private Long commentId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "book_id", nullable = false)
   private Book book;
 

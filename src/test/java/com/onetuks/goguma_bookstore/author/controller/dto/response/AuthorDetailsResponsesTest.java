@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class AuthorDetailsResponsesTest extends IntegrationTest {
+class AuthorDetailsResponsesTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 다건 조회 결과 객체를 응답 객체로 변환한다.")

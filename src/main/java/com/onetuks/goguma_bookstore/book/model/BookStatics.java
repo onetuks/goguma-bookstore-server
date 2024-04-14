@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore.book.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,7 +27,7 @@ public class BookStatics {
   @Column(name = "book_statics_id", nullable = false)
   private Long bookStaticsId;
 
-  @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "book_id", nullable = false, unique = true)
   private Book book;
 

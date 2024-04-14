@@ -1,4 +1,4 @@
-name: Pull Request Test
+name: Pull Request CI
 
 # 언제 작성한 트리거 동작하는가
 on:

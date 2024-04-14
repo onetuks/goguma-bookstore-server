@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.book.model.Book;
+import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.order.model.Item;
 import com.onetuks.goguma_bookstore.order.model.Order;
 

@@ -33,7 +33,7 @@ public class Book {
   @Column(name = "book_id", nullable = false)
   private Long bookId;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "author_id", nullable = false)
   private Author author;
 

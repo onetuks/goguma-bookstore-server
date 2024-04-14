@@ -4,10 +4,10 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OAUTH_CLIENT_S
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.UNAUTHORIZED_TOKEN;
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenValidFailedException;
-import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.GoogleUser;
-import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public Member getUserData(String accessToken) {
+  public UserData getUserData(String accessToken) {
     GoogleUser googleUser =
         webClient
             .get()
@@ -43,7 +43,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
     Objects.requireNonNull(googleUser);
 
-    return Member.builder()
+    return UserData.builder()
         .name(googleUser.getName())
         .socialId(googleUser.getSub())
         .clientProvider(ClientProvider.GOOGLE)

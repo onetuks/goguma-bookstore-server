@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore.global.error;
 
+import static com.onetuks.goguma_bookstore.global.error.ErrorCode.DUPLICATED_COLUMN_VALUE;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.FILE_NOT_FOUND;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_ARGUMENT_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_STATE_ERROR;
@@ -11,11 +12,13 @@ import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ONLY_FOR_ADMIN
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_BODY_MISSING_ERROR;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_PARAM_MISSING_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.UncheckedIOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +37,17 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 @Slf4j
 public class GlobalExceptionRestHandler {
 
+  /** 유니크 컬럼에 중복된 값을 넣으려고 하는 경우 - members, authors nickname col */
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  protected ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+      DataIntegrityViolationException e) {
+    logging(e);
+
+    final ErrorResponse response = ErrorResponse.of(DUPLICATED_COLUMN_VALUE, e.getMessage());
+
+    return ResponseEntity.status(BAD_REQUEST).body(response);
+  }
+
   /** 관리자 혹은 작가만 접근 가능한 API에 다른 권한으로 접근한 경우 */
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
@@ -41,7 +55,7 @@ public class GlobalExceptionRestHandler {
 
     final ErrorResponse response = ErrorResponse.of(ONLY_FOR_ADMIN_METHOD, e.getMessage());
 
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    return ResponseEntity.status(UNAUTHORIZED).body(response);
   }
 
   /** S3 버킷에 찾고자 하는 파일이 없는 경우 */

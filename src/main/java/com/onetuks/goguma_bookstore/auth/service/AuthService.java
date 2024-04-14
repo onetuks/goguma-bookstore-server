@@ -8,7 +8,6 @@ import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenProvider;
 import com.onetuks.goguma_bookstore.auth.jwt.AuthTokenRepository;
 import com.onetuks.goguma_bookstore.auth.service.dto.LogoutResult;
 import com.onetuks.goguma_bookstore.auth.service.dto.RefreshResult;
-import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +23,9 @@ public class AuthService {
   }
 
   @Transactional
-  public AuthToken saveAccessToken(Long memberId, String socialId) {
+  public AuthToken saveAccessToken(String socialId, Long memberId) {
     AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, memberId);
-    AuthToken refreshToken = authTokenProvider.provideRefreshToken();
+    AuthToken refreshToken = authTokenProvider.provideRefreshToken(socialId, memberId);
 
     authTokenRepository.save(accessToken.getToken(), refreshToken.getToken());
 
@@ -35,13 +34,12 @@ public class AuthService {
 
   @Transactional
   public RefreshResult updateAccessToken(AuthToken accessToken, Long loginId) {
-    Claims claims = accessToken.getTokenClaims();
-    String socialId = claims.getSubject();
+    String socialId = accessToken.getSocialId();
 
     validateRefreshToken(accessToken.getToken());
 
     authTokenRepository.delete(accessToken.getToken());
-    AuthToken newAccessToken = saveAccessToken(loginId, socialId);
+    AuthToken newAccessToken = saveAccessToken(socialId, loginId);
 
     return RefreshResult.of(newAccessToken.getToken(), loginId);
   }

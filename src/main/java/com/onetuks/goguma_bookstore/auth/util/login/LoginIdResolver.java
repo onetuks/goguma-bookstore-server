@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.auth.util.login;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
 import jakarta.annotation.Nonnull;
-import java.util.Objects;
+import java.util.Arrays;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +17,8 @@ public class LoginIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
-    return Objects.equals(parameter.getParameterType(), Long.class);
+    return Arrays.stream(parameter.getParameterAnnotations())
+        .anyMatch(annotation -> annotation.annotationType().equals(LoginId.class));
   }
 
   @Override

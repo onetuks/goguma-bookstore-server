@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 
 public record AuthorEnrollmentJudgeResponse(
     boolean enrollmentPassed, long memberId, RoleType roleType) {

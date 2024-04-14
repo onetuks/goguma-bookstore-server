@@ -7,6 +7,6 @@ public record AuthorCreateEnrollmentRequest(
     @NotBlank String nickname, @NotBlank String introduction) {
 
   public AuthorCreateParam to() {
-    return new AuthorCreateParam(this.nickname, this.introduction);
+    return new AuthorCreateParam(nickname(), introduction());
   }
 }

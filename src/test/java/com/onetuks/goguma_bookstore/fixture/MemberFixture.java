@@ -1,24 +1,44 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.vo.ClientProvider;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
+import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultAddressInfo;
+import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
-import java.util.Random;
 
 public class MemberFixture {
 
   public static Member create(RoleType roleType) {
     return Member.builder()
-        .name("빠니보틀")
-        .socialId(String.valueOf(new Random().longs(1, 1_024)))
+        .authInfo(createAuthInfo(roleType))
+        .nickname("빡친감자" + UUIDProvider.getUUID())
+        .alarmPermission(true)
+        .defaultAddressInfo(
+            DefaultAddressInfo.builder()
+                .defaultAddress("강원도 춘천시")
+                .defaultAddressDetail("어딘가")
+                .build())
+        .defaultCashReceiptInfo(
+            DefaultCashReceiptInfo.builder()
+                .defaultCashReceiptType(CashReceiptType.PERSON)
+                .defaultCashReceiptNumber("1234-1234")
+                .build())
+        .build();
+  }
+
+  public static UserData createUserData(RoleType roleType) {
+    return UserData.builder()
+        .name("빠니보틀" + UUIDProvider.getUUID())
+        .socialId(UUIDProvider.getUUID())
         .clientProvider(ClientProvider.NAVER)
         .roleType(roleType)
-        .nickname("빡친감자")
-        .defaultAddress("강원도 춘천시")
-        .defaultAddressDetail("어딘가")
-        .defaultCashReceiptType(CashReceiptType.PERSON)
-        .defaultCashReceiptNumber("1234-1234")
         .build();
+  }
+
+  private static AuthInfo createAuthInfo(RoleType roleType) {
+    return AuthInfo.from(createUserData(roleType));
   }
 }

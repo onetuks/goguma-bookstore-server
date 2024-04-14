@@ -2,9 +2,12 @@ package com.onetuks.goguma_bookstore.author.model;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
-import com.onetuks.goguma_bookstore.author.model.vo.ProfileImg;
+import com.onetuks.goguma_bookstore.global.vo.file.EscrowServiceFile;
+import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSalesFile;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
+import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
+import com.onetuks.goguma_bookstore.member.model.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -34,14 +37,14 @@ public class Author {
   @Column(name = "author_id", nullable = false)
   private Long authorId;
 
-  @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "member_id", unique = true)
   private Member member;
 
-  @Embedded private ProfileImg profileImg;
+  @Embedded private ProfileImgFile profileImgFile;
 
   @Column(name = "nickname", nullable = false)
-  private String nickname;
+  private Nickname nickname;
 
   @Column(name = "introduction", nullable = false)
   private String introduction;
@@ -57,13 +60,13 @@ public class Author {
   @Builder
   public Author(
       Member member,
-      String profileImgUri,
+      ProfileImgFile profileImgFile,
       String nickname,
       String introduction,
       EnrollmentInfo enrollmentInfo) {
     this.member = member;
-    this.profileImg = new ProfileImg(profileImgUri);
-    this.nickname = nickname;
+    this.profileImgFile = profileImgFile;
+    this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.enrollmentInfo =
         Objects.requireNonNullElse(
@@ -75,16 +78,29 @@ public class Author {
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
+  public String getNickname() {
+    return this.nickname.getNicknameValue();
+  }
+
   public String getProfileImgUrl() {
-    return this.profileImg.getProfileImgUrl();
+    return this.profileImgFile.getProfileImgUrl();
   }
 
   public String getEscrowServiceUrl() {
-    return this.enrollmentInfo.getEscrowService().getEscrowServiceUrl();
+    EscrowServiceFile escrowServiceFile = this.enrollmentInfo.getEscrowServiceFile();
+    if (escrowServiceFile == null) {
+      return null;
+    }
+
+    return escrowServiceFile.getEscrowServiceUrl();
   }
 
   public String getMailOrderSalesUrl() {
-    return this.enrollmentInfo.getMailOrderSales().getMailOrderSalesUrl();
+    MailOrderSalesFile mailOrderSalesFile = this.enrollmentInfo.getMailOrderSalesFile();
+    if (mailOrderSalesFile == null) {
+      return null;
+    }
+    return mailOrderSalesFile.getMailOrderSalesUrl();
   }
 
   public boolean getEnrollmentPassed() {
@@ -95,13 +111,13 @@ public class Author {
     return this.enrollmentInfo.getEnrollmentAt();
   }
 
-  public Author updateProfileImgUri(String profileImgUri) {
-    this.profileImg = new ProfileImg(profileImgUri);
+  public Author updateProfileImgFile(ProfileImgFile profileImgFile) {
+    this.profileImgFile = profileImgFile;
     return this;
   }
 
   public Author updateNickname(String nickname) {
-    this.nickname = nickname;
+    this.nickname = new Nickname(nickname);
     return this;
   }
 
@@ -110,13 +126,13 @@ public class Author {
     return this;
   }
 
-  public String updateEscrowService(String escrowServiceUri) {
-    this.enrollmentInfo = enrollmentInfo.setEscrowService(escrowServiceUri);
+  public String updateEscrowService(EscrowServiceFile escrowServiceFile) {
+    this.enrollmentInfo = enrollmentInfo.setEscrowServiceFile(escrowServiceFile);
     return this.getEscrowServiceUrl();
   }
 
-  public String updateMailOrderSales(String mailOrderSalesUri) {
-    this.enrollmentInfo = enrollmentInfo.setMailOrderSales(mailOrderSalesUri);
+  public String updateMailOrderSales(MailOrderSalesFile mailOrderSalesFile) {
+    this.enrollmentInfo = enrollmentInfo.setMailOrderSalesFile(mailOrderSalesFile);
     return this.getMailOrderSalesUrl();
   }
 

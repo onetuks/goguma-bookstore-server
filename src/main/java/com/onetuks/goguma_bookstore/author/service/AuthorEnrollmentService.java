@@ -1,8 +1,5 @@
 package com.onetuks.goguma_bookstore.author.service;
 
-import com.onetuks.goguma_bookstore.auth.model.Member;
-import com.onetuks.goguma_bookstore.auth.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.auth.vo.RoleType;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
@@ -11,16 +8,17 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDe
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
-import com.onetuks.goguma_bookstore.global.service.FileURIProviderService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.service.vo.FileType;
+import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class AuthorEnrollmentService {
@@ -29,17 +27,14 @@ public class AuthorEnrollmentService {
   private final MemberJpaRepository memberJpaRepository;
 
   private final S3Service s3Service;
-  private final FileURIProviderService fileURIProviderService;
 
   public AuthorEnrollmentService(
       AuthorJpaRepository authorJpaRepository,
       MemberJpaRepository memberJpaRepository,
-      S3Service s3Service,
-      FileURIProviderService fileURIProviderService) {
+      S3Service s3Service) {
     this.authorJpaRepository = authorJpaRepository;
     this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
-    this.fileURIProviderService = fileURIProviderService;
   }
 
   /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
@@ -57,7 +52,7 @@ public class AuthorEnrollmentService {
         authorJpaRepository.save(
             Author.builder()
                 .member(getUserMemberById(loginId))
-                .profileImgUri(fileURIProviderService.provideDefaultProfileURI())
+                .profileImgFile(CustomFile.of().toProfileImgFile())
                 .nickname(param.nickname())
                 .introduction(param.introduction())
                 .build());
@@ -67,26 +62,25 @@ public class AuthorEnrollmentService {
 
   @Transactional
   public AuthorEscrowServiceHandOverResult updateAuthorEscrowService(
-      Long authorId, MultipartFile escrowServiceFile) {
-    String uri = fileURIProviderService.provideFileURI(FileType.ESCROWS, authorId);
-    s3Service.putFile(uri, escrowServiceFile);
+      Long authorId, CustomFile file) {
+    s3Service.putFile(file);
 
-    String escrowServiceUrl = getAuthorById(authorId).updateEscrowService(uri);
+    String escrowServiceUrl =
+        getAuthorById(authorId).updateEscrowService(file.toEscrowServiceFile());
 
     return new AuthorEscrowServiceHandOverResult(escrowServiceUrl);
   }
 
   @Transactional
   public AuthorMailOrderSalesSubmitResult updateAuthorMailOrderSales(
-      long loginId, long authorId, MultipartFile mailOrderSalesFile) {
+      long loginId, long authorId, CustomFile file) {
     Author author = getAuthorById(authorId);
 
     checkIllegalArgument(author, loginId);
 
-    String uri = fileURIProviderService.provideFileURI(FileType.MAIL_ORDER_SALES, authorId);
-    s3Service.putFile(uri, mailOrderSalesFile);
+    s3Service.putFile(file);
 
-    String mailOrderSalesUrl = author.updateMailOrderSales(uri);
+    String mailOrderSalesUrl = author.updateMailOrderSales(file.toMailOrderSalesFile());
 
     return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
