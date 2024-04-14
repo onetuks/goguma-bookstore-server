@@ -13,6 +13,7 @@ import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.member.service.event.WithdrawalEventPublisher;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
@@ -101,6 +102,11 @@ public class MemberService {
         getMemberById(memberId)
             .updateDefaultCashReceiptInfo(
                 param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
+  }
+
+  @Transactional(readOnly = true)
+  public MemberInfoResult getMemberInfo(long memberId) {
+    return MemberInfoResult.from(getMemberById(memberId));
   }
 
   private Member getMemberById(long memberId) {

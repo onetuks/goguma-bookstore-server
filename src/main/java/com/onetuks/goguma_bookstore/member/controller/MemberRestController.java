@@ -13,18 +13,22 @@ import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberProfileE
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberDefaultAddressEditResponse;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberDefaultCashReceiptEditResponse;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberEntryInfoResponse;
+import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberInfoResponse;
 import com.onetuks.goguma_bookstore.member.controller.dto.response.MemberProfileEditResponse;
 import com.onetuks.goguma_bookstore.member.service.MemberService;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -116,6 +120,13 @@ public class MemberRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 기본 현금영수증 설정
+   *
+   * @param memberId : 로그인한 멤버 아이디
+   * @param request : 기본 현금영수증 수정 요청
+   * @return defaultCashReceiptType, defaultCashReceiptNumber
+   */
   @PatchMapping(
       path = "/default-cash-receipt",
       produces = APPLICATION_JSON_VALUE,
@@ -126,6 +137,15 @@ public class MemberRestController {
         memberService.updateDefaultCashReceipt(memberId, request.to());
     MemberDefaultCashReceiptEditResponse response =
         MemberDefaultCashReceiptEditResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/{memberId}", produces = APPLICATION_JSON_VALUE)
+  public ResponseEntity<MemberInfoResponse> getMemberInfo(
+      @PathVariable(name = "memberId") Long memberId) {
+    MemberInfoResult result = memberService.getMemberInfo(memberId);
+    MemberInfoResponse response = MemberInfoResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

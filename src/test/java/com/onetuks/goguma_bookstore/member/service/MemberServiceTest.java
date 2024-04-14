@@ -17,6 +17,7 @@ import com.onetuks.goguma_bookstore.member.service.dto.result.MemberCreateResult
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -159,5 +160,31 @@ class MemberServiceTest extends IntegrationTest {
         () ->
             assertThat(result.defaultCashReciptNumber())
                 .isEqualTo(param.defaultCashReceiptNumber()));
+  }
+
+  @Test
+  @DisplayName("멤버 정보를 조회한다.")
+  void getMemberInfoTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    memberJpaRepository.flush();
+
+    // When
+    MemberInfoResult result = memberService.getMemberInfo(member.getMemberId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
+        () -> assertThat(result.nickname()).isEqualTo(member.getNickname()),
+        () -> assertThat(result.profileImgUrl()).isEqualTo(member.getProfileImgUrl()),
+        () -> assertThat(result.alarmPermission()).isEqualTo(member.getAlarmPermission()),
+        () -> assertThat(result.defaultAddress()).isEqualTo(member.getDefaultAddress()),
+        () -> assertThat(result.defaultAddressDetail()).isEqualTo(member.getDefaultAddressDetail()),
+        () ->
+            assertThat(result.defaultCashReceiptType())
+                .isEqualTo(member.getDefaultCashReceiptType()),
+        () ->
+            assertThat(result.defaultCashReceiptNumber())
+                .isEqualTo(member.getDefaultCashReceiptNumber()));
   }
 }
