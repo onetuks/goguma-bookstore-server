@@ -83,6 +83,8 @@ public class MemberService {
     withdrawalEventPublisher.publishWithdrawalEvent(token);
 
     memberJpaRepository.deleteById(memberId);
+
+    // todo : s3 파일 삭제
   }
 
   @Transactional

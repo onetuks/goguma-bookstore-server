@@ -53,7 +53,7 @@ public class AuthorEnrollmentRestController {
    */
   @PostMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorCreateEnrollmentResponse> requestEnrollment(
-      @LoginId Long loginId, @Valid @RequestBody AuthorCreateEnrollmentRequest request) {
+      @LoginId Long loginId, @RequestBody @Valid AuthorCreateEnrollmentRequest request) {
     AuthorCreateEnrollmentResult result =
         authorEnrollmentService.createAuthorEnrollment(loginId, request.to());
     AuthorCreateEnrollmentResponse response = AuthorCreateEnrollmentResponse.from(result);

@@ -45,7 +45,7 @@ public class S3Service {
 
   @Transactional(readOnly = true)
   public File getFile(String uri) {
-    File file = new File("build/output/" + uri);
+    File file = new File("src/test/resources/static" + uri);
 
     try {
       ResponseInputStream<GetObjectResponse> res =

@@ -8,6 +8,7 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
@@ -25,6 +26,7 @@ import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import jakarta.persistence.EntityNotFoundException;
+import java.io.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ class MemberServiceTest extends IntegrationTest {
 
   @Autowired private MemberService memberService;
   @Autowired private MemberJpaRepository memberJpaRepository;
+  @Autowired private S3Service s3Service;
 
   @Test
   @DisplayName("새로운 멤버를 생성한다.")
@@ -113,7 +116,7 @@ class MemberServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("회원 프로필을 수정한다.")
+  @DisplayName("회원 프로필을 수정하면 멤버 정보가 수정되고, 프로필 이미지가 저장된다.")
   void updateMemberProfileTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
@@ -127,7 +130,10 @@ class MemberServiceTest extends IntegrationTest {
         memberService.updateMemberProfile(member.getMemberId(), param, customFile);
 
     // Then
+    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
+
     assertAll(
+        () -> assertThat(savedProfileImgFile).hasSize(customFile.getMultipartFile().getSize()),
         () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
         () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
         () -> assertThat(result.alarmPermission()).isEqualTo(param.alarmPermission()),
