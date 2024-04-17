@@ -10,7 +10,9 @@ import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationE
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
+import java.util.List;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +105,22 @@ public class RegistrationService {
     s3Service.deleteFile(registration.getSampleFile().getSampleUri());
 
     registrationJpaRepository.delete(registration);
+  }
+
+  @Transactional(readOnly = true)
+  public RegistrationGetResult getRegistration(long authorId, long registrationId) {
+    Registration registration = getRegistrationById(registrationId);
+
+    if (registration.getAuthor().getAuthorId() != authorId) {
+      throw new AccessDeniedException("해당 신간등록을 조회할 권한이 없습니다.");
+    }
+
+    return RegistrationGetResult.from(registration);
+  }
+
+  @Transactional(readOnly = true)
+  public List<RegistrationGetResult> getAllRegistrations() {
+    return registrationJpaRepository.findAll().stream().map(RegistrationGetResult::from).toList();
   }
 
   private Registration getRegistrationById(long registrationId) {

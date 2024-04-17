@@ -9,16 +9,21 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.request.Registra
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationInspectionRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationCreateResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationEditResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationgetResponses;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -135,5 +140,30 @@ public class RegistrationRestController {
     registrationService.deleteRegistration(authorId, registrationId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * 신간 등록 조회 - 작가용
+   *
+   * @param authorId : 로그인한 작가 아이디
+   * @param registrationId : 신간 등록 아이디
+   * @return registrationId, approvalResult, approvalMemo, coverImgUrl, title, summary, price,
+   *     stockCount, isbn, publisher, sampleUrl
+   */
+  @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegistrationGetResponse> getRegistration(
+      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+    RegistrationGetResult result = registrationService.getRegistration(authorId, registrationId);
+    RegistrationGetResponse response = RegistrationGetResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegistrationgetResponses> getAllRegistrations(@AdminId Long adminId) {
+    List<RegistrationGetResult> result = registrationService.getAllRegistrations();
+    RegistrationgetResponses response = RegistrationgetResponses.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

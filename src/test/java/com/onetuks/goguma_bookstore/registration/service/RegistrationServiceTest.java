@@ -24,8 +24,10 @@ import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationE
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import java.io.File;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -217,5 +219,68 @@ class RegistrationServiceTest extends IntegrationTest {
 
     assertAll(
         () -> assertThat(savedCoverImgFile).exists(), () -> assertThat(savedSampleFile).exists());
+  }
+
+  @Test
+  @DisplayName("신간등록 단건 조회한다.")
+  void getRegistrationTest() {
+    // Given
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
+
+    // When
+    RegistrationGetResult result =
+        registrationService.getRegistration(author.getAuthorId(), save.getRegistrationId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgFile().getCoverImgUrl()),
+        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
+        () -> assertThat(result.summary()).isEqualTo(save.getSummary()),
+        () -> assertThat(result.price()).isEqualTo(save.getPrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
+        () -> assertThat(result.promotion()).isEqualTo(save.getPromotion()),
+        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleFile().getSampleUrl()));
+  }
+
+  @Test
+  @DisplayName("신간등록 조회 시 작가 본인이 아니라면 조회할 수 없다.")
+  void getRegistration_NotAuthor_ExceptionTest() {
+    // Given
+    long notAuthorityId = 123_144L;
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
+
+    // When & Then
+    assertThrows(
+        AccessDeniedException.class,
+        () -> registrationService.getRegistration(notAuthorityId, save.getRegistrationId()));
+  }
+
+  @Test
+  @DisplayName("모든 신간등록을 조회한다.")
+  void getAllRegistrationTest() {
+    // Given
+    registrationJpaRepository.save(RegistrationFixture.create(author));
+    registrationJpaRepository.save(RegistrationFixture.create(author));
+
+    // 새로운 작가에 대한 신간 등록
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    Author newAuthor = authorJpaRepository.save(AuthorFixture.create(member));
+    registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
+
+    // When
+    List<RegistrationGetResult> results = registrationService.getAllRegistrations();
+
+    // Then
+    assertThat(results)
+        .hasSize(3)
+        .allSatisfy(
+            result -> {
+              assertThat(result.registrationId()).isPositive();
+              assertThat(result.coverImgUrl()).contains(String.valueOf(result.registrationId()));
+              assertThat(result.sampleUrl()).contains(String.valueOf(result.registrationId()));
+            });
   }
 }
