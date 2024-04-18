@@ -123,6 +123,18 @@ public class RegistrationService {
     return registrationJpaRepository.findAll().stream().map(RegistrationGetResult::from).toList();
   }
 
+  @Transactional(readOnly = true)
+  public List<RegistrationGetResult> getAllRegistrationsByAuthor(
+      long loginAuthorId, long authorId) {
+    if (loginAuthorId != authorId) {
+      throw new AccessDeniedException("해당 작가의 신간등록을 조회할 권한이 없습니다.");
+    }
+
+    return registrationJpaRepository.findByAuthorAuthorId(authorId).stream()
+        .map(RegistrationGetResult::from)
+        .toList();
+  }
+
   private Registration getRegistrationById(long registrationId) {
     return registrationJpaRepository
         .findById(registrationId)

@@ -339,16 +339,22 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             MemberFixture.create(RoleType.AUTHOR),
             MemberFixture.create(RoleType.AUTHOR));
 
-    authorJpaRepository.saveAll(
-        memberJpaRepository.saveAll(members).stream()
-            .map(
-                member ->
-                    AuthorFixture.createWithEnrollmentAt(
-                        member,
-                        member.getMemberId() % 2 == 0
-                            ? LocalDateTime.now().minusWeeks(2).minusHours(1)
-                            : LocalDateTime.now().minusWeeks(1).plusHours(1)))
-            .toList());
+    boolean isTwoWeeksAgo = true;
+
+    for (Member member : memberJpaRepository.saveAll(members)) {
+      if (isTwoWeeksAgo) {
+        isTwoWeeksAgo = false;
+        authorJpaRepository.save(
+            AuthorFixture.createWithEnrollmentAt(
+                member, LocalDateTime.now().minusWeeks(2).minusHours(1)));
+        continue;
+      }
+
+      isTwoWeeksAgo = true;
+      authorJpaRepository.save(
+          AuthorFixture.createWithEnrollmentAt(
+              member, LocalDateTime.now().minusWeeks(1).plusHours(1)));
+    }
 
     // When
     authorEnrollmentService.deleteAbandonedAuthorEnrollment();

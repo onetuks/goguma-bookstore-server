@@ -3,7 +3,7 @@ package com.onetuks.goguma_bookstore.registration.controller.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationgetResponses;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -58,7 +58,7 @@ class RegistrationGetResponesTest extends IntegrationTest {
                 "sampleUrl3"));
 
     // When
-    RegistrationgetResponses responses = RegistrationgetResponses.from(results);
+    RegistrationGetResponses responses = RegistrationGetResponses.from(results);
 
     // Then
     assertThat(responses.responses())

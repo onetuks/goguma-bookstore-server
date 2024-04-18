@@ -10,7 +10,7 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.request.Registra
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationCreateResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationEditResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationgetResponses;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -159,10 +160,35 @@ public class RegistrationRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 신간 등록 전체 조회 - 관리자용
+   *
+   * @param adminId : 로그인한 관리자 아이디
+   * @return registrationId, approvalResult, approvalMemo, coverImgUrl, title, summary, price,
+   *     stockCount, isbn, publisher, promotion, sampleUrl
+   */
   @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationgetResponses> getAllRegistrations(@AdminId Long adminId) {
+  public ResponseEntity<RegistrationGetResponses> getAllRegistrations(@AdminId Long adminId) {
     List<RegistrationGetResult> result = registrationService.getAllRegistrations();
-    RegistrationgetResponses response = RegistrationgetResponses.from(result);
+    RegistrationGetResponses response = RegistrationGetResponses.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 작가별 신간 등록 조회 - 관리자용
+   *
+   * @param loginAuthorId : 로그인한 작가 아이디
+   * @param authorId : 작가 아이디
+   * @return registrationId, approvalResult, approvalMemo, coverImgUrl, title, summary, price,
+   *     stockCount, isbn, publisher, promotion, sampleUrl
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegistrationGetResponses> getAllRegistrationByAuthor(
+      @AuthorId Long loginAuthorId, @RequestParam(name = "authorId") Long authorId) {
+    List<RegistrationGetResult> result =
+        registrationService.getAllRegistrationsByAuthor(loginAuthorId, authorId);
+    RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

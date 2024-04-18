@@ -33,10 +33,10 @@ public record RegistrationGetResponse(
         result.sampleUrl());
   }
 
-  public record RegistrationgetResponses(List<RegistrationGetResponse> responses) {
+  public record RegistrationGetResponses(List<RegistrationGetResponse> responses) {
 
-    public static RegistrationgetResponses from(List<RegistrationGetResult> results) {
-      return new RegistrationgetResponses(
+    public static RegistrationGetResponses from(List<RegistrationGetResult> results) {
+      return new RegistrationGetResponses(
           results.stream().map(RegistrationGetResponse::from).toList());
     }
   }
