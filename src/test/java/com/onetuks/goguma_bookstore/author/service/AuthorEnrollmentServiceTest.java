@@ -10,6 +10,7 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
+import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
@@ -18,25 +19,31 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSal
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.EscrowServiceFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSalesFile;
+import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @Autowired private AuthorEnrollmentService authorEnrollmentService;
+  @Autowired private AuthorService authorService;
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
+  @Autowired private S3Service s3Service;
 
   private Member userMember;
   private Member authorMember;
@@ -77,6 +84,18 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   }
 
   @Test
+  @DisplayName("존재하지 않는 멤버가 입점 신청하는 경우 예외를 던진다.")
+  void createAuthorEnrollment_NotExistsMember_ExceptionTest() {
+    // Given
+    AuthorCreateParam param = AuthorFixture.createCreationParam();
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class,
+        () -> authorEnrollmentService.createAuthorEnrollment(1_454_020L, param));
+  }
+
+  @Test
   @DisplayName("구매안전서비스확인증을 부여한다.")
   void updateAuthorEscrowService() {
     // Given
@@ -108,7 +127,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // When
     AuthorMailOrderSalesSubmitResult result =
         authorEnrollmentService.updateAuthorMailOrderSales(
-            userMember.getMemberId(), createResult.authorId(), mailOrderSalesFile);
+            createResult.authorId(), createResult.authorId(), mailOrderSalesFile);
 
     // Then
     assertThat(result.mailOrderSalesUrl()).contains(mailOrderSalesFile.getMailOrderSalesUrl());
@@ -169,18 +188,20 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("입점 심사를 취소하면 해당 작가 정보가 모두 말소된다.")
+  @DisplayName("입점 심사를 취소하면 해당 작가 정보가 모두 말소된다. 프로필 이미지 파일도 제거된다.")
   void deleteAuthorEnrollmentTest() {
     // Given
     Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When
-    authorEnrollmentService.deleteAuthorEnrollment(authorMember.getMemberId(), save.getAuthorId());
+    authorEnrollmentService.deleteAuthorEnrollment(save.getAuthorId(), save.getAuthorId());
 
     // Then
     boolean result = authorJpaRepository.existsById(save.getAuthorId());
 
     assertThat(result).isFalse();
+    assertThrows(
+        NoSuchKeyException.class, () -> s3Service.getFile(save.getProfileImgFile().getUri()));
   }
 
   @Test
@@ -199,17 +220,45 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("작가 아이디와 요청한 아이디가 서로 같은 유저에 대한 정보가 아니면 예외를 던진다.")
+  @DisplayName("작가 아이디와 요청한 아이디가 서로 같은 유저에 대한 정보가 아니면 예외를 던진다. 프로필 이미지는 삭제되지 않는다.")
   void deleteAuthorEnrollment_NotEqualsAuthorAndMember_ExceptionTest() {
     // Given
-    Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
+    Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
+    authorJpaRepository.flush();
+
+    // 구매안전서비스 등록
+    EscrowServiceFile escrowServiceFile =
+        CustomFileFixture.create(author.getAuthorId(), FileType.ESCROWS).toEscrowServiceFile();
+    authorEnrollmentService.updateAuthorEscrowService(author.getAuthorId(), escrowServiceFile);
+
+    // 통신판매신고증 등록
+    MailOrderSalesFile mailOrderSalesFile =
+        CustomFileFixture.create(author.getAuthorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
+    authorEnrollmentService.updateAuthorMailOrderSales(
+        author.getAuthorId(), author.getAuthorId(), mailOrderSalesFile);
+
+    // 프로필 이미지 등록
+    ProfileImgFile profileImgFile =
+        CustomFileFixture.create(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
+    AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미");
+    authorService.updateAuthorProfile(
+        author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
             authorEnrollmentService.deleteAuthorEnrollment(
-                userMember.getMemberId(), save.getAuthorId()));
+                userMember.getMemberId(), author.getAuthorId()));
+
+    File savedProfileImgFile = s3Service.getFile(profileImgFile.getUri());
+    File savedEscrowServiceFile = s3Service.getFile(escrowServiceFile.getUri());
+    File savedMailOrderSalesFile = s3Service.getFile(mailOrderSalesFile.getUri());
+
+    assertAll(
+        () -> assertThat(savedProfileImgFile).exists(),
+        () -> assertThat(savedEscrowServiceFile).exists(),
+        () -> assertThat(savedMailOrderSalesFile).exists());
   }
 
   @Test
@@ -223,7 +272,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // When
     AuthorEnrollmentDetailsResult result =
         authorEnrollmentService.findAuthorEnrollmentDetails(
-            userMember.getMemberId(), createResult.authorId());
+            createResult.authorId(), createResult.authorId());
 
     // Then
     assertAll(
@@ -290,13 +339,22 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             MemberFixture.create(RoleType.AUTHOR),
             MemberFixture.create(RoleType.AUTHOR));
 
-    authorJpaRepository.saveAll(
-        memberJpaRepository.saveAll(members).stream()
-            .map(
-                member ->
-                    AuthorFixture.createWithEnrollmentAt(
-                        member, LocalDateTime.now().minusWeeks(2).minusHours(1)))
-            .toList());
+    boolean isTwoWeeksAgo = true;
+
+    for (Member member : memberJpaRepository.saveAll(members)) {
+      if (isTwoWeeksAgo) {
+        isTwoWeeksAgo = false;
+        authorJpaRepository.save(
+            AuthorFixture.createWithEnrollmentAt(
+                member, LocalDateTime.now().minusWeeks(2).minusHours(1)));
+        continue;
+      }
+
+      isTwoWeeksAgo = true;
+      authorJpaRepository.save(
+          AuthorFixture.createWithEnrollmentAt(
+              member, LocalDateTime.now().minusWeeks(1).plusHours(1)));
+    }
 
     // When
     authorEnrollmentService.deleteAbandonedAuthorEnrollment();
@@ -305,6 +363,6 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     List<AuthorEnrollmentDetailsResult> results =
         authorEnrollmentService.findAllAuthorEnrollmentDetails();
 
-    assertThat(results).isEmpty();
+    assertThat(results).hasSize(1);
   }
 }

@@ -54,4 +54,12 @@ public class CustomFile {
   public MailOrderSalesFile toMailOrderSalesFile() {
     return new MailOrderSalesFile(uri, multipartFile);
   }
+
+  public CoverImgFile toCoverImgFile() {
+    return new CoverImgFile(uri, multipartFile);
+  }
+
+  public SampleFile toSampleFile() {
+    return new SampleFile(uri, multipartFile);
+  }
 }

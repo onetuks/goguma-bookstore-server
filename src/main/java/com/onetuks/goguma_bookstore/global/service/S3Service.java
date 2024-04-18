@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
@@ -45,7 +46,7 @@ public class S3Service {
 
   @Transactional(readOnly = true)
   public File getFile(String uri) {
-    File file = new File("build/output/" + uri);
+    File file = new File("src/test/resources/static" + uri);
 
     try {
       ResponseInputStream<GetObjectResponse> res =
@@ -62,7 +63,11 @@ public class S3Service {
 
   @Transactional
   public void deleteFile(String uri) {
-    s3Client.deleteObject(
-        DeleteObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build());
+    try {
+      s3Client.deleteObject(
+          DeleteObjectRequest.builder().bucket(s3Config.getBucketName()).key(uri).build());
+    } catch (NoSuchKeyException e) {
+      // 이미 삭제된 파일이므로 무시
+    }
   }
 }

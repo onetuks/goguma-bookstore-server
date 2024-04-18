@@ -1,6 +1,7 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
@@ -35,8 +36,10 @@ class AuthorCreateEnrollmentResultTest extends IntegrationTest {
     AuthorCreateEnrollmentResult result = AuthorCreateEnrollmentResult.from(author);
 
     // Then
-    assertThat(result)
-        .hasFieldOrPropertyWithValue("authorId", author.getAuthorId())
-        .hasFieldOrPropertyWithValue("profileImgUrl", author.getProfileImgUrl());
+    assertAll(
+        () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
+        () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
+        () -> assertThat(result.profileImgUrl()).isEqualTo(author.getProfileImgUrl()),
+        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
   }
 }

@@ -69,7 +69,7 @@ public class MemberRestController {
    *
    * @param memberId : 로그인한 회원 ID
    * @param request : 수정할 회원 프로필 정보
-   * @param profileImg : 프로필 이미지
+   * @param profileImgFile : 프로필 이미지
    * @return memberId, nickname, alarmPermission, profileImgUri, defaultAddress,
    *     defaultAddressDetail, defaultCashReceiptType, defaultCashReceiptNumber
    */
@@ -77,10 +77,10 @@ public class MemberRestController {
   public ResponseEntity<MemberProfileEditResponse> editMemberProfile(
       @LoginId Long memberId,
       @RequestBody @Valid MemberProfileEditRequest request,
-      @RequestPart(value = "profileImg", required = false) MultipartFile profileImg) {
+      @RequestPart(value = "profile-img-file", required = false) MultipartFile profileImgFile) {
     MemberProfileEditResult result =
         memberService.updateMemberProfile(
-            memberId, request.to(), CustomFile.of(memberId, FileType.PROFILES, profileImg));
+            memberId, request.to(), CustomFile.of(memberId, FileType.PROFILES, profileImgFile));
     MemberProfileEditResponse response = MemberProfileEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -5,16 +5,19 @@ import static com.onetuks.goguma_bookstore.global.vo.file.FileType.BOOK_SAMPLES;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
-import java.io.IOException;
+import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
 
 public class RegistrationFixture {
 
-  public static Registration create(Author author) throws IOException {
+  public static Registration create(Author author) {
     return Registration.builder()
         .author(author)
-        .approvalResult(Boolean.FALSE)
-        .approvalMemo("통판신고증 누락함 다시 해주세요.")
-        .coverImgUri(CustomFileFixture.create(author.getAuthorId(), BOOK_COVERS).getUri())
+        .approvalInfo(
+            ApprovalInfo.builder()
+                .approvalResult(Boolean.FALSE)
+                .approvalMemo("유효하지 않은 ISBN입니다.")
+                .build())
+        .coverImgFile(CustomFileFixture.create(author.getAuthorId(), BOOK_COVERS).toCoverImgFile())
         .title("아메리카 여행기")
         .summary("미국 갔다가 남극 직전에 돌아옴")
         .price(10_000L)
@@ -22,7 +25,7 @@ public class RegistrationFixture {
         .isbn("1234GH1234")
         .publisher("샌드박스")
         .promotion(Boolean.TRUE)
-        .sampleUri(CustomFileFixture.create(author.getAuthorId(), BOOK_SAMPLES).getUri())
+        .sampleFile(CustomFileFixture.create(author.getAuthorId(), BOOK_SAMPLES).toSampleFile())
         .build();
   }
 }

@@ -1,7 +1,11 @@
 package com.onetuks.goguma_bookstore.registration.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
+import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
+import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,14 +35,9 @@ public class Registration {
   @JoinColumn(name = "author_id", nullable = false)
   private Author author;
 
-  @Column(name = "approval_result", nullable = false)
-  private Boolean approvalResult;
+  @Embedded private ApprovalInfo approvalInfo;
 
-  @Column(name = "approval_memo", nullable = false)
-  private String approvalMemo;
-
-  @Column(name = "cover_img_uri", nullable = false)
-  private String coverImgUri;
+  @Embedded private CoverImgFile coverImgFile;
 
   @Column(name = "title", nullable = false)
   private String title;
@@ -61,15 +60,13 @@ public class Registration {
   @Column(name = "promotion", nullable = false)
   private Boolean promotion;
 
-  @Column(name = "sample_uri", nullable = false)
-  private String sampleUri;
+  @Embedded private SampleFile sampleFile;
 
   @Builder
   public Registration(
       Author author,
-      Boolean approvalResult,
-      String approvalMemo,
-      String coverImgUri,
+      ApprovalInfo approvalInfo,
+      CoverImgFile coverImgFile,
       String title,
       String summary,
       Long price,
@@ -77,11 +74,13 @@ public class Registration {
       String isbn,
       String publisher,
       Boolean promotion,
-      String sampleUri) {
+      SampleFile sampleFile) {
     this.author = author;
-    this.approvalResult = approvalResult;
-    this.approvalMemo = approvalMemo;
-    this.coverImgUri = coverImgUri;
+    this.approvalInfo =
+        Objects.requireNonNullElse(
+            approvalInfo,
+            ApprovalInfo.builder().approvalResult(false).approvalMemo("신간 등록 검수 중입니다.").build());
+    this.coverImgFile = coverImgFile;
     this.title = title;
     this.summary = summary;
     this.price = price;
@@ -89,7 +88,51 @@ public class Registration {
     this.isbn = isbn;
     this.publisher = publisher;
     this.promotion = promotion;
-    this.sampleUri = sampleUri;
+    this.sampleFile = sampleFile;
+  }
+
+  public boolean getApprovalResult() {
+    return approvalInfo.getApprovalResult();
+  }
+
+  public String getApprovalMemo() {
+    return approvalInfo.getApprovalMemo();
+  }
+
+  public String getCoverImgUrl() {
+    return coverImgFile.getCoverImgUrl();
+  }
+
+  public String getSampleUrl() {
+    return sampleFile.getSampleUrl();
+  }
+
+  public Registration updateApprovalInfo(boolean approvalResult, String approvalMemo) {
+    this.approvalInfo =
+        ApprovalInfo.builder().approvalResult(approvalResult).approvalMemo(approvalMemo).build();
+    return this;
+  }
+
+  public Registration updateRegistration(
+      String title,
+      String summary,
+      Long price,
+      Long stockCount,
+      String isbn,
+      String publisher,
+      Boolean promotion,
+      CoverImgFile coverImgFile,
+      SampleFile sampleFile) {
+    this.title = title;
+    this.summary = summary;
+    this.price = price;
+    this.stockCount = stockCount;
+    this.isbn = isbn;
+    this.publisher = publisher;
+    this.promotion = promotion;
+    this.coverImgFile = coverImgFile;
+    this.sampleFile = sampleFile;
+    return this;
   }
 
   @Override

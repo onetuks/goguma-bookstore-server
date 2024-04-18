@@ -13,17 +13,21 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import jakarta.persistence.EntityNotFoundException;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorServiceTest extends IntegrationTest {
 
@@ -31,6 +35,7 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
+  @Autowired private S3Service s3Service;
 
   private List<Author> authors;
 
@@ -55,7 +60,7 @@ class AuthorServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("작가 정보를 수정한다.")
+  @DisplayName("작가 정보를 수정한다. 작가 프로필은 S3에 저장된다.")
   void updateAuthorProfileTest() {
     // Given
     Author author = authors.get(0);
@@ -68,7 +73,10 @@ class AuthorServiceTest extends IntegrationTest {
             author.getAuthorId(), author.getAuthorId(), param, customFile);
 
     // Then
+    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
+
     assertAll(
+        () -> assertThat(savedProfileImgFile).exists(),
         () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
         () -> assertThat(result.profileImgUrl()).contains(String.valueOf(author.getAuthorId())),
         () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
@@ -76,7 +84,7 @@ class AuthorServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다.")
+  @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다. 프로필 이미지는 저장되지 않는다.")
   void updateAuthorProfile_NotSameAuthorId_ExceptionTest() {
     // Given
     Author author0 = authors.get(0);
@@ -90,6 +98,7 @@ class AuthorServiceTest extends IntegrationTest {
         () ->
             authorService.updateAuthorProfile(
                 author1.getAuthorId(), author0.getAuthorId(), param, customFile));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
   }
 
   @Test
@@ -134,5 +143,41 @@ class AuthorServiceTest extends IntegrationTest {
                                   result.profileImgUrl().contains(String.valueOf(memberId))))
                   .isTrue();
             });
+  }
+
+  @Test
+  @DisplayName("존재하지 않는 작가의 아이디로 조회할 때 예외가 발생한다.")
+  void getAuthorById_NotExistAuthorId_ExceptionTest() {
+    // Given
+    long notExistAuthorId = 1_213_300L;
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class, () -> authorService.findAuthorDetails(notExistAuthorId));
+  }
+
+  @Test
+  @DisplayName("멤버 아이디로 작가 아이디를 조회한다.")
+  void getAuthorIdByMemberIdTest() {
+    // Given
+    Author author = authors.get(0);
+
+    // When
+    Long authorId = authorService.getAuthorIdByMemberId(author.getMember().getMemberId());
+
+    // Then
+    assertThat(authorId).isEqualTo(author.getAuthorId());
+  }
+
+  @Test
+  @DisplayName("작가 입점을 하지 않은 멤버 아이디로 작가 아이디 조회 시 예외가 발생한다.")
+  void getAuthorIdByMemberId_NotAuthor_ExceptionTest() {
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+
+    // When & Then
+    assertThrows(
+        EntityNotFoundException.class,
+        () -> authorService.getAuthorIdByMemberId(member.getMemberId()));
   }
 }

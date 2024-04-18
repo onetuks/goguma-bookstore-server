@@ -42,7 +42,15 @@ public class AuthorEnrollmentService {
   @Transactional
   public void deleteAbandonedAuthorEnrollment() {
     LocalDateTime twoWeeksAgo = LocalDateTime.now().minusWeeks(2);
-    authorJpaRepository.deleteAuthorsByNotPassedAndEnrollmentAtForTwoWeeks(twoWeeksAgo);
+    authorJpaRepository
+        .findAll()
+        .forEach(
+            author -> {
+              if (author.getEnrollmentAt().isBefore(twoWeeksAgo)) {
+                s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
+                authorJpaRepository.delete(author);
+              }
+            });
   }
 
   @Transactional
@@ -62,25 +70,26 @@ public class AuthorEnrollmentService {
 
   @Transactional
   public AuthorEscrowServiceHandOverResult updateAuthorEscrowService(
-      Long authorId, CustomFile file) {
-    s3Service.putFile(file);
+      Long authorId, CustomFile escrowServiceFile) {
+    s3Service.putFile(escrowServiceFile);
 
     String escrowServiceUrl =
-        getAuthorById(authorId).updateEscrowService(file.toEscrowServiceFile());
+        getAuthorById(authorId).updateEscrowService(escrowServiceFile.toEscrowServiceFile());
 
     return new AuthorEscrowServiceHandOverResult(escrowServiceUrl);
   }
 
   @Transactional
   public AuthorMailOrderSalesSubmitResult updateAuthorMailOrderSales(
-      long loginId, long authorId, CustomFile file) {
+      long loginAuthorId, long authorId, CustomFile mailOrderSalesFile) {
     Author author = getAuthorById(authorId);
 
-    checkIllegalArgument(author, loginId);
+    checkIllegalArgument(author, loginAuthorId);
 
-    s3Service.putFile(file);
+    s3Service.putFile(mailOrderSalesFile);
 
-    String mailOrderSalesUrl = author.updateMailOrderSales(file.toMailOrderSalesFile());
+    String mailOrderSalesUrl =
+        author.updateMailOrderSales(mailOrderSalesFile.toMailOrderSalesFile());
 
     return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
@@ -98,19 +107,22 @@ public class AuthorEnrollmentService {
   }
 
   @Transactional
-  public void deleteAuthorEnrollment(long loginId, long authorId) {
+  public void deleteAuthorEnrollment(long loginAuthorId, long authorId) {
     Author author = getAuthorById(authorId);
 
-    checkIllegalArgument(author, loginId);
+    checkIllegalArgument(author, loginAuthorId);
+
+    s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
 
     authorJpaRepository.deleteById(authorId);
   }
 
   @Transactional(readOnly = true)
-  public AuthorEnrollmentDetailsResult findAuthorEnrollmentDetails(long loginId, long authorId) {
+  public AuthorEnrollmentDetailsResult findAuthorEnrollmentDetails(
+      long loginAuthorId, long authorId) {
     Author author = getAuthorById(authorId);
 
-    checkIllegalArgument(author, loginId);
+    checkIllegalArgument(author, loginAuthorId);
 
     return AuthorEnrollmentDetailsResult.from(author);
   }
@@ -140,8 +152,8 @@ public class AuthorEnrollmentService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 
-  private void checkIllegalArgument(Author author, long loginId) {
-    if (author.getMember().getMemberId() != loginId) {
+  private void checkIllegalArgument(Author author, long loginAuthorId) {
+    if (author.getAuthorId() != loginAuthorId) {
       throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
     }
   }

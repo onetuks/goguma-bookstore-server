@@ -48,7 +48,7 @@ public class GlobalExceptionRestHandler {
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
 
-  /** 관리자 혹은 작가만 접근 가능한 API에 다른 권한으로 접근한 경우 */
+  /** 권한이 없는 사용자가 API를 호출한 경우 */
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
     logging(e);
