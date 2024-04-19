@@ -34,6 +34,7 @@ class AuthorEditResultTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.profileImgUrl()).isEqualTo(author.getProfileImgUrl()),
         () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
-        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
+        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()),
+        () -> assertThat(result.instagramUrl()).isEqualTo(author.getInstagramUrl()));
   }
 }

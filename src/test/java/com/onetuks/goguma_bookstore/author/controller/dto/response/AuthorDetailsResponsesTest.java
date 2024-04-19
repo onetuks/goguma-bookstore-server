@@ -17,9 +17,33 @@ class AuthorDetailsResponsesTest extends IntegrationTest {
     // Given
     List<AuthorDetailsResult> detailsResults =
         List.of(
-            new AuthorDetailsResult(1_000L, "mock-profile.png", "빠니보틀", "유튜브 대통령", 1, 2, 3),
-            new AuthorDetailsResult(1_001L, "mock-profile2.png", "빠니보틀2", "유튜브 대통령2", 1, 2, 3),
-            new AuthorDetailsResult(1_002L, "mock-profile3.png", "빠니보틀3", "유튜브 대통령3", 1, 2, 3));
+            new AuthorDetailsResult(
+                1_000L,
+                "mock-profile.png",
+                "빠니보틀",
+                "유튜브 대통령",
+                "https://www.instagram.com/panibottle1",
+                1,
+                2,
+                3),
+            new AuthorDetailsResult(
+                1_001L,
+                "mock-profile2.png",
+                "빠니보틀2",
+                "유튜브 대통령2",
+                "https://www.instagram.com/panibottle2",
+                1,
+                2,
+                3),
+            new AuthorDetailsResult(
+                1_002L,
+                "mock-profile3.png",
+                "빠니보틀3",
+                "유튜브 대통령3",
+                "https://www.instagram.com/panibottle3",
+                1,
+                2,
+                3));
 
     // When
     AuthorDetailsResponses results = AuthorDetailsResponses.from(detailsResults);

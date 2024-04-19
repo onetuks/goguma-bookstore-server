@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,8 +35,8 @@ public class EnrollmentInfo {
       LocalDateTime enrollmentAt) {
     this.escrowServiceFile = escrowServiceFile;
     this.mailOrderSalesFile = mailOrderSalesFile;
-    this.enrollmentPassed = enrollmentPassed;
-    this.enrollmentAt = enrollmentAt;
+    this.enrollmentPassed = Objects.requireNonNullElse(enrollmentPassed, false);
+    this.enrollmentAt = Objects.requireNonNullElse(enrollmentAt, LocalDateTime.now());
   }
 
   public EnrollmentInfo setEscrowServiceFile(EscrowServiceFile escrowServiceFile) {

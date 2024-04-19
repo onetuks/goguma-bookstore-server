@@ -53,7 +53,8 @@ public class AuthorFixture {
   }
 
   public static AuthorCreateParam createCreationParam() {
-    return new AuthorCreateParam("빠선생님" + UUIDProvider.getUUID(), "유튜브 대통령");
+    return new AuthorCreateParam(
+        "빠선생님" + UUIDProvider.getUUID(), "유튜브 대통령", "https://www.instagram.com/pannibottle");
   }
 
   public static AuthorEnrollmentDetailsResult createDetailsResult() {
@@ -66,6 +67,7 @@ public class AuthorFixture {
         "profile_" + authorId + ".png",
         "빠선생님" + authorId,
         "유튜브 대통령" + authorId,
+        "https://www.instagram.com/pannibottle" + authorId,
         "escrow-service" + authorId + ".pdf",
         "mail-order-sales" + authorId + ".pdf",
         isAuthorMember,

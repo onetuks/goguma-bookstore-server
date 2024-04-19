@@ -8,6 +8,7 @@ public record AuthorDetailsResponse(
     String profileImgUrl,
     String nickname,
     String introduction,
+    String instagramUrl,
     long subscribeCount,
     long bookCount,
     long restockCount) {
@@ -18,6 +19,7 @@ public record AuthorDetailsResponse(
         result.profileImgUrl(),
         result.nickname(),
         result.introduction(),
+        result.instagramUrl(),
         result.subscribeCount(),
         result.bookCount(),
         result.restockCount());

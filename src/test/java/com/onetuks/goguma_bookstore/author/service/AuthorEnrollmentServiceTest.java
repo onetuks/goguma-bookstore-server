@@ -240,7 +240,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // 프로필 이미지 등록
     ProfileImgFile profileImgFile =
         CustomFileFixture.create(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
-    AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미");
+    AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미", "https://www.instagram.com/kwak");
     authorService.updateAuthorProfile(
         author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);
 

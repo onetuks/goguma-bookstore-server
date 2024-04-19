@@ -1,1 +1,0 @@
-ALTER TABLE `goguma-bookstore`.members ADD COLUMN alarm_permission BOOLEAN NOT NULL DEFAULT FALSE COMMENT '알람 수신 여부';
