@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore;
 
-import com.onetuks.goguma_bookstore.fixture.MultipartFileFixture;
+import com.onetuks.goguma_bookstore.util.TestFileCleaner;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -32,9 +33,11 @@ public class IntegrationTest {
   //  static RedisContainer redis;
   static LocalStackContainer aws;
 
+  @Autowired private TestFileCleaner testFileCleaner;
+
   @AfterEach
   void tearDown() {
-    MultipartFileFixture.deleteAllStaticTestFiles();
+    testFileCleaner.deleteAllTestStatic();
   }
 
   static {
