@@ -50,9 +50,12 @@ public class RegistrationRestController {
    * @param authorId : 로그인한 작가 아이디
    * @param request : 신간 등록 요청 정보
    * @param coverImgFile : 신간 표지 이미지 파일
+   * @param mockUpFiles : 신간 모의 이미지 파일
+   * @param previewFiles : 신간 미리보기 이미지 파일
    * @param sampleFile : 신간 샘플 파일
-   * @return registrationId, approvalResult, approvalMemo, coverImgUrl, title, summary, price,
-   *     stockCount, isbn, publisher, promotion, sampleUrl
+   * @return registrationId, approvalResult, approvalMemo, title, oneLiner, summary, categories,
+   *     publisher, isbn, pageSizeInfo, coverType, pageCount, price, stockCount, promotion,
+   *     coverImgUrl, detailImgUrls, previewUrls, sampleUrl
    */
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -61,13 +64,17 @@ public class RegistrationRestController {
       @AuthorId Long authorId,
       @RequestBody @Valid RegistrationCreateRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
+      @RequestPart(name = "mock-up-files") MultipartFile[] mockUpFiles,
+      @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
     RegistrationCreateResult result =
         registrationService.createRegistration(
             authorId,
             request.to(),
-            CustomFile.of(authorId, FileType.BOOK_COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.BOOK_SAMPLES, sampleFile));
+            CustomFile.of(authorId, FileType.COVERS, coverImgFile),
+            CustomFile.of(authorId, FileType.DETAILS, mockUpFiles),
+            CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
+            CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationCreateResponse response = RegistrationCreateResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -121,8 +128,8 @@ public class RegistrationRestController {
         registrationService.updateRegistration(
             registrationId,
             request.to(),
-            CustomFile.of(authorId, FileType.BOOK_COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.BOOK_SAMPLES, sampleFile));
+            CustomFile.of(authorId, FileType.COVERS, coverImgFile),
+            CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationEditResponse response = RegistrationEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

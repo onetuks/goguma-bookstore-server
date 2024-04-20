@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -44,75 +46,100 @@ class RegistrationServiceTest extends IntegrationTest {
   @Autowired private S3Service s3Service;
 
   private Author author;
+  private RegistrationCreateParam param;
 
   @BeforeEach
   void setUp() {
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     author = authorJpaRepository.save(AuthorFixture.create(member));
+
+    param =
+        new RegistrationCreateParam(
+            "신간 제목",
+            "한줄 요약",
+            "줄거리",
+            List.of(Category.NOVEL, Category.ESSEY),
+            "출판사",
+            "1234567890123",
+            new PageSizeInfo(200, 100),
+            "양장본",
+            500L,
+            10000,
+            100,
+            true);
   }
 
   @Test
-  @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
+  @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지, 목업 이미지, 미리보기 파일, 샘플 파일이 S3에 저장된다.")
   void createRegistrationTest() {
     // Given
     long authorId = author.getAuthorId();
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(authorId, FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(authorId, FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
+    List<CustomFile> mockUpFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
     RegistrationCreateResult result =
         registrationService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, sampleFile);
+            author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile);
 
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    List<File> savedMockUpFiles =
+        mockUpFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+    List<File> savedPreviewFiles =
+        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
-        () -> assertThat(savedCoverImgFile).hasSize(coverImgFile.getMultipartFile().getSize()),
-        () -> assertThat(savedSampleFile).hasSize(sampleFile.getMultipartFile().getSize()),
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () ->
-            assertThat(result.coverImgUrl())
-                .isEqualTo(coverImgFile.toCoverImgFile().getCoverImgUrl()),
         () -> assertThat(result.title()).isEqualTo(param.title()),
+        () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(param.summary()),
+        () -> assertThat(result.categories()).isEqualTo(param.categories()),
+        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
+        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.pageSizeInfo()).isEqualTo(param.pageSizeInfo()),
+        () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
         () -> assertThat(result.price()).isEqualTo(param.price()),
         () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
-        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(sampleFile.toSampleFile().getSampleUrl()));
+        () -> assertThat(savedCoverImgFile).exists(),
+        () -> assertThat(savedMockUpFiles).hasSize(10),
+        () -> assertThat(savedPreviewFiles).hasSize(25),
+        () -> assertThat(savedSampleFile).exists());
   }
 
   @Test
   @DisplayName("신간 등록을 요청할 때 커버 이미지 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoCoverImgFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
+    long authorId = author.getAuthorId();
     CustomFile coverImgFile = CustomFileFixture.createNullFile();
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    List<CustomFile> mockUpFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
             registrationService.createRegistration(
-                author.getAuthorId(), param, coverImgFile, sampleFile));
+                author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile));
   }
 
   @Test
   @DisplayName("신간 등록을 요청할 때 샘플 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoSampleFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> mockUpFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
     CustomFile sampleFile = CustomFileFixture.createNullFile();
 
     // When & Then
@@ -120,7 +147,43 @@ class RegistrationServiceTest extends IntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationService.createRegistration(
-                author.getAuthorId(), param, coverImgFile, sampleFile));
+                author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile));
+  }
+
+  @Test
+  @DisplayName("신간 등록 요청할 때 목업 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoMockUpFiles_ExceptionTest() {
+    // Given
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> mockUpFiles = List.of();
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile));
+  }
+
+  @Test
+  @DisplayName("신간 등록 요청할 때 미리보기 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoPreviewFiles_ExceptionTest() {
+    // Given
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> mockUpFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = List.of();
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile));
   }
 
   @Test
@@ -149,8 +212,8 @@ class RegistrationServiceTest extends IntegrationTest {
     RegistrationEditParam param =
         new RegistrationEditParam(
             "신간 제목 수정", "신간 요약 수정", 20000, 200, "1234567890123", "출판사 수정", false);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When
     RegistrationEditResult result =
@@ -200,14 +263,16 @@ class RegistrationServiceTest extends IntegrationTest {
   void deleteRegistration_NoAuthority_ExceptionTest() {
     // Given
     long otherAuthorId = 123_412L;
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> mockUpFiles =
+        CustomFileFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+    List<CustomFile> previewFiles =
+        CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     RegistrationCreateResult result =
         registrationService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, sampleFile);
+            author.getAuthorId(), param, coverImgFile, mockUpFiles, previewFiles, sampleFile);
 
     // When & Then
     assertThrows(
@@ -215,10 +280,17 @@ class RegistrationServiceTest extends IntegrationTest {
         () -> registrationService.deleteRegistration(otherAuthorId, result.registrationId()));
 
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    List<File> savedMockUpfiles =
+        mockUpFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+    List<File> savedPreviewFiles =
+        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
-        () -> assertThat(savedCoverImgFile).exists(), () -> assertThat(savedSampleFile).exists());
+        () -> assertThat(savedCoverImgFile).exists(),
+        () -> assertThat(savedMockUpfiles).hasSize(10),
+        () -> assertThat(savedPreviewFiles).hasSize(25),
+        () -> assertThat(savedSampleFile).exists());
   }
 
   @Test

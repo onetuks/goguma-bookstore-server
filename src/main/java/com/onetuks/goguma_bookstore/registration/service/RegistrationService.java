@@ -38,26 +38,40 @@ public class RegistrationService {
       long authorId,
       RegistrationCreateParam param,
       CustomFile coverImgFile,
+      List<CustomFile> mockUpFiles,
+      List<CustomFile> previewFiles,
       CustomFile sampleFile) {
-    if (coverImgFile.isNullFile() || sampleFile.isNullFile()) {
+    if (coverImgFile.isNullFile()
+        || sampleFile.isNullFile()
+        || mockUpFiles.isEmpty()
+        || previewFiles.isEmpty()) {
       throw new IllegalArgumentException("신간 등록에 필요한 파일이 존재하지 않습니다.");
     }
 
     s3Service.putFile(coverImgFile);
     s3Service.putFile(sampleFile);
+    mockUpFiles.forEach(s3Service::putFile);
+    previewFiles.forEach(s3Service::putFile);
 
     return RegistrationCreateResult.from(
         registrationJpaRepository.save(
             Registration.builder()
                 .author(authorService.getAuthorById(authorId))
-                .coverImgFile(coverImgFile.toCoverImgFile())
                 .title(param.title())
+                .oneLiner(param.oneLiner())
                 .summary(param.summary())
+                .categories(param.categories())
+                .publisher(param.publisher())
+                .isbn(param.isbn())
+                .pageSizeInfo(param.pageSizeInfo())
+                .coverType(param.coverType())
+                .pageCount(param.pageCount())
                 .price(param.price())
                 .stockCount(param.stockCount())
-                .isbn(param.isbn())
-                .publisher(param.publisher())
                 .promotion(param.promotion())
+                .coverImgFile(coverImgFile.toCoverImgFile())
+                .detailImgFiles(mockUpFiles.stream().map(CustomFile::toMockUpFile).toList())
+                .previewFiles(previewFiles.stream().map(CustomFile::toPreviewFile).toList())
                 .sampleFile(sampleFile.toSampleFile())
                 .build()));
   }
