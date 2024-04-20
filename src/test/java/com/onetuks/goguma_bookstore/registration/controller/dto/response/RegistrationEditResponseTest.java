@@ -1,11 +1,10 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -26,14 +25,16 @@ class RegistrationEditResponseTest extends IntegrationTest {
             "대충 베트남에서 시작해서 영국까지",
             "대 빠니께서 무려 400일 간 유라시아 대륙을 횡단하시며 있었던 일들을 친히 적어내리신 이 시대 최고의 책!",
             List.of(Category.CARTOON, Category.NOVEL),
-            "출판사A",
             "978-89-12345-67-8",
-            new PageSizeInfo(200, 100),
+            200,
+            100,
             "양장본",
             300L,
             20_000L,
-            10L,
+            10_000L,
             true,
+            "출판사A",
+            10L,
             "https://cover.img.png",
             List.of("https://mockup.img.png", "https://mockup.img2.png"),
             List.of("https://preview.img.png", "https://preview.img2.png"),
@@ -50,24 +51,20 @@ class RegistrationEditResponseTest extends IntegrationTest {
         () -> assertThat(result.title()).isEqualTo(editResult.title()),
         () -> assertThat(result.oneLiner()).isEqualTo(editResult.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(editResult.summary()),
-        () ->
-            assertThat(result.categories())
-                .containsExactlyInAnyOrderElementsOf(editResult.categories()),
-        () -> assertThat(result.publisher()).isEqualTo(editResult.publisher()),
+        () -> assertThat(result.categories()).isEqualTo(editResult.categories()),
         () -> assertThat(result.isbn()).isEqualTo(editResult.isbn()),
-        () -> assertThat(result.pageSizeInfo()).isEqualTo(editResult.pageSizeInfo()),
+        () -> assertThat(result.height()).isEqualTo(editResult.height()),
+        () -> assertThat(result.width()).isEqualTo(editResult.width()),
         () -> assertThat(result.coverType()).isEqualTo(editResult.coverType()),
         () -> assertThat(result.pageCount()).isEqualTo(editResult.pageCount()),
-        () -> assertThat(result.price()).isEqualTo(editResult.price()),
-        () -> assertThat(result.stockCount()).isEqualTo(editResult.stockCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(editResult.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(editResult.purchasePrice()),
         () -> assertThat(result.promotion()).isEqualTo(editResult.promotion()),
+        () -> assertThat(result.publisher()).isEqualTo(editResult.publisher()),
+        () -> assertThat(result.stockCount()).isEqualTo(editResult.stockCount()),
         () -> assertThat(result.coverImgUrl()).isEqualTo(editResult.coverImgUrl()),
-        () ->
-            assertThat(result.detailImgUrls())
-                .containsExactlyInAnyOrderElementsOf(editResult.detailImgUrls()),
-        () ->
-            assertThat(result.previewUrls())
-                .containsExactlyInAnyOrderElementsOf(editResult.previewUrls()),
+        () -> assertThat(result.detailImgUrls()).isEqualTo(editResult.detailImgUrls()),
+        () -> assertThat(result.previewUrls()).isEqualTo(editResult.previewUrls()),
         () -> assertThat(result.sampleUrl()).isEqualTo(editResult.sampleUrl()));
   }
 }

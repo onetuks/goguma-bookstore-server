@@ -38,7 +38,11 @@ class RegistrationInspectionResultTest extends IntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(registration.getRegistrationId()),
-        () -> assertThat(result.approvalResult()).isEqualTo(registration.getApprovalResult()),
-        () -> assertThat(result.approvalMemo()).isEqualTo(registration.getApprovalMemo()));
+        () ->
+            assertThat(result.approvalResult())
+                .isEqualTo(registration.getApprovalInfo().getApprovalResult()),
+        () ->
+            assertThat(result.approvalMemo())
+                .isEqualTo(registration.getApprovalInfo().getApprovalMemo()));
   }
 }

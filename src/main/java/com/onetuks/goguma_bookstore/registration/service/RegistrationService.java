@@ -1,14 +1,15 @@
 package com.onetuks.goguma_bookstore.registration.service;
 
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
+import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
@@ -34,9 +35,9 @@ public class RegistrationService {
   }
 
   @Transactional
-  public RegistrationCreateResult createRegistration(
+  public RegistrationEditResult createRegistration(
       long authorId,
-      RegistrationCreateParam param,
+      RegistrationEditParam param,
       CustomFile coverImgFile,
       List<CustomFile> detailImgFiles,
       List<CustomFile> previewFiles,
@@ -48,22 +49,33 @@ public class RegistrationService {
     detailImgFiles.forEach(s3Service::putFile);
     previewFiles.forEach(s3Service::putFile);
 
-    return RegistrationCreateResult.from(
+    return RegistrationEditResult.from(
         registrationJpaRepository.save(
             Registration.builder()
                 .author(authorService.getAuthorById(authorId))
-                .title(param.title())
-                .oneLiner(param.oneLiner())
-                .summary(param.summary())
-                .categories(param.categories())
+                .bookConceptualInfo(
+                    BookConceptualInfo.builder()
+                        .title(param.title())
+                        .oneLiner(param.oneLiner())
+                        .summary(param.summary())
+                        .categories(param.categories())
+                        .isbn(param.isbn())
+                        .build())
+                .bookPhysicalInfo(
+                    BookPhysicalInfo.builder()
+                        .height(param.height())
+                        .width(param.width())
+                        .coverType(param.coverType())
+                        .pageCount(param.pageCount())
+                        .build())
+                .bookPriceInfo(
+                    BookPriceInfo.builder()
+                        .regularPrice(param.regularPrice())
+                        .purchasePrice(param.purchasePrice())
+                        .promotion(param.promotion())
+                        .build())
                 .publisher(param.publisher())
-                .isbn(param.isbn())
-                .pageSizeInfo(param.pageSizeInfo())
-                .coverType(param.coverType())
-                .pageCount(param.pageCount())
-                .price(param.price())
                 .stockCount(param.stockCount())
-                .promotion(param.promotion())
                 .coverImgFile(coverImgFile.toCoverImgFile())
                 .detailImgFiles(detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList())
                 .previewFiles(previewFiles.stream().map(CustomFile::toPreviewFile).toList())
@@ -104,18 +116,26 @@ public class RegistrationService {
 
     return RegistrationEditResult.from(
         registration.updateRegistration(
-            param.title(),
-            param.oneLiner(),
-            param.summary(),
-            param.categories(),
+            BookConceptualInfo.builder()
+                .title(param.title())
+                .oneLiner(param.oneLiner())
+                .summary(param.summary())
+                .categories(param.categories())
+                .isbn(param.isbn())
+                .build(),
+            BookPhysicalInfo.builder()
+                .height(param.height())
+                .width(param.width())
+                .coverType(param.coverType())
+                .pageCount(param.pageCount())
+                .build(),
+            BookPriceInfo.builder()
+                .regularPrice(param.regularPrice())
+                .purchasePrice(param.purchasePrice())
+                .promotion(param.promotion())
+                .build(),
             param.publisher(),
-            param.isbn(),
-            param.pageSizeInfo(),
-            param.coverType(),
-            param.pageCount(),
-            param.price(),
             param.stockCount(),
-            param.promotion(),
             coverImgFile.toCoverImgFile(),
             detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList(),
             previewFiles.stream().map(CustomFile::toPreviewFile).toList(),

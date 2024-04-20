@@ -8,7 +8,6 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -21,10 +20,8 @@ import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
@@ -46,7 +43,7 @@ class RegistrationServiceTest extends IntegrationTest {
   @Autowired private S3Service s3Service;
 
   private Author author;
-  private RegistrationCreateParam param;
+  private RegistrationEditParam param;
 
   @BeforeEach
   void setUp() {
@@ -54,19 +51,21 @@ class RegistrationServiceTest extends IntegrationTest {
     author = authorJpaRepository.save(AuthorFixture.create(member));
 
     param =
-        new RegistrationCreateParam(
+        new RegistrationEditParam(
             "신간 제목",
             "한줄 요약",
             "줄거리",
             List.of(Category.NOVEL, Category.ESSEY),
-            "출판사",
             "1234567890123",
-            new PageSizeInfo(200, 100),
+            200,
+            100,
             "양장본",
             500L,
-            10000,
-            100,
-            true);
+            20_000,
+            10_000,
+            true,
+            "출판사A",
+            100);
   }
 
   @Test
@@ -80,7 +79,7 @@ class RegistrationServiceTest extends IntegrationTest {
     CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
-    RegistrationCreateResult result =
+    RegistrationEditResult result =
         registrationService.createRegistration(
             author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
@@ -102,10 +101,12 @@ class RegistrationServiceTest extends IntegrationTest {
         () -> assertThat(result.categories()).isEqualTo(param.categories()),
         () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
         () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
-        () -> assertThat(result.pageSizeInfo()).isEqualTo(param.pageSizeInfo()),
+        () -> assertThat(result.height()).isEqualTo(param.height()),
+        () -> assertThat(result.width()).isEqualTo(param.width()),
         () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
         () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
-        () -> assertThat(result.price()).isEqualTo(param.price()),
+        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
         () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
         () -> assertThat(savedCoverImgFile).exists(),
@@ -230,20 +231,6 @@ class RegistrationServiceTest extends IntegrationTest {
     // Given
     long authorId = author.getAuthorId();
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
-    RegistrationEditParam param =
-        new RegistrationEditParam(
-            "신간 제목",
-            "한줄 요약",
-            "줄거리",
-            List.of(Category.NOVEL, Category.ESSEY),
-            "출판사",
-            "1234567890123",
-            new PageSizeInfo(200, 100),
-            "양장본",
-            500L,
-            10000,
-            100,
-            true);
     CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
     List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
     List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
@@ -270,17 +257,19 @@ class RegistrationServiceTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
-        () -> assertThat(result.approvalMemo()).isEqualTo("유효하지 않은 ISBN입니다."),
+        () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
         () -> assertThat(result.title()).isEqualTo(param.title()),
         () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(param.summary()),
         () -> assertThat(result.categories()).isEqualTo(param.categories()),
         () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
         () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
-        () -> assertThat(result.pageSizeInfo()).isEqualTo(param.pageSizeInfo()),
+        () -> assertThat(result.height()).isEqualTo(param.height()),
+        () -> assertThat(result.width()).isEqualTo(param.width()),
         () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
         () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
-        () -> assertThat(result.price()).isEqualTo(param.price()),
+        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
         () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
         () -> assertThat(savedCoverImgFile).exists(),
@@ -318,7 +307,7 @@ class RegistrationServiceTest extends IntegrationTest {
         CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
     CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
-    RegistrationCreateResult result =
+    RegistrationEditResult result =
         registrationService.createRegistration(
             author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
@@ -354,15 +343,26 @@ class RegistrationServiceTest extends IntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
-        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgFile().getCoverImgUrl()),
-        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
-        () -> assertThat(result.summary()).isEqualTo(save.getSummary()),
-        () -> assertThat(result.price()).isEqualTo(save.getPrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.approvalResult()).isFalse(),
+        () -> assertThat(result.approvalMemo()).isEqualTo("유효하지 않은 ISBN입니다."),
+        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(save.getBookConceptualInfo().getOneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(save.getBookConceptualInfo().getSummary()),
+        () ->
+            assertThat(result.categories()).isEqualTo(save.getBookConceptualInfo().getCategories()),
         () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
-        () -> assertThat(result.promotion()).isEqualTo(save.getPromotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleFile().getSampleUrl()));
+        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () ->
+            assertThat(result.regularPrice()).isEqualTo(save.getBookPriceInfo().getRegularPrice()),
+        () ->
+            assertThat(result.purchasePrice())
+                .isEqualTo(save.getBookPriceInfo().getPurchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(save.getBookPriceInfo().getPromotion()));
   }
 
   @Test

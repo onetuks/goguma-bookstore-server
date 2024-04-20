@@ -1,7 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.service.dto.result;
 
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import java.util.List;
 
@@ -13,14 +12,16 @@ public record RegistrationEditResult(
     String oneLiner,
     String summary,
     List<Category> categories,
-    String publisher,
     String isbn,
-    PageSizeInfo pageSizeInfo,
+    int height,
+    int width,
     String coverType,
     long pageCount,
-    long price,
-    long stockCount,
+    long regularPrice,
+    long purchasePrice,
     boolean promotion,
+    String publisher,
+    long stockCount,
     String coverImgUrl,
     List<String> detailImgUrls,
     List<String> previewUrls,
@@ -29,20 +30,22 @@ public record RegistrationEditResult(
   public static RegistrationEditResult from(Registration registration) {
     return new RegistrationEditResult(
         registration.getRegistrationId(),
-        registration.getApprovalResult(),
-        registration.getApprovalMemo(),
-        registration.getTitle(),
-        registration.getOneLiner(),
-        registration.getSummary(),
-        registration.getCategories(),
+        registration.getApprovalInfo().getApprovalResult(),
+        registration.getApprovalInfo().getApprovalMemo(),
+        registration.getBookConceptualInfo().getTitle(),
+        registration.getBookConceptualInfo().getOneLiner(),
+        registration.getBookConceptualInfo().getSummary(),
+        registration.getBookConceptualInfo().getCategories(),
+        registration.getBookConceptualInfo().getIsbn(),
+        registration.getBookPhysicalInfo().getHeight(),
+        registration.getBookPhysicalInfo().getWidth(),
+        registration.getBookPhysicalInfo().getCoverType(),
+        registration.getBookPhysicalInfo().getPageCount(),
+        registration.getBookPriceInfo().getRegularPrice(),
+        registration.getBookPriceInfo().getPurchasePrice(),
+        registration.getBookPriceInfo().getPromotion(),
         registration.getPublisher(),
-        registration.getIsbn(),
-        registration.getPageSizeInfo(),
-        registration.getCoverType(),
-        registration.getPageCount(),
-        registration.getPrice(),
         registration.getStockCount(),
-        registration.getPromotion(),
         registration.getCoverImgUrl(),
         registration.getDetailImgUrls(),
         registration.getPreviewUrls(),

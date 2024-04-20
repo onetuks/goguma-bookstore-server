@@ -1,10 +1,10 @@
 package com.onetuks.goguma_bookstore.registration.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.book.model.converter.CategoryListToJsonConverter;
 import com.onetuks.goguma_bookstore.book.model.converter.CustomFileListToJsonConverter;
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
+import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;
@@ -45,41 +45,17 @@ public class Registration {
 
   @Embedded private ApprovalInfo approvalInfo;
 
-  @Column(name = "title", nullable = false)
-  private String title;
+  @Embedded private BookConceptualInfo bookConceptualInfo;
 
-  @Column(name = "one_liner", nullable = false)
-  private String oneLiner;
+  @Embedded private BookPhysicalInfo bookPhysicalInfo;
 
-  @Column(name = "summary", nullable = false)
-  private String summary;
-
-  @Convert(converter = CategoryListToJsonConverter.class)
-  @Column(name = "categories", nullable = false)
-  private List<Category> categories;
+  @Embedded private BookPriceInfo bookPriceInfo;
 
   @Column(name = "publisher", nullable = false)
   private String publisher;
 
-  @Column(name = "isbn", nullable = false)
-  private String isbn;
-
-  @Embedded private PageSizeInfo pageSizeInfo;
-
-  @Column(name = "cover_type", nullable = false)
-  private String coverType;
-
-  @Column(name = "page_count", nullable = false)
-  private Long pageCount;
-
-  @Column(name = "price", nullable = false)
-  private Long price;
-
   @Column(name = "stock_count", nullable = false)
   private Long stockCount;
-
-  @Column(name = "promotion", nullable = false)
-  private Boolean promotion;
 
   @Embedded private CoverImgFile coverImgFile;
 
@@ -97,48 +73,26 @@ public class Registration {
   public Registration(
       Author author,
       ApprovalInfo approvalInfo,
-      String title,
-      String oneLiner,
-      String summary,
-      List<Category> categories,
+      BookConceptualInfo bookConceptualInfo,
+      BookPhysicalInfo bookPhysicalInfo,
+      BookPriceInfo bookPriceInfo,
       String publisher,
-      String isbn,
-      PageSizeInfo pageSizeInfo,
-      String coverType,
-      Long pageCount,
-      Long price,
       Long stockCount,
-      Boolean promotion,
       CoverImgFile coverImgFile,
       List<DetailImgFile> detailImgFiles,
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
     this.author = author;
     this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.builder().build());
-    this.title = title;
-    this.oneLiner = oneLiner;
-    this.summary = summary;
-    this.categories = categories;
+    this.bookConceptualInfo = bookConceptualInfo;
+    this.bookPhysicalInfo = bookPhysicalInfo;
+    this.bookPriceInfo = bookPriceInfo;
     this.publisher = publisher;
-    this.isbn = isbn;
-    this.pageSizeInfo = pageSizeInfo;
-    this.coverType = coverType;
-    this.pageCount = pageCount;
-    this.price = price;
     this.stockCount = stockCount;
-    this.promotion = promotion;
     this.coverImgFile = coverImgFile;
     this.detailImgFiles = detailImgFiles;
     this.previewFiles = previewFiles;
     this.sampleFile = sampleFile;
-  }
-
-  public boolean getApprovalResult() {
-    return approvalInfo.getApprovalResult();
-  }
-
-  public String getApprovalMemo() {
-    return approvalInfo.getApprovalMemo();
   }
 
   public String getCoverImgUrl() {
@@ -164,34 +118,21 @@ public class Registration {
   }
 
   public Registration updateRegistration(
-      String title,
-      String oneLiner,
-      String summary,
-      List<Category> categories,
+      BookConceptualInfo bookConceptualInfo,
+      BookPhysicalInfo bookPhysicalInfo,
+      BookPriceInfo bookPriceInfo,
       String publisher,
-      String isbn,
-      PageSizeInfo pageSizeInfo,
-      String coverType,
-      Long pageCount,
-      Long price,
       Long stockCount,
-      Boolean promotion,
       CoverImgFile coverImgFile,
       List<DetailImgFile> detailImgFiles,
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
-    this.title = title;
-    this.oneLiner = oneLiner;
-    this.summary = summary;
-    this.categories = categories;
+    this.approvalInfo = ApprovalInfo.builder().build();
+    this.bookConceptualInfo = bookConceptualInfo;
+    this.bookPhysicalInfo = bookPhysicalInfo;
+    this.bookPriceInfo = bookPriceInfo;
     this.publisher = publisher;
-    this.isbn = isbn;
-    this.pageSizeInfo = pageSizeInfo;
-    this.coverType = coverType;
-    this.pageCount = pageCount;
-    this.price = price;
     this.stockCount = stockCount;
-    this.promotion = promotion;
     this.coverImgFile = coverImgFile;
     this.detailImgFiles = detailImgFiles;
     this.previewFiles = previewFiles;

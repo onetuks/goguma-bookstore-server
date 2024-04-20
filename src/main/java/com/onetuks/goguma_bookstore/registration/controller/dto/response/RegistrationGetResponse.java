@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import java.util.List;
 
@@ -7,14 +8,23 @@ public record RegistrationGetResponse(
     long registrationId,
     boolean approvalResult,
     String approvalMemo,
-    String coverImgUrl,
     String title,
+    String oneLiner,
     String summary,
-    long price,
-    long stockCount,
+    List<Category> categories,
     String isbn,
-    String publisher,
+    int height,
+    int width,
+    String coverType,
+    long pageCount,
+    long regularPrice,
+    long purchasePrice,
     boolean promotion,
+    String publisher,
+    long stockCount,
+    String coverImgUrl,
+    List<String> detailImgUrls,
+    List<String> previewUrls,
     String sampleUrl) {
 
   public static RegistrationGetResponse from(RegistrationGetResult result) {
@@ -22,14 +32,23 @@ public record RegistrationGetResponse(
         result.registrationId(),
         result.approvalResult(),
         result.approvalMemo(),
-        result.coverImgUrl(),
         result.title(),
+        result.oneLiner(),
         result.summary(),
-        result.price(),
-        result.stockCount(),
+        result.categories(),
         result.isbn(),
-        result.publisher(),
+        result.height(),
+        result.width(),
+        result.coverType(),
+        result.pageCount(),
+        result.regularPrice(),
+        result.purchasePrice(),
         result.promotion(),
+        result.publisher(),
+        result.stockCount(),
+        result.coverImgUrl(),
+        result.detailImgUrls(),
+        result.previewUrls(),
         result.sampleUrl());
   }
 

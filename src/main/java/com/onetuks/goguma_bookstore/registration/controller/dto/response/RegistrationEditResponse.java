@@ -1,7 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import java.util.List;
 
@@ -13,14 +12,16 @@ public record RegistrationEditResponse(
     String oneLiner,
     String summary,
     List<Category> categories,
-    String publisher,
     String isbn,
-    PageSizeInfo pageSizeInfo,
+    int height,
+    int width,
     String coverType,
     long pageCount,
-    long price,
-    long stockCount,
+    long regularPrice,
+    long purchasePrice,
     boolean promotion,
+    String publisher,
+    long stockCount,
     String coverImgUrl,
     List<String> detailImgUrls,
     List<String> previewUrls,
@@ -35,14 +36,16 @@ public record RegistrationEditResponse(
         result.oneLiner(),
         result.summary(),
         result.categories(),
-        result.publisher(),
         result.isbn(),
-        result.pageSizeInfo(),
+        result.height(),
+        result.width(),
         result.coverType(),
         result.pageCount(),
-        result.price(),
-        result.stockCount(),
+        result.regularPrice(),
+        result.purchasePrice(),
         result.promotion(),
+        result.publisher(),
+        result.stockCount(),
         result.coverImgUrl(),
         result.detailImgUrls(),
         result.previewUrls(),

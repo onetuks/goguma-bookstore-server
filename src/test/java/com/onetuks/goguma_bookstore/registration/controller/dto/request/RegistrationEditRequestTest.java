@@ -29,6 +29,7 @@ class RegistrationEditRequestTest extends IntegrationTest {
             "양장본",
             500L,
             20_000L,
+            10_000L,
             10L,
             true);
 
@@ -45,11 +46,13 @@ class RegistrationEditRequestTest extends IntegrationTest {
                 .containsExactlyInAnyOrderElementsOf(request.categories()),
         () -> assertThat(result.publisher()).isEqualTo(request.publisher()),
         () -> assertThat(result.isbn()).isEqualTo(request.isbn()),
-        () -> assertThat(result.price()).isEqualTo(request.price()),
+        () -> assertThat(result.height()).isEqualTo(request.height()),
+        () -> assertThat(result.width()).isEqualTo(request.width()),
         () -> assertThat(result.stockCount()).isEqualTo(request.stockCount()),
         () -> assertThat(result.coverType()).isEqualTo(request.coverType()),
         () -> assertThat(result.pageCount()).isEqualTo(request.pageCount()),
-        () -> assertThat(result.price()).isEqualTo(request.price()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(request.purchasePrice()),
+        () -> assertThat(result.regularPrice()).isEqualTo(request.regularPrice()),
         () -> assertThat(result.stockCount()).isEqualTo(request.stockCount()),
         () -> assertThat(result.promotion()).isEqualTo(request.promotion()));
   }

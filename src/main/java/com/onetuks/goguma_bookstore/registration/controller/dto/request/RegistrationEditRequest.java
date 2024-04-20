@@ -1,7 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.request;
 
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,7 +22,8 @@ public record RegistrationEditRequest(
     @Positive Integer width,
     @NotBlank String coverType,
     @Positive Long pageCount,
-    @PositiveOrZero Long price,
+    @PositiveOrZero Long regularPrice,
+    @PositiveOrZero Long purchasePrice,
     @PositiveOrZero Long stockCount,
     @NotNull Boolean promotion) {
 
@@ -33,13 +33,15 @@ public record RegistrationEditRequest(
         oneLiner(),
         summary(),
         categories(),
-        publisher(),
         isbn(),
-        new PageSizeInfo(height, width),
+        height(),
+        width(),
         coverType(),
         pageCount(),
-        price(),
-        stockCount(),
-        promotion());
+        regularPrice(),
+        purchasePrice(),
+        promotion(),
+        publisher(),
+        stockCount());
   }
 }
