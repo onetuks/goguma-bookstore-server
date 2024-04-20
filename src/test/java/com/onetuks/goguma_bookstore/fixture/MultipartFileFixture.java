@@ -18,6 +18,7 @@ public class MultipartFileFixture {
   public static MultipartFile create(String fileName, FileType fileType) {
     try {
       Path path = getTempFilePath(fileName);
+      Files.createDirectories(path.getParent());
       if (!Files.exists(path)) {
         Files.createFile(path);
       }
@@ -45,6 +46,17 @@ public class MultipartFileFixture {
                             Files.delete(filePath);
                           } catch (IOException e) {
                             log.info("Failed to delete static test files.", e);
+                          }
+                        });
+
+                Files.walk(path)
+                    .filter(Files::isDirectory)
+                    .forEach(
+                        dirPath -> {
+                          try {
+                            Files.delete(dirPath);
+                          } catch (IOException e) {
+                            log.info("Failed to delete static test directories.", e);
                           }
                         });
               } catch (IOException e) {

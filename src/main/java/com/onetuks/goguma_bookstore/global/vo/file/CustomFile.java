@@ -96,7 +96,7 @@ public class CustomFile {
     return new SampleFile(uri, multipartFile);
   }
 
-  public DetailImgFile toMockUpFile() {
+  public DetailImgFile toDetailImgFile() {
     return new DetailImgFile(uri, multipartFile);
   }
 

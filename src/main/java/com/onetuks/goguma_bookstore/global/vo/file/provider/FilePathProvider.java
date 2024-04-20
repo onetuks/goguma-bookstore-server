@@ -12,7 +12,7 @@ public class FilePathProvider {
   }
 
   public static String provideFileIndexedURI(FileType fileType, long id, int index) {
-    return fileType.getDirectoryPath() + id + "_" + index + fileType.getFileExtension();
+    return fileType.getDirectoryPath() + id + "/" + index + fileType.getFileExtension();
   }
 
   public static String provideDefaultProfileURI() {

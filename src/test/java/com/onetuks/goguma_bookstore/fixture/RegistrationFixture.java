@@ -39,7 +39,7 @@ public class RegistrationFixture {
         .coverImgFile(CustomFileFixture.createFile(author.getAuthorId(), COVERS).toCoverImgFile())
         .detailImgFiles(
             CustomFileFixture.createFiles(author.getAuthorId(), DETAILS).stream()
-                .map(CustomFile::toMockUpFile)
+                .map(CustomFile::toDetailImgFile)
                 .toList())
         .previewFiles(
             CustomFileFixture.createFiles(author.getAuthorId(), PREVIEWS).stream()

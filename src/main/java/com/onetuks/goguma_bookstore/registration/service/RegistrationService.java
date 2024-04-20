@@ -38,19 +38,14 @@ public class RegistrationService {
       long authorId,
       RegistrationCreateParam param,
       CustomFile coverImgFile,
-      List<CustomFile> mockUpFiles,
+      List<CustomFile> detailImgFiles,
       List<CustomFile> previewFiles,
       CustomFile sampleFile) {
-    if (coverImgFile.isNullFile()
-        || sampleFile.isNullFile()
-        || mockUpFiles.isEmpty()
-        || previewFiles.isEmpty()) {
-      throw new IllegalArgumentException("신간 등록에 필요한 파일이 존재하지 않습니다.");
-    }
+    checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     s3Service.putFile(coverImgFile);
     s3Service.putFile(sampleFile);
-    mockUpFiles.forEach(s3Service::putFile);
+    detailImgFiles.forEach(s3Service::putFile);
     previewFiles.forEach(s3Service::putFile);
 
     return RegistrationCreateResult.from(
@@ -70,7 +65,7 @@ public class RegistrationService {
                 .stockCount(param.stockCount())
                 .promotion(param.promotion())
                 .coverImgFile(coverImgFile.toCoverImgFile())
-                .detailImgFiles(mockUpFiles.stream().map(CustomFile::toMockUpFile).toList())
+                .detailImgFiles(detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList())
                 .previewFiles(previewFiles.stream().map(CustomFile::toPreviewFile).toList())
                 .sampleFile(sampleFile.toSampleFile())
                 .build()));
@@ -89,22 +84,42 @@ public class RegistrationService {
       long registrationId,
       RegistrationEditParam param,
       CustomFile coverImgFile,
+      List<CustomFile> detailImgFiles,
+      List<CustomFile> previewFiles,
       CustomFile sampleFile) {
+    checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
+
+    Registration registration = getRegistrationById(registrationId);
+    registration
+        .getDetailImgFiles()
+        .forEach(detailImgFile -> s3Service.deleteFile(detailImgFile.getDetailImgUri()));
+    registration
+        .getPreviewFiles()
+        .forEach(previewFile -> s3Service.deleteFile(previewFile.getPreviewFileUri()));
+
     s3Service.putFile(coverImgFile);
     s3Service.putFile(sampleFile);
+    detailImgFiles.forEach(s3Service::putFile);
+    previewFiles.forEach(s3Service::putFile);
 
     return RegistrationEditResult.from(
-        getRegistrationById(registrationId)
-            .updateRegistration(
-                param.title(),
-                param.summary(),
-                param.price(),
-                param.stockCount(),
-                param.isbn(),
-                param.publisher(),
-                param.promotion(),
-                coverImgFile.toCoverImgFile(),
-                sampleFile.toSampleFile()));
+        registration.updateRegistration(
+            param.title(),
+            param.oneLiner(),
+            param.summary(),
+            param.categories(),
+            param.publisher(),
+            param.isbn(),
+            param.pageSizeInfo(),
+            param.coverType(),
+            param.pageCount(),
+            param.price(),
+            param.stockCount(),
+            param.promotion(),
+            coverImgFile.toCoverImgFile(),
+            detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList(),
+            previewFiles.stream().map(CustomFile::toPreviewFile).toList(),
+            sampleFile.toSampleFile()));
   }
 
   @Transactional
@@ -153,5 +168,18 @@ public class RegistrationService {
     return registrationJpaRepository
         .findById(registrationId)
         .orElseThrow(() -> new IllegalArgumentException("해당 신간등록이 존재하지 않습니다."));
+  }
+
+  private void checkFileValidity(
+      CustomFile coverImgFile,
+      List<CustomFile> detailImgFiles,
+      List<CustomFile> previewFiles,
+      CustomFile sampleFile) {
+    if (coverImgFile.isNullFile()
+        || sampleFile.isNullFile()
+        || detailImgFiles.isEmpty()
+        || previewFiles.isEmpty()) {
+      throw new IllegalArgumentException("신간 등록에 필요한 파일이 존재하지 않습니다.");
+    }
   }
 }

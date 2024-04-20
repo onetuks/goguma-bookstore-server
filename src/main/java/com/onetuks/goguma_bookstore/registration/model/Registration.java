@@ -165,22 +165,36 @@ public class Registration {
 
   public Registration updateRegistration(
       String title,
+      String oneLiner,
       String summary,
+      List<Category> categories,
+      String publisher,
+      String isbn,
+      PageSizeInfo pageSizeInfo,
+      String coverType,
+      Long pageCount,
       Long price,
       Long stockCount,
-      String isbn,
-      String publisher,
       Boolean promotion,
       CoverImgFile coverImgFile,
+      List<DetailImgFile> detailImgFiles,
+      List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
     this.title = title;
+    this.oneLiner = oneLiner;
     this.summary = summary;
+    this.categories = categories;
+    this.publisher = publisher;
+    this.isbn = isbn;
+    this.pageSizeInfo = pageSizeInfo;
+    this.coverType = coverType;
+    this.pageCount = pageCount;
     this.price = price;
     this.stockCount = stockCount;
-    this.isbn = isbn;
-    this.publisher = publisher;
     this.promotion = promotion;
     this.coverImgFile = coverImgFile;
+    this.detailImgFiles = detailImgFiles;
+    this.previewFiles = previewFiles;
     this.sampleFile = sampleFile;
     return this;
   }

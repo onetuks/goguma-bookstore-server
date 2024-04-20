@@ -30,22 +30,37 @@ class RegistrationEditResultTest extends IntegrationTest {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     Author author = authorJpaRepository.save(AuthorFixture.create(member));
-    Registration registration = registrationJpaRepository.save(RegistrationFixture.create(author));
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    RegistrationEditResult result = RegistrationEditResult.from(registration);
+    RegistrationEditResult result = RegistrationEditResult.from(save);
 
     // Then
     assertAll(
-        () -> assertThat(result.registrationId()).isEqualTo(registration.getRegistrationId()),
-        () -> assertThat(result.coverImgUrl()).isEqualTo(registration.getCoverImgUrl()),
-        () -> assertThat(result.title()).isEqualTo(registration.getTitle()),
-        () -> assertThat(result.summary()).isEqualTo(registration.getSummary()),
-        () -> assertThat(result.price()).isEqualTo(registration.getPrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(registration.getStockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(registration.getIsbn()),
-        () -> assertThat(result.publisher()).isEqualTo(registration.getPublisher()),
-        () -> assertThat(result.promotion()).isEqualTo(registration.getPromotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(registration.getSampleUrl()));
+        () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
+        () -> assertThat(result.approvalResult()).isEqualTo(save.getApprovalResult()),
+        () -> assertThat(result.approvalMemo()).isEqualTo(save.getApprovalMemo()),
+        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(save.getOneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(save.getSummary()),
+        () ->
+            assertThat(result.categories())
+                .containsExactlyInAnyOrderElementsOf(save.getCategories()),
+        () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.pageSizeInfo()).isEqualTo(save.getPageSizeInfo()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getPageCount()),
+        () -> assertThat(result.price()).isEqualTo(save.getPrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(save.getPromotion()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgUrl()),
+        () ->
+            assertThat(result.detailImgUrls())
+                .containsExactlyInAnyOrderElementsOf(save.getDetailImgUrls()),
+        () ->
+            assertThat(result.previewUrls())
+                .containsExactlyInAnyOrderElementsOf(save.getPreviewUrls()),
+        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleUrl()));
   }
 }

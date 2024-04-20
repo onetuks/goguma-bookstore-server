@@ -50,7 +50,7 @@ public class RegistrationRestController {
    * @param authorId : 로그인한 작가 아이디
    * @param request : 신간 등록 요청 정보
    * @param coverImgFile : 신간 표지 이미지 파일
-   * @param mockUpFiles : 신간 모의 이미지 파일
+   * @param detailImgFiles : 신간 모의 이미지 파일
    * @param previewFiles : 신간 미리보기 이미지 파일
    * @param sampleFile : 신간 샘플 파일
    * @return registrationId, approvalResult, approvalMemo, title, oneLiner, summary, categories,
@@ -64,7 +64,7 @@ public class RegistrationRestController {
       @AuthorId Long authorId,
       @RequestBody @Valid RegistrationCreateRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
-      @RequestPart(name = "mock-up-files") MultipartFile[] mockUpFiles,
+      @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
       @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
     RegistrationCreateResult result =
@@ -72,7 +72,7 @@ public class RegistrationRestController {
             authorId,
             request.to(),
             CustomFile.of(authorId, FileType.COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.DETAILS, mockUpFiles),
+            CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
             CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
             CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationCreateResponse response = RegistrationCreateResponse.from(result);
@@ -123,12 +123,16 @@ public class RegistrationRestController {
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationEditRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
+      @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
+      @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
     RegistrationEditResult result =
         registrationService.updateRegistration(
             registrationId,
             request.to(),
             CustomFile.of(authorId, FileType.COVERS, coverImgFile),
+            CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
+            CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
             CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationEditResponse response = RegistrationEditResponse.from(result);
 
