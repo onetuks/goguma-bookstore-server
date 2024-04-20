@@ -1,10 +1,17 @@
 package com.onetuks.goguma_bookstore.registration.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.book.model.converter.CategoryListToJsonConverter;
+import com.onetuks.goguma_bookstore.book.model.converter.CustomFileListToJsonConverter;
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.model.vo.PageSizeInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
+import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
+import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;
 import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
 import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,13 +45,32 @@ public class Registration {
 
   @Embedded private ApprovalInfo approvalInfo;
 
-  @Embedded private CoverImgFile coverImgFile;
-
   @Column(name = "title", nullable = false)
   private String title;
 
+  @Column(name = "one_liner", nullable = false)
+  private String oneLiner;
+
   @Column(name = "summary", nullable = false)
   private String summary;
+
+  @Convert(converter = CategoryListToJsonConverter.class)
+  @Column(name = "categories", nullable = false)
+  private List<Category> categories;
+
+  @Column(name = "publisher", nullable = false)
+  private String publisher;
+
+  @Column(name = "isbn", nullable = false)
+  private String isbn;
+
+  @Embedded private PageSizeInfo pageSizeInfo;
+
+  @Column(name = "cover_type", nullable = false)
+  private String coverType;
+
+  @Column(name = "page_count", nullable = false)
+  private Long pageCount;
 
   @Column(name = "price", nullable = false)
   private Long price;
@@ -51,14 +78,18 @@ public class Registration {
   @Column(name = "stock_count", nullable = false)
   private Long stockCount;
 
-  @Column(name = "isbn", nullable = false)
-  private String isbn;
-
-  @Column(name = "publisher", nullable = false)
-  private String publisher;
-
   @Column(name = "promotion", nullable = false)
   private Boolean promotion;
+
+  @Embedded private CoverImgFile coverImgFile;
+
+  @Convert(converter = CustomFileListToJsonConverter.class)
+  @Column(name = "detail_img_uris", nullable = false)
+  private List<DetailImgFile> detailImgFiles;
+
+  @Convert(converter = CustomFileListToJsonConverter.class)
+  @Column(name = "preview_uris", nullable = false)
+  private List<PreviewFile> previewFiles;
 
   @Embedded private SampleFile sampleFile;
 
@@ -66,28 +97,39 @@ public class Registration {
   public Registration(
       Author author,
       ApprovalInfo approvalInfo,
-      CoverImgFile coverImgFile,
       String title,
+      String oneLiner,
       String summary,
+      List<Category> categories,
+      String publisher,
+      String isbn,
+      PageSizeInfo pageSizeInfo,
+      String coverType,
+      Long pageCount,
       Long price,
       Long stockCount,
-      String isbn,
-      String publisher,
       Boolean promotion,
+      CoverImgFile coverImgFile,
+      List<DetailImgFile> detailImgFiles,
+      List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
     this.author = author;
-    this.approvalInfo =
-        Objects.requireNonNullElse(
-            approvalInfo,
-            ApprovalInfo.builder().approvalResult(false).approvalMemo("신간 등록 검수 중입니다.").build());
-    this.coverImgFile = coverImgFile;
+    this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.builder().build());
     this.title = title;
+    this.oneLiner = oneLiner;
     this.summary = summary;
+    this.categories = categories;
+    this.publisher = publisher;
+    this.isbn = isbn;
+    this.pageSizeInfo = pageSizeInfo;
+    this.coverType = coverType;
+    this.pageCount = pageCount;
     this.price = price;
     this.stockCount = stockCount;
-    this.isbn = isbn;
-    this.publisher = publisher;
     this.promotion = promotion;
+    this.coverImgFile = coverImgFile;
+    this.detailImgFiles = detailImgFiles;
+    this.previewFiles = previewFiles;
     this.sampleFile = sampleFile;
   }
 
@@ -101,6 +143,14 @@ public class Registration {
 
   public String getCoverImgUrl() {
     return coverImgFile.getCoverImgUrl();
+  }
+
+  public List<String> getDetailImgUrls() {
+    return detailImgFiles.stream().map(DetailImgFile::getDetailImgUrl).toList();
+  }
+
+  public List<String> getPreviewUrls() {
+    return previewFiles.stream().map(PreviewFile::getPreviewUrl).toList();
   }
 
   public String getSampleUrl() {

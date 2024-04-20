@@ -103,7 +103,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     AuthorCreateEnrollmentResult createResult =
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     EscrowServiceFile escrowServiceFile =
-        CustomFileFixture.create(createResult.authorId(), FileType.ESCROWS).toEscrowServiceFile();
+        CustomFileFixture.createFile(createResult.authorId(), FileType.ESCROWS)
+            .toEscrowServiceFile();
 
     // When
     AuthorEscrowServiceHandOverResult result =
@@ -122,7 +123,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     AuthorCreateEnrollmentResult createResult =
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.create(createResult.authorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
+        CustomFileFixture.createFile(createResult.authorId(), MAIL_ORDER_SALES)
+            .toMailOrderSalesFile();
 
     // When
     AuthorMailOrderSalesSubmitResult result =
@@ -141,7 +143,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     AuthorCreateEnrollmentResult createResult =
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
     MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.create(createResult.authorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
+        CustomFileFixture.createFile(createResult.authorId(), MAIL_ORDER_SALES)
+            .toMailOrderSalesFile();
 
     // When & Then
     assertThrows(
@@ -228,18 +231,18 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // 구매안전서비스 등록
     EscrowServiceFile escrowServiceFile =
-        CustomFileFixture.create(author.getAuthorId(), FileType.ESCROWS).toEscrowServiceFile();
+        CustomFileFixture.createFile(author.getAuthorId(), FileType.ESCROWS).toEscrowServiceFile();
     authorEnrollmentService.updateAuthorEscrowService(author.getAuthorId(), escrowServiceFile);
 
     // 통신판매신고증 등록
     MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.create(author.getAuthorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
+        CustomFileFixture.createFile(author.getAuthorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
     authorEnrollmentService.updateAuthorMailOrderSales(
         author.getAuthorId(), author.getAuthorId(), mailOrderSalesFile);
 
     // 프로필 이미지 등록
     ProfileImgFile profileImgFile =
-        CustomFileFixture.create(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
+        CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
     AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미", "https://www.instagram.com/kwak");
     authorService.updateAuthorProfile(
         author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);

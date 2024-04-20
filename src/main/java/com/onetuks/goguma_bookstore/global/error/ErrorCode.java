@@ -19,6 +19,7 @@ public enum ErrorCode {
 
   ILLEGAL_ARGUMENT_ERROR("E001", "잘못된 입력입니다."),
   ILLEGAL_STATE_ERROR("E002", "잘못된 상태입니다"),
+  JSON_CONVERT_ERROR("E003", "Json 변환 중 에러가 발생했습니다."),
 
   // Auth
   EXPIRED_TOKEN("L001", "토큰이 만료되었습니다."),

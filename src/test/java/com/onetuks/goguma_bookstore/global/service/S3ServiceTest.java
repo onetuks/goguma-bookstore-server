@@ -23,7 +23,7 @@ class S3ServiceTest extends IntegrationTest {
   void s3PutFileSuccessTest() {
     // Given
     long memberId = 1_0000L;
-    CustomFile customFile = CustomFileFixture.create(memberId, FileType.PROFILES);
+    CustomFile customFile = CustomFileFixture.createFile(memberId, FileType.PROFILES);
 
     // When
     s3Service.putFile(customFile);
@@ -54,7 +54,7 @@ class S3ServiceTest extends IntegrationTest {
   void s3DeleteFileSuccessTest() {
     // Given
     long memberId = 1L;
-    CustomFile customFile = CustomFileFixture.create(memberId, FileType.PROFILES);
+    CustomFile customFile = CustomFileFixture.createFile(memberId, FileType.PROFILES);
     s3Service.putFile(customFile);
 
     // When

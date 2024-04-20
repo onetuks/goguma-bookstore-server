@@ -66,7 +66,7 @@ class AuthorServiceTest extends IntegrationTest {
     Author author = authors.get(0);
     AuthorEditParam param =
         new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.create(author.getAuthorId(), FileType.PROFILES);
+    CustomFile customFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES);
 
     // When
     AuthorEditResult result =
@@ -92,7 +92,7 @@ class AuthorServiceTest extends IntegrationTest {
     Author author1 = authors.get(1);
     AuthorEditParam param =
         new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.create(author0.getAuthorId(), FileType.PROFILES);
+    CustomFile customFile = CustomFileFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
 
     // When & Then
     assertThrows(

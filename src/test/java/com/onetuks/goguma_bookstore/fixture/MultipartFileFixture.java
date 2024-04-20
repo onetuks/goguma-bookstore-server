@@ -15,7 +15,7 @@ public class MultipartFileFixture {
 
   private static final Logger log = LoggerFactory.getLogger(MultipartFileFixture.class);
 
-  public static MultipartFile createFile(String fileName, FileType fileType) {
+  public static MultipartFile create(String fileName, FileType fileType) {
     try {
       Path path = getTempFilePath(fileName);
       if (!Files.exists(path)) {

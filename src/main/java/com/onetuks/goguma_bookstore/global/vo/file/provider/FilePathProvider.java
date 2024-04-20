@@ -11,6 +11,10 @@ public class FilePathProvider {
     return fileType.getDirectoryPath() + id + fileType.getFileExtension();
   }
 
+  public static String provideFileIndexedURI(FileType fileType, long id, int index) {
+    return fileType.getDirectoryPath() + id + "_" + index + fileType.getFileExtension();
+  }
+
   public static String provideDefaultProfileURI() {
     return FileType.PROFILES.getDirectoryPath() + "default-profile.png";
   }

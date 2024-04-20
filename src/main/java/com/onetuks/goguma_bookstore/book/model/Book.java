@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.book.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

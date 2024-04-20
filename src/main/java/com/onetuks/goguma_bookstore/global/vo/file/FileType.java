@@ -10,8 +10,11 @@ public enum FileType {
   ESCROWS("/escrows/", APPLICATION_PDF_VALUE),
   MAIL_ORDER_SALES("/mail-order-sales/", APPLICATION_PDF_VALUE),
   PROFILES("/profiles/", IMAGE_PNG_VALUE),
-  BOOK_COVERS("/book-covers/", IMAGE_PNG_VALUE),
-  BOOK_SAMPLES("/book-samples/", APPLICATION_PDF_VALUE);
+  COVERS("/covers/", IMAGE_PNG_VALUE),
+  SAMPLES("/samples/", APPLICATION_PDF_VALUE),
+  DETAILS("/details/", IMAGE_PNG_VALUE),
+  PREVIEWS("/previews/", APPLICATION_PDF_VALUE),
+  ;
 
   private final String directoryPath;
   private final String mediaType;
