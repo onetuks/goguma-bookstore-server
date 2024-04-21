@@ -1,18 +1,18 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.ESCROWS;
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.MAIL_ORDER_SALES;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PROFILES;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
-import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 public class AuthorFixture {
+
+  private static final Random random = new Random();
 
   public static Author create(Member member) {
     return Author.builder()
@@ -20,14 +20,11 @@ public class AuthorFixture {
         .profileImgFile(CustomFileFixture.createNullFile().toProfileImgFile())
         .nickname("빠선생님" + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
+        .instagramUrl("https://www.instagram.com/pannibottle" + UUIDProvider.getUUID())
         .enrollmentInfo(
             EnrollmentInfo.builder()
-                .escrowServiceFile(
-                    CustomFileFixture.createFile(member.getMemberId(), ESCROWS)
-                        .toEscrowServiceFile())
-                .mailOrderSalesFile(
-                    CustomFileFixture.createFile(member.getMemberId(), MAIL_ORDER_SALES)
-                        .toMailOrderSalesFile())
+                .businessNumber(createBusinessNumber())
+                .mailOrderSalesNumber(createMailOrderSalesNumber())
                 .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
                 .enrollmentAt(LocalDateTime.now())
                 .build())
@@ -43,21 +40,12 @@ public class AuthorFixture {
         .introduction("유튜브 대통령")
         .enrollmentInfo(
             EnrollmentInfo.builder()
-                .escrowServiceFile(
-                    CustomFileFixture.createFile(member.getMemberId(), ESCROWS)
-                        .toEscrowServiceFile())
-                .mailOrderSalesFile(
-                    CustomFileFixture.createFile(member.getMemberId(), MAIL_ORDER_SALES)
-                        .toMailOrderSalesFile())
+                .businessNumber(createBusinessNumber())
+                .mailOrderSalesNumber(createMailOrderSalesNumber())
                 .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
                 .enrollmentAt(enrollmentAt)
                 .build())
         .build();
-  }
-
-  public static AuthorCreateParam createCreationParam() {
-    return new AuthorCreateParam(
-        "빠선생님" + UUIDProvider.getUUID(), "유튜브 대통령", "https://www.instagram.com/pannibottle");
   }
 
   public static AuthorEnrollmentDetailsResult createDetailsResult() {
@@ -75,5 +63,13 @@ public class AuthorFixture {
         "mail-order-sales" + authorId + ".pdf",
         isAuthorMember,
         LocalDateTime.now());
+  }
+
+  private static String createBusinessNumber() {
+    return String.valueOf(random.nextLong(1_000_000_000L, 9_999_999_999L));
+  }
+
+  private static String createMailOrderSalesNumber() {
+    return String.valueOf(random.nextLong(1_000_000_000L, 9_999_999_999L));
   }
 }

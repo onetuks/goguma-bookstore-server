@@ -10,16 +10,10 @@ import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateE
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentJudgeResponse;
-import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEscrowServiceHandOverResponse;
-import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorMailOrderSalesSubmitResponse;
 import com.onetuks.goguma_bookstore.author.service.AuthorEnrollmentService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -31,9 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/authors/enrollment")
@@ -63,61 +55,11 @@ public class AuthorEnrollmentRestController {
   }
 
   /**
-   * 구매안전서비스확인증 발급 - only for admin
-   *
-   * @param adminId : 관리자 확인용
-   * @param authorId : 작가 등록 식별자
-   * @param escrowServiceFile : 구매안전서비스확인증 PDF 파일
-   * @return escrowServiceUrl
-   */
-  @PatchMapping(
-      path = "/{authorId}/escrow-service",
-      produces = APPLICATION_JSON_VALUE,
-      consumes = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorEscrowServiceHandOverResponse> handOverEscrowService(
-      @AdminId Long adminId,
-      @PathVariable("authorId") Long authorId,
-      @RequestPart(name = "escrow-service-file") MultipartFile escrowServiceFile) {
-    AuthorEscrowServiceHandOverResult result =
-        authorEnrollmentService.updateAuthorEscrowService(
-            authorId, CustomFile.of(authorId, FileType.ESCROWS, escrowServiceFile));
-    AuthorEscrowServiceHandOverResponse response = AuthorEscrowServiceHandOverResponse.from(result);
-
-    return ResponseEntity.status(HttpStatus.OK).body(response);
-  }
-
-  /**
-   * 통신판매신고증 전송
-   *
-   * @param loginAuthorId : 본인 확인용
-   * @param authorId : 작가 등록 식별자
-   * @param mailOrderSalesFile : 통판신고증 PDF 파일
-   * @return mailOrderSalesUrl
-   */
-  @PatchMapping(
-      path = "/{authorId}/main-order-sales",
-      produces = APPLICATION_JSON_VALUE,
-      consumes = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorMailOrderSalesSubmitResponse> submitMailOrderSales(
-      @AuthorId Long loginAuthorId,
-      @PathVariable(name = "authorId") Long authorId,
-      @RequestPart(name = "mail-order-sales-file") MultipartFile mailOrderSalesFile) {
-    AuthorMailOrderSalesSubmitResult result =
-        authorEnrollmentService.updateAuthorMailOrderSales(
-            loginAuthorId,
-            authorId,
-            CustomFile.of(authorId, FileType.MAIL_ORDER_SALES, mailOrderSalesFile));
-    AuthorMailOrderSalesSubmitResponse response = AuthorMailOrderSalesSubmitResponse.from(result);
-
-    return ResponseEntity.status(HttpStatus.OK).body(response);
-  }
-
-  /**
    * 입점 심사 - only for admin todo 해당 멤버에게 알람 보내기
    *
    * @param adminId : 관리자 확인용
    * @param authorId : 작가 등록 식별자
-   * @return enrollmentPass, memberId, roleType
+   * @return AuthorEnrollmentJudgeResponse
    */
   @PatchMapping(
       path = "/{authorId}/result",

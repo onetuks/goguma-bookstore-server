@@ -152,8 +152,9 @@ tasks.jacocoTestReport {
                     "**/Q*",
                     "**/global/config/*",
                     "**/global/error/*",
-                    "**/model/*",
                     "**/auth/*",
+                    "**/model/*",
+                    "**/dto/*",
                     "**/controller/*",
                     "**/GogumaBookStoreServerApplication.class"
             ])
@@ -192,6 +193,7 @@ tasks.jacocoTestCoverageVerification {
                     "*.global.error.*",
                     "*.auth.*",
                     "*.model.*",
+                    "*.dto.*",
                     "*.controller.*",
                     "com.onetuks.goguma_bookstore.GogumaBookStoreServerApplication"
             ]

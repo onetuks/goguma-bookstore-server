@@ -7,7 +7,9 @@ public record AuthorCreateEnrollmentResult(
     String profileImgUrl,
     String nickname,
     String introduction,
-    String instagramUrl) {
+    String instagramUrl,
+    String businessNumber,
+    String mailOrderSalesNumber) {
 
   public static AuthorCreateEnrollmentResult from(Author author) {
     return new AuthorCreateEnrollmentResult(
@@ -15,6 +17,8 @@ public record AuthorCreateEnrollmentResult(
         author.getProfileImgUrl(),
         author.getNickname(),
         author.getIntroduction(),
-        author.getInstagramUrl());
+        author.getInstagramUrl(),
+        author.getEnrollmentInfo().getBusinessNumber(),
+        author.getEnrollmentInfo().getMailOrderSalesNumber());
   }
 }

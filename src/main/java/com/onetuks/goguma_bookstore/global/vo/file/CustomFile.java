@@ -80,14 +80,6 @@ public class CustomFile {
     return new ProfileImgFile(uri, multipartFile);
   }
 
-  public EscrowServiceFile toEscrowServiceFile() {
-    return new EscrowServiceFile(uri, multipartFile);
-  }
-
-  public MailOrderSalesFile toMailOrderSalesFile() {
-    return new MailOrderSalesFile(uri, multipartFile);
-  }
-
   public CoverImgFile toCoverImgFile() {
     return new CoverImgFile(uri, multipartFile);
   }

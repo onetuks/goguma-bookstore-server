@@ -1,6 +1,5 @@
 package com.onetuks.goguma_bookstore.author.service;
 
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.MAIL_ORDER_SALES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,21 +8,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
+import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
+import com.onetuks.goguma_bookstore.fixture.UUIDProvider;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.EscrowServiceFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSalesFile;
 import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
@@ -48,19 +44,25 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   private Member userMember;
   private Member authorMember;
 
+  private AuthorCreateEnrollmentParam param;
+
   @BeforeEach
   void setUp() {
     userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    param =
+        new AuthorCreateEnrollmentParam(
+            "빠선생님" + UUIDProvider.getUUID(),
+            "유튜브 대통령",
+            "https://www.instagram.com/pannibottle",
+            "1234567890",
+            "1234567890");
   }
 
   @Test
   @DisplayName("작가 등록 신청을 수행한다.")
   void createAuthorEnrollmentTest() {
-    // Given
-    AuthorCreateParam param = AuthorFixture.createCreationParam();
-
-    // When
+    // Given & When
     AuthorCreateEnrollmentResult result =
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
 
@@ -74,10 +76,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   @Test
   @DisplayName("이미 작가인 멤버가 입점 신청을 하는 경우 예외를 던진다.")
   void createAuthorEnrollmentExceptionTest() {
-    // Given
-    AuthorCreateParam param = AuthorFixture.createCreationParam();
-
-    // When & Then
+    // Given & When & Then
     assertThrows(
         IllegalStateException.class,
         () -> authorEnrollmentService.createAuthorEnrollment(authorMember.getMemberId(), param));
@@ -86,81 +85,18 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   @Test
   @DisplayName("존재하지 않는 멤버가 입점 신청하는 경우 예외를 던진다.")
   void createAuthorEnrollment_NotExistsMember_ExceptionTest() {
-    // Given
-    AuthorCreateParam param = AuthorFixture.createCreationParam();
-
-    // When & Then
+    // Given & When & Then
     assertThrows(
         EntityNotFoundException.class,
         () -> authorEnrollmentService.createAuthorEnrollment(1_454_020L, param));
   }
 
   @Test
-  @DisplayName("구매안전서비스확인증을 부여한다.")
-  void updateAuthorEscrowService() {
-    // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
-    EscrowServiceFile escrowServiceFile =
-        CustomFileFixture.createFile(createResult.authorId(), FileType.ESCROWS)
-            .toEscrowServiceFile();
-
-    // When
-    AuthorEscrowServiceHandOverResult result =
-        authorEnrollmentService.updateAuthorEscrowService(
-            createResult.authorId(), escrowServiceFile);
-
-    // Then
-    assertThat(result.escrowServiceUrl()).contains(escrowServiceFile.getEscrowServiceUrl());
-  }
-
-  @Test
-  @DisplayName("통신판매신고증을 전송한다.")
-  void updateAuthorMailOrderSalesTest() {
-    // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
-    MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.createFile(createResult.authorId(), MAIL_ORDER_SALES)
-            .toMailOrderSalesFile();
-
-    // When
-    AuthorMailOrderSalesSubmitResult result =
-        authorEnrollmentService.updateAuthorMailOrderSales(
-            createResult.authorId(), createResult.authorId(), mailOrderSalesFile);
-
-    // Then
-    assertThat(result.mailOrderSalesUrl()).contains(mailOrderSalesFile.getMailOrderSalesUrl());
-  }
-
-  @Test
-  @DisplayName("멤버아이디와 작가아이디가 다른 상태로 통신판매신고증 전송 시 예외를 던진다.")
-  void updateAuthorMailOrderSalesExceptionTest() {
-    // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
-    AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
-    MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.createFile(createResult.authorId(), MAIL_ORDER_SALES)
-            .toMailOrderSalesFile();
-
-    // When & Then
-    assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            authorEnrollmentService.updateAuthorMailOrderSales(
-                authorMember.getMemberId(), createResult.authorId(), mailOrderSalesFile));
-  }
-
-  @Test
   @DisplayName("입점 심사를 승인하면 입점 승인 여부가 참이 되고, 해당 멤버의 역할이 작가가 된다.")
   void updateAuthorEnrollmentJudgeApprovalTest() {
     // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
+        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When
     AuthorEnrollmentJudgeResult result =
@@ -229,17 +165,6 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
     authorJpaRepository.flush();
 
-    // 구매안전서비스 등록
-    EscrowServiceFile escrowServiceFile =
-        CustomFileFixture.createFile(author.getAuthorId(), FileType.ESCROWS).toEscrowServiceFile();
-    authorEnrollmentService.updateAuthorEscrowService(author.getAuthorId(), escrowServiceFile);
-
-    // 통신판매신고증 등록
-    MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.createFile(author.getAuthorId(), MAIL_ORDER_SALES).toMailOrderSalesFile();
-    authorEnrollmentService.updateAuthorMailOrderSales(
-        author.getAuthorId(), author.getAuthorId(), mailOrderSalesFile);
-
     // 프로필 이미지 등록
     ProfileImgFile profileImgFile =
         CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
@@ -255,22 +180,16 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
                 userMember.getMemberId(), author.getAuthorId()));
 
     File savedProfileImgFile = s3Service.getFile(profileImgFile.getUri());
-    File savedEscrowServiceFile = s3Service.getFile(escrowServiceFile.getUri());
-    File savedMailOrderSalesFile = s3Service.getFile(mailOrderSalesFile.getUri());
 
-    assertAll(
-        () -> assertThat(savedProfileImgFile).exists(),
-        () -> assertThat(savedEscrowServiceFile).exists(),
-        () -> assertThat(savedMailOrderSalesFile).exists());
+    assertThat(savedProfileImgFile).exists();
   }
 
   @Test
   @DisplayName("요청한 멤버 아이디와 작가 아이디가 같은 유저에 대한 정보이면 임점 심사 정보를 반환한다.")
   void findEnrollmentDetails_Test() {
     // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
+        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When
     AuthorEnrollmentDetailsResult result =
@@ -289,9 +208,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   @DisplayName("요청한 멤버 아이디와 작가 아이디가 다른 유저에 대한 정보이면 임점 심사 정보 요청 시 예외를 던진다.")
   void findAuthorEnrollmentDetails_NotSameAuthorAndMember_ExceptionTest() {
     // Given
-    AuthorCreateParam createParam = AuthorFixture.createCreationParam();
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), createParam);
+        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When & Then
     assertThrows(

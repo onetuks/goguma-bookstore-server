@@ -7,8 +7,6 @@ import lombok.Getter;
 
 @Getter
 public enum FileType {
-  ESCROWS("/escrows/", APPLICATION_PDF_VALUE),
-  MAIL_ORDER_SALES("/mail-order-sales/", APPLICATION_PDF_VALUE),
   PROFILES("/profiles/", IMAGE_PNG_VALUE),
   COVERS("/covers/", IMAGE_PNG_VALUE),
   SAMPLES("/samples/", APPLICATION_PDF_VALUE),

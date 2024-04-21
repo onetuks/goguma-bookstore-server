@@ -3,8 +3,6 @@ package com.onetuks.goguma_bookstore.author.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
-import com.onetuks.goguma_bookstore.global.vo.file.EscrowServiceFile;
-import com.onetuks.goguma_bookstore.global.vo.file.MailOrderSalesFile;
 import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
 import com.onetuks.goguma_bookstore.member.model.Member;
@@ -19,7 +17,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,13 +40,14 @@ public class Author {
 
   @Embedded private ProfileImgFile profileImgFile;
 
-  @Column(name = "nickname", nullable = false)
+  @Column(nullable = false)
+  @Embedded
   private Nickname nickname;
 
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
-  @Column(name = "instagram_url", nullable = false)
+  @Column(name = "instagram_url", nullable = false, unique = true)
   private String instagramUrl;
 
   @Embedded private EnrollmentInfo enrollmentInfo;
@@ -86,31 +84,6 @@ public class Author {
     return this.profileImgFile.getProfileImgUrl();
   }
 
-  public String getEscrowServiceUrl() {
-    EscrowServiceFile escrowServiceFile = this.enrollmentInfo.getEscrowServiceFile();
-    if (escrowServiceFile == null) {
-      return null;
-    }
-
-    return escrowServiceFile.getEscrowServiceUrl();
-  }
-
-  public String getMailOrderSalesUrl() {
-    MailOrderSalesFile mailOrderSalesFile = this.enrollmentInfo.getMailOrderSalesFile();
-    if (mailOrderSalesFile == null) {
-      return null;
-    }
-    return mailOrderSalesFile.getMailOrderSalesUrl();
-  }
-
-  public boolean getEnrollmentPassed() {
-    return this.enrollmentInfo.getEnrollmentPassed();
-  }
-
-  public LocalDateTime getEnrollmentAt() {
-    return this.enrollmentInfo.getEnrollmentAt();
-  }
-
   public Author updateProfileImgFile(ProfileImgFile profileImgFile) {
     this.profileImgFile = profileImgFile;
     return this;
@@ -121,16 +94,6 @@ public class Author {
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;
     return this;
-  }
-
-  public String updateEscrowService(EscrowServiceFile escrowServiceFile) {
-    this.enrollmentInfo = enrollmentInfo.setEscrowServiceFile(escrowServiceFile);
-    return this.getEscrowServiceUrl();
-  }
-
-  public String updateMailOrderSales(MailOrderSalesFile mailOrderSalesFile) {
-    this.enrollmentInfo = enrollmentInfo.setMailOrderSalesFile(mailOrderSalesFile);
-    return this.getMailOrderSalesUrl();
   }
 
   public boolean convertEnrollmentJudgeStatus() {
