@@ -7,6 +7,7 @@ import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollm
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
+import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
@@ -27,14 +28,17 @@ public class AuthorEnrollmentService {
   private final MemberJpaRepository memberJpaRepository;
 
   private final S3Service s3Service;
+  private final EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
   public AuthorEnrollmentService(
       AuthorJpaRepository authorJpaRepository,
       MemberJpaRepository memberJpaRepository,
-      S3Service s3Service) {
+      S3Service s3Service,
+      EnrollmentInfoVerificationService enrollmentInfoVerificationService) {
     this.authorJpaRepository = authorJpaRepository;
     this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
+    this.enrollmentInfoVerificationService = enrollmentInfoVerificationService;
   }
 
   /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
@@ -57,6 +61,9 @@ public class AuthorEnrollmentService {
   @Transactional
   public AuthorCreateEnrollmentResult createAuthorEnrollment(
       long loginId, AuthorCreateEnrollmentParam param) {
+    enrollmentInfoVerificationService.verifyEnrollmentInfo(
+        param.businessNumber(), param.mailOrderSalesNumber());
+
     Author temporaryAuthor =
         authorJpaRepository.save(
             Author.builder()

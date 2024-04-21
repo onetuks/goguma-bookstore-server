@@ -72,7 +72,7 @@ public class ArchitectureTest extends IntegrationTest {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..response..")
+              .resideInAnyPackage("..response")
               .should()
               .haveSimpleNameEndingWith("Response")
               .orShould()
@@ -128,7 +128,7 @@ public class ArchitectureTest extends IntegrationTest {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..service..")
+              .resideInAnyPackage("..service")
               .and()
               .resideOutsideOfPackage("..dto..")
               .and()

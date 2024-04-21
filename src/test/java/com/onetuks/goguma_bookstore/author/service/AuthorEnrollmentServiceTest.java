@@ -13,6 +13,7 @@ import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
+import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
@@ -42,6 +44,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private S3Service s3Service;
+  @MockBean private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
   private Member userMember;
   private Member authorMember;
@@ -58,7 +61,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
             "유튜브 대통령",
             "https://www.instagram.com/pannibottle",
             "1234567890",
-            "1234567890");
+            "123456789012345678");
   }
 
   @Test

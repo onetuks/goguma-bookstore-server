@@ -112,11 +112,11 @@ dependencies {
     testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 
     // AWS S3
-    implementation(platform('software.amazon.awssdk:bom:2.25.30'))
+    implementation(platform('software.amazon.awssdk:bom:2.25.35'))
     implementation('commons-io:commons-io:2.16.1')
     implementation('software.amazon.awssdk:aws-core:2.25.30')
-    implementation('software.amazon.awssdk:sdk-core:2.25.30')
-    implementation('software.amazon.awssdk:sts:2.25.23')
+    implementation('software.amazon.awssdk:sdk-core:2.25.35')
+    implementation('software.amazon.awssdk:sts:2.25.30')
     implementation('software.amazon.awssdk:s3:2.25.27')
     testImplementation('org.testcontainers:localstack')
 
@@ -219,7 +219,7 @@ sonar {
             property("sonar.projectName", "goguma-bookstore")
             property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
             property("sonar.coverage.exclusions",
-                    "**/Q*,**/global/config/**,**/global/error/**,**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
+                    "**/Q*,**/global/config/**,**/global/error/**,**/dto/**,**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
         }
     } else {
         println ".env file not exists"

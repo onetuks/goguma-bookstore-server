@@ -11,7 +11,7 @@ public record AuthorCreateEnrollmentRequest(
     @NotBlank @Length(min = 1, max = 100) String introduction,
     @NotBlank @URL String instagramUrl,
     @NotBlank @Length(min = 10, max = 10) @Pattern(regexp = "^[0-9]+$") String businessNumber,
-    @NotBlank @Length(min = 10, max = 10) @Pattern(regexp = "^[0-9]+$")
+    @NotBlank @Length(min = 18, max = 18) @Pattern(regexp = "^[0-9]+$")
         String mailOrderSalesNumber) {
 
   public AuthorCreateEnrollmentParam to() {
