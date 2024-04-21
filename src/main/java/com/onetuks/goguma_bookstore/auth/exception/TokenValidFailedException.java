@@ -4,12 +4,12 @@ import com.onetuks.goguma_bookstore.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class TokenValidFailedException extends TokenException {
+public class TokenValidFailedException extends IllegalStateException {
 
   private final ErrorCode errorCode;
 
   public TokenValidFailedException(ErrorCode errorCode) {
-    super(errorCode);
+    super(errorCode.getMessage());
     this.errorCode = errorCode;
   }
 }

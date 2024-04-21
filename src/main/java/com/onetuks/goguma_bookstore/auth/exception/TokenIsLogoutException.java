@@ -4,12 +4,12 @@ import com.onetuks.goguma_bookstore.global.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class TokenIsLogoutException extends TokenException {
+public class TokenIsLogoutException extends IllegalStateException {
 
   private final ErrorCode errorCode;
 
   public TokenIsLogoutException(ErrorCode errorCode) {
-    super(errorCode);
+    super(errorCode.getMessage());
     this.errorCode = errorCode;
   }
 }
