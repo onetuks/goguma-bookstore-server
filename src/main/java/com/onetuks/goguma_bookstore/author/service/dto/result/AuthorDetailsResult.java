@@ -8,6 +8,7 @@ public record AuthorDetailsResult(
     String profileImgUrl,
     String nickname,
     String introduction,
+    String instagramUrl,
     long subscribeCount,
     long bookCount,
     long restockCount) {
@@ -20,6 +21,7 @@ public record AuthorDetailsResult(
         author.getProfileImgUrl(),
         author.getNickname(),
         author.getIntroduction(),
+        author.getInstagramUrl(),
         authorStatics.getSubscribeCount(),
         authorStatics.getBookCount(),
         authorStatics.getRestockCount());

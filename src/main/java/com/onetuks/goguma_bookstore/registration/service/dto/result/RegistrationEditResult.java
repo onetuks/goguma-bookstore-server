@@ -1,30 +1,54 @@
 package com.onetuks.goguma_bookstore.registration.service.dto.result;
 
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
+import java.util.List;
 
 public record RegistrationEditResult(
     long registrationId,
-    String coverImgUrl,
+    boolean approvalResult,
+    String approvalMemo,
     String title,
+    String oneLiner,
     String summary,
-    long price,
-    long stockCount,
+    List<Category> categories,
     String isbn,
-    String publisher,
+    int height,
+    int width,
+    String coverType,
+    long pageCount,
+    long regularPrice,
+    long purchasePrice,
     boolean promotion,
+    String publisher,
+    long stockCount,
+    String coverImgUrl,
+    List<String> detailImgUrls,
+    List<String> previewUrls,
     String sampleUrl) {
 
   public static RegistrationEditResult from(Registration registration) {
     return new RegistrationEditResult(
         registration.getRegistrationId(),
-        registration.getCoverImgUrl(),
-        registration.getTitle(),
-        registration.getSummary(),
-        registration.getPrice(),
-        registration.getStockCount(),
-        registration.getIsbn(),
+        registration.getApprovalInfo().getApprovalResult(),
+        registration.getApprovalInfo().getApprovalMemo(),
+        registration.getBookConceptualInfo().getTitle(),
+        registration.getBookConceptualInfo().getOneLiner(),
+        registration.getBookConceptualInfo().getSummary(),
+        registration.getBookConceptualInfo().getCategories(),
+        registration.getBookConceptualInfo().getIsbn(),
+        registration.getBookPhysicalInfo().getHeight(),
+        registration.getBookPhysicalInfo().getWidth(),
+        registration.getBookPhysicalInfo().getCoverType(),
+        registration.getBookPhysicalInfo().getPageCount(),
+        registration.getBookPriceInfo().getRegularPrice(),
+        registration.getBookPriceInfo().getPurchasePrice(),
+        registration.getBookPriceInfo().getPromotion(),
         registration.getPublisher(),
-        registration.getPromotion(),
+        registration.getStockCount(),
+        registration.getCoverImgUrl(),
+        registration.getDetailImgUrls(),
+        registration.getPreviewUrls(),
         registration.getSampleUrl());
   }
 }

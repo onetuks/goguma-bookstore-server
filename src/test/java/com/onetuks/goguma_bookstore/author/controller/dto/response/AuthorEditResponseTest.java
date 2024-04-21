@@ -15,7 +15,8 @@ class AuthorEditResponseTest extends IntegrationTest {
   void fromTest() {
     // Given
     AuthorEditResult editResult =
-        new AuthorEditResult(1_000L, "profileImgUrl.png", "빠니보틀", "유튜브 대통령");
+        new AuthorEditResult(
+            1_000L, "profileImgUrl.png", "빠니보틀", "유튜브 대통령", "https://instagram.com/panibottle");
 
     // When
     AuthorEditResponse result = AuthorEditResponse.from(editResult);
@@ -25,6 +26,7 @@ class AuthorEditResponseTest extends IntegrationTest {
         () -> assertThat(result.authorId()).isEqualTo(editResult.authorId()),
         () -> assertThat(result.profileImgUrl()).isEqualTo(editResult.profileImgUrl()),
         () -> assertThat(result.nickname()).isEqualTo(editResult.nickname()),
-        () -> assertThat(result.introduction()).isEqualTo(editResult.introduction()));
+        () -> assertThat(result.introduction()).isEqualTo(editResult.introduction()),
+        () -> assertThat(result.instagramUrl()).isEqualTo(editResult.instagramUrl()));
   }
 }

@@ -18,7 +18,7 @@ class AuthorMailOrderSalesFileSubmitResponseTest extends IntegrationTest {
     // Given
     long authorId = 1_000L;
     MailOrderSalesFile mailOrderSalesFile =
-        CustomFileFixture.create(authorId, MAIL_ORDER_SALES).toMailOrderSalesFile();
+        CustomFileFixture.createFile(authorId, MAIL_ORDER_SALES).toMailOrderSalesFile();
     AuthorMailOrderSalesSubmitResult submitResult =
         new AuthorMailOrderSalesSubmitResult(mailOrderSalesFile.getMailOrderSalesUrl());
 

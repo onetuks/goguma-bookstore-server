@@ -49,6 +49,9 @@ public class Author {
   @Column(name = "introduction", nullable = false)
   private String introduction;
 
+  @Column(name = "instagram_url", nullable = false)
+  private String instagramUrl;
+
   @Embedded private EnrollmentInfo enrollmentInfo;
 
   @OneToOne(
@@ -63,18 +66,15 @@ public class Author {
       ProfileImgFile profileImgFile,
       String nickname,
       String introduction,
+      String instagramUrl,
       EnrollmentInfo enrollmentInfo) {
     this.member = member;
     this.profileImgFile = profileImgFile;
     this.nickname = new Nickname(nickname);
     this.introduction = introduction;
+    this.instagramUrl = instagramUrl;
     this.enrollmentInfo =
-        Objects.requireNonNullElse(
-            enrollmentInfo,
-            EnrollmentInfo.builder()
-                .enrollmentPassed(false)
-                .enrollmentAt(LocalDateTime.now())
-                .build());
+        Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.builder().build());
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
@@ -116,13 +116,10 @@ public class Author {
     return this;
   }
 
-  public Author updateNickname(String nickname) {
+  public Author updateAuthorProfile(String nickname, String introduction, String instagramUrl) {
     this.nickname = new Nickname(nickname);
-    return this;
-  }
-
-  public Author updateIntroduction(String introduction) {
     this.introduction = introduction;
+    this.instagramUrl = instagramUrl;
     return this;
   }
 

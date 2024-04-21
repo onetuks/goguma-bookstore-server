@@ -30,22 +30,39 @@ class RegistrationEditResultTest extends IntegrationTest {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     Author author = authorJpaRepository.save(AuthorFixture.create(member));
-    Registration registration = registrationJpaRepository.save(RegistrationFixture.create(author));
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    RegistrationEditResult result = RegistrationEditResult.from(registration);
+    RegistrationEditResult result = RegistrationEditResult.from(save);
 
     // Then
     assertAll(
-        () -> assertThat(result.registrationId()).isEqualTo(registration.getRegistrationId()),
-        () -> assertThat(result.coverImgUrl()).isEqualTo(registration.getCoverImgUrl()),
-        () -> assertThat(result.title()).isEqualTo(registration.getTitle()),
-        () -> assertThat(result.summary()).isEqualTo(registration.getSummary()),
-        () -> assertThat(result.price()).isEqualTo(registration.getPrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(registration.getStockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(registration.getIsbn()),
-        () -> assertThat(result.publisher()).isEqualTo(registration.getPublisher()),
-        () -> assertThat(result.promotion()).isEqualTo(registration.getPromotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(registration.getSampleUrl()));
+        () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
+        () ->
+            assertThat(result.approvalResult())
+                .isEqualTo(save.getApprovalInfo().getApprovalResult()),
+        () -> assertThat(result.approvalMemo()).isEqualTo(save.getApprovalInfo().getApprovalMemo()),
+        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(save.getBookConceptualInfo().getOneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(save.getBookConceptualInfo().getSummary()),
+        () ->
+            assertThat(result.categories()).isEqualTo(save.getBookConceptualInfo().getCategories()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () ->
+            assertThat(result.regularPrice()).isEqualTo(save.getBookPriceInfo().getRegularPrice()),
+        () ->
+            assertThat(result.purchasePrice())
+                .isEqualTo(save.getBookPriceInfo().getPurchasePrice()),
+        () -> assertThat(result.promotion()).isEqualTo(save.getBookPriceInfo().getPromotion()),
+        () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
+        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgUrl()),
+        () -> assertThat(result.detailImgUrls()).isEqualTo(save.getDetailImgUrls()),
+        () -> assertThat(result.previewUrls()).isEqualTo(save.getPreviewUrls()),
+        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleUrl()));
   }
 }

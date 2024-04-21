@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.book.model;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,7 +54,7 @@ public class Book {
   @Column(name = "summary", nullable = false)
   private String summary;
 
-  @Column(name = "price", nullable = false)
+  @Column(name = "purchasePrice", nullable = false)
   private Long price;
 
   @Column(name = "stock_count", nullable = false)

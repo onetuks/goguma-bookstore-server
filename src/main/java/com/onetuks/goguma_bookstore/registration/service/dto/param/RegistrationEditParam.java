@@ -1,10 +1,20 @@
 package com.onetuks.goguma_bookstore.registration.service.dto.param;
 
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import java.util.List;
+
 public record RegistrationEditParam(
     String title,
+    String oneLiner,
     String summary,
-    long price,
-    long stockCount,
+    List<Category> categories,
     String isbn,
+    int height,
+    int width,
+    String coverType,
+    long pageCount,
+    long regularPrice,
+    long purchasePrice,
+    boolean promotion,
     String publisher,
-    boolean promotion) {}
+    long stockCount) {}

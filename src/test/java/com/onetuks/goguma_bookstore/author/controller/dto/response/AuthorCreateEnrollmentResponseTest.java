@@ -18,10 +18,14 @@ class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
     // Given
     long authorId = 1_000L;
     ProfileImgFile profileImgFile =
-        CustomFileFixture.create(authorId, FileType.PROFILES).toProfileImgFile();
+        CustomFileFixture.createFile(authorId, FileType.PROFILES).toProfileImgFile();
     AuthorCreateEnrollmentResult resultObject =
         new AuthorCreateEnrollmentResult(
-            authorId, profileImgFile.getProfileImgUrl(), "빠니보틀", "빡친감자");
+            authorId,
+            profileImgFile.getProfileImgUrl(),
+            "빠니보틀",
+            "빡친감자",
+            "https://www.instagram.com/pannibottle");
 
     // When
     AuthorCreateEnrollmentResponse result = AuthorCreateEnrollmentResponse.from(resultObject);

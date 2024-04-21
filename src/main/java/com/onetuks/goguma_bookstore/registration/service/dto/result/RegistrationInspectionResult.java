@@ -8,7 +8,7 @@ public record RegistrationInspectionResult(
   public static RegistrationInspectionResult from(Registration registration) {
     return new RegistrationInspectionResult(
         registration.getRegistrationId(),
-        registration.getApprovalResult(),
-        registration.getApprovalMemo());
+        registration.getApprovalInfo().getApprovalResult(),
+        registration.getApprovalInfo().getApprovalMemo());
   }
 }

@@ -63,6 +63,7 @@ public class AuthorEnrollmentService {
                 .profileImgFile(CustomFile.of().toProfileImgFile())
                 .nickname(param.nickname())
                 .introduction(param.introduction())
+                .instagramUrl(param.instagramUrl())
                 .build());
 
     return AuthorCreateEnrollmentResult.from(temporaryAuthor);

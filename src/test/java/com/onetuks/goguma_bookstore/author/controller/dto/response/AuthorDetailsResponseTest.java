@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
@@ -15,7 +15,15 @@ class AuthorDetailsResponseTest extends IntegrationTest {
   void fromTest() {
     // Given
     AuthorDetailsResult expected =
-        new AuthorDetailsResult(1_000L, "mock-profile.png", "빠니보틀", "유튜브 대통령", 101, 102, 103);
+        new AuthorDetailsResult(
+            1_000L,
+            "mock-profile.png",
+            "빠니보틀",
+            "유튜브 대통령",
+            "https://www.instagram.com/panibottle",
+            101,
+            102,
+            103);
 
     // When
     AuthorDetailsResponse result = AuthorDetailsResponse.from(expected);
@@ -26,6 +34,7 @@ class AuthorDetailsResponseTest extends IntegrationTest {
         () -> assertThat(result.profileImgUrl()).isEqualTo(expected.profileImgUrl()),
         () -> assertThat(result.nickname()).isEqualTo(expected.nickname()),
         () -> assertThat(result.introduction()).isEqualTo(expected.introduction()),
+        () -> assertThat(result.instagramUrl()).isEqualTo(expected.instagramUrl()),
         () -> assertThat(result.subscribeCount()).isEqualTo(101),
         () -> assertThat(result.bookCount()).isEqualTo(102),
         () -> assertThat(result.restockCount()).isEqualTo(103));

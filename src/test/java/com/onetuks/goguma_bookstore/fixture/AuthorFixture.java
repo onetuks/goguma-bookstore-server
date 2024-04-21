@@ -23,9 +23,10 @@ public class AuthorFixture {
         .enrollmentInfo(
             EnrollmentInfo.builder()
                 .escrowServiceFile(
-                    CustomFileFixture.create(member.getMemberId(), ESCROWS).toEscrowServiceFile())
+                    CustomFileFixture.createFile(member.getMemberId(), ESCROWS)
+                        .toEscrowServiceFile())
                 .mailOrderSalesFile(
-                    CustomFileFixture.create(member.getMemberId(), MAIL_ORDER_SALES)
+                    CustomFileFixture.createFile(member.getMemberId(), MAIL_ORDER_SALES)
                         .toMailOrderSalesFile())
                 .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
                 .enrollmentAt(LocalDateTime.now())
@@ -36,15 +37,17 @@ public class AuthorFixture {
   public static Author createWithEnrollmentAt(Member member, LocalDateTime enrollmentAt) {
     return Author.builder()
         .member(member)
-        .profileImgFile(CustomFileFixture.create(member.getMemberId(), PROFILES).toProfileImgFile())
+        .profileImgFile(
+            CustomFileFixture.createFile(member.getMemberId(), PROFILES).toProfileImgFile())
         .nickname("빠선생님" + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
         .enrollmentInfo(
             EnrollmentInfo.builder()
                 .escrowServiceFile(
-                    CustomFileFixture.create(member.getMemberId(), ESCROWS).toEscrowServiceFile())
+                    CustomFileFixture.createFile(member.getMemberId(), ESCROWS)
+                        .toEscrowServiceFile())
                 .mailOrderSalesFile(
-                    CustomFileFixture.create(member.getMemberId(), MAIL_ORDER_SALES)
+                    CustomFileFixture.createFile(member.getMemberId(), MAIL_ORDER_SALES)
                         .toMailOrderSalesFile())
                 .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
                 .enrollmentAt(enrollmentAt)
@@ -53,7 +56,8 @@ public class AuthorFixture {
   }
 
   public static AuthorCreateParam createCreationParam() {
-    return new AuthorCreateParam("빠선생님" + UUIDProvider.getUUID(), "유튜브 대통령");
+    return new AuthorCreateParam(
+        "빠선생님" + UUIDProvider.getUUID(), "유튜브 대통령", "https://www.instagram.com/pannibottle");
   }
 
   public static AuthorEnrollmentDetailsResult createDetailsResult() {
@@ -66,6 +70,7 @@ public class AuthorFixture {
         "profile_" + authorId + ".png",
         "빠선생님" + authorId,
         "유튜브 대통령" + authorId,
+        "https://www.instagram.com/pannibottle" + authorId,
         "escrow-service" + authorId + ".pdf",
         "mail-order-sales" + authorId + ".pdf",
         isAuthorMember,

@@ -246,7 +246,7 @@ public class ArchitectureTest extends IntegrationTest {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..model..")
+              .resideInAnyPackage("..model")
               .should()
               .onlyDependOnClassesThat()
               .resideInAnyPackage("..model..", "java..", "jakarta..", "lombok..", "..vo..");

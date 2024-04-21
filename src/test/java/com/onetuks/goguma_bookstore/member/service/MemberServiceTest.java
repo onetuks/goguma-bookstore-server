@@ -123,7 +123,7 @@ class MemberServiceTest extends IntegrationTest {
     MemberProfileEditParam param =
         new MemberProfileEditParam(
             "빠니보틀니", true, "강원도 춘천시 중앙로", "킹갓 빠니보틀 생가", CashReceiptType.PERSON, "010-0101-0101");
-    CustomFile customFile = CustomFileFixture.create(member.getMemberId(), FileType.PROFILES);
+    CustomFile customFile = CustomFileFixture.createFile(member.getMemberId(), FileType.PROFILES);
 
     // When
     MemberProfileEditResult result =

@@ -35,8 +35,10 @@ public class AuthorService {
     return AuthorEditResult.from(
         getAuthorById(authorId)
             .updateProfileImgFile(customFile.toProfileImgFile())
-            .updateNickname(authorEditParam.nickname())
-            .updateIntroduction(authorEditParam.introduction()));
+            .updateAuthorProfile(
+                authorEditParam.nickname(),
+                authorEditParam.introduction(),
+                authorEditParam.instagramUrl()));
   }
 
   @Transactional(readOnly = true)

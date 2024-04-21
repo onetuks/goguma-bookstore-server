@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
+import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -19,10 +20,8 @@ import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationCreateResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
@@ -32,6 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
@@ -44,75 +45,109 @@ class RegistrationServiceTest extends IntegrationTest {
   @Autowired private S3Service s3Service;
 
   private Author author;
+  private RegistrationEditParam param;
 
   @BeforeEach
   void setUp() {
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     author = authorJpaRepository.save(AuthorFixture.create(member));
+
+    param =
+        new RegistrationEditParam(
+            "신간 제목",
+            "한줄 요약",
+            "줄거리",
+            List.of(Category.NOVEL, Category.ESSEY),
+            "1234567890123",
+            200,
+            100,
+            "양장본",
+            500L,
+            20_000,
+            10_000,
+            true,
+            "출판사A",
+            100);
   }
 
   @Test
-  @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
+  @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지, 목업 이미지, 미리보기 파일, 샘플 파일이 S3에 저장된다.")
   void createRegistrationTest() {
     // Given
     long authorId = author.getAuthorId();
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(authorId, FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(authorId, FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
+    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
-    RegistrationCreateResult result =
+    RegistrationEditResult result =
         registrationService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, sampleFile);
+            author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    List<File> savedDetailImgFiles =
+        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+    List<File> savedPreviewFiles =
+        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
-        () -> assertThat(savedCoverImgFile).hasSize(coverImgFile.getMultipartFile().getSize()),
-        () -> assertThat(savedSampleFile).hasSize(sampleFile.getMultipartFile().getSize()),
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () ->
-            assertThat(result.coverImgUrl())
-                .isEqualTo(coverImgFile.toCoverImgFile().getCoverImgUrl()),
         () -> assertThat(result.title()).isEqualTo(param.title()),
+        () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.price()).isEqualTo(param.price()),
-        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.categories()).isEqualTo(param.categories()),
         () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
+        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.height()).isEqualTo(param.height()),
+        () -> assertThat(result.width()).isEqualTo(param.width()),
+        () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(sampleFile.toSampleFile().getSampleUrl()));
+        () -> assertThat(savedCoverImgFile).exists(),
+        () -> assertThat(savedDetailImgFiles).hasSize(10),
+        () -> assertThat(savedPreviewFiles).hasSize(25),
+        () -> assertThat(savedSampleFile).exists());
   }
 
   @Test
   @DisplayName("신간 등록을 요청할 때 커버 이미지 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoCoverImgFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
+    long authorId = author.getAuthorId();
     CustomFile coverImgFile = CustomFileFixture.createNullFile();
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
             registrationService.createRegistration(
-                author.getAuthorId(), param, coverImgFile, sampleFile));
+                author.getAuthorId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
 
   @Test
   @DisplayName("신간 등록을 요청할 때 샘플 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoSampleFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
     CustomFile sampleFile = CustomFileFixture.createNullFile();
 
     // When & Then
@@ -120,7 +155,58 @@ class RegistrationServiceTest extends IntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationService.createRegistration(
-                author.getAuthorId(), param, coverImgFile, sampleFile));
+                author.getAuthorId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
+  }
+
+  @Test
+  @DisplayName("신간 등록 요청할 때 목업 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoMockUpFiles_ExceptionTest() {
+    // Given
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> detailImgFiles = List.of();
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
+  }
+
+  @Test
+  @DisplayName("신간 등록 요청할 때 미리보기 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoPreviewFiles_ExceptionTest() {
+    // Given
+    long authorId = author.getAuthorId();
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = List.of();
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            registrationService.createRegistration(
+                author.getAuthorId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
 
   @Test
@@ -145,37 +231,53 @@ class RegistrationServiceTest extends IntegrationTest {
   @DisplayName("신간등록을 수정한다. 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
   void updateRegistrationTest() {
     // Given
+    long authorId = author.getAuthorId();
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
-    RegistrationEditParam param =
-        new RegistrationEditParam(
-            "신간 제목 수정", "신간 요약 수정", 20000, 200, "1234567890123", "출판사 수정", false);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
+    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
+    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
     RegistrationEditResult result =
         registrationService.updateRegistration(
-            save.getRegistrationId(), param, coverImgFile, sampleFile);
+            save.getRegistrationId(),
+            param,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
+            sampleFile);
 
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    List<File> savedDetailImgFiles =
+        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+    List<File> savedPreviewFiles =
+        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
-        () -> assertThat(savedCoverImgFile).hasSize(coverImgFile.getMultipartFile().getSize()),
-        () -> assertThat(savedSampleFile).hasSize(sampleFile.getMultipartFile().getSize()),
-        () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
-        () ->
-            assertThat(result.coverImgUrl())
-                .isEqualTo(coverImgFile.toCoverImgFile().getCoverImgUrl()),
+        () -> assertThat(result.registrationId()).isPositive(),
+        () -> assertThat(result.approvalResult()).isFalse(),
+        () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
         () -> assertThat(result.title()).isEqualTo(param.title()),
+        () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.price()).isEqualTo(param.price()),
-        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.categories()).isEqualTo(param.categories()),
         () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
+        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
+        () -> assertThat(result.height()).isEqualTo(param.height()),
+        () -> assertThat(result.width()).isEqualTo(param.width()),
+        () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(sampleFile.toSampleFile().getSampleUrl()));
+        () -> assertThat(savedCoverImgFile).exists(),
+        () -> assertThat(savedDetailImgFiles).hasSize(10),
+        () -> assertThat(savedPreviewFiles).hasSize(25),
+        () -> assertThat(savedSampleFile).exists());
   }
 
   @Test
@@ -200,14 +302,16 @@ class RegistrationServiceTest extends IntegrationTest {
   void deleteRegistration_NoAuthority_ExceptionTest() {
     // Given
     long otherAuthorId = 123_412L;
-    RegistrationCreateParam param =
-        new RegistrationCreateParam("신간 제목", "신간 요약", 10000, 100, "1234567890123", "출판사", true);
-    CustomFile coverImgFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_COVERS);
-    CustomFile sampleFile = CustomFileFixture.create(author.getAuthorId(), FileType.BOOK_SAMPLES);
+    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    List<CustomFile> detailImgFiles =
+        CustomFileFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+    List<CustomFile> previewFiles =
+        CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
-    RegistrationCreateResult result =
+    RegistrationEditResult result =
         registrationService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, sampleFile);
+            author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     // When & Then
     assertThrows(
@@ -215,10 +319,17 @@ class RegistrationServiceTest extends IntegrationTest {
         () -> registrationService.deleteRegistration(otherAuthorId, result.registrationId()));
 
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    List<File> savedDetailImgFiles =
+        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+    List<File> savedPreviewFiles =
+        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
-        () -> assertThat(savedCoverImgFile).exists(), () -> assertThat(savedSampleFile).exists());
+        () -> assertThat(savedCoverImgFile).exists(),
+        () -> assertThat(savedDetailImgFiles).hasSize(10),
+        () -> assertThat(savedPreviewFiles).hasSize(25),
+        () -> assertThat(savedSampleFile).exists());
   }
 
   @Test
@@ -234,15 +345,26 @@ class RegistrationServiceTest extends IntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
-        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgFile().getCoverImgUrl()),
-        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
-        () -> assertThat(result.summary()).isEqualTo(save.getSummary()),
-        () -> assertThat(result.price()).isEqualTo(save.getPrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
-        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.approvalResult()).isFalse(),
+        () -> assertThat(result.approvalMemo()).isEqualTo("유효하지 않은 ISBN입니다."),
+        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(save.getBookConceptualInfo().getOneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(save.getBookConceptualInfo().getSummary()),
+        () ->
+            assertThat(result.categories()).isEqualTo(save.getBookConceptualInfo().getCategories()),
         () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
-        () -> assertThat(result.promotion()).isEqualTo(save.getPromotion()),
-        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleFile().getSampleUrl()));
+        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () ->
+            assertThat(result.regularPrice()).isEqualTo(save.getBookPriceInfo().getRegularPrice()),
+        () ->
+            assertThat(result.purchasePrice())
+                .isEqualTo(save.getBookPriceInfo().getPurchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(save.getBookPriceInfo().getPromotion()));
   }
 
   @Test
@@ -271,15 +393,13 @@ class RegistrationServiceTest extends IntegrationTest {
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
     // When
-    List<RegistrationGetResult> results = registrationService.getAllRegistrations();
+    Page<RegistrationGetResult> results =
+        registrationService.getAllRegistrations(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
         .hasSize(3)
-        .allSatisfy(
-            result -> {
-              assertThat(result.registrationId()).isPositive();
-            });
+        .allSatisfy(result -> assertThat(result.registrationId()).isPositive());
   }
 
   @Test
@@ -294,12 +414,18 @@ class RegistrationServiceTest extends IntegrationTest {
     Author newAuthor = authorJpaRepository.save(AuthorFixture.create(member));
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
+    List<Registration> all = registrationJpaRepository.findAll();
+
     // When
-    List<RegistrationGetResult> results =
-        registrationService.getAllRegistrationsByAuthor(author.getAuthorId(), author.getAuthorId());
+    Page<RegistrationGetResult> results =
+        registrationService.getAllRegistrationsByAuthor(
+            author.getAuthorId(), author.getAuthorId(), PageRequest.of(0, 10));
 
     // Then
-    assertThat(results).hasSize(2);
+    assertAll(
+        () -> assertThat(results.getTotalElements()).isEqualTo(2),
+        () -> assertThat(results.getTotalPages()).isEqualTo(1),
+        () -> assertThat(results.getContent()).hasSize(2));
   }
 
   @Test
@@ -313,6 +439,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         AccessDeniedException.class,
         () ->
-            registrationService.getAllRegistrationsByAuthor(notAuthorityId, author.getAuthorId()));
+            registrationService.getAllRegistrationsByAuthor(
+                notAuthorityId, author.getAuthorId(), PageRequest.of(0, 10)));
   }
 }

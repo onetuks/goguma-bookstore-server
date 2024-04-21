@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.book.model;
+package com.onetuks.goguma_bookstore.book.model.vo;
 
 public enum Category {
   NOVEL,

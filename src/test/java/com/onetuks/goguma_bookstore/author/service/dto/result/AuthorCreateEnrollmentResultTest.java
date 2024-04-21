@@ -40,6 +40,7 @@ class AuthorCreateEnrollmentResultTest extends IntegrationTest {
         () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
         () -> assertThat(result.nickname()).isEqualTo(author.getNickname()),
         () -> assertThat(result.profileImgUrl()).isEqualTo(author.getProfileImgUrl()),
-        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()));
+        () -> assertThat(result.introduction()).isEqualTo(author.getIntroduction()),
+        () -> assertThat(result.instagramUrl()).isEqualTo(author.getInstagramUrl()));
   }
 }
