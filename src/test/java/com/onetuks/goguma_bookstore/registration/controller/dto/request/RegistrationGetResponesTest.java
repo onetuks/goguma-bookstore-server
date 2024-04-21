@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 class RegistrationGetResponesTest extends IntegrationTest {
 
@@ -17,7 +20,7 @@ class RegistrationGetResponesTest extends IntegrationTest {
   @DisplayName("신간등록 다건 조회 결과 객체에서 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    List<RegistrationGetResult> results =
+    List<RegistrationGetResult> list =
         IntStream.range(1, 4)
             .mapToObj(
                 index ->
@@ -45,17 +48,19 @@ class RegistrationGetResponesTest extends IntegrationTest {
                         "샘플 URL" + index))
             .toList();
 
+    Page<RegistrationGetResult> results = new PageImpl<>(list, PageRequest.of(1, 10), list.size());
+
     // When
     RegistrationGetResponses responses = RegistrationGetResponses.from(results);
 
     // Then
     assertThat(responses.responses())
-        .hasSize(results.size())
+        .hasSize(list.size())
         .allSatisfy(
             result -> {
               assertThat(result.registrationId()).isPositive();
               assertThat(result.approvalResult()).isTrue();
-              assertThat(result.approvalMemo()).isEqualTo(results.get(0).approvalMemo());
+              assertThat(result.approvalMemo()).isEqualTo(list.get(0).approvalMemo());
               assertThat(result.title()).contains(String.valueOf(result.registrationId()));
               assertThat(result.oneLiner()).contains(String.valueOf(result.registrationId()));
               assertThat(result.summary()).contains(String.valueOf(result.registrationId()));

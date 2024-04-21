@@ -31,6 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
@@ -391,15 +393,13 @@ class RegistrationServiceTest extends IntegrationTest {
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
     // When
-    List<RegistrationGetResult> results = registrationService.getAllRegistrations();
+    Page<RegistrationGetResult> results =
+        registrationService.getAllRegistrations(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
         .hasSize(3)
-        .allSatisfy(
-            result -> {
-              assertThat(result.registrationId()).isPositive();
-            });
+        .allSatisfy(result -> assertThat(result.registrationId()).isPositive());
   }
 
   @Test
@@ -414,12 +414,18 @@ class RegistrationServiceTest extends IntegrationTest {
     Author newAuthor = authorJpaRepository.save(AuthorFixture.create(member));
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
+    List<Registration> all = registrationJpaRepository.findAll();
+
     // When
-    List<RegistrationGetResult> results =
-        registrationService.getAllRegistrationsByAuthor(author.getAuthorId(), author.getAuthorId());
+    Page<RegistrationGetResult> results =
+        registrationService.getAllRegistrationsByAuthor(
+            author.getAuthorId(), author.getAuthorId(), PageRequest.of(0, 10));
 
     // Then
-    assertThat(results).hasSize(2);
+    assertAll(
+        () -> assertThat(results.getTotalElements()).isEqualTo(2),
+        () -> assertThat(results.getTotalPages()).isEqualTo(1),
+        () -> assertThat(results.getContent()).hasSize(2));
   }
 
   @Test
@@ -433,6 +439,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         AccessDeniedException.class,
         () ->
-            registrationService.getAllRegistrationsByAuthor(notAuthorityId, author.getAuthorId()));
+            registrationService.getAllRegistrationsByAuthor(
+                notAuthorityId, author.getAuthorId(), PageRequest.of(0, 10)));
   }
 }

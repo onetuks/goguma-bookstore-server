@@ -15,7 +15,10 @@ import com.onetuks.goguma_bookstore.registration.service.dto.result.Registration
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -171,8 +174,10 @@ public class RegistrationRestController {
    * @return RegistrationGetResponses
    */
   @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationGetResponses> getAllRegistrations(@AdminId Long adminId) {
-    List<RegistrationGetResult> result = registrationService.getAllRegistrations();
+  public ResponseEntity<RegistrationGetResponses> getAllRegistrations(
+      @AdminId Long adminId,
+      @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
+    Page<RegistrationGetResult> result = registrationService.getAllRegistrations(pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -187,9 +192,11 @@ public class RegistrationRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationGetResponses> getAllRegistrationByAuthor(
-      @AuthorId Long loginAuthorId, @RequestParam(name = "authorId") Long authorId) {
-    List<RegistrationGetResult> result =
-        registrationService.getAllRegistrationsByAuthor(loginAuthorId, authorId);
+      @AuthorId Long loginAuthorId,
+      @RequestParam(name = "authorId") Long authorId,
+      @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
+    Page<RegistrationGetResult> result =
+        registrationService.getAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

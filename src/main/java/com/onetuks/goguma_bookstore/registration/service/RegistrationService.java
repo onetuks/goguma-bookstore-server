@@ -14,6 +14,8 @@ import com.onetuks.goguma_bookstore.registration.service.dto.result.Registration
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -168,20 +170,20 @@ public class RegistrationService {
   }
 
   @Transactional(readOnly = true)
-  public List<RegistrationGetResult> getAllRegistrations() {
-    return registrationJpaRepository.findAll().stream().map(RegistrationGetResult::from).toList();
+  public Page<RegistrationGetResult> getAllRegistrations(Pageable pageable) {
+    return registrationJpaRepository.findAll(pageable).map(RegistrationGetResult::from);
   }
 
   @Transactional(readOnly = true)
-  public List<RegistrationGetResult> getAllRegistrationsByAuthor(
-      long loginAuthorId, long authorId) {
+  public Page<RegistrationGetResult> getAllRegistrationsByAuthor(
+      long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
       throw new AccessDeniedException("해당 작가의 신간등록을 조회할 권한이 없습니다.");
     }
 
-    return registrationJpaRepository.findByAuthorAuthorId(authorId).stream()
-        .map(RegistrationGetResult::from)
-        .toList();
+    return registrationJpaRepository
+        .findByAuthorAuthorId(authorId, pageable)
+        .map(RegistrationGetResult::from);
   }
 
   private Registration getRegistrationById(long registrationId) {

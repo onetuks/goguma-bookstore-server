@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public record RegistrationGetResponse(
     long registrationId,
@@ -52,11 +53,10 @@ public record RegistrationGetResponse(
         result.sampleUrl());
   }
 
-  public record RegistrationGetResponses(List<RegistrationGetResponse> responses) {
+  public record RegistrationGetResponses(Page<RegistrationGetResponse> responses) {
 
-    public static RegistrationGetResponses from(List<RegistrationGetResult> results) {
-      return new RegistrationGetResponses(
-          results.stream().map(RegistrationGetResponse::from).toList());
+    public static RegistrationGetResponses from(Page<RegistrationGetResult> results) {
+      return new RegistrationGetResponses(results.map(RegistrationGetResponse::from));
     }
   }
 }
