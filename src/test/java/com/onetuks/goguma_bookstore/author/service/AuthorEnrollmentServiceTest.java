@@ -31,6 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorEnrollmentServiceTest extends IntegrationTest {
@@ -235,8 +237,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
         memberJpaRepository.saveAll(members).stream().map(AuthorFixture::create).toList());
 
     // When
-    List<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails();
+    Page<AuthorEnrollmentDetailsResult> results =
+        authorEnrollmentService.findAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
@@ -281,8 +283,8 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     authorEnrollmentService.deleteAbandonedAuthorEnrollment();
 
     // Then
-    List<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails();
+    Page<AuthorEnrollmentDetailsResult> results =
+        authorEnrollmentService.findAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     assertThat(results).hasSize(1);
   }

@@ -14,7 +14,8 @@ import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,10 +111,10 @@ public class AuthorEnrollmentService {
   }
 
   @Transactional(readOnly = true)
-  public List<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails() {
-    return authorJpaRepository.findAuthorsByEnrollmentInfoEnrollmentPassedFalse().stream()
-        .map(AuthorEnrollmentDetailsResult::from)
-        .toList();
+  public Page<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails(Pageable pageable) {
+    return authorJpaRepository
+        .findAuthorsByEnrollmentInfoEnrollmentPassedFalse(pageable)
+        .map(AuthorEnrollmentDetailsResult::from);
   }
 
   private Member getUserMemberById(long loginId) {

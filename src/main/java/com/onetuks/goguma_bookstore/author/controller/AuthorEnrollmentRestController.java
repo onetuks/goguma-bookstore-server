@@ -15,7 +15,10 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnroll
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -116,9 +119,10 @@ public class AuthorEnrollmentRestController {
    */
   @GetMapping(produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponses> getAllAuthorEnrollmentDetails(
-      @AdminId Long adminId) {
-    List<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails();
+      @AdminId Long adminId,
+      @PageableDefault(sort = "enrollmentAt", direction = Direction.DESC) Pageable pageable) {
+    Page<AuthorEnrollmentDetailsResult> results =
+        authorEnrollmentService.findAllAuthorEnrollmentDetails(pageable);
     AuthorEnrollmentDetailsResponses responses = AuthorEnrollmentDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

@@ -3,7 +3,7 @@ package com.onetuks.goguma_bookstore.author.controller.dto.response;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public record AuthorEnrollmentDetailsResponse(
     long authorId,
@@ -33,12 +33,12 @@ public record AuthorEnrollmentDetailsResponse(
         result.enrollmentAt());
   }
 
-  public record AuthorEnrollmentDetailsResponses(List<AuthorEnrollmentDetailsResponse> responses) {
+  public record AuthorEnrollmentDetailsResponses(Page<AuthorEnrollmentDetailsResponse> responses) {
 
     public static AuthorEnrollmentDetailsResponses from(
-        List<AuthorEnrollmentDetailsResult> results) {
+        Page<AuthorEnrollmentDetailsResult> results) {
       return new AuthorEnrollmentDetailsResponses(
-          results.stream().map(AuthorEnrollmentDetailsResponse::from).toList());
+          results.map(AuthorEnrollmentDetailsResponse::from));
     }
   }
 }

@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
 
@@ -18,7 +21,7 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
   @DisplayName("입점 심사 상세 다건 조회 결과 객체를 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    List<AuthorEnrollmentDetailsResult> results =
+    List<AuthorEnrollmentDetailsResult> list =
         Stream.of(
                 AuthorFixture.createDetailsResult(),
                 AuthorFixture.createDetailsResult(),
@@ -30,12 +33,15 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
             .filter(result -> result.roleType() == RoleType.USER)
             .toList();
 
+    Page<AuthorEnrollmentDetailsResult> results =
+        new PageImpl<>(list, PageRequest.of(0, 10), list.size());
+
     // When
     AuthorEnrollmentDetailsResponses responses = AuthorEnrollmentDetailsResponses.from(results);
 
     // Then
     assertThat(responses.responses())
-        .hasSize(results.size())
+        .hasSize(list.size())
         .allSatisfy(
             response -> {
               assertThat(response.roleType()).isEqualTo(RoleType.USER);
