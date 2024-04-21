@@ -11,12 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TestFileCleaner extends SimpleFileVisitor<Path> {
+
+  private static final List<Path> staticDirectoryPaths =
+      Arrays.stream(FileType.values())
+          .map(fileType -> getTempFilePath(fileType.getDirectoryPath()))
+          .toList();
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -35,7 +41,9 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
   @Override
   public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
     try {
-      Files.deleteIfExists(dir);
+      if (!staticDirectoryPaths.contains(dir)) {
+        Files.deleteIfExists(dir);
+      }
     } catch (DirectoryNotEmptyException e) {
       log.info("Failed to delete directory: {}", dir, e);
     }
@@ -43,9 +51,7 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
   }
 
   public void deleteAllTestStatic() {
-    Arrays.stream(FileType.values())
-        .map(fileType -> getTempFilePath(fileType.getDirectoryPath()))
-        .forEach(this::deleteStaticTestFilesAndDirectories);
+    staticDirectoryPaths.forEach(this::deleteStaticTestFilesAndDirectories);
   }
 
   private void deleteStaticTestFilesAndDirectories(Path startPath) {

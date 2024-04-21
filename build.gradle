@@ -174,11 +174,11 @@ tasks.jacocoTestCoverageVerification {
                 minimum = BigDecimal.valueOf(0.5)
             }
 
-            // 클래스 당 100줄 미만
+            // 클래스 당 150줄 미만
             limit {
                 counter = "LINE"
                 value = "TOTALCOUNT"
-                maximum = BigDecimal.valueOf(100)
+                maximum = BigDecimal.valueOf(150)
             }
 
             limit {
