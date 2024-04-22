@@ -11,6 +11,7 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.response.Registr
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnGetResponse;
+import com.onetuks.goguma_bookstore.registration.service.IsbnWebClientService;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
@@ -41,9 +42,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class RegistrationRestController {
 
   private final RegistrationService registrationService;
+  private final IsbnWebClientService isbnWebClientService;
 
-  public RegistrationRestController(RegistrationService registrationService) {
+  public RegistrationRestController(
+      RegistrationService registrationService, IsbnWebClientService isbnWebClientService) {
     this.registrationService = registrationService;
+    this.isbnWebClientService = isbnWebClientService;
   }
 
   /**
@@ -204,12 +208,16 @@ public class RegistrationRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-  @GetMapping(
-      path = "/isbn/{isbn}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  /**
+   * ISBN으로 책 정보 조회
+   *
+   * @param isbn : ISBN
+   * @return RegistrationIsbnGetResponse
+   */
+  @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationIsbnGetResponse> getBookInfoByIsbn(
       @PathVariable(name = "isbn") String isbn) {
-    RegistrationIsbnGetResult result = registrationService.readBookInfoByIsbn(isbn);
+    RegistrationIsbnGetResult result = isbnWebClientService.requestData(isbn);
     RegistrationIsbnGetResponse response = RegistrationIsbnGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
