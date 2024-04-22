@@ -18,7 +18,6 @@ import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVe
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.fixture.UUIDProvider;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
@@ -26,6 +25,7 @@ import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.util.UUIDProvider;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import java.time.LocalDateTime;

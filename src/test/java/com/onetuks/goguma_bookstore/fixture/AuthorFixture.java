@@ -1,12 +1,15 @@
 package com.onetuks.goguma_bookstore.fixture;
 
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PROFILES;
+import static com.onetuks.goguma_bookstore.util.UniqueValueProvider.createBusinessNumber;
+import static com.onetuks.goguma_bookstore.util.UniqueValueProvider.createMailOrderSalesNumber;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.goguma_bookstore.util.UUIDProvider;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -63,13 +66,5 @@ public class AuthorFixture {
         "mail-order-sales" + authorId + ".pdf",
         isAuthorMember,
         LocalDateTime.now());
-  }
-
-  private static String createBusinessNumber() {
-    return String.valueOf(random.nextLong(1_000_000_000L, 9_999_999_999L));
-  }
-
-  private static String createMailOrderSalesNumber() {
-    return String.valueOf(random.nextLong(1_000_000_000L, 9_999_999_999L));
   }
 }

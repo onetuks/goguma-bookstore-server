@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.fixture;
+package com.onetuks.goguma_bookstore.util;
 
 import java.util.UUID;
 

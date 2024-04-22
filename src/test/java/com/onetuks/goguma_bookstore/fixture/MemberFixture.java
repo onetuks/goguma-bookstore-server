@@ -8,6 +8,7 @@ import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
 import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.goguma_bookstore.util.UUIDProvider;
 
 public class MemberFixture {
 
