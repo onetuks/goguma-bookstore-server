@@ -8,6 +8,7 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -43,6 +44,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
   @Autowired private S3Service s3Service;
+  @Autowired private BookJpaRepository bookJpaRepository;
 
   private Author author;
   private RegistrationEditParam param;
@@ -210,8 +212,8 @@ class RegistrationScmServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("신간등록을 검수한다.")
-  void changeRegistrationApprovalTest() {
+  @DisplayName("신간등록을 검수 승인하면 검수 결과가 변경되고, 도서 등록이 완료된다.")
+  void updateRegistrationApprovalTest() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
     RegistrationInspectionParam param = new RegistrationInspectionParam(true, "검수 완료");
@@ -221,6 +223,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
         registrationScmService.updateRegistrationApproval(save.getRegistrationId(), param);
 
     // Then
+    boolean existsBook =
+        bookJpaRepository
+            .findByBookConceptualInfoIsbn(save.getBookConceptualInfo().getIsbn())
+            .isPresent();
+
+    assertThat(existsBook).isTrue();
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
         () -> assertThat(result.approvalResult()).isTrue(),
@@ -229,7 +237,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록을 수정한다. 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
-  void changeRegistrationTest() {
+  void updateRegistrationTest() {
     // Given
     long authorId = author.getAuthorId();
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));

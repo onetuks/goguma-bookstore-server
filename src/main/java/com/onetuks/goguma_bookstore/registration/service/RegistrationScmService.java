@@ -4,6 +4,7 @@ import com.onetuks.goguma_bookstore.author.service.AuthorService;
 import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
 import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
 import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.service.BookRegistrationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
@@ -26,14 +27,17 @@ public class RegistrationScmService {
   private final RegistrationJpaRepository registrationJpaRepository;
   private final AuthorService authorService;
   private final S3Service s3Service;
+  private final BookRegistrationService bookRegistrationService;
 
   public RegistrationScmService(
       RegistrationJpaRepository registrationJpaRepository,
       AuthorService authorService,
-      S3Service s3Service) {
+      S3Service s3Service,
+      BookRegistrationService bookRegistrationService) {
     this.registrationJpaRepository = registrationJpaRepository;
     this.authorService = authorService;
     this.s3Service = s3Service;
+    this.bookRegistrationService = bookRegistrationService;
   }
 
   @Transactional
@@ -88,9 +92,15 @@ public class RegistrationScmService {
   @Transactional
   public RegistrationInspectionResult updateRegistrationApproval(
       long registrationId, RegistrationInspectionParam param) {
-    return RegistrationInspectionResult.from(
+    Registration updatedRegistration =
         getRegistrationById(registrationId)
-            .changeApprovalInfo(param.approvalResult(), param.approvalMemo()));
+            .changeApprovalInfo(param.approvalResult(), param.approvalMemo());
+
+    if (param.approvalResult()) {
+      bookRegistrationService.createBook(updatedRegistration);
+    }
+
+    return RegistrationInspectionResult.from(updatedRegistration);
   }
 
   @Transactional
