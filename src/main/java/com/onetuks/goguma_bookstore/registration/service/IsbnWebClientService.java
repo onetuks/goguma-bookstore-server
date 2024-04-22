@@ -1,11 +1,9 @@
-package com.onetuks.goguma_bookstore.author.service.verification;
+package com.onetuks.goguma_bookstore.registration.service;
 
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OPENAPI_REQUEST_ERROR;
 
-import com.onetuks.goguma_bookstore.author.service.verification.dto.request.BusinessNumberRequest;
-import com.onetuks.goguma_bookstore.author.service.verification.dto.response.BusinessNumberResponse;
 import com.onetuks.goguma_bookstore.global.service.URIBuilder;
-import java.util.List;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -16,29 +14,25 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 @Service
-public class BusinessNumberWebClientService {
+public class IsbnWebClientService {
 
-  private static final String BUSINESS_NUMBER_URL =
-      "https://api.odcloud.kr/api/nts-businessman/v1/status";
+  private static final String ISBN_URL = "https://www.nl.go.kr/seoji/SearchApi.do";
 
-  @Value("${openapi.data-go-kr.secret-key}")
+  @Value("${openapi.center-lib.secret-key}")
   private String secretKey;
 
   private final WebClient webClient;
   private final URIBuilder uriBuilder;
 
-  public BusinessNumberWebClientService(WebClient webClient, URIBuilder uriBuilder) {
+  public IsbnWebClientService(WebClient webClient, URIBuilder uriBuilder) {
     this.webClient = webClient;
     this.uriBuilder = uriBuilder;
   }
 
-  protected BusinessNumberResponse requestData(String businessNumber) {
-    BusinessNumberRequest request = new BusinessNumberRequest(List.of(businessNumber));
-
+  public RegistrationIsbnGetResult requestData(String isbn) {
     return webClient
         .post()
-        .uri(uriBuilder.buildUri(BUSINESS_NUMBER_URL, buildMultiValueMap()))
-        .bodyValue(request)
+        .uri(uriBuilder.buildUri(ISBN_URL, buildMultiValueMap(isbn)))
         .retrieve()
         .onStatus(
             HttpStatusCode::isError,
@@ -52,13 +46,17 @@ public class BusinessNumberWebClientService {
                         null,
                         null,
                         response.request())))
-        .bodyToMono(BusinessNumberResponse.class)
+        .bodyToMono(RegistrationIsbnGetResult.class)
         .block();
   }
 
-  private MultiValueMap<String, String> buildMultiValueMap() {
+  private MultiValueMap<String, String> buildMultiValueMap(String isbn) {
     MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-    params.add("serviceKey", secretKey);
+    params.add("cert_key", secretKey);
+    params.add("result_style", "json");
+    params.add("page_no", "1");
+    params.add("page_size", "10");
+    params.add("isbn", isbn);
     return params;
   }
 }

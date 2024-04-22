@@ -107,12 +107,12 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 정보 조회한다.")
-  void findAuthorDetailsTest() {
+  void readAuthorDetailsTest() {
     // Given
     Author author = authors.get(0);
 
     // When
-    AuthorDetailsResult result = authorService.findAuthorDetails(author.getAuthorId());
+    AuthorDetailsResult result = authorService.readAuthorDetails(author.getAuthorId());
 
     // Then
     assertAll(
@@ -124,9 +124,9 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 다건 조회한다.")
-  void findAllAuthorDetailsTest() {
+  void readAllAuthorDetailsTest() {
     // Given & When
-    Page<AuthorDetailsResult> results = authorService.findAllAuthorDetails(PageRequest.of(0, 10));
+    Page<AuthorDetailsResult> results = authorService.readAllAuthorDetails(PageRequest.of(0, 10));
 
     // Then
     List<Long> memberIds =
@@ -157,7 +157,7 @@ class AuthorServiceTest extends IntegrationTest {
 
     // When & Then
     assertThrows(
-        EntityNotFoundException.class, () -> authorService.findAuthorDetails(notExistAuthorId));
+        EntityNotFoundException.class, () -> authorService.readAuthorDetails(notExistAuthorId));
   }
 
   @Test

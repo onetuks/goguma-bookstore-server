@@ -43,12 +43,12 @@ public class AuthorService {
   }
 
   @Transactional(readOnly = true)
-  public AuthorDetailsResult findAuthorDetails(long authorId) {
+  public AuthorDetailsResult readAuthorDetails(long authorId) {
     return AuthorDetailsResult.from(getAuthorById(authorId));
   }
 
   @Transactional(readOnly = true)
-  public Page<AuthorDetailsResult> findAllAuthorDetails(Pageable pageable) {
+  public Page<AuthorDetailsResult> readAllAuthorDetails(Pageable pageable) {
     return authorJpaRepository
         .findAuthorsByEnrollmentInfoEnrollmentPassedTrue(pageable)
         .map(AuthorDetailsResult::from);

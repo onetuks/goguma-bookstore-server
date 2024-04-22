@@ -203,13 +203,13 @@ class MemberServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("멤버 정보를 조회한다.")
-  void getMemberInfoTest() {
+  void readMemberInfoTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     memberJpaRepository.flush();
 
     // When
-    MemberInfoResult result = memberService.getMemberInfo(member.getMemberId());
+    MemberInfoResult result = memberService.readMemberInfo(member.getMemberId());
 
     // Then
     assertAll(
@@ -229,12 +229,12 @@ class MemberServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("존재하지 않는 멤버 조회 시 실패한다.")
-  void getMemberInfo_NotExistsMember_ExceptionTest() {
+  void readMemberInfo_NotExistsMember_ExceptionTest() {
     // Given
     long notExistsMemberId = 999L;
 
     // When & Then
     assertThrows(
-        EntityNotFoundException.class, () -> memberService.getMemberInfo(notExistsMemberId));
+        EntityNotFoundException.class, () -> memberService.readMemberInfo(notExistsMemberId));
   }
 }
