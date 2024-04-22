@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.onetuks.goguma_bookstore.global.vo.file.provider.FilePathProvider;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
@@ -94,5 +95,22 @@ public class CustomFile {
 
   public PreviewFile toPreviewFile() {
     return new PreviewFile(uri, multipartFile);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    CustomFile that = (CustomFile) o;
+    return Objects.equals(uri, that.uri);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(uri);
   }
 }

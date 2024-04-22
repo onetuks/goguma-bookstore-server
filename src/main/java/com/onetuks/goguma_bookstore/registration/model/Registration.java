@@ -83,7 +83,7 @@ public class Registration {
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
     this.author = author;
-    this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.builder().build());
+    this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.init());
     this.bookConceptualInfo = bookConceptualInfo;
     this.bookPhysicalInfo = bookPhysicalInfo;
     this.bookPriceInfo = bookPriceInfo;
@@ -127,7 +127,7 @@ public class Registration {
       List<DetailImgFile> detailImgFiles,
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
-    this.approvalInfo = ApprovalInfo.builder().build();
+    this.approvalInfo = ApprovalInfo.init();
     this.bookConceptualInfo = bookConceptualInfo;
     this.bookPhysicalInfo = bookPhysicalInfo;
     this.bookPriceInfo = bookPriceInfo;

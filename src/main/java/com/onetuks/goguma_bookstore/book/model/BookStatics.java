@@ -12,7 +12,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,27 +36,13 @@ public class BookStatics {
   @Column(name = "view_count", nullable = false)
   private Long viewCount;
 
-  @Builder
-  public BookStatics(Book book, Long favoriteCount, Long viewCount) {
+  protected BookStatics(Book book, Long favoriteCount, Long viewCount) {
     this.book = book;
     this.favoriteCount = (Long) Objects.requireNonNullElse(favoriteCount, 0);
     this.viewCount = (Long) Objects.requireNonNullElse(viewCount, 0);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    BookStatics that = (BookStatics) o;
-    return Objects.equals(bookStaticsId, that.bookStaticsId);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(bookStaticsId);
+  public static BookStatics init(Book book) {
+    return new BookStatics(book, 0L, 0L);
   }
 }

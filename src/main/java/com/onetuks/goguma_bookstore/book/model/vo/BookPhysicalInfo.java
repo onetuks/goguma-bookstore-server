@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.book.model.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,12 +33,23 @@ public class BookPhysicalInfo {
     this.pageCount = pageCount;
   }
 
-  public BookPhysicalInfo updateBookPhysicalInfo(
-      Integer height, Integer width, String coverType, Long pageCount) {
-    this.height = height;
-    this.width = width;
-    this.coverType = coverType;
-    this.pageCount = pageCount;
-    return this;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookPhysicalInfo that = (BookPhysicalInfo) o;
+    return Objects.equals(height, that.height)
+        && Objects.equals(width, that.width)
+        && Objects.equals(coverType, that.coverType)
+        && Objects.equals(pageCount, that.pageCount);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(height, width, coverType, pageCount);
   }
 }

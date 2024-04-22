@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.book.model.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,11 +29,22 @@ public class BookPriceInfo {
     this.promotion = promotion;
   }
 
-  public BookPriceInfo updateBookPriceInfo(
-      Long regularPrice, Long purchasePrice, Boolean promotion) {
-    this.regularPrice = regularPrice;
-    this.purchasePrice = purchasePrice;
-    this.promotion = promotion;
-    return this;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookPriceInfo that = (BookPriceInfo) o;
+    return Objects.equals(regularPrice, that.regularPrice)
+        && Objects.equals(purchasePrice, that.purchasePrice)
+        && Objects.equals(promotion, that.promotion);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(regularPrice, purchasePrice, promotion);
   }
 }

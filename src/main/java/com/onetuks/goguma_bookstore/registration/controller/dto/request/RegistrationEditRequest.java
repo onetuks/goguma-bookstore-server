@@ -5,6 +5,7 @@ import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationE
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -17,7 +18,7 @@ public record RegistrationEditRequest(
     @NotBlank @Length(max = 5_000) String summary,
     @NotEmpty @Size(min = 1, max = 3) List<Category> categories,
     @NotBlank @Length(min = 1, max = 20) String publisher,
-    @NotBlank String isbn,
+    @NotBlank @Length(min = 13, max = 13) @Pattern(regexp = "^[0-9]+$") String isbn,
     @Positive Integer height,
     @Positive Integer width,
     @NotBlank String coverType,

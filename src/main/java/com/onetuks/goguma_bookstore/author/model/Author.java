@@ -71,8 +71,7 @@ public class Author {
     this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;
-    this.enrollmentInfo =
-        Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.builder().build());
+    this.enrollmentInfo = Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.init());
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
