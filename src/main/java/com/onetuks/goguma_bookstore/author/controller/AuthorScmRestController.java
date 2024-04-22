@@ -6,14 +6,19 @@ import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorCreateEnrollmentRequest;
+import com.onetuks.goguma_bookstore.author.controller.dto.request.AuthorEditRequest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorCreateEnrollmentResponse;
+import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEditResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorEnrollmentJudgeResponse;
-import com.onetuks.goguma_bookstore.author.service.AuthorEnrollmentService;
+import com.onetuks.goguma_bookstore.author.service.AuthorScmService;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,16 +33,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(path = "/authors/enrollment")
-public class AuthorEnrollmentRestController {
+@RequestMapping(path = "/scm/authors/enrollment")
+public class AuthorScmRestController {
 
-  private final AuthorEnrollmentService authorEnrollmentService;
+  private final AuthorScmService authorScmService;
 
-  public AuthorEnrollmentRestController(AuthorEnrollmentService authorEnrollmentService) {
-    this.authorEnrollmentService = authorEnrollmentService;
+  public AuthorScmRestController(AuthorScmService authorScmService) {
+    this.authorScmService = authorScmService;
   }
 
   /**
@@ -51,7 +58,7 @@ public class AuthorEnrollmentRestController {
   public ResponseEntity<AuthorCreateEnrollmentResponse> requestEnrollment(
       @LoginId Long loginId, @RequestBody @Valid AuthorCreateEnrollmentRequest request) {
     AuthorCreateEnrollmentResult result =
-        authorEnrollmentService.createAuthorEnrollment(loginId, request.to());
+        authorScmService.createAuthorEnrollment(loginId, request.to());
     AuthorCreateEnrollmentResponse response = AuthorCreateEnrollmentResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -70,8 +77,7 @@ public class AuthorEnrollmentRestController {
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentJudgeResponse> judgeEnrollment(
       @AdminId Long adminId, @PathVariable(name = "authorId") Long authorId) {
-    AuthorEnrollmentJudgeResult result =
-        authorEnrollmentService.updateAuthorEnrollmentJudge(authorId);
+    AuthorEnrollmentJudgeResult result = authorScmService.updateAuthorEnrollmentJudge(authorId);
     AuthorEnrollmentJudgeResponse response = AuthorEnrollmentJudgeResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -87,7 +93,7 @@ public class AuthorEnrollmentRestController {
   @DeleteMapping(path = "/{authorId}")
   public ResponseEntity<Void> cancelAuthorEnrollment(
       @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
-    authorEnrollmentService.deleteAuthorEnrollment(loginAuthorId, authorId);
+    authorScmService.deleteAuthorEnrollment(loginAuthorId, authorId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -104,7 +110,7 @@ public class AuthorEnrollmentRestController {
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
       @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
     AuthorEnrollmentDetailsResult result =
-        authorEnrollmentService.readAuthorEnrollmentDetails(loginAuthorId, authorId);
+        authorScmService.readAuthorEnrollmentDetails(loginAuthorId, authorId);
     AuthorEnrollmentDetailsResponse response = AuthorEnrollmentDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -122,9 +128,38 @@ public class AuthorEnrollmentRestController {
       @AdminId Long adminId,
       @PageableDefault(sort = "enrollmentAt", direction = Direction.DESC) Pageable pageable) {
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.readAllAuthorEnrollmentDetails(pageable);
+        authorScmService.readAllAuthorEnrollmentDetails(pageable);
     AuthorEnrollmentDetailsResponses responses = AuthorEnrollmentDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
+
+  /**
+   * 작가 프로필 수정
+   *
+   * @param loginAuthorId : 로그인한 작가 ID
+   * @param authorId : 수정할 작가 ID
+   * @param request : 작가 프로필 수정 내용
+   * @param profileImgFile : 작가 프로필 수정 이미지 (같은 이미지여도 덮어쓰기)
+   * @return authorId, profileImgUrl, nickname, introduction
+   */
+  @PatchMapping(
+      path = "/{authorId}",
+      produces = APPLICATION_JSON_VALUE,
+      consumes = APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorEditResponse> editAuthorProfile(
+      @AuthorId Long loginAuthorId,
+      @PathVariable(name = "authorId") Long authorId,
+      @Valid @RequestBody AuthorEditRequest request,
+      @RequestPart(name = "profile-img-file", required = false) MultipartFile profileImgFile) {
+    AuthorEditResult result =
+        authorScmService.updateAuthorProfile(
+            loginAuthorId,
+            authorId,
+            request.to(),
+            CustomFile.of(loginAuthorId, FileType.PROFILES, profileImgFile));
+    AuthorEditResponse response = AuthorEditResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

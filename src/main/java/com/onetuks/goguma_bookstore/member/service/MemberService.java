@@ -59,8 +59,8 @@ public class MemberService {
   public MemberEntryInfoResult updateMemberInfo(long memberId, MemberEntryInfoParam param) {
     return MemberEntryInfoResult.from(
         getMemberById(memberId)
-            .updateNickname(param.nickname())
-            .updateAlarmPermission(param.alarmPermission()));
+            .changeNickname(param.nickname())
+            .changeAlarmPermission(param.alarmPermission()));
   }
 
   @Transactional
@@ -70,11 +70,11 @@ public class MemberService {
 
     return MemberProfileEditResult.from(
         getMemberById(memberId)
-            .updateNickname(param.nickname())
-            .updateProfileImgFile(customFile.toProfileImgFile())
-            .updateAlarmPermission(param.alarmPermission())
-            .updateDefaultAddressInfo(param.defaultAddress(), param.defaultAddressDetail())
-            .updateDefaultCashReceiptInfo(
+            .changeNickname(param.nickname())
+            .changeProfileImgFile(customFile.toProfileImgFile())
+            .changeAlarmPermission(param.alarmPermission())
+            .changeDefaultAddressInfo(param.defaultAddress(), param.defaultAddressDetail())
+            .changeDefaultCashReceiptInfo(
                 param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
   }
 
@@ -92,7 +92,7 @@ public class MemberService {
       long memberId, MemberDefaultAddressEditParam memberDefaultAddressParam) {
     return MemberDefaultAddressEditResult.from(
         getMemberById(memberId)
-            .updateDefaultAddressInfo(
+            .changeDefaultAddressInfo(
                 memberDefaultAddressParam.defaultAddress(),
                 memberDefaultAddressParam.defaultAddressDetail()));
   }
@@ -102,7 +102,7 @@ public class MemberService {
       long memberId, MemberDefaultCashReceiptEditParam param) {
     return MemberDefaultCashReceiptEditResult.from(
         getMemberById(memberId)
-            .updateDefaultCashReceiptInfo(
+            .changeDefaultCashReceiptInfo(
                 param.defaultCashReceiptType(), param.defaultCashReceiptNumber()));
   }
 

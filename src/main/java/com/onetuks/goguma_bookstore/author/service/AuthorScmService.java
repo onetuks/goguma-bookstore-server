@@ -4,7 +4,9 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
+import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AuthorEnrollmentService {
+public class AuthorScmService {
 
   private final AuthorJpaRepository authorJpaRepository;
   private final MemberJpaRepository memberJpaRepository;
@@ -30,7 +32,7 @@ public class AuthorEnrollmentService {
   private final S3Service s3Service;
   private final EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
-  public AuthorEnrollmentService(
+  public AuthorScmService(
       AuthorJpaRepository authorJpaRepository,
       MemberJpaRepository memberJpaRepository,
       S3Service s3Service,
@@ -122,6 +124,24 @@ public class AuthorEnrollmentService {
     return authorJpaRepository
         .findAuthorsByEnrollmentInfoEnrollmentPassedFalse(pageable)
         .map(AuthorEnrollmentDetailsResult::from);
+  }
+
+  @Transactional
+  public AuthorEditResult updateAuthorProfile(
+      long loginAuthorId, long authorId, AuthorEditParam authorEditParam, CustomFile customFile) {
+    if (loginAuthorId != authorId) {
+      throw new IllegalArgumentException("작가 정보를 수정할 권한이 없습니다.");
+    }
+
+    s3Service.putFile(customFile);
+
+    return AuthorEditResult.from(
+        getAuthorById(authorId)
+            .changeProfileImgFile(customFile.toProfileImgFile())
+            .changeAuthorProfile(
+                authorEditParam.nickname(),
+                authorEditParam.introduction(),
+                authorEditParam.instagramUrl()));
   }
 
   private Member getUserMemberById(long loginId) {

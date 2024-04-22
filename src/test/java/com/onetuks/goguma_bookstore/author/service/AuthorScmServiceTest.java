@@ -11,6 +11,7 @@ import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
+import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
@@ -20,6 +21,7 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.UUIDProvider;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.member.model.Member;
@@ -37,10 +39,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-class AuthorEnrollmentServiceTest extends IntegrationTest {
+class AuthorScmServiceTest extends IntegrationTest {
 
-  @Autowired private AuthorEnrollmentService authorEnrollmentService;
-  @Autowired private AuthorService authorService;
+  @Autowired private AuthorScmService authorScmService;
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private S3Service s3Service;
@@ -69,7 +70,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   void createAuthorEnrollmentTest() {
     // Given & When
     AuthorCreateEnrollmentResult result =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
+        authorScmService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // Then
     assertAll(
@@ -84,7 +85,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given & When & Then
     assertThrows(
         IllegalStateException.class,
-        () -> authorEnrollmentService.createAuthorEnrollment(authorMember.getMemberId(), param));
+        () -> authorScmService.createAuthorEnrollment(authorMember.getMemberId(), param));
   }
 
   @Test
@@ -93,7 +94,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     // Given & When & Then
     assertThrows(
         EntityNotFoundException.class,
-        () -> authorEnrollmentService.createAuthorEnrollment(1_454_020L, param));
+        () -> authorScmService.createAuthorEnrollment(1_454_020L, param));
   }
 
   @Test
@@ -101,11 +102,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   void updateAuthorEnrollmentJudgeApprovalTest() {
     // Given
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
+        authorScmService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When
     AuthorEnrollmentJudgeResult result =
-        authorEnrollmentService.updateAuthorEnrollmentJudge(createResult.authorId());
+        authorScmService.updateAuthorEnrollmentJudge(createResult.authorId());
 
     // Then
     assertAll(
@@ -122,7 +123,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // When
     AuthorEnrollmentJudgeResult result =
-        authorEnrollmentService.updateAuthorEnrollmentJudge(save.getAuthorId());
+        authorScmService.updateAuthorEnrollmentJudge(save.getAuthorId());
 
     // Then
     assertAll(
@@ -138,7 +139,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When
-    authorEnrollmentService.deleteAuthorEnrollment(save.getAuthorId(), save.getAuthorId());
+    authorScmService.deleteAuthorEnrollment(save.getAuthorId(), save.getAuthorId());
 
     // Then
     boolean result = authorJpaRepository.existsById(save.getAuthorId());
@@ -156,7 +157,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     Exception e =
         catchException(
             () ->
-                authorEnrollmentService.deleteAuthorEnrollment(
+                authorScmService.deleteAuthorEnrollment(
                     authorMember.getMemberId(), notExistsAuthorId));
 
     // Then
@@ -174,14 +175,14 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     ProfileImgFile profileImgFile =
         CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
     AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미", "https://www.instagram.com/kwak");
-    authorService.updateAuthorProfile(
+    authorScmService.updateAuthorProfile(
         author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            authorEnrollmentService.deleteAuthorEnrollment(
+            authorScmService.deleteAuthorEnrollment(
                 userMember.getMemberId(), author.getAuthorId()));
 
     File savedProfileImgFile = s3Service.getFile(profileImgFile.getUri());
@@ -194,11 +195,11 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   void findEnrollmentDetails_Test() {
     // Given
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
+        authorScmService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When
     AuthorEnrollmentDetailsResult result =
-        authorEnrollmentService.readAuthorEnrollmentDetails(
+        authorScmService.readAuthorEnrollmentDetails(
             createResult.authorId(), createResult.authorId());
 
     // Then
@@ -214,13 +215,13 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
   void readAuthorEnrollmentDetails_NotSameAuthorAndMember_ExceptionTest() {
     // Given
     AuthorCreateEnrollmentResult createResult =
-        authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
+        authorScmService.createAuthorEnrollment(userMember.getMemberId(), param);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            authorEnrollmentService.readAuthorEnrollmentDetails(
+            authorScmService.readAuthorEnrollmentDetails(
                 authorMember.getMemberId(), createResult.authorId()));
   }
 
@@ -241,7 +242,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // When
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
+        authorScmService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
@@ -283,12 +284,58 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     }
 
     // When
-    authorEnrollmentService.deleteAbandonedAuthorEnrollment();
+    authorScmService.deleteAbandonedAuthorEnrollment();
 
     // Then
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
+        authorScmService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     assertThat(results).hasSize(1);
+  }
+
+  @Test
+  @DisplayName("작가 정보를 수정한다. 작가 프로필은 S3에 저장된다.")
+  void changeAuthorProfileTest() {
+    // Given
+    Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
+    AuthorEditParam param =
+        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
+    CustomFile customFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES);
+
+    // When
+    AuthorEditResult result =
+        authorScmService.updateAuthorProfile(
+            author.getAuthorId(), author.getAuthorId(), param, customFile);
+
+    // Then
+    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
+
+    assertAll(
+        () -> assertThat(savedProfileImgFile).exists(),
+        () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
+        () -> assertThat(result.profileImgUrl()).contains(String.valueOf(author.getAuthorId())),
+        () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
+        () -> assertThat(result.introduction()).isEqualTo(param.introduction()));
+  }
+
+  @Test
+  @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다. 프로필 이미지는 저장되지 않는다.")
+  void changeAuthorProfile_NotSameAuthorId_ExceptionTest() {
+    // Given
+    Author author0 = authorJpaRepository.save(AuthorFixture.create(authorMember));
+    Author author1 =
+        authorJpaRepository.save(
+            AuthorFixture.create(memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))));
+    AuthorEditParam param =
+        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
+    CustomFile customFile = CustomFileFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
+
+    // When & Then
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            authorScmService.updateAuthorProfile(
+                author1.getAuthorId(), author0.getAuthorId(), param, customFile));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
   }
 }

@@ -7,20 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorServiceTest extends IntegrationTest {
 
@@ -37,7 +29,6 @@ class AuthorServiceTest extends IntegrationTest {
 
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
-  @Autowired private S3Service s3Service;
 
   private List<Author> authors;
 
@@ -59,50 +50,6 @@ class AuthorServiceTest extends IntegrationTest {
                         AuthorFixture.createWithEnrollmentAt(
                             member, LocalDateTime.now().minusWeeks(2).minusHours(1)))
                 .toList());
-  }
-
-  @Test
-  @DisplayName("작가 정보를 수정한다. 작가 프로필은 S3에 저장된다.")
-  void updateAuthorProfileTest() {
-    // Given
-    Author author = authors.get(0);
-    AuthorEditParam param =
-        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES);
-
-    // When
-    AuthorEditResult result =
-        authorService.updateAuthorProfile(
-            author.getAuthorId(), author.getAuthorId(), param, customFile);
-
-    // Then
-    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
-
-    assertAll(
-        () -> assertThat(savedProfileImgFile).exists(),
-        () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
-        () -> assertThat(result.profileImgUrl()).contains(String.valueOf(author.getAuthorId())),
-        () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
-        () -> assertThat(result.introduction()).isEqualTo(param.introduction()));
-  }
-
-  @Test
-  @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다. 프로필 이미지는 저장되지 않는다.")
-  void updateAuthorProfile_NotSameAuthorId_ExceptionTest() {
-    // Given
-    Author author0 = authors.get(0);
-    Author author1 = authors.get(1);
-    AuthorEditParam param =
-        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
-
-    // When & Then
-    assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            authorService.updateAuthorProfile(
-                author1.getAuthorId(), author0.getAuthorId(), param, customFile));
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
   }
 
   @Test

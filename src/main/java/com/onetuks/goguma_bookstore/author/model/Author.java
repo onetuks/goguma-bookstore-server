@@ -84,12 +84,12 @@ public class Author {
     return this.profileImgFile.getProfileImgUrl();
   }
 
-  public Author updateProfileImgFile(ProfileImgFile profileImgFile) {
+  public Author changeProfileImgFile(ProfileImgFile profileImgFile) {
     this.profileImgFile = profileImgFile;
     return this;
   }
 
-  public Author updateAuthorProfile(String nickname, String introduction, String instagramUrl) {
+  public Author changeAuthorProfile(String nickname, String introduction, String instagramUrl) {
     this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;
