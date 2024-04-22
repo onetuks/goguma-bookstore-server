@@ -36,9 +36,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-class RegistrationServiceTest extends IntegrationTest {
+class RegistrationScmServiceTest extends IntegrationTest {
 
-  @Autowired private RegistrationService registrationService;
+  @Autowired private RegistrationScmService registrationScmService;
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
@@ -82,7 +82,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     RegistrationEditResult result =
-        registrationService.createRegistration(
+        registrationScmService.createRegistration(
             author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     // Then
@@ -131,7 +131,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            registrationService.createRegistration(
+            registrationScmService.createRegistration(
                 author.getAuthorId(),
                 param,
                 coverImgFile,
@@ -154,7 +154,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            registrationService.createRegistration(
+            registrationScmService.createRegistration(
                 author.getAuthorId(),
                 param,
                 coverImgFile,
@@ -177,7 +177,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            registrationService.createRegistration(
+            registrationScmService.createRegistration(
                 author.getAuthorId(),
                 param,
                 coverImgFile,
@@ -200,7 +200,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            registrationService.createRegistration(
+            registrationScmService.createRegistration(
                 author.getAuthorId(),
                 param,
                 coverImgFile,
@@ -211,14 +211,14 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록을 검수한다.")
-  void updateRegistrationApprovalTest() {
+  void changeRegistrationApprovalTest() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
     RegistrationInspectionParam param = new RegistrationInspectionParam(true, "검수 완료");
 
     // When
     RegistrationInspectionResult result =
-        registrationService.updateRegistrationApproval(save.getRegistrationId(), param);
+        registrationScmService.updateRegistrationApproval(save.getRegistrationId(), param);
 
     // Then
     assertAll(
@@ -229,7 +229,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록을 수정한다. 커버 이미지 파일과 샘플 파일이 S3에 저장된다.")
-  void updateRegistrationTest() {
+  void changeRegistrationTest() {
     // Given
     long authorId = author.getAuthorId();
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
@@ -240,7 +240,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     RegistrationEditResult result =
-        registrationService.updateRegistration(
+        registrationScmService.updateRegistration(
             save.getRegistrationId(),
             param,
             coverImgFile,
@@ -287,7 +287,7 @@ class RegistrationServiceTest extends IntegrationTest {
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    registrationService.deleteRegistration(author.getAuthorId(), save.getRegistrationId());
+    registrationScmService.deleteRegistration(author.getAuthorId(), save.getRegistrationId());
 
     // Then
     boolean result = registrationJpaRepository.existsById(save.getRegistrationId());
@@ -310,13 +310,13 @@ class RegistrationServiceTest extends IntegrationTest {
     CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     RegistrationEditResult result =
-        registrationService.createRegistration(
+        registrationScmService.createRegistration(
             author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     // When & Then
     assertThrows(
         AccessDeniedException.class,
-        () -> registrationService.deleteRegistration(otherAuthorId, result.registrationId()));
+        () -> registrationScmService.deleteRegistration(otherAuthorId, result.registrationId()));
 
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
@@ -340,7 +340,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     RegistrationGetResult result =
-        registrationService.readRegistration(author.getAuthorId(), save.getRegistrationId());
+        registrationScmService.readRegistration(author.getAuthorId(), save.getRegistrationId());
 
     // Then
     assertAll(
@@ -377,7 +377,7 @@ class RegistrationServiceTest extends IntegrationTest {
     // When & Then
     assertThrows(
         AccessDeniedException.class,
-        () -> registrationService.readRegistration(notAuthorityId, save.getRegistrationId()));
+        () -> registrationScmService.readRegistration(notAuthorityId, save.getRegistrationId()));
   }
 
   @Test
@@ -394,7 +394,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     Page<RegistrationGetResult> results =
-        registrationService.readAllRegistrations(PageRequest.of(0, 10));
+        registrationScmService.readAllRegistrations(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
@@ -418,7 +418,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     Page<RegistrationGetResult> results =
-        registrationService.readAllRegistrationsByAuthor(
+        registrationScmService.readAllRegistrationsByAuthor(
             author.getAuthorId(), author.getAuthorId(), PageRequest.of(0, 10));
 
     // Then
@@ -439,7 +439,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         AccessDeniedException.class,
         () ->
-            registrationService.readAllRegistrationsByAuthor(
+            registrationScmService.readAllRegistrationsByAuthor(
                 notAuthorityId, author.getAuthorId(), PageRequest.of(0, 10)));
   }
 }

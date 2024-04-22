@@ -12,7 +12,7 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.response.Registr
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnGetResponse;
 import com.onetuks.goguma_bookstore.registration.service.IsbnWebClientService;
-import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
+import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
@@ -38,15 +38,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(path = "/registrations")
-public class RegistrationRestController {
+@RequestMapping(path = "/scm/registrations")
+public class RegistrationScmRestController {
 
-  private final RegistrationService registrationService;
+  private final RegistrationScmService registrationScmService;
   private final IsbnWebClientService isbnWebClientService;
 
-  public RegistrationRestController(
-      RegistrationService registrationService, IsbnWebClientService isbnWebClientService) {
-    this.registrationService = registrationService;
+  public RegistrationScmRestController(
+      RegistrationScmService registrationScmService, IsbnWebClientService isbnWebClientService) {
+    this.registrationScmService = registrationScmService;
     this.isbnWebClientService = isbnWebClientService;
   }
 
@@ -72,7 +72,7 @@ public class RegistrationRestController {
       @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
     RegistrationEditResult result =
-        registrationService.createRegistration(
+        registrationScmService.createRegistration(
             authorId,
             request.to(),
             CustomFile.of(authorId, FileType.COVERS, coverImgFile),
@@ -101,7 +101,7 @@ public class RegistrationRestController {
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationInspectionRequest request) {
     RegistrationInspectionResult result =
-        registrationService.updateRegistrationApproval(registrationId, request.to());
+        registrationScmService.updateRegistrationApproval(registrationId, request.to());
     RegistrationInspectionResponse response = RegistrationInspectionResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -130,7 +130,7 @@ public class RegistrationRestController {
       @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
     RegistrationEditResult result =
-        registrationService.updateRegistration(
+        registrationScmService.updateRegistration(
             registrationId,
             request.to(),
             CustomFile.of(authorId, FileType.COVERS, coverImgFile),
@@ -152,7 +152,7 @@ public class RegistrationRestController {
   @DeleteMapping(path = "/{registrationId}")
   public ResponseEntity<Void> removeRegistration(
       @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
-    registrationService.deleteRegistration(authorId, registrationId);
+    registrationScmService.deleteRegistration(authorId, registrationId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -167,7 +167,8 @@ public class RegistrationRestController {
   @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationGetResponse> getRegistration(
       @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
-    RegistrationGetResult result = registrationService.readRegistration(authorId, registrationId);
+    RegistrationGetResult result =
+        registrationScmService.readRegistration(authorId, registrationId);
     RegistrationGetResponse response = RegistrationGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -183,7 +184,7 @@ public class RegistrationRestController {
   public ResponseEntity<RegistrationGetResponses> getAllRegistrations(
       @AdminId Long adminId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
-    Page<RegistrationGetResult> result = registrationService.readAllRegistrations(pageable);
+    Page<RegistrationGetResult> result = registrationScmService.readAllRegistrations(pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -202,7 +203,7 @@ public class RegistrationRestController {
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationGetResult> result =
-        registrationService.readAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
+        registrationScmService.readAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

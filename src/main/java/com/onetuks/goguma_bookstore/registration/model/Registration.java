@@ -111,13 +111,13 @@ public class Registration {
     return sampleFile.getSampleUrl();
   }
 
-  public Registration updateApprovalInfo(boolean approvalResult, String approvalMemo) {
+  public Registration changeApprovalInfo(boolean approvalResult, String approvalMemo) {
     this.approvalInfo =
         ApprovalInfo.builder().approvalResult(approvalResult).approvalMemo(approvalMemo).build();
     return this;
   }
 
-  public Registration updateRegistration(
+  public Registration changeRegistration(
       BookConceptualInfo bookConceptualInfo,
       BookPhysicalInfo bookPhysicalInfo,
       BookPriceInfo bookPriceInfo,

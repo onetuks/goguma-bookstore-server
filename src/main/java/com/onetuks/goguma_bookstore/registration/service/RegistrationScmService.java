@@ -21,13 +21,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RegistrationService {
+public class RegistrationScmService {
 
   private final RegistrationJpaRepository registrationJpaRepository;
   private final AuthorService authorService;
   private final S3Service s3Service;
 
-  public RegistrationService(
+  public RegistrationScmService(
       RegistrationJpaRepository registrationJpaRepository,
       AuthorService authorService,
       S3Service s3Service) {
@@ -90,7 +90,7 @@ public class RegistrationService {
       long registrationId, RegistrationInspectionParam param) {
     return RegistrationInspectionResult.from(
         getRegistrationById(registrationId)
-            .updateApprovalInfo(param.approvalResult(), param.approvalMemo()));
+            .changeApprovalInfo(param.approvalResult(), param.approvalMemo()));
   }
 
   @Transactional
@@ -117,7 +117,7 @@ public class RegistrationService {
     previewFiles.forEach(s3Service::putFile);
 
     return RegistrationEditResult.from(
-        registration.updateRegistration(
+        registration.changeRegistration(
             BookConceptualInfo.builder()
                 .title(param.title())
                 .oneLiner(param.oneLiner())
