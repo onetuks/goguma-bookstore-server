@@ -13,7 +13,6 @@ import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationI
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

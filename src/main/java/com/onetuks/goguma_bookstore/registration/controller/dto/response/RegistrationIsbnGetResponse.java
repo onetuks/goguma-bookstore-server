@@ -44,7 +44,7 @@ public record RegistrationIsbnGetResponse(
       // bookSize : "width*height"
       String[] bookSizeInfo = bookSize.split("x");
       return new Integer[] {Integer.parseInt(bookSizeInfo[0]), Integer.parseInt(bookSizeInfo[1])};
-    } catch (ArrayIndexOutOfBoundsException e) {
+    } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
       return new Integer[] {null, null};
     }
   }
