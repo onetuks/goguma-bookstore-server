@@ -6,8 +6,12 @@ import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.controller.dto.response.AuthorDetailsResponse.AuthorDetailsResponses;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
 import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 class AuthorDetailsResponsesTest extends IntegrationTest {
 
@@ -15,35 +19,23 @@ class AuthorDetailsResponsesTest extends IntegrationTest {
   @DisplayName("작가 프로필 다건 조회 결과 객체를 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    List<AuthorDetailsResult> detailsResults =
-        List.of(
-            new AuthorDetailsResult(
-                1_000L,
-                "mock-profile.png",
-                "빠니보틀",
-                "유튜브 대통령",
-                "https://www.instagram.com/panibottle1",
-                1,
-                2,
-                3),
-            new AuthorDetailsResult(
-                1_001L,
-                "mock-profile2.png",
-                "빠니보틀2",
-                "유튜브 대통령2",
-                "https://www.instagram.com/panibottle2",
-                1,
-                2,
-                3),
-            new AuthorDetailsResult(
-                1_002L,
-                "mock-profile3.png",
-                "빠니보틀3",
-                "유튜브 대통령3",
-                "https://www.instagram.com/panibottle3",
-                1,
-                2,
-                3));
+    List<AuthorDetailsResult> list =
+        IntStream.rangeClosed(1, 3)
+            .mapToObj(
+                index ->
+                    new AuthorDetailsResult(
+                        index,
+                        "mock-profile.png",
+                        "빠니보틀" + index,
+                        "유튜브 대통령",
+                        "https://www.instagram.com/panibottle" + index,
+                        1,
+                        2,
+                        3))
+            .toList();
+
+    Page<AuthorDetailsResult> detailsResults =
+        new PageImpl<>(list, PageRequest.of(0, 10), list.size());
 
     // When
     AuthorDetailsResponses results = AuthorDetailsResponses.from(detailsResults);
@@ -53,9 +45,7 @@ class AuthorDetailsResponsesTest extends IntegrationTest {
         .hasSize(3)
         .allSatisfy(
             result -> {
-              assertThat(result.authorId())
-                  .isGreaterThanOrEqualTo(1_000L)
-                  .isLessThanOrEqualTo(1_002L);
+              assertThat(result.authorId()).isPositive();
               assertThat(result.nickname()).contains("빠니보틀");
               assertThat(result.bookCount()).isEqualTo(2);
             });

@@ -19,16 +19,16 @@ CREATE TABLE IF NOT EXISTS members
 
 CREATE TABLE IF NOT EXISTS authors
 (
-    author_id            BIGINT              NOT NULL AUTO_INCREMENT COMMENT '작가 식별자',
-    member_id            BIGINT              NOT NULL UNIQUE COMMENT '멤버 식별자',
-    profile_img_uri      VARCHAR(255)        NOT NULL DEFAULT '' COMMENT '작가 프로필 이미지 URI',
-    nickname             VARCHAR(255) UNIQUE NOT NULL COMMENT '필명',
-    introduction         VARCHAR(255)        NOT NULL COMMENT '한줄소개',
-    instagram_url        VARCHAR(255) UNIQUE COMMENT '인스타그램 주소',
-    escrow_service_uri   VARCHAR(255) COMMENT '구매안전증',
-    mail_order_sales_uri VARCHAR(255) COMMENT '통신판매증',
-    enrollment_passed    BOOLEAN             NOT NULL DEFAULT FALSE COMMENT '입점 승인 여부',
-    enrollment_at        DATETIME            NOT NULL DEFAULT NOW() COMMENT '입점 신청일',
+    author_id               BIGINT              NOT NULL AUTO_INCREMENT COMMENT '작가 식별자',
+    member_id               BIGINT UNIQUE       NOT NULL COMMENT '멤버 식별자',
+    profile_img_uri         VARCHAR(255)        NOT NULL DEFAULT '/profils/default-profile.png' COMMENT '작가 프로필 이미지 URI',
+    nickname                VARCHAR(255) UNIQUE NOT NULL COMMENT '필명',
+    introduction            VARCHAR(255)        NOT NULL COMMENT '한줄소개',
+    instagram_url           VARCHAR(255) UNIQUE COMMENT '인스타그램 링크',
+    business_number         VARCHAR(255) UNIQUE NOT NULL COMMENT '사업자 등록번호',
+    mail_order_sales_number VARCHAR(255) UNIQUE NOT NULL COMMENT '통신판매 신고번호',
+    enrollment_passed       BOOLEAN             NOT NULL DEFAULT FALSE COMMENT '입점 승인 여부',
+    enrollment_at           DATETIME            NOT NULL DEFAULT NOW() COMMENT '입점 신청일',
     PRIMARY KEY (author_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE
 ) ENGINE = InnoDB

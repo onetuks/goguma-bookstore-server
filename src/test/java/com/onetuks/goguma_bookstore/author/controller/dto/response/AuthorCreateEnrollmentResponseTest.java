@@ -25,7 +25,9 @@ class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
             profileImgFile.getProfileImgUrl(),
             "빠니보틀",
             "빡친감자",
-            "https://www.instagram.com/pannibottle");
+            "https://www.instagram.com/pannibottle",
+            "1234567890",
+            "1234567890");
 
     // When
     AuthorCreateEnrollmentResponse result = AuthorCreateEnrollmentResponse.from(resultObject);

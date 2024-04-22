@@ -27,6 +27,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorServiceTest extends IntegrationTest {
@@ -124,7 +126,7 @@ class AuthorServiceTest extends IntegrationTest {
   @DisplayName("작가 프로필 다건 조회한다.")
   void findAllAuthorDetailsTest() {
     // Given & When
-    List<AuthorDetailsResult> results = authorService.findAllAuthorDetails();
+    Page<AuthorDetailsResult> results = authorService.findAllAuthorDetails(PageRequest.of(0, 10));
 
     // Then
     List<Long> memberIds =

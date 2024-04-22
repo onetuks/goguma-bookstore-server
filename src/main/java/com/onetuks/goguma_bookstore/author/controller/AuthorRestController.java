@@ -13,7 +13,10 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,8 +90,9 @@ public class AuthorRestController {
    *     restockCount
    */
   @GetMapping(produces = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorDetailsResponses> getAllAuthorDetails() {
-    List<AuthorDetailsResult> results = authorService.findAllAuthorDetails();
+  public ResponseEntity<AuthorDetailsResponses> getAllAuthorDetails(
+      @PageableDefault(sort = "authorId", direction = Direction.DESC) Pageable pageable) {
+    Page<AuthorDetailsResult> results = authorService.findAllAuthorDetails(pageable);
     AuthorDetailsResponses responses = AuthorDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

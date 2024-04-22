@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public record AuthorDetailsResponse(
     long authorId,
@@ -25,10 +25,10 @@ public record AuthorDetailsResponse(
         result.restockCount());
   }
 
-  public record AuthorDetailsResponses(List<AuthorDetailsResponse> responses) {
+  public record AuthorDetailsResponses(Page<AuthorDetailsResponse> responses) {
 
-    public static AuthorDetailsResponses from(List<AuthorDetailsResult> results) {
-      return new AuthorDetailsResponses(results.stream().map(AuthorDetailsResponse::from).toList());
+    public static AuthorDetailsResponses from(Page<AuthorDetailsResult> results) {
+      return new AuthorDetailsResponses(results.map(AuthorDetailsResponse::from));
     }
   }
 }

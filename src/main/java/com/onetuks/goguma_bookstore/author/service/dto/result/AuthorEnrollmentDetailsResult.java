@@ -26,9 +26,9 @@ public record AuthorEnrollmentDetailsResult(
         author.getNickname(),
         author.getIntroduction(),
         author.getInstagramUrl(),
-        author.getEscrowServiceUrl(),
-        author.getMailOrderSalesUrl(),
-        author.getEnrollmentPassed(),
-        author.getEnrollmentAt());
+        author.getEnrollmentInfo().getBusinessNumber(),
+        author.getEnrollmentInfo().getMailOrderSalesNumber(),
+        author.getEnrollmentInfo().getEnrollmentPassed(),
+        author.getEnrollmentInfo().getEnrollmentAt());
   }
 }

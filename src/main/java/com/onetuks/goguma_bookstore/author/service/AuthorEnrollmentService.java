@@ -1,13 +1,13 @@
 package com.onetuks.goguma_bookstore.author.service;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateParam;
+import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEscrowServiceHandOverResult;
-import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorMailOrderSalesSubmitResult;
+import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
@@ -15,7 +15,8 @@ import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +28,17 @@ public class AuthorEnrollmentService {
   private final MemberJpaRepository memberJpaRepository;
 
   private final S3Service s3Service;
+  private final EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
   public AuthorEnrollmentService(
       AuthorJpaRepository authorJpaRepository,
       MemberJpaRepository memberJpaRepository,
-      S3Service s3Service) {
+      S3Service s3Service,
+      EnrollmentInfoVerificationService enrollmentInfoVerificationService) {
     this.authorJpaRepository = authorJpaRepository;
     this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
+    this.enrollmentInfoVerificationService = enrollmentInfoVerificationService;
   }
 
   /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
@@ -46,7 +50,8 @@ public class AuthorEnrollmentService {
         .findAll()
         .forEach(
             author -> {
-              if (author.getEnrollmentAt().isBefore(twoWeeksAgo)) {
+              LocalDateTime enrollmentAt = author.getEnrollmentInfo().getEnrollmentAt();
+              if (enrollmentAt.isBefore(twoWeeksAgo)) {
                 s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
                 authorJpaRepository.delete(author);
               }
@@ -55,7 +60,10 @@ public class AuthorEnrollmentService {
 
   @Transactional
   public AuthorCreateEnrollmentResult createAuthorEnrollment(
-      long loginId, AuthorCreateParam param) {
+      long loginId, AuthorCreateEnrollmentParam param) {
+    enrollmentInfoVerificationService.verifyEnrollmentInfo(
+        param.businessNumber(), param.mailOrderSalesNumber());
+
     Author temporaryAuthor =
         authorJpaRepository.save(
             Author.builder()
@@ -64,35 +72,16 @@ public class AuthorEnrollmentService {
                 .nickname(param.nickname())
                 .introduction(param.introduction())
                 .instagramUrl(param.instagramUrl())
+                .enrollmentInfo(
+                    EnrollmentInfo.builder()
+                        .businessNumber(param.businessNumber())
+                        .mailOrderSalesNumber(param.mailOrderSalesNumber())
+                        .enrollmentPassed(false)
+                        .enrollmentAt(LocalDateTime.now())
+                        .build())
                 .build());
 
     return AuthorCreateEnrollmentResult.from(temporaryAuthor);
-  }
-
-  @Transactional
-  public AuthorEscrowServiceHandOverResult updateAuthorEscrowService(
-      Long authorId, CustomFile escrowServiceFile) {
-    s3Service.putFile(escrowServiceFile);
-
-    String escrowServiceUrl =
-        getAuthorById(authorId).updateEscrowService(escrowServiceFile.toEscrowServiceFile());
-
-    return new AuthorEscrowServiceHandOverResult(escrowServiceUrl);
-  }
-
-  @Transactional
-  public AuthorMailOrderSalesSubmitResult updateAuthorMailOrderSales(
-      long loginAuthorId, long authorId, CustomFile mailOrderSalesFile) {
-    Author author = getAuthorById(authorId);
-
-    checkIllegalArgument(author, loginAuthorId);
-
-    s3Service.putFile(mailOrderSalesFile);
-
-    String mailOrderSalesUrl =
-        author.updateMailOrderSales(mailOrderSalesFile.toMailOrderSalesFile());
-
-    return new AuthorMailOrderSalesSubmitResult(mailOrderSalesUrl);
   }
 
   @Transactional
@@ -129,10 +118,10 @@ public class AuthorEnrollmentService {
   }
 
   @Transactional(readOnly = true)
-  public List<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails() {
-    return authorJpaRepository.findAuthorsByEnrollmentInfoEnrollmentPassedFalse().stream()
-        .map(AuthorEnrollmentDetailsResult::from)
-        .toList();
+  public Page<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails(Pageable pageable) {
+    return authorJpaRepository
+        .findAuthorsByEnrollmentInfoEnrollmentPassedFalse(pageable)
+        .map(AuthorEnrollmentDetailsResult::from);
   }
 
   private Member getUserMemberById(long loginId) {

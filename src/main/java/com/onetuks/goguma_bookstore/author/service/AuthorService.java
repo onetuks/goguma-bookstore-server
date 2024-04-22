@@ -8,7 +8,8 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +48,10 @@ public class AuthorService {
   }
 
   @Transactional(readOnly = true)
-  public List<AuthorDetailsResult> findAllAuthorDetails() {
-    return authorJpaRepository.findAuthorsByEnrollmentInfoEnrollmentPassedTrue().stream()
-        .map(AuthorDetailsResult::from)
-        .toList();
+  public Page<AuthorDetailsResult> findAllAuthorDetails(Pageable pageable) {
+    return authorJpaRepository
+        .findAuthorsByEnrollmentInfoEnrollmentPassedTrue(pageable)
+        .map(AuthorDetailsResult::from);
   }
 
   public Author getAuthorById(long authorId) {
