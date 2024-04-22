@@ -10,10 +10,12 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.response.Registr
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnGetResponse;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,7 +60,7 @@ public class RegistrationRestController {
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationEditResponse> requestRegistration(
+  public ResponseEntity<RegistrationEditResponse> addRegistration(
       @AuthorId Long authorId,
       @RequestBody @Valid RegistrationEditRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
@@ -161,7 +163,7 @@ public class RegistrationRestController {
   @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationGetResponse> getRegistration(
       @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
-    RegistrationGetResult result = registrationService.getRegistration(authorId, registrationId);
+    RegistrationGetResult result = registrationService.readRegistration(authorId, registrationId);
     RegistrationGetResponse response = RegistrationGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -177,7 +179,7 @@ public class RegistrationRestController {
   public ResponseEntity<RegistrationGetResponses> getAllRegistrations(
       @AdminId Long adminId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
-    Page<RegistrationGetResult> result = registrationService.getAllRegistrations(pageable);
+    Page<RegistrationGetResult> result = registrationService.readAllRegistrations(pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -191,13 +193,24 @@ public class RegistrationRestController {
    * @return RegistrationGetResponses
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationGetResponses> getAllRegistrationByAuthor(
+  public ResponseEntity<RegistrationGetResponses> getAllRegistrationsByAuthor(
       @AuthorId Long loginAuthorId,
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationGetResult> result =
-        registrationService.getAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
+        registrationService.readAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
     RegistrationGetResponses response = RegistrationGetResponses.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(
+      path = "/isbn/{isbn}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegistrationIsbnGetResponse> getBookInfoByIsbn(
+      @PathVariable(name = "isbn") String isbn) {
+    RegistrationIsbnGetResult result = registrationService.readBookInfoByIsbn(isbn);
+    RegistrationIsbnGetResponse response = RegistrationIsbnGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

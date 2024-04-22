@@ -151,7 +151,7 @@ public class MemberRestController {
   @GetMapping(path = "/{memberId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberInfoResponse> getMemberInfo(
       @PathVariable(name = "memberId") Long memberId) {
-    MemberInfoResult result = memberService.getMemberInfo(memberId);
+    MemberInfoResult result = memberService.readMemberInfo(memberId);
     MemberInfoResponse response = MemberInfoResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

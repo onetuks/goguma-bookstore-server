@@ -77,7 +77,7 @@ public class AuthorRestController {
   @GetMapping(path = "/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorDetailsResponse> getAuthorDetails(
       @PathVariable(name = "authorId") Long authorId) {
-    AuthorDetailsResult result = authorService.findAuthorDetails(authorId);
+    AuthorDetailsResult result = authorService.readAuthorDetails(authorId);
     AuthorDetailsResponse response = AuthorDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -92,7 +92,7 @@ public class AuthorRestController {
   @GetMapping(produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorDetailsResponses> getAllAuthorDetails(
       @PageableDefault(sort = "authorId", direction = Direction.DESC) Pageable pageable) {
-    Page<AuthorDetailsResult> results = authorService.findAllAuthorDetails(pageable);
+    Page<AuthorDetailsResult> results = authorService.readAllAuthorDetails(pageable);
     AuthorDetailsResponses responses = AuthorDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

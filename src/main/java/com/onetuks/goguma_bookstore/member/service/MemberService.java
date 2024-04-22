@@ -107,7 +107,7 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public MemberInfoResult getMemberInfo(long memberId) {
+  public MemberInfoResult readMemberInfo(long memberId) {
     return MemberInfoResult.from(getMemberById(memberId));
   }
 

@@ -334,13 +334,13 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 단건 조회한다.")
-  void getRegistrationTest() {
+  void readRegistrationTest() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
     RegistrationGetResult result =
-        registrationService.getRegistration(author.getAuthorId(), save.getRegistrationId());
+        registrationService.readRegistration(author.getAuthorId(), save.getRegistrationId());
 
     // Then
     assertAll(
@@ -369,7 +369,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 조회 시 작가 본인이 아니라면 조회할 수 없다.")
-  void getRegistration_NotAuthor_ExceptionTest() {
+  void readRegistration_NotAuthor_ExceptionTest() {
     // Given
     long notAuthorityId = 123_144L;
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
@@ -377,7 +377,7 @@ class RegistrationServiceTest extends IntegrationTest {
     // When & Then
     assertThrows(
         AccessDeniedException.class,
-        () -> registrationService.getRegistration(notAuthorityId, save.getRegistrationId()));
+        () -> registrationService.readRegistration(notAuthorityId, save.getRegistrationId()));
   }
 
   @Test
@@ -394,7 +394,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     Page<RegistrationGetResult> results =
-        registrationService.getAllRegistrations(PageRequest.of(0, 10));
+        registrationService.readAllRegistrations(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
@@ -404,7 +404,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가별 신간등록을 조회한다.")
-  void getAllRegistrationsByAuthorTest() {
+  void readAllRegistrationsByAuthorTest() {
     // Given
     registrationJpaRepository.save(RegistrationFixture.create(author));
     registrationJpaRepository.save(RegistrationFixture.create(author));
@@ -418,7 +418,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
     // When
     Page<RegistrationGetResult> results =
-        registrationService.getAllRegistrationsByAuthor(
+        registrationService.readAllRegistrationsByAuthor(
             author.getAuthorId(), author.getAuthorId(), PageRequest.of(0, 10));
 
     // Then
@@ -430,7 +430,7 @@ class RegistrationServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("작가별 신간등록 조회 시 작가 본인이 아니라면 조회할 수 없다.")
-  void getAllRegistrationsByAuthor_NotAuthor_ExceptionTest() {
+  void readAllRegistrationsByAuthor_NotAuthor_ExceptionTest() {
     // Given
     long notAuthorityId = 123_144L;
     registrationJpaRepository.save(RegistrationFixture.create(author));
@@ -439,7 +439,7 @@ class RegistrationServiceTest extends IntegrationTest {
     assertThrows(
         AccessDeniedException.class,
         () ->
-            registrationService.getAllRegistrationsByAuthor(
+            registrationService.readAllRegistrationsByAuthor(
                 notAuthorityId, author.getAuthorId(), PageRequest.of(0, 10)));
   }
 }

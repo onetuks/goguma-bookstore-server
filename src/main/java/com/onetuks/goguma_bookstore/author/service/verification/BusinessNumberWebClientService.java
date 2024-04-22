@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class BusinessNumberWebClientService {
 
-  private static final String BUSINESS_NUMBER_VERIFY_URL =
+  private static final String BUSINESS_NUMBER_URL =
       "https://api.odcloud.kr/api/nts-businessman/v1/status";
 
   @Value("${openapi.data-go-kr.secret-key}")
@@ -37,7 +37,7 @@ public class BusinessNumberWebClientService {
 
     return webClient
         .post()
-        .uri(uriBuilder.buildUri(BUSINESS_NUMBER_VERIFY_URL, buildMultiValueMap()))
+        .uri(uriBuilder.buildUri(BUSINESS_NUMBER_URL, buildMultiValueMap()))
         .bodyValue(request)
         .retrieve()
         .onStatus(

@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class MailOrderSalesWebClientService {
 
-  private static final String MAIL_ORDER_SALES_VERIFY_URL =
+  private static final String MAIL_ORDER_SALES_URL =
       "https://apis.data.go.kr/1130000/MllBs_1Service/getMllBsBiznoInfo_1";
 
   @Value("${openapi.data-go-kr.secret-key}")
@@ -33,7 +33,7 @@ public class MailOrderSalesWebClientService {
   protected MailOrderSalesResponse requestData(String businessNumber) {
     return webClient
         .get()
-        .uri(uriBuilder.buildUri(MAIL_ORDER_SALES_VERIFY_URL, buildMultiValueMap(businessNumber)))
+        .uri(uriBuilder.buildUri(MAIL_ORDER_SALES_URL, buildMultiValueMap(businessNumber)))
         .retrieve()
         .onStatus(
             HttpStatusCode::isError,

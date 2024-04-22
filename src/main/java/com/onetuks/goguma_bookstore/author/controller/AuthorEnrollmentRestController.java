@@ -104,7 +104,7 @@ public class AuthorEnrollmentRestController {
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
       @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
     AuthorEnrollmentDetailsResult result =
-        authorEnrollmentService.findAuthorEnrollmentDetails(loginAuthorId, authorId);
+        authorEnrollmentService.readAuthorEnrollmentDetails(loginAuthorId, authorId);
     AuthorEnrollmentDetailsResponse response = AuthorEnrollmentDetailsResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -122,7 +122,7 @@ public class AuthorEnrollmentRestController {
       @AdminId Long adminId,
       @PageableDefault(sort = "enrollmentAt", direction = Direction.DESC) Pageable pageable) {
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails(pageable);
+        authorEnrollmentService.readAllAuthorEnrollmentDetails(pageable);
     AuthorEnrollmentDetailsResponses responses = AuthorEnrollmentDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);

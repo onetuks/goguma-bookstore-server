@@ -198,7 +198,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // When
     AuthorEnrollmentDetailsResult result =
-        authorEnrollmentService.findAuthorEnrollmentDetails(
+        authorEnrollmentService.readAuthorEnrollmentDetails(
             createResult.authorId(), createResult.authorId());
 
     // Then
@@ -211,7 +211,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("요청한 멤버 아이디와 작가 아이디가 다른 유저에 대한 정보이면 임점 심사 정보 요청 시 예외를 던진다.")
-  void findAuthorEnrollmentDetails_NotSameAuthorAndMember_ExceptionTest() {
+  void readAuthorEnrollmentDetails_NotSameAuthorAndMember_ExceptionTest() {
     // Given
     AuthorCreateEnrollmentResult createResult =
         authorEnrollmentService.createAuthorEnrollment(userMember.getMemberId(), param);
@@ -220,13 +220,13 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () ->
-            authorEnrollmentService.findAuthorEnrollmentDetails(
+            authorEnrollmentService.readAuthorEnrollmentDetails(
                 authorMember.getMemberId(), createResult.authorId()));
   }
 
   @Test
   @DisplayName("아직 입점 신청이 완료되지 않은 모든 작가 지망생 상세 정보를 조회한다.")
-  void findAllAuthorEnrollmentDetailsTest() {
+  void readAllAuthorEnrollmentDetailsTest() {
     // Given
     List<Member> members =
         List.of(
@@ -241,7 +241,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // When
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
+        authorEnrollmentService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     // Then
     assertThat(results)
@@ -287,7 +287,7 @@ class AuthorEnrollmentServiceTest extends IntegrationTest {
 
     // Then
     Page<AuthorEnrollmentDetailsResult> results =
-        authorEnrollmentService.findAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
+        authorEnrollmentService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     assertThat(results).hasSize(1);
   }

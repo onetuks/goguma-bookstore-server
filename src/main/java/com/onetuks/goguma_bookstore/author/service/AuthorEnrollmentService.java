@@ -108,7 +108,7 @@ public class AuthorEnrollmentService {
   }
 
   @Transactional(readOnly = true)
-  public AuthorEnrollmentDetailsResult findAuthorEnrollmentDetails(
+  public AuthorEnrollmentDetailsResult readAuthorEnrollmentDetails(
       long loginAuthorId, long authorId) {
     Author author = getAuthorById(authorId);
 
@@ -118,7 +118,7 @@ public class AuthorEnrollmentService {
   }
 
   @Transactional(readOnly = true)
-  public Page<AuthorEnrollmentDetailsResult> findAllAuthorEnrollmentDetails(Pageable pageable) {
+  public Page<AuthorEnrollmentDetailsResult> readAllAuthorEnrollmentDetails(Pageable pageable) {
     return authorJpaRepository
         .findAuthorsByEnrollmentInfoEnrollmentPassedFalse(pageable)
         .map(AuthorEnrollmentDetailsResult::from);
