@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.book.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -12,6 +12,7 @@ import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.book.service.dto.param.BookEditParam;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
+import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -29,6 +30,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 
 class BookScmServiceTest extends IntegrationTest {
@@ -223,5 +226,64 @@ class BookScmServiceTest extends IntegrationTest {
                 CustomFileFixture.createFile(notAuthorityAuthorId, FileType.COVERS),
                 CustomFileFixture.createFiles(notAuthorityAuthorId, FileType.DETAILS),
                 CustomFileFixture.createFiles(notAuthorityAuthorId, FileType.PREVIEWS)));
+  }
+
+  @Test
+  @DisplayName("작가의 모든 도서를 조회한다.")
+  void getAllBooksByAuthorTest() {
+    // Given
+    long loginAuthorId = author.getAuthorId();
+    long authorId = author.getAuthorId();
+
+    // When
+    Page<BookResult> results =
+        bookScmService.getAllBooksByAuthor(loginAuthorId, authorId, PageRequest.of(0, 10));
+
+    // Then
+    assertThat(results)
+        .isNotNull()
+        .isNotEmpty()
+        .allSatisfy(
+            result -> {
+              assertThat(result.bookId()).isEqualTo(book.getBookId());
+              assertThat(result.authorId()).isEqualTo(author.getAuthorId());
+              assertThat(result.authorNickname()).isEqualTo(author.getNickname());
+              assertThat(result.title()).isEqualTo(book.getBookConceptualInfo().getTitle());
+              assertThat(result.oneLiner()).isEqualTo(book.getBookConceptualInfo().getOneLiner());
+              assertThat(result.summary()).isEqualTo(book.getBookConceptualInfo().getSummary());
+              assertThat(result.categories())
+                  .containsExactlyInAnyOrderElementsOf(
+                      book.getBookConceptualInfo().getCategories());
+              assertThat(result.isbn()).isEqualTo(book.getBookConceptualInfo().getIsbn());
+              assertThat(result.height()).isEqualTo(book.getBookPhysicalInfo().getHeight());
+              assertThat(result.width()).isEqualTo(book.getBookPhysicalInfo().getWidth());
+              assertThat(result.coverType()).isEqualTo(book.getBookPhysicalInfo().getCoverType());
+              assertThat(result.pageCount()).isEqualTo(book.getBookPhysicalInfo().getPageCount());
+              assertThat(result.regularPrice())
+                  .isEqualTo(book.getBookPriceInfo().getRegularPrice());
+              assertThat(result.purchasePrice())
+                  .isEqualTo(book.getBookPriceInfo().getPurchasePrice());
+              assertThat(result.promotion()).isEqualTo(book.getBookPriceInfo().getPromotion());
+              assertThat(result.publisher()).isEqualTo(book.getPublisher());
+              assertThat(result.stockCount()).isEqualTo(book.getStockCount());
+              assertThat(result.coverImgUrl()).isEqualTo(book.getCoverImgFile().getCoverImgUrl());
+              assertThat(result.detailImgUrls())
+                  .containsExactlyInAnyOrderElementsOf(book.getDetailImgUrls());
+              assertThat(result.previewUrls())
+                  .containsExactlyInAnyOrderElementsOf(book.getPreviewUrls());
+            });
+  }
+
+  @Test
+  @DisplayName("조회하려는 작가와 로그인한 작가가 다르면 시스템 도서 조회 시 예외를 던진다.")
+  void getAllBooksByAuthor_NotAuthorityAuthor_ExceptionTest() {
+    // Given
+    long loginAuthorId = 123_421_415L;
+    long authorId = author.getAuthorId();
+
+    // When
+    assertThrows(
+        AccessDeniedException.class,
+        () -> bookScmService.getAllBooksByAuthor(loginAuthorId, authorId, PageRequest.of(0, 10)));
   }
 }

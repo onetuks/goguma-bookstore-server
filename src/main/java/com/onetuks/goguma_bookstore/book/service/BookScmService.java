@@ -4,12 +4,15 @@ import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.book.service.dto.param.BookEditParam;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
+import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +56,16 @@ public class BookScmService {
             CustomFile.of());
 
     return BookEditResult.from(bookId, update, inspection);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<BookResult> getAllBooksByAuthor(
+      long loginAuthorId, long authorId, Pageable pageable) {
+    if (loginAuthorId != authorId) {
+      throw new AccessDeniedException("현재 작가에게 해당 도서 조회 권한이 없습니다.");
+    }
+
+    return bookJpaRepository.findAllByAuthorAuthorId(authorId, pageable).map(BookResult::from);
   }
 
   private Book getBookById(long authorId, long bookId) {
