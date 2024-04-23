@@ -5,19 +5,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationEditRequestTest extends IntegrationTest {
+class RegistrationCreateRequestTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 수정 요청 객체를 파람 객체로 변환한다.")
   void toTest() {
     // Given
-    RegistrationEditRequest request =
-        new RegistrationEditRequest(
+    RegistrationCreateRequest request =
+        new RegistrationCreateRequest(
             "유라시아 여행기",
             "대충 베트남에서 시작해서 영국까지",
             "이 편지는 영국에서 시작하여 대충 누구 손을 거쳐서 어쩌구 저쩌구 거시기 뭐시기",
@@ -34,7 +34,7 @@ class RegistrationEditRequestTest extends IntegrationTest {
             true);
 
     // When
-    RegistrationEditParam result = request.to();
+    RegistrationCreateParam result = request.to();
 
     // Then
     assertAll(

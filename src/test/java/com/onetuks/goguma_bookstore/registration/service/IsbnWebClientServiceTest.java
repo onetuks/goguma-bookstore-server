@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ class IsbnWebClientServiceTest extends IntegrationTest {
     String isbn = "9788999278488";
 
     // When
-    RegistrationIsbnGetResult result = service.requestData(isbn);
+    RegistrationIsbnResult result = service.requestData(isbn);
 
     // Then
     assertAll(

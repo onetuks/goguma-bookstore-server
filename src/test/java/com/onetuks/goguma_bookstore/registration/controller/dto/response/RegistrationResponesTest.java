@@ -1,11 +1,11 @@
-package com.onetuks.goguma_bookstore.registration.controller.dto.request;
+package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse.RegistrationResponses;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -14,17 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-class RegistrationGetResponesTest extends IntegrationTest {
+class RegistrationResponesTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 다건 조회 결과 객체에서 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    List<RegistrationGetResult> list =
+    List<RegistrationResult> list =
         IntStream.range(1, 4)
             .mapToObj(
                 index ->
-                    new RegistrationGetResult(
+                    new RegistrationResult(
                         index,
                         true,
                         "심사 통과했습니다.",
@@ -48,10 +48,10 @@ class RegistrationGetResponesTest extends IntegrationTest {
                         "샘플 URL" + index))
             .toList();
 
-    Page<RegistrationGetResult> results = new PageImpl<>(list, PageRequest.of(1, 10), list.size());
+    Page<RegistrationResult> results = new PageImpl<>(list, PageRequest.of(1, 10), list.size());
 
     // When
-    RegistrationGetResponses responses = RegistrationGetResponses.from(results);
+    RegistrationResponses responses = RegistrationResponses.from(results);
 
     // Then
     assertThat(responses.responses())

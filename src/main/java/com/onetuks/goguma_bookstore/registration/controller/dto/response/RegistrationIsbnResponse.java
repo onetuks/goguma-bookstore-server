@@ -1,9 +1,9 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult.IsbnDataResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult.IsbnDataResult;
 
-public record RegistrationIsbnGetResponse(
+public record RegistrationIsbnResponse(
     String isbn,
     String title,
     String publisher,
@@ -12,7 +12,7 @@ public record RegistrationIsbnGetResponse(
     Integer height,
     Integer width) {
 
-  public static RegistrationIsbnGetResponse from(RegistrationIsbnGetResult result) {
+  public static RegistrationIsbnResponse from(RegistrationIsbnResult result) {
     if (result == null || result.docs().isEmpty()) {
       throw new IllegalArgumentException("해당 ISBN 정보가 존재하지 않습니다.");
     }
@@ -21,7 +21,7 @@ public record RegistrationIsbnGetResponse(
 
     Integer[] bookSizeInfo = parseBookSizeInfo(data.BOOK_SIZE());
 
-    return new RegistrationIsbnGetResponse(
+    return new RegistrationIsbnResponse(
         data.EA_ISBN(),
         data.TITLE(),
         data.PUBLISHER(),

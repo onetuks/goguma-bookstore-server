@@ -55,6 +55,10 @@ public class CustomFile {
   }
 
   public static List<CustomFile> of(long id, FileType fileType, MultipartFile[] multipartFiles) {
+    if (multipartFiles == null) {
+      return List.of();
+    }
+
     int fileCount = multipartFiles.length;
 
     if (fileType == FileType.DETAILS

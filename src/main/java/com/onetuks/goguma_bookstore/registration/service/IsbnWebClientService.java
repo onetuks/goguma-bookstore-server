@@ -3,7 +3,7 @@ package com.onetuks.goguma_bookstore.registration.service;
 import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OPENAPI_REQUEST_ERROR;
 
 import com.onetuks.goguma_bookstore.global.service.URIBuilder;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class IsbnWebClientService {
     this.uriBuilder = uriBuilder;
   }
 
-  public RegistrationIsbnGetResult requestData(String isbn) {
+  public RegistrationIsbnResult requestData(String isbn) {
     return webClient
         .post()
         .uri(uriBuilder.buildUri(ISBN_URL, buildMultiValueMap(isbn)))
@@ -46,7 +46,7 @@ public class IsbnWebClientService {
                         null,
                         null,
                         response.request())))
-        .bodyToMono(RegistrationIsbnGetResult.class)
+        .bodyToMono(RegistrationIsbnResult.class)
         .block();
   }
 

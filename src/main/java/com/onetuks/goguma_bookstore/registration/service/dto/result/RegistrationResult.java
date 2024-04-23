@@ -4,7 +4,7 @@ import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import java.util.List;
 
-public record RegistrationGetResult(
+public record RegistrationResult(
     long registrationId,
     boolean approvalResult,
     String approvalMemo,
@@ -27,8 +27,8 @@ public record RegistrationGetResult(
     List<String> previewUrls,
     String sampleUrl) {
 
-  public static RegistrationGetResult from(Registration registration) {
-    return new RegistrationGetResult(
+  public static RegistrationResult from(Registration registration) {
+    return new RegistrationResult(
         registration.getRegistrationId(),
         registration.getApprovalInfo().getApprovalResult(),
         registration.getApprovalInfo().getApprovalMemo(),

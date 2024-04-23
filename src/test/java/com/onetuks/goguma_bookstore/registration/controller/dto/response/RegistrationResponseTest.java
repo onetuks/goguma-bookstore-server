@@ -5,19 +5,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationGetResponseTest extends IntegrationTest {
+class RegistrationResponseTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록 조회 결과 객체에서 응답 객체로 변환한다.")
   void fromTest() {
     // Given
-    RegistrationGetResult getResult =
-        new RegistrationGetResult(
+    RegistrationResult getResult =
+        new RegistrationResult(
             1_233L,
             true,
             "심사 통과했습니다.",
@@ -41,7 +41,7 @@ class RegistrationGetResponseTest extends IntegrationTest {
             "샘플 URL");
 
     // When
-    RegistrationGetResponse result = RegistrationGetResponse.from(getResult);
+    RegistrationResponse result = RegistrationResponse.from(getResult);
 
     // Then
     assertAll(

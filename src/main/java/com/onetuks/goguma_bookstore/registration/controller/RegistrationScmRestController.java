@@ -4,19 +4,18 @@ import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationInspectionRequest;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationEditResponse;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationGetResponse.RegistrationGetResponses;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationInspectionResponse;
-import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnGetResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse;
+import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse.RegistrationResponses;
 import com.onetuks.goguma_bookstore.registration.service.IsbnWebClientService;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnGetResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,19 +58,19 @@ public class RegistrationScmRestController {
    * @param detailImgFiles : 신간 모의 이미지 파일
    * @param previewFiles : 신간 미리보기 이미지 파일
    * @param sampleFile : 신간 샘플 파일
-   * @return RegistrationEditResponse
+   * @return RegistrationResponse
    */
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationEditResponse> addRegistration(
+  public ResponseEntity<RegistrationResponse> addRegistration(
       @AuthorId Long authorId,
-      @RequestBody @Valid RegistrationEditRequest request,
+      @RequestBody @Valid RegistrationCreateRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
       @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
       @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
       @RequestPart(name = "sample-file") MultipartFile sampleFile) {
-    RegistrationEditResult result =
+    RegistrationResult result =
         registrationScmService.createRegistration(
             authorId,
             request.to(),
@@ -79,7 +78,7 @@ public class RegistrationScmRestController {
             CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
             CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
             CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
-    RegistrationEditResponse response = RegistrationEditResponse.from(result);
+    RegistrationResponse response = RegistrationResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -101,7 +100,8 @@ public class RegistrationScmRestController {
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationInspectionRequest request) {
     RegistrationInspectionResult result =
-        registrationScmService.updateRegistrationApproval(registrationId, request.to());
+        registrationScmService.updateRegistrationApproval(
+            registrationId, request.approvalResult(), request.approvalMemo());
     RegistrationInspectionResponse response = RegistrationInspectionResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -115,21 +115,21 @@ public class RegistrationScmRestController {
    * @param request : 신간 등록 수정 요청 정보
    * @param coverImgFile : 신간 표지 이미지 파일
    * @param sampleFile : 신간 샘플 파일
-   * @return RegistrationEditResponse
+   * @return RegistrationResponse
    */
   @PatchMapping(
       path = "/{registrationId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationEditResponse> editRegistration(
+  public ResponseEntity<RegistrationResponse> editRegistration(
       @AuthorId Long authorId,
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationEditRequest request,
-      @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
-      @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
-      @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
-      @RequestPart(name = "sample-file") MultipartFile sampleFile) {
-    RegistrationEditResult result =
+      @RequestPart(name = "cover-img-file", required = false) MultipartFile coverImgFile,
+      @RequestPart(name = "detail-img-files", required = false) MultipartFile[] detailImgFiles,
+      @RequestPart(name = "preview-files", required = false) MultipartFile[] previewFiles,
+      @RequestPart(name = "sample-file", required = false) MultipartFile sampleFile) {
+    RegistrationResult result =
         registrationScmService.updateRegistration(
             registrationId,
             request.to(),
@@ -137,7 +137,7 @@ public class RegistrationScmRestController {
             CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
             CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
             CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
-    RegistrationEditResponse response = RegistrationEditResponse.from(result);
+    RegistrationResponse response = RegistrationResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -162,14 +162,13 @@ public class RegistrationScmRestController {
    *
    * @param authorId : 로그인한 작가 아이디
    * @param registrationId : 신간 등록 아이디
-   * @return RegistrationGetResponse
+   * @return RegistrationResponse
    */
   @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationGetResponse> getRegistration(
+  public ResponseEntity<RegistrationResponse> getRegistration(
       @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
-    RegistrationGetResult result =
-        registrationScmService.readRegistration(authorId, registrationId);
-    RegistrationGetResponse response = RegistrationGetResponse.from(result);
+    RegistrationResult result = registrationScmService.readRegistration(authorId, registrationId);
+    RegistrationResponse response = RegistrationResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -178,14 +177,14 @@ public class RegistrationScmRestController {
    * 신간 등록 전체 조회 - 관리자용
    *
    * @param adminId : 로그인한 관리자 아이디
-   * @return RegistrationGetResponses
+   * @return RegistrationResponses
    */
   @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationGetResponses> getAllRegistrations(
+  public ResponseEntity<RegistrationResponses> getAllRegistrations(
       @AdminId Long adminId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
-    Page<RegistrationGetResult> result = registrationScmService.readAllRegistrations(pageable);
-    RegistrationGetResponses response = RegistrationGetResponses.from(result);
+    Page<RegistrationResult> result = registrationScmService.readAllRegistrations(pageable);
+    RegistrationResponses response = RegistrationResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -195,16 +194,16 @@ public class RegistrationScmRestController {
    *
    * @param loginAuthorId : 로그인한 작가 아이디
    * @param authorId : 작가 아이디
-   * @return RegistrationGetResponses
+   * @return RegistrationResponses
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationGetResponses> getAllRegistrationsByAuthor(
+  public ResponseEntity<RegistrationResponses> getAllRegistrationsByAuthor(
       @AuthorId Long loginAuthorId,
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
-    Page<RegistrationGetResult> result =
+    Page<RegistrationResult> result =
         registrationScmService.readAllRegistrationsByAuthor(loginAuthorId, authorId, pageable);
-    RegistrationGetResponses response = RegistrationGetResponses.from(result);
+    RegistrationResponses response = RegistrationResponses.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
@@ -213,13 +212,13 @@ public class RegistrationScmRestController {
    * ISBN으로 책 정보 조회
    *
    * @param isbn : ISBN
-   * @return RegistrationIsbnGetResponse
+   * @return RegistrationIsbnResponse
    */
   @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationIsbnGetResponse> getBookInfoByIsbn(
+  public ResponseEntity<RegistrationIsbnResponse> getBookInfoByIsbn(
       @PathVariable(name = "isbn") String isbn) {
-    RegistrationIsbnGetResult result = isbnWebClientService.requestData(isbn);
-    RegistrationIsbnGetResponse response = RegistrationIsbnGetResponse.from(result);
+    RegistrationIsbnResult result = isbnWebClientService.requestData(isbn);
+    RegistrationIsbnResponse response = RegistrationIsbnResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

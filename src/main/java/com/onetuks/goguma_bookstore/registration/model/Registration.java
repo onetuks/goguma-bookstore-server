@@ -119,9 +119,7 @@ public class Registration {
 
   public Registration changeRegistration(
       BookConceptualInfo bookConceptualInfo,
-      BookPhysicalInfo bookPhysicalInfo,
       BookPriceInfo bookPriceInfo,
-      String publisher,
       Long stockCount,
       CoverImgFile coverImgFile,
       List<DetailImgFile> detailImgFiles,
@@ -129,14 +127,12 @@ public class Registration {
       SampleFile sampleFile) {
     this.approvalInfo = ApprovalInfo.init();
     this.bookConceptualInfo = bookConceptualInfo;
-    this.bookPhysicalInfo = bookPhysicalInfo;
     this.bookPriceInfo = bookPriceInfo;
-    this.publisher = publisher;
     this.stockCount = stockCount;
-    this.coverImgFile = coverImgFile;
-    this.detailImgFiles = detailImgFiles;
-    this.previewFiles = previewFiles;
-    this.sampleFile = sampleFile;
+    this.coverImgFile = coverImgFile.isNullFile() ? this.coverImgFile : coverImgFile;
+    this.detailImgFiles = detailImgFiles.isEmpty() ? this.detailImgFiles : detailImgFiles;
+    this.previewFiles = previewFiles.isEmpty() ? this.previewFiles : previewFiles;
+    this.sampleFile = sampleFile.isNullFile() ? this.sampleFile : sampleFile;
     return this;
   }
 

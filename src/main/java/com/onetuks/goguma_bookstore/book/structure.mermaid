@@ -1,0 +1,24 @@
+classDiagram
+
+    class RegistrationScmService {
+        +createRegistration(id, create)
+        +updateRegistrationApproval(result, memo)
+        +updateRegistrationInfo(id, edit)
+    }
+    class RegistrationJpaRepository
+    class BookService
+    class BookScmService {
+        +updateBook(id, edit)
+    }
+    class BookRegistrationService {
+        +createBook(create)
+    }
+    class BookJpaRepository
+
+    RegistrationScmService --> RegistrationJpaRepository
+    BookService --> BookJpaRepository
+    BookScmService --> BookJpaRepository
+    BookRegistrationService --> BookJpaRepository
+
+    RegistrationScmService --> BookRegistrationService : BookCreateParam
+    BookScmService --> RegistrationScmService : RegistrationEditParam

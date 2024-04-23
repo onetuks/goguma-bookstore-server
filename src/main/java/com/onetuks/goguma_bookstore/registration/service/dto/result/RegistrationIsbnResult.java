@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.registration.service.dto.result;
 
 import java.util.List;
 
-public record RegistrationIsbnGetResult(
+public record RegistrationIsbnResult(
     String TOTAL_COUNT, List<IsbnDataResult> docs, String PAGE_NO) {
 
   public record IsbnDataResult(

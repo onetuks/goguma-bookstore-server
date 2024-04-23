@@ -9,11 +9,11 @@ import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,9 +41,9 @@ public class RegistrationScmService {
   }
 
   @Transactional
-  public RegistrationEditResult createRegistration(
+  public RegistrationResult createRegistration(
       long authorId,
-      RegistrationEditParam param,
+      RegistrationCreateParam param,
       CustomFile coverImgFile,
       List<CustomFile> detailImgFiles,
       List<CustomFile> previewFiles,
@@ -55,7 +55,7 @@ public class RegistrationScmService {
     detailImgFiles.forEach(s3Service::putFile);
     previewFiles.forEach(s3Service::putFile);
 
-    return RegistrationEditResult.from(
+    return RegistrationResult.from(
         registrationJpaRepository.save(
             Registration.builder()
                 .author(authorService.getAuthorById(authorId))
@@ -91,12 +91,11 @@ public class RegistrationScmService {
 
   @Transactional
   public RegistrationInspectionResult updateRegistrationApproval(
-      long registrationId, RegistrationInspectionParam param) {
+      long registrationId, boolean approvalResult, String approvalMemo) {
     Registration updatedRegistration =
-        getRegistrationById(registrationId)
-            .changeApprovalInfo(param.approvalResult(), param.approvalMemo());
+        getRegistrationById(registrationId).changeApprovalInfo(approvalResult, approvalMemo);
 
-    if (param.approvalResult()) {
+    if (approvalResult) {
       bookRegistrationService.createBook(updatedRegistration);
     }
 
@@ -104,49 +103,31 @@ public class RegistrationScmService {
   }
 
   @Transactional
-  public RegistrationEditResult updateRegistration(
+  public RegistrationResult updateRegistration(
       long registrationId,
       RegistrationEditParam param,
       CustomFile coverImgFile,
       List<CustomFile> detailImgFiles,
       List<CustomFile> previewFiles,
       CustomFile sampleFile) {
-    checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
-
     Registration registration = getRegistrationById(registrationId);
-    registration
-        .getDetailImgFiles()
-        .forEach(detailImgFile -> s3Service.deleteFile(detailImgFile.getDetailImgUri()));
-    registration
-        .getPreviewFiles()
-        .forEach(previewFile -> s3Service.deleteFile(previewFile.getPreviewFileUri()));
 
-    s3Service.putFile(coverImgFile);
-    s3Service.putFile(sampleFile);
-    detailImgFiles.forEach(s3Service::putFile);
-    previewFiles.forEach(s3Service::putFile);
+    replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, sampleFile, registration);
 
-    return RegistrationEditResult.from(
+    return RegistrationResult.from(
         registration.changeRegistration(
             BookConceptualInfo.builder()
-                .title(param.title())
+                .title(registration.getBookConceptualInfo().getTitle())
                 .oneLiner(param.oneLiner())
                 .summary(param.summary())
                 .categories(param.categories())
-                .isbn(param.isbn())
-                .build(),
-            BookPhysicalInfo.builder()
-                .height(param.height())
-                .width(param.width())
-                .coverType(param.coverType())
-                .pageCount(param.pageCount())
+                .isbn(registration.getBookConceptualInfo().getIsbn())
                 .build(),
             BookPriceInfo.builder()
                 .regularPrice(param.regularPrice())
                 .purchasePrice(param.purchasePrice())
                 .promotion(param.promotion())
                 .build(),
-            param.publisher(),
             param.stockCount(),
             coverImgFile.toCoverImgFile(),
             detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList(),
@@ -169,23 +150,23 @@ public class RegistrationScmService {
   }
 
   @Transactional(readOnly = true)
-  public RegistrationGetResult readRegistration(long authorId, long registrationId) {
+  public RegistrationResult readRegistration(long authorId, long registrationId) {
     Registration registration = getRegistrationById(registrationId);
 
     if (registration.getAuthor().getAuthorId() != authorId) {
       throw new AccessDeniedException("해당 신간등록을 조회할 권한이 없습니다.");
     }
 
-    return RegistrationGetResult.from(registration);
+    return RegistrationResult.from(registration);
   }
 
   @Transactional(readOnly = true)
-  public Page<RegistrationGetResult> readAllRegistrations(Pageable pageable) {
-    return registrationJpaRepository.findAll(pageable).map(RegistrationGetResult::from);
+  public Page<RegistrationResult> readAllRegistrations(Pageable pageable) {
+    return registrationJpaRepository.findAll(pageable).map(RegistrationResult::from);
   }
 
   @Transactional(readOnly = true)
-  public Page<RegistrationGetResult> readAllRegistrationsByAuthor(
+  public Page<RegistrationResult> readAllRegistrationsByAuthor(
       long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
       throw new AccessDeniedException("해당 작가의 신간등록을 조회할 권한이 없습니다.");
@@ -193,7 +174,14 @@ public class RegistrationScmService {
 
     return registrationJpaRepository
         .findByAuthorAuthorId(authorId, pageable)
-        .map(RegistrationGetResult::from);
+        .map(RegistrationResult::from);
+  }
+
+  @Transactional(readOnly = true)
+  public Registration getRegistrationByIsbn(String isbn) {
+    return registrationJpaRepository
+        .findByBookConceptualInfoIsbn(isbn)
+        .orElseThrow(() -> new EntityNotFoundException("해당 ISBN을 가진 신간등록이 존재하지 않습니다."));
   }
 
   private Registration getRegistrationById(long registrationId) {
@@ -212,6 +200,32 @@ public class RegistrationScmService {
         || detailImgFiles.isEmpty()
         || previewFiles.isEmpty()) {
       throw new IllegalArgumentException("신간 등록에 필요한 파일이 존재하지 않습니다.");
+    }
+  }
+
+  private void replaceIfValidFile(
+      CustomFile coverImgFile,
+      List<CustomFile> detailImgFiles,
+      List<CustomFile> previewFiles,
+      CustomFile sampleFile,
+      Registration registration) {
+    if (!coverImgFile.isNullFile()) {
+      s3Service.putFile(coverImgFile);
+    }
+    if (!sampleFile.isNullFile()) {
+      s3Service.putFile(sampleFile);
+    }
+    if (!detailImgFiles.isEmpty()) {
+      registration
+          .getDetailImgFiles()
+          .forEach(detailImgFile -> s3Service.deleteFile(detailImgFile.getDetailImgUri()));
+      detailImgFiles.forEach(s3Service::putFile);
+    }
+    if (!previewFiles.isEmpty()) {
+      registration
+          .getPreviewFiles()
+          .forEach(previewFile -> s3Service.deleteFile(previewFile.getPreviewFileUri()));
+      previewFiles.forEach(s3Service::putFile);
     }
   }
 }

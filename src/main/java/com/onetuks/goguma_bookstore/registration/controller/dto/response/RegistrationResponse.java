@@ -1,11 +1,11 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
 import com.onetuks.goguma_bookstore.book.model.vo.Category;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
-public record RegistrationGetResponse(
+public record RegistrationResponse(
     long registrationId,
     boolean approvalResult,
     String approvalMemo,
@@ -28,8 +28,8 @@ public record RegistrationGetResponse(
     List<String> previewUrls,
     String sampleUrl) {
 
-  public static RegistrationGetResponse from(RegistrationGetResult result) {
-    return new RegistrationGetResponse(
+  public static RegistrationResponse from(RegistrationResult result) {
+    return new RegistrationResponse(
         result.registrationId(),
         result.approvalResult(),
         result.approvalMemo(),
@@ -53,10 +53,10 @@ public record RegistrationGetResponse(
         result.sampleUrl());
   }
 
-  public record RegistrationGetResponses(Page<RegistrationGetResponse> responses) {
+  public record RegistrationResponses(Page<RegistrationResponse> responses) {
 
-    public static RegistrationGetResponses from(Page<RegistrationGetResult> results) {
-      return new RegistrationGetResponses(results.map(RegistrationGetResponse::from));
+    public static RegistrationResponses from(Page<RegistrationResult> results) {
+      return new RegistrationResponses(results.map(RegistrationResponse::from));
     }
   }
 }

@@ -18,14 +18,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class RegistrationEditResultTest extends IntegrationTest {
+class RegistrationResultTest extends IntegrationTest {
 
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
 
   @Test
-  @DisplayName("신간등록 엔티티에서 신간등록 수정 결과 객체로 변환한다.")
+  @DisplayName("신간등록 엔티티에서 신간등록 조회 결과 객체로 변환한다.")
   void fromTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
@@ -33,7 +33,7 @@ class RegistrationEditResultTest extends IntegrationTest {
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    RegistrationEditResult result = RegistrationEditResult.from(save);
+    RegistrationResult result = RegistrationResult.from(save);
 
     // Then
     assertAll(

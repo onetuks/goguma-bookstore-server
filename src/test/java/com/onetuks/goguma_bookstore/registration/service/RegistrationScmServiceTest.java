@@ -21,13 +21,13 @@ import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
 import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
+import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationInspectionParam;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationEditResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationGetResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
+import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,15 +47,16 @@ class RegistrationScmServiceTest extends IntegrationTest {
   @Autowired private BookJpaRepository bookJpaRepository;
 
   private Author author;
-  private RegistrationEditParam param;
+  private RegistrationCreateParam createParam;
+  private RegistrationEditParam editParam;
 
   @BeforeEach
   void setUp() {
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
     author = authorJpaRepository.save(AuthorFixture.create(member));
 
-    param =
-        new RegistrationEditParam(
+    createParam =
+        new RegistrationCreateParam(
             "신간 제목",
             "한줄 요약",
             "줄거리",
@@ -70,6 +71,9 @@ class RegistrationScmServiceTest extends IntegrationTest {
             true,
             "출판사A",
             100);
+    editParam =
+        new RegistrationEditParam(
+            "한줄 요약", "줄거리", List.of(Category.NOVEL, Category.ESSEY), 20_000, 10_000, true, 100);
   }
 
   @Test
@@ -83,9 +87,14 @@ class RegistrationScmServiceTest extends IntegrationTest {
     CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
-    RegistrationEditResult result =
+    RegistrationResult result =
         registrationScmService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
+            author.getAuthorId(),
+            createParam,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
+            sampleFile);
 
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
@@ -99,20 +108,20 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () -> assertThat(result.title()).isEqualTo(param.title()),
-        () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
-        () -> assertThat(result.summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.categories()).isEqualTo(param.categories()),
-        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
-        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
-        () -> assertThat(result.height()).isEqualTo(param.height()),
-        () -> assertThat(result.width()).isEqualTo(param.width()),
-        () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
-        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
-        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
+        () -> assertThat(result.title()).isEqualTo(createParam.title()),
+        () -> assertThat(result.oneLiner()).isEqualTo(createParam.oneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(createParam.summary()),
+        () -> assertThat(result.categories()).isEqualTo(createParam.categories()),
+        () -> assertThat(result.publisher()).isEqualTo(createParam.publisher()),
+        () -> assertThat(result.isbn()).isEqualTo(createParam.isbn()),
+        () -> assertThat(result.height()).isEqualTo(createParam.height()),
+        () -> assertThat(result.width()).isEqualTo(createParam.width()),
+        () -> assertThat(result.coverType()).isEqualTo(createParam.coverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(createParam.pageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(createParam.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(createParam.purchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(createParam.stockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(createParam.promotion()),
         () -> assertThat(savedCoverImgFile).exists(),
         () -> assertThat(savedDetailImgFiles).hasSize(10),
         () -> assertThat(savedPreviewFiles).hasSize(25),
@@ -135,7 +144,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () ->
             registrationScmService.createRegistration(
                 author.getAuthorId(),
-                param,
+                createParam,
                 coverImgFile,
                 detailImgFiles,
                 previewFiles,
@@ -158,7 +167,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () ->
             registrationScmService.createRegistration(
                 author.getAuthorId(),
-                param,
+                createParam,
                 coverImgFile,
                 detailImgFiles,
                 previewFiles,
@@ -181,7 +190,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () ->
             registrationScmService.createRegistration(
                 author.getAuthorId(),
-                param,
+                createParam,
                 coverImgFile,
                 detailImgFiles,
                 previewFiles,
@@ -204,7 +213,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () ->
             registrationScmService.createRegistration(
                 author.getAuthorId(),
-                param,
+                createParam,
                 coverImgFile,
                 detailImgFiles,
                 previewFiles,
@@ -216,23 +225,28 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void updateRegistrationApprovalTest() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
-    RegistrationInspectionParam param = new RegistrationInspectionParam(true, "검수 완료");
+    boolean approvalResult = true;
+    String approvalMemo = "검수 완료";
 
     // When
     RegistrationInspectionResult result =
-        registrationScmService.updateRegistrationApproval(save.getRegistrationId(), param);
+        registrationScmService.updateRegistrationApproval(
+            save.getRegistrationId(), approvalResult, approvalMemo);
 
     // Then
     boolean existsBook =
-        bookJpaRepository
-            .findByBookConceptualInfoIsbn(save.getBookConceptualInfo().getIsbn())
-            .isPresent();
+        bookJpaRepository.findAll().stream()
+            .anyMatch(
+                book ->
+                    Objects.equals(
+                        book.getBookConceptualInfo().getIsbn(),
+                        save.getBookConceptualInfo().getIsbn()));
 
     assertThat(existsBook).isTrue();
     assertAll(
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
-        () -> assertThat(result.approvalResult()).isTrue(),
-        () -> assertThat(result.approvalMemo()).isEqualTo(param.approvalMemo()));
+        () -> assertThat(result.approvalResult()).isEqualTo(approvalResult),
+        () -> assertThat(result.approvalMemo()).isEqualTo(approvalMemo));
   }
 
   @Test
@@ -247,10 +261,10 @@ class RegistrationScmServiceTest extends IntegrationTest {
     CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
-    RegistrationEditResult result =
+    RegistrationResult result =
         registrationScmService.updateRegistration(
             save.getRegistrationId(),
-            param,
+            editParam,
             coverImgFile,
             detailImgFiles,
             previewFiles,
@@ -268,24 +282,73 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () -> assertThat(result.title()).isEqualTo(param.title()),
-        () -> assertThat(result.oneLiner()).isEqualTo(param.oneLiner()),
-        () -> assertThat(result.summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.categories()).isEqualTo(param.categories()),
-        () -> assertThat(result.publisher()).isEqualTo(param.publisher()),
-        () -> assertThat(result.isbn()).isEqualTo(param.isbn()),
-        () -> assertThat(result.height()).isEqualTo(param.height()),
-        () -> assertThat(result.width()).isEqualTo(param.width()),
-        () -> assertThat(result.coverType()).isEqualTo(param.coverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(param.pageCount()),
-        () -> assertThat(result.regularPrice()).isEqualTo(param.regularPrice()),
-        () -> assertThat(result.purchasePrice()).isEqualTo(param.purchasePrice()),
-        () -> assertThat(result.stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.promotion()).isEqualTo(param.promotion()),
+        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
+        () -> assertThat(result.categories()).isEqualTo(editParam.categories()),
+        () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(editParam.promotion()),
         () -> assertThat(savedCoverImgFile).exists(),
         () -> assertThat(savedDetailImgFiles).hasSize(10),
         () -> assertThat(savedPreviewFiles).hasSize(25),
         () -> assertThat(savedSampleFile).exists());
+  }
+
+  @Test
+  @DisplayName("신간등록을 수정할 때 사용자가 제공하지 않은 이미지 정보는 기존 데이터를 유지한다.")
+  void updateRegistration_NoFiles_Test() {
+    // Given
+    Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
+    CustomFile coverImgFile = CustomFileFixture.createNullFile();
+    List<CustomFile> detailImgFiles = List.of();
+    List<CustomFile> previewFiles = List.of();
+    CustomFile sampleFile = CustomFileFixture.createNullFile();
+
+    // When
+    RegistrationResult result =
+        registrationScmService.updateRegistration(
+            save.getRegistrationId(),
+            editParam,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
+            sampleFile);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.registrationId()).isPositive(),
+        () -> assertThat(result.approvalResult()).isFalse(),
+        () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
+        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
+        () -> assertThat(result.categories()).isEqualTo(editParam.categories()),
+        () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
+        () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
+        () -> assertThat(result.promotion()).isEqualTo(editParam.promotion()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(save.getCoverImgUrl()),
+        () ->
+            assertThat(result.detailImgUrls())
+                .containsExactlyInAnyOrderElementsOf(save.getDetailImgUrls()),
+        () ->
+            assertThat(result.previewUrls())
+                .containsExactlyInAnyOrderElementsOf(save.getPreviewUrls()),
+        () -> assertThat(result.sampleUrl()).isEqualTo(save.getSampleUrl()));
   }
 
   @Test
@@ -317,9 +380,14 @@ class RegistrationScmServiceTest extends IntegrationTest {
         CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
     CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
-    RegistrationEditResult result =
+    RegistrationResult result =
         registrationScmService.createRegistration(
-            author.getAuthorId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
+            author.getAuthorId(),
+            createParam,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
+            sampleFile);
 
     // When & Then
     assertThrows(
@@ -347,7 +415,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
 
     // When
-    RegistrationGetResult result =
+    RegistrationResult result =
         registrationScmService.readRegistration(author.getAuthorId(), save.getRegistrationId());
 
     // Then
@@ -401,7 +469,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
     // When
-    Page<RegistrationGetResult> results =
+    Page<RegistrationResult> results =
         registrationScmService.readAllRegistrations(PageRequest.of(0, 10));
 
     // Then
@@ -422,10 +490,8 @@ class RegistrationScmServiceTest extends IntegrationTest {
     Author newAuthor = authorJpaRepository.save(AuthorFixture.create(member));
     registrationJpaRepository.save(RegistrationFixture.create(newAuthor));
 
-    List<Registration> all = registrationJpaRepository.findAll();
-
     // When
-    Page<RegistrationGetResult> results =
+    Page<RegistrationResult> results =
         registrationScmService.readAllRegistrationsByAuthor(
             author.getAuthorId(), author.getAuthorId(), PageRequest.of(0, 10));
 
