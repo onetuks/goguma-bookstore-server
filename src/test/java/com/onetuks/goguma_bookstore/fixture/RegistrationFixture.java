@@ -6,7 +6,7 @@ import static com.onetuks.goguma_bookstore.global.vo.file.FileType.COVERS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.DETAILS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PREVIEWS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.SAMPLES;
-import static com.onetuks.goguma_bookstore.util.UniqueValueProvider.createIsbn;
+import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createIsbn;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;

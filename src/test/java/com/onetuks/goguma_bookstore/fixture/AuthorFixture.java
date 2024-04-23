@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.fixture;
 
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PROFILES;
-import static com.onetuks.goguma_bookstore.util.UniqueValueProvider.createBusinessNumber;
-import static com.onetuks.goguma_bookstore.util.UniqueValueProvider.createMailOrderSalesNumber;
+import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createBusinessNumber;
+import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createMailOrderSalesNumber;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;

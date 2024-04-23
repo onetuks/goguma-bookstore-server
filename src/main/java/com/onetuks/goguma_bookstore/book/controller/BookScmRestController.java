@@ -71,6 +71,14 @@ public class BookScmRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 작가 별 등록 도서 조회
+   *
+   * @param loginAuthorId : 로그인한 작가 아이디
+   * @param authorId : 작가 아이디
+   * @param pageable : 페이지 정보
+   * @return BookResponses
+   */
   @GetMapping(path = "/scm/books?authorId=xx")
   public ResponseEntity<BookResponses> getAllBooksByAuthor(
       @AuthorId Long loginAuthorId,
