@@ -36,6 +36,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "books")
 public class Book {
 
+  private static final long NO_STOCK = 0L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "book_id", nullable = false)
@@ -99,6 +101,19 @@ public class Book {
     this.detailImgFiles = detailImgFiles;
     this.previewFiles = previewFiles;
     this.bookStatics = BookStatics.init(this);
+  }
+
+  public List<String> getDetailImgUrls() {
+    return detailImgFiles.stream().map(DetailImgFile::getDetailImgUrl).toList();
+  }
+
+  public List<String> getPreviewUrls() {
+    return previewFiles.stream().map(PreviewFile::getPreviewUrl).toList();
+  }
+
+  public Book changeStockCount(long newStockCount) {
+    this.stockCount = stockCount > NO_STOCK ? NO_STOCK : newStockCount;
+    return this;
   }
 
   @Override

@@ -222,7 +222,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("신간등록을 검수 승인하면 검수 결과가 변경되고, 도서 등록이 완료된다.")
-  void updateRegistrationApprovalTest() {
+  void updateRegistrationApprovalInfoTest() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
     boolean approvalResult = true;
@@ -230,7 +230,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
     // When
     RegistrationInspectionResult result =
-        registrationScmService.updateRegistrationApproval(
+        registrationScmService.updateRegistrationApprovalInfo(
             save.getRegistrationId(), approvalResult, approvalMemo);
 
     // Then

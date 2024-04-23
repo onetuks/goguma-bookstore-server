@@ -100,7 +100,7 @@ public class RegistrationScmRestController {
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationInspectionRequest request) {
     RegistrationInspectionResult result =
-        registrationScmService.updateRegistrationApproval(
+        registrationScmService.updateRegistrationApprovalInfo(
             registrationId, request.approvalResult(), request.approvalMemo());
     RegistrationInspectionResponse response = RegistrationInspectionResponse.from(result);
 

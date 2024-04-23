@@ -90,7 +90,7 @@ public class RegistrationScmService {
   }
 
   @Transactional
-  public RegistrationInspectionResult updateRegistrationApproval(
+  public RegistrationInspectionResult updateRegistrationApprovalInfo(
       long registrationId, boolean approvalResult, String approvalMemo) {
     Registration updatedRegistration =
         getRegistrationById(registrationId).changeApprovalInfo(approvalResult, approvalMemo);
