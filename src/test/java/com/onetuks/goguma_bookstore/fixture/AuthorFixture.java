@@ -1,27 +1,25 @@
 package com.onetuks.goguma_bookstore.fixture;
 
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PROFILES;
+import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createAuthorNickname;
 import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createBusinessNumber;
 import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createMailOrderSalesNumber;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
+import com.onetuks.goguma_bookstore.author.model.embedded.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.util.UUIDProvider;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 public class AuthorFixture {
-
-  private static final Random random = new Random();
 
   public static Author create(Member member) {
     return Author.builder()
         .member(member)
         .profileImgFile(CustomFileFixture.createNullFile().toProfileImgFile())
-        .nickname("빠선생님" + UUIDProvider.getUUID())
+        .nickname(createAuthorNickname() + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
         .instagramUrl("https://www.instagram.com/pannibottle" + UUIDProvider.getUUID())
         .enrollmentInfo(
@@ -39,7 +37,7 @@ public class AuthorFixture {
         .member(member)
         .profileImgFile(
             CustomFileFixture.createFile(member.getMemberId(), PROFILES).toProfileImgFile())
-        .nickname("빠선생님" + UUIDProvider.getUUID())
+        .nickname(createAuthorNickname() + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
         .enrollmentInfo(
             EnrollmentInfo.builder()
@@ -59,7 +57,7 @@ public class AuthorFixture {
         System.currentTimeMillis(),
         isAuthorMember ? RoleType.AUTHOR : RoleType.USER,
         "profile_" + authorId + ".png",
-        "빠선생님" + authorId,
+        createAuthorNickname() + authorId,
         "유튜브 대통령" + authorId,
         "https://www.instagram.com/pannibottle" + authorId,
         "escrow-service" + authorId + ".pdf",
