@@ -71,8 +71,7 @@ public class Author {
     this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;
-    this.enrollmentInfo =
-        Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.builder().build());
+    this.enrollmentInfo = Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.init());
     this.authorStatics = AuthorStatics.builder().author(this).build();
   }
 
@@ -84,12 +83,12 @@ public class Author {
     return this.profileImgFile.getProfileImgUrl();
   }
 
-  public Author updateProfileImgFile(ProfileImgFile profileImgFile) {
+  public Author changeProfileImgFile(ProfileImgFile profileImgFile) {
     this.profileImgFile = profileImgFile;
     return this;
   }
 
-  public Author updateAuthorProfile(String nickname, String introduction, String instagramUrl) {
+  public Author changeAuthorProfile(String nickname, String introduction, String instagramUrl) {
     this.nickname = new Nickname(nickname);
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;

@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import java.util.List;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class BookConceptualInfo {
   @Column(name = "categories", nullable = false)
   private List<Category> categories;
 
-  @Column(name = "isbn", nullable = false)
+  @Column(name = "isbn", nullable = false, unique = true)
   private String isbn;
 
   @Builder
@@ -41,13 +42,24 @@ public class BookConceptualInfo {
     this.isbn = isbn;
   }
 
-  public BookConceptualInfo updateBookConceptualInfo(
-      String title, String oneLiner, String summary, List<Category> categories, String isbn) {
-    this.title = title;
-    this.oneLiner = oneLiner;
-    this.summary = summary;
-    this.categories = categories;
-    this.isbn = isbn;
-    return this;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookConceptualInfo that = (BookConceptualInfo) o;
+    return Objects.equals(title, that.title)
+        && Objects.equals(oneLiner, that.oneLiner)
+        && Objects.equals(summary, that.summary)
+        && Objects.equals(categories, that.categories)
+        && Objects.equals(isbn, that.isbn);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(title, oneLiner, summary, categories, isbn);
   }
 }

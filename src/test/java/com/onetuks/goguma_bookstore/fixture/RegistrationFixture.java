@@ -6,6 +6,7 @@ import static com.onetuks.goguma_bookstore.global.vo.file.FileType.COVERS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.DETAILS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PREVIEWS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.SAMPLES;
+import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createIsbn;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
@@ -64,7 +65,7 @@ public class RegistrationFixture {
         .oneLiner("대 빠니보틀 여행기")
         .summary("미국 갔다가 남극 직전에 돌아옴")
         .categories(List.of(CARTOON, ESSEY))
-        .isbn("978-89-1234-567-8")
+        .isbn(createIsbn())
         .build();
   }
 

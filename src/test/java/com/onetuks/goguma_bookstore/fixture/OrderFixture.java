@@ -15,7 +15,7 @@ public class OrderFixture {
         .address("경기도 용인시")
         .addressDetail("수지구 풍덕천동")
         .deliveryFee(3_500L)
-        .totalPrice(book.getPrice() + 3_500L)
+        .totalPrice(book.getBookPriceInfo().getPurchasePrice() + 3_500L)
         .paymentClient(PaymentClient.KAKAO)
         .cashReceiptType(CashReceiptType.PERSON)
         .cashReceiptNumber("1234-1234")

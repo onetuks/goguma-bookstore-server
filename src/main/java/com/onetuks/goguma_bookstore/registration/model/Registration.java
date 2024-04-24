@@ -83,7 +83,7 @@ public class Registration {
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
     this.author = author;
-    this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.builder().build());
+    this.approvalInfo = Objects.requireNonNullElse(approvalInfo, ApprovalInfo.init());
     this.bookConceptualInfo = bookConceptualInfo;
     this.bookPhysicalInfo = bookPhysicalInfo;
     this.bookPriceInfo = bookPriceInfo;
@@ -111,32 +111,28 @@ public class Registration {
     return sampleFile.getSampleUrl();
   }
 
-  public Registration updateApprovalInfo(boolean approvalResult, String approvalMemo) {
+  public Registration changeApprovalInfo(boolean approvalResult, String approvalMemo) {
     this.approvalInfo =
         ApprovalInfo.builder().approvalResult(approvalResult).approvalMemo(approvalMemo).build();
     return this;
   }
 
-  public Registration updateRegistration(
+  public Registration changeRegistration(
       BookConceptualInfo bookConceptualInfo,
-      BookPhysicalInfo bookPhysicalInfo,
       BookPriceInfo bookPriceInfo,
-      String publisher,
       Long stockCount,
       CoverImgFile coverImgFile,
       List<DetailImgFile> detailImgFiles,
       List<PreviewFile> previewFiles,
       SampleFile sampleFile) {
-    this.approvalInfo = ApprovalInfo.builder().build();
+    this.approvalInfo = ApprovalInfo.init();
     this.bookConceptualInfo = bookConceptualInfo;
-    this.bookPhysicalInfo = bookPhysicalInfo;
     this.bookPriceInfo = bookPriceInfo;
-    this.publisher = publisher;
     this.stockCount = stockCount;
-    this.coverImgFile = coverImgFile;
-    this.detailImgFiles = detailImgFiles;
-    this.previewFiles = previewFiles;
-    this.sampleFile = sampleFile;
+    this.coverImgFile = coverImgFile.isNullFile() ? this.coverImgFile : coverImgFile;
+    this.detailImgFiles = detailImgFiles.isEmpty() ? this.detailImgFiles : detailImgFiles;
+    this.previewFiles = previewFiles.isEmpty() ? this.previewFiles : previewFiles;
+    this.sampleFile = sampleFile.isNullFile() ? this.sampleFile : sampleFile;
     return this;
   }
 

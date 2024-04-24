@@ -3,7 +3,6 @@ package com.onetuks.goguma_bookstore.author.model.vo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,8 +33,15 @@ public class EnrollmentInfo {
       LocalDateTime enrollmentAt) {
     this.businessNumber = businessNumber;
     this.mailOrderSalesNumber = mailOrderSalesNumber;
-    this.enrollmentPassed = Objects.requireNonNullElse(enrollmentPassed, false);
-    this.enrollmentAt = Objects.requireNonNullElse(enrollmentAt, LocalDateTime.now());
+    this.enrollmentPassed = enrollmentPassed;
+    this.enrollmentAt = enrollmentAt;
+  }
+
+  public static EnrollmentInfo init() {
+    return EnrollmentInfo.builder()
+        .enrollmentPassed(false)
+        .enrollmentAt(LocalDateTime.now())
+        .build();
   }
 
   public EnrollmentInfo convertEnrollmentPassedStatus() {

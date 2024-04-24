@@ -183,7 +183,7 @@ class MemberServiceTest extends IntegrationTest {
 
   @Test
   @DisplayName("기본 현금영수증 정보를 수정한다.")
-  void updateDefaultCashReceiptInfoTest() {
+  void changeDefaultCashReceiptInfoTest() {
     // Given
     Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     MemberDefaultCashReceiptEditParam param =

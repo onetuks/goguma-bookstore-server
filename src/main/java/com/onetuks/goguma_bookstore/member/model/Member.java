@@ -113,27 +113,27 @@ public class Member {
     return getRoleType();
   }
 
-  public Member updateNickname(String nickname) {
+  public Member changeNickname(String nickname) {
     this.nickname = new Nickname(nickname);
     return this;
   }
 
-  public Member updateAlarmPermission(boolean alarmPermission) {
+  public Member changeAlarmPermission(boolean alarmPermission) {
     this.alarmPermission = alarmPermission;
     return this;
   }
 
-  public Member updateProfileImgFile(ProfileImgFile profileImgFile) {
+  public Member changeProfileImgFile(ProfileImgFile profileImgFile) {
     this.profileImgFile = profileImgFile;
     return this;
   }
 
-  public Member updateDefaultAddressInfo(String defaultAddress, String defaultAddressDetail) {
+  public Member changeDefaultAddressInfo(String defaultAddress, String defaultAddressDetail) {
     this.defaultAddressInfo = new DefaultAddressInfo(defaultAddress, defaultAddressDetail);
     return this;
   }
 
-  public Member updateDefaultCashReceiptInfo(
+  public Member changeDefaultCashReceiptInfo(
       CashReceiptType defaultCashReceiptType, String defaultCashReceiptNumber) {
     this.defaultCashReceiptInfo =
         new DefaultCashReceiptInfo(defaultCashReceiptType, defaultCashReceiptNumber);
