@@ -21,7 +21,7 @@ public class CustomFileFixture {
   }
 
   public static List<CustomFile> createFiles(long id, FileType fileType) {
-    int count = fileType == FileType.DETAILS ? 10 : 25;
+    int count = fileType == FileType.PREVIEWS ? 25 : 10;
 
     MultipartFile[] multipartFiles =
         IntStream.range(0, count)
