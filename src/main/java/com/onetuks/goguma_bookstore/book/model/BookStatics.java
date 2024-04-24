@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,13 +35,31 @@ public class BookStatics {
   @Column(name = "view_count", nullable = false)
   private Long viewCount;
 
-  protected BookStatics(Book book, Long favoriteCount, Long viewCount) {
+  @Column(name = "sales_count", nullable = false)
+  private Long salesCount;
+
+  @Column(name = "review_count", nullable = false)
+  private Long reviewCount;
+
+  @Column(name = "review_score", nullable = false)
+  private Float reviewScore;
+
+  public BookStatics(
+      Book book,
+      Long favoriteCount,
+      Long viewCount,
+      Long salesCount,
+      Long reviewCount,
+      Float reviewScore) {
     this.book = book;
-    this.favoriteCount = (Long) Objects.requireNonNullElse(favoriteCount, 0);
-    this.viewCount = (Long) Objects.requireNonNullElse(viewCount, 0);
+    this.favoriteCount = favoriteCount;
+    this.viewCount = viewCount;
+    this.salesCount = salesCount;
+    this.reviewCount = reviewCount;
+    this.reviewScore = reviewScore;
   }
 
   public static BookStatics init(Book book) {
-    return new BookStatics(book, 0L, 0L);
+    return new BookStatics(book, 0L, 0L, 0L, 0L, 0F);
   }
 }
