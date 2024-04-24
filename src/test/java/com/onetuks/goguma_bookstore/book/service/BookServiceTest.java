@@ -8,7 +8,7 @@ import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
-import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
+import com.onetuks.goguma_bookstore.book.service.dto.result.BookGetResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.BookFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
@@ -46,19 +46,19 @@ class BookServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("도서 아이디로 도서를 조회한다.")
+  @DisplayName("도서 아이디로 도서를 조회하면 도서 조회 수 통계가 증가한다.")
   void readBookTest() {
     // Given
     int randomIndex = new Random().nextInt(books.size());
     long bookId = books.get(randomIndex).getBookId();
     Book expected = books.get(randomIndex);
+    long expectedViewCount = expected.getBookStatics().getViewCount();
 
     // When
-    BookResult result = bookService.readBook(bookId);
+    BookGetResult result = bookService.readBook(bookId);
 
     // Then
     assertAll(
-        () -> assertThat(result.bookId()).isEqualTo(expected.getBookId()),
         () -> assertThat(result.authorId()).isEqualTo(expected.getAuthor().getAuthorId()),
         () -> assertThat(result.authorNickname()).isEqualTo(expected.getAuthorNickname()),
         () -> assertThat(result.title()).isEqualTo(expected.getBookConceptualInfo().getTitle()),
@@ -87,6 +87,15 @@ class BookServiceTest extends IntegrationTest {
         () ->
             assertThat(result.coverImgUrl()).isEqualTo(expected.getCoverImgFile().getCoverImgUrl()),
         () -> assertThat(result.detailImgUrls()).isEqualTo(expected.getDetailImgUrls()),
-        () -> assertThat(result.previewUrls()).isEqualTo(expected.getPreviewUrls()));
+        () -> assertThat(result.previewUrls()).isEqualTo(expected.getPreviewUrls()),
+        () ->
+            assertThat(result.favoriteCount())
+                .isEqualTo(expected.getBookStatics().getFavoriteCount()),
+        () -> assertThat(result.viewCount()).isEqualTo(expectedViewCount + 1),
+        () -> assertThat(result.salesCount()).isEqualTo(expected.getBookStatics().getSalesCount()),
+        () ->
+            assertThat(result.reviewCount()).isEqualTo(expected.getBookStatics().getReviewCount()),
+        () ->
+            assertThat(result.reviewScore()).isEqualTo(expected.getBookStatics().getReviewScore()));
   }
 }

@@ -62,4 +62,9 @@ public class BookStatics {
   public static BookStatics init(Book book) {
     return new BookStatics(book, 0L, 0L, 0L, 0L, 0F);
   }
+
+  public BookStatics increaseViewCount() {
+    this.viewCount++;
+    return this;
+  }
 }
