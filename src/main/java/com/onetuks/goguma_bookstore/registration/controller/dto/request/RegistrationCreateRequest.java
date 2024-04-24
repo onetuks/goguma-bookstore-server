@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.request;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

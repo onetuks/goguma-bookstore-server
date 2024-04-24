@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.book.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import java.util.List;
 
 public record BookEditResponse(

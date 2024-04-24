@@ -1,8 +1,9 @@
-package com.onetuks.goguma_bookstore;
+package com.onetuks.goguma_bookstore.home.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.home.HomeRestController;
 import com.onetuks.goguma_bookstore.home.HomeRestController.HomeResponse;
 import java.util.Objects;

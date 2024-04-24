@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.author.model;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
-import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
+import com.onetuks.goguma_bookstore.author.model.embedded.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
 import com.onetuks.goguma_bookstore.global.vo.profile.Nickname;
 import com.onetuks.goguma_bookstore.member.model.Member;

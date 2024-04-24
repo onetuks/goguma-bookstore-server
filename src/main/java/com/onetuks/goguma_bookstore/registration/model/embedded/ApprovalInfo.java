@@ -1,4 +1,4 @@
-package com.onetuks.goguma_bookstore.registration.model.vo;
+package com.onetuks.goguma_bookstore.registration.model.embedded;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

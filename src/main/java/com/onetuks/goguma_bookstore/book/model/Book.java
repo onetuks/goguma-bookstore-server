@@ -4,9 +4,9 @@ import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.converter.CustomFileListToJsonConverter;
-import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;

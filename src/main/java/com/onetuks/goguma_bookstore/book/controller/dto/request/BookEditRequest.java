@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.book.controller.dto.request;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
 import com.onetuks.goguma_bookstore.book.service.dto.param.BookEditParam;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

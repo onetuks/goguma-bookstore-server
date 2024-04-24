@@ -3,7 +3,7 @@ package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse.RegistrationResponses;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.util.List;
