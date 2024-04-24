@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.book.service.dto.param;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import java.util.List;
 

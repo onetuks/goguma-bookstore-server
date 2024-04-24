@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.book.model.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.global.error.ErrorCode;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;

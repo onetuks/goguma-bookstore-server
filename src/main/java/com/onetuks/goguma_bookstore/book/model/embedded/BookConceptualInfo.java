@@ -1,6 +1,7 @@
-package com.onetuks.goguma_bookstore.book.model.vo;
+package com.onetuks.goguma_bookstore.book.model.embedded;
 
 import com.onetuks.goguma_bookstore.book.model.converter.CategoryListToJsonConverter;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;

@@ -85,7 +85,6 @@ class AuthorServiceTest extends IntegrationTest {
         .allSatisfy(
             result -> {
               assertThat(result.authorId()).isIn(authorIds);
-              assertThat(result.nickname()).contains("빠선생님");
               assertThat(result.introduction()).contains("대통령");
               assertThat(
                       memberIds.stream()

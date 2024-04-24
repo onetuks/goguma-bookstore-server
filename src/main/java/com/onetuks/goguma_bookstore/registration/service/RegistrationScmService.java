@@ -1,9 +1,9 @@
 package com.onetuks.goguma_bookstore.registration.service;
 
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
-import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.book.service.BookRegistrationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;

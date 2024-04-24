@@ -17,9 +17,9 @@ import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createWidth;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import java.util.List;

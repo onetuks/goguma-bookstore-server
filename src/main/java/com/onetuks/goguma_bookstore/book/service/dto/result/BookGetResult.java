@@ -4,7 +4,7 @@ import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.vo.Category;
 import java.util.List;
 
-public record BookResult(
+public record BookGetResult(
     long bookId,
     long authorId,
     String authorNickname,
@@ -24,10 +24,15 @@ public record BookResult(
     long stockCount,
     String coverImgUrl,
     List<String> detailImgUrls,
-    List<String> previewUrls) {
+    List<String> previewUrls,
+    long favoriteCount,
+    long viewCount,
+    long salesCount,
+    long reviewCount,
+    float reviewScore) {
 
-  public static BookResult from(Book book) {
-    return new BookResult(
+  public static BookGetResult from(Book book) {
+    return new BookGetResult(
         book.getBookId(),
         book.getAuthor().getAuthorId(),
         book.getAuthorNickname(),
@@ -47,6 +52,11 @@ public record BookResult(
         book.getStockCount(),
         book.getCoverImgFile().getCoverImgUrl(),
         book.getDetailImgUrls(),
-        book.getPreviewUrls());
+        book.getPreviewUrls(),
+        book.getBookStatics().getFavoriteCount(),
+        book.getBookStatics().getViewCount(),
+        book.getBookStatics().getSalesCount(),
+        book.getBookStatics().getReviewCount(),
+        book.getBookStatics().getReviewScore());
   }
 }

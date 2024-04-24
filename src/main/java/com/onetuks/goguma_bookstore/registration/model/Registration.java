@@ -2,14 +2,14 @@ package com.onetuks.goguma_bookstore.registration.model;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.book.model.converter.CustomFileListToJsonConverter;
-import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;
 import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
-import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
+import com.onetuks.goguma_bookstore.registration.model.embedded.ApprovalInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;

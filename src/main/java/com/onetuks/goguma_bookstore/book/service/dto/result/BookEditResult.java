@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.book.service.dto.result;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
 import java.util.List;

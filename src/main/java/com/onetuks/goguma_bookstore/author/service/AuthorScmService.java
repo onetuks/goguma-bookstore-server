@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.service;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.model.vo.EnrollmentInfo;
+import com.onetuks.goguma_bookstore.author.model.embedded.EnrollmentInfo;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;

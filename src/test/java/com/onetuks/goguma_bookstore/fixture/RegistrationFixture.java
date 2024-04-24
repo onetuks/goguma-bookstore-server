@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import static com.onetuks.goguma_bookstore.book.model.vo.Category.CARTOON;
-import static com.onetuks.goguma_bookstore.book.model.vo.Category.ESSEY;
+import static com.onetuks.goguma_bookstore.book.vo.Category.CARTOON;
+import static com.onetuks.goguma_bookstore.book.vo.Category.ESSEY;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.COVERS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.DETAILS;
 import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PREVIEWS;
@@ -9,16 +9,16 @@ import static com.onetuks.goguma_bookstore.global.vo.file.FileType.SAMPLES;
 import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createIsbn;
 
 import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.book.model.vo.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.vo.BookPriceInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
 import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;
 import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
 import com.onetuks.goguma_bookstore.registration.model.Registration;
-import com.onetuks.goguma_bookstore.registration.model.vo.ApprovalInfo;
+import com.onetuks.goguma_bookstore.registration.model.embedded.ApprovalInfo;
 import java.util.List;
 
 public class RegistrationFixture {

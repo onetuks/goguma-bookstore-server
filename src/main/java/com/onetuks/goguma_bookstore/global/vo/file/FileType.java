@@ -12,7 +12,7 @@ public enum FileType {
   SAMPLES("/samples/", APPLICATION_PDF_VALUE),
   DETAILS("/details/", IMAGE_PNG_VALUE),
   PREVIEWS("/previews/", APPLICATION_PDF_VALUE),
-  ;
+  REVIEWS("/reviews/", IMAGE_PNG_VALUE);
 
   private final String directoryPath;
   private final String mediaType;

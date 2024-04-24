@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.util;
 
-import com.onetuks.goguma_bookstore.book.model.vo.Category;
+import com.onetuks.goguma_bookstore.book.vo.Category;
 import java.util.List;
 import java.util.Random;
 
@@ -64,6 +64,8 @@ public class RandomValueProvider {
           "미움받을 용기는 무엇일까?");
   private static final List<String> publishers =
       List.of("아무거나보틀", "샌드박스", "끄박", "침튜브", "임용한튜브", "이성과힘", "자화상", "현대지성", "비즈니스북스");
+  private static final List<String> authorNicknames =
+      List.of("빠니보틀", "곽튜브", "임용한", "침착맨", "진수", "나관중", "조지오엘");
 
   public static String createTitle() {
     return titles.get(random.nextInt(titles.size()));
@@ -134,5 +136,9 @@ public class RandomValueProvider {
 
   public static String createMailOrderSalesNumber() {
     return String.valueOf(random.nextLong(100_000_000_000_000_000L, 999_999_999_999_999_999L));
+  }
+
+  public static String createAuthorNickname() {
+    return authorNicknames.get(random.nextInt(authorNicknames.size()));
   }
 }

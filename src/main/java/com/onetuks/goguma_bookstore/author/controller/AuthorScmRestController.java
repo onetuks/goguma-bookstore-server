@@ -72,7 +72,7 @@ public class AuthorScmRestController {
    * @return AuthorEnrollmentJudgeResponse
    */
   @PatchMapping(
-      path = "/{authorId}/result",
+      path = "/{authorId}/judge",
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentJudgeResponse> judgeEnrollment(

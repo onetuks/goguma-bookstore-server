@@ -101,6 +101,10 @@ public class CustomFile {
     return new PreviewFile(uri, multipartFile);
   }
 
+  public ReviewImgFile toReivewFile() {
+    return new ReviewImgFile(uri, multipartFile);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

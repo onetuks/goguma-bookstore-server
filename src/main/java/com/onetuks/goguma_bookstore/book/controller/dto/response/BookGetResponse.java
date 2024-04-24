@@ -1,11 +1,11 @@
 package com.onetuks.goguma_bookstore.book.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
+import com.onetuks.goguma_bookstore.book.service.dto.result.BookGetResult;
 import com.onetuks.goguma_bookstore.book.vo.Category;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
-public record BookResponse(
+public record BookGetResponse(
     long bookId,
     long authorId,
     String authorNickname,
@@ -25,17 +25,22 @@ public record BookResponse(
     long stockCount,
     String coverImgUrl,
     List<String> detailImgUrls,
-    List<String> previewUrls) {
+    List<String> previewUrls,
+    long favoriteCount,
+    long viewCount,
+    long salesCount,
+    long reviewCount,
+    float reviewScore) {
 
-  public record BookResponses(Page<BookResponse> responses) {
+  public record BookGetResponses(Page<BookGetResponse> responses) {
 
-    public static BookResponses from(Page<BookResult> results) {
-      return new BookResponses(results.map(BookResponse::from));
+    public static BookGetResponses from(Page<BookGetResult> results) {
+      return new BookGetResponses(results.map(BookGetResponse::from));
     }
   }
 
-  public static BookResponse from(BookResult result) {
-    return new BookResponse(
+  public static BookGetResponse from(BookGetResult result) {
+    return new BookGetResponse(
         result.bookId(),
         result.authorId(),
         result.authorNickname(),
@@ -55,6 +60,11 @@ public record BookResponse(
         result.stockCount(),
         result.coverImgUrl(),
         result.detailImgUrls(),
-        result.previewUrls());
+        result.previewUrls(),
+        result.favoriteCount(),
+        result.viewCount(),
+        result.salesCount(),
+        result.reviewCount(),
+        result.reviewScore());
   }
 }

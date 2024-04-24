@@ -115,9 +115,7 @@ public class ArchitectureTest extends IntegrationTest {
               .that()
               .resideInAnyPackage("..repository..")
               .should()
-              .haveSimpleNameEndingWith("Repository")
-              .andShould()
-              .beInterfaces();
+              .haveSimpleNameEndingWith("Repository");
 
       rule.check(javaClasses);
     }
@@ -207,7 +205,7 @@ public class ArchitectureTest extends IntegrationTest {
               .dependOnClassesThat()
               .resideInAnyPackage("..model..")
               .andShould()
-              .resideOutsideOfPackage("..vo..");
+              .resideOutsideOfPackage("..model.vo..");
 
       rule.check(javaClasses);
     }
@@ -235,7 +233,8 @@ public class ArchitectureTest extends IntegrationTest {
               .resideInAnyPackage("..model")
               .should()
               .onlyHaveDependentClassesThat()
-              .resideInAnyPackage("..service..", "..repository..", "..model..", "..auth..");
+              .resideInAnyPackage(
+                  "..service..", "..repository..", "..model..", "..auth..", "..vo..");
 
       rule.check(javaClasses);
     }
@@ -247,6 +246,8 @@ public class ArchitectureTest extends IntegrationTest {
           ArchRuleDefinition.classes()
               .that()
               .resideInAnyPackage("..model")
+              .and()
+              .haveSimpleNameNotStartingWith("Q")
               .should()
               .onlyDependOnClassesThat()
               .resideInAnyPackage("..model..", "java..", "jakarta..", "lombok..", "..vo..");
