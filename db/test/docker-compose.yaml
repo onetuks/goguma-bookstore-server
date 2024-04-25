@@ -10,7 +10,7 @@ services:
       - '3306'
 
   local-db-migrate:
-    image: flyway/flyway:10
+    image: flyway/flyway:7
     environment:
       FLYWAY_DB_URL: jdbc:mysql://local-db/goguma-bookstore
       FLYWAY_DB_USER: root
