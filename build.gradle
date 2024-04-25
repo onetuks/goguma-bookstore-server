@@ -136,6 +136,12 @@ tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
 
+    doLast {
+        exec {
+            commandLine 'sh', './script/cleanup-docker-networks.sh'
+        }
+    }
+
     finalizedBy(tasks.jacocoTestReport)
 }
 
