@@ -33,7 +33,7 @@ public record RegistrationIsbnResponse(
 
   private static Long parsePageCountInfo(String pageCount) {
     try {
-      return Long.parseLong(pageCount.replaceAll("[^0-9]", ""));
+      return Long.parseLong(pageCount.replaceAll("\\D", ""));
     } catch (NumberFormatException e) {
       return null;
     }

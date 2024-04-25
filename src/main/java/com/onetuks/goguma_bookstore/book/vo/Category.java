@@ -9,5 +9,5 @@ public enum Category {
   CARTOON,
   MAGAZINE,
   POETRY,
-  ETC;
+  ETC
 }

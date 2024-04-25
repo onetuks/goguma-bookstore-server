@@ -26,8 +26,7 @@ public class LoginIdResolver implements HandlerMethodArgumentResolver {
       @Nonnull MethodParameter parameter,
       ModelAndViewContainer mavContainer,
       @Nonnull NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory)
-      throws Exception {
+      WebDataBinderFactory binderFactory) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }

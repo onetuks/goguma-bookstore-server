@@ -18,7 +18,7 @@ public record RegistrationCreateRequest(
     @NotBlank @Length(max = 5_000) String summary,
     @NotEmpty @Size(min = 1, max = 3) List<Category> categories,
     @NotBlank @Length(min = 1, max = 20) String publisher,
-    @NotBlank @Length(min = 13, max = 13) @Pattern(regexp = "^[0-9]+$") String isbn,
+    @NotBlank @Length(min = 13, max = 13) @Pattern(regexp = "^\\d+$") String isbn,
     @Positive Integer height,
     @Positive Integer width,
     @NotBlank String coverType,

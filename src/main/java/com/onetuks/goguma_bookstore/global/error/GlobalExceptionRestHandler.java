@@ -125,9 +125,7 @@ public class GlobalExceptionRestHandler {
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
 
-  /**
-   * @ModelAttribute 으로 binding error 발생할 경우
-   */
+  /** &#064;ModelAttribute 으로 binding error 발생할 경우 */
   @ExceptionHandler(BindException.class)
   protected ResponseEntity<ErrorResponse> handleBindException(BindException e) {
     logging(e);

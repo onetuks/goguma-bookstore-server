@@ -10,9 +10,8 @@ public record AuthorCreateEnrollmentRequest(
     @NotBlank @Length(min = 1, max = 20) String nickname,
     @NotBlank @Length(min = 1, max = 100) String introduction,
     @NotBlank @URL String instagramUrl,
-    @NotBlank @Length(min = 10, max = 10) @Pattern(regexp = "^[0-9]+$") String businessNumber,
-    @NotBlank @Length(min = 18, max = 18) @Pattern(regexp = "^[0-9]+$")
-        String mailOrderSalesNumber) {
+    @NotBlank @Length(min = 10, max = 10) @Pattern(regexp = "^\\d+$") String businessNumber,
+    @NotBlank @Length(min = 18, max = 18) @Pattern(regexp = "^\\d+$") String mailOrderSalesNumber) {
 
   public AuthorCreateEnrollmentParam to() {
     return new AuthorCreateEnrollmentParam(

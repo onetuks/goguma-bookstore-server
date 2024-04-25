@@ -47,23 +47,12 @@ public class ErrorResponse {
     this.fieldDetailErrors = fieldDetailErrors;
   }
 
+  @Getter
   public static class FieldDetailError {
 
     private final String field;
     private final String value;
     private final String reason;
-
-    public String getField() {
-      return field;
-    }
-
-    public String getValue() {
-      return value;
-    }
-
-    public String getReason() {
-      return reason;
-    }
 
     private static List<FieldDetailError> of(final BindingResult bindingResult) {
       final List<org.springframework.validation.FieldError> fieldErrors =

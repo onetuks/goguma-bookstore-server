@@ -8,8 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RegistrationJpaRepository extends JpaRepository<Registration, Long> {
 
-  Page<Registration> findAll(Pageable pageable);
-
   Page<Registration> findByAuthorAuthorId(Long authorId, Pageable pageable);
 
   Optional<Registration> findByBookConceptualInfoIsbn(String isbn);

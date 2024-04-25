@@ -18,9 +18,9 @@ jobs:
       pull-requests: write
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
@@ -30,7 +30,7 @@ jobs:
 
       - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: zulu
@@ -63,9 +63,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
@@ -75,7 +75,7 @@ jobs:
 
       - name: JDK 설치
         if: steps.changes.outputs.application == 'true'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: zulu
