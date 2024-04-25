@@ -1,11 +1,17 @@
 package com.onetuks.goguma_bookstore.favorite.controller;
 
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
+import com.onetuks.goguma_bookstore.favorite.controller.dto.response.FavoriteGetResponse.FavoriteGetResponses;
 import com.onetuks.goguma_bookstore.favorite.controller.dto.response.FavoritePostResponse;
 import com.onetuks.goguma_bookstore.favorite.controller.dto.response.FavoriteWhetherGetResponse;
 import com.onetuks.goguma_bookstore.favorite.service.FavoriteService;
+import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteWhetherGetResult;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,15 +68,32 @@ public class FavoriteRestController {
    * 즐겨찾기 여부 조회
    *
    * @param memberId : 로그인한 회원의 ID
-   * @param bookId
-   * @return
+   * @param bookId : 즐겨찾기 여부를 조회할 도서의 ID
+   * @return FavoriteWhetherGetResponse
    */
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/whether", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoriteWhetherGetResponse> getIsFavorited(
       @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     FavoriteWhetherGetResult result = favoriteService.readFavoriteExistance(memberId, bookId);
     FavoriteWhetherGetResponse response = FavoriteWhetherGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 즐겨찾기 목록 조회
+   *
+   * @param memberId : 로그인한 회원의 ID
+   * @param pageable : 페이지 정보
+   * @return FavoriteGetResponses
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<FavoriteGetResponses> getResponsesOfMember(
+      @LoginId Long memberId,
+      @PageableDefault(sort = "favoriteId", direction = Direction.DESC) Pageable pageable) {
+    Page<FavoriteGetResult> results = favoriteService.readFavoritesOfMember(memberId, pageable);
+    FavoriteGetResponses responses = FavoriteGetResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 }

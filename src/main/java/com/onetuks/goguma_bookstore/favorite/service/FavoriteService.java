@@ -4,11 +4,14 @@ import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.model.Favorite;
 import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
+import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteWhetherGetResult;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,5 +62,12 @@ public class FavoriteService {
   public FavoriteWhetherGetResult readFavoriteExistance(long memberId, long bookId) {
     return FavoriteWhetherGetResult.from(
         favoriteJpaRepository.existsByMemberMemberIdAndBookBookId(memberId, bookId));
+  }
+
+  @Transactional(readOnly = true)
+  public Page<FavoriteGetResult> readFavoritesOfMember(long memberId, Pageable pageable) {
+    return favoriteJpaRepository
+        .findAllByMemberMemberId(memberId, pageable)
+        .map(favorite -> FavoriteGetResult.from(favorite, favorite.getBook()));
   }
 }

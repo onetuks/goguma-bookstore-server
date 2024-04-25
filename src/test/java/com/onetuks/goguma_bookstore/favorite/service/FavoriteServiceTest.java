@@ -4,10 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
+import com.onetuks.goguma_bookstore.author.model.Author;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
+import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.BookFixture;
@@ -15,11 +17,15 @@ import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 class FavoriteServiceTest extends IntegrationTest {
 
@@ -128,5 +134,26 @@ class FavoriteServiceTest extends IntegrationTest {
 
     // Then
     assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("유저의 모든 즐겨찾기를 조회한다.")
+  void readFavoritesOfMemberTest() {
+    // Given
+    Member authorMember = memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR));
+    Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
+    List<Book> books =
+        IntStream.range(0, 3)
+            .mapToObj(i -> bookJpaRepository.save(BookFixture.create(author)))
+            .toList();
+    books.forEach(
+        book -> favoriteService.createFavorite(authorMember.getMemberId(), book.getBookId()));
+
+    // When
+    Page<FavoriteGetResult> results =
+        favoriteService.readFavoritesOfMember(authorMember.getMemberId(), PageRequest.of(0, 10));
+
+    // Then
+    assertThat(results).isNotEmpty().hasSize(books.size());
   }
 }
