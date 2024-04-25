@@ -35,6 +35,8 @@ public class FavoriteService {
             .findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다."));
 
+    book.getBookStatics().increaseFavoriteCount();
+
     return FavoritePostResult.from(
         favoriteJpaRepository.save(Favorite.builder().member(member).book(book).build()));
   }

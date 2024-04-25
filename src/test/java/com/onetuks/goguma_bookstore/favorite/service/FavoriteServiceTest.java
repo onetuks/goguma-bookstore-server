@@ -1,12 +1,13 @@
 package com.onetuks.goguma_bookstore.favorite.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.catchException;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.book.model.Book;
 import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
+import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.BookFixture;
@@ -26,6 +27,7 @@ class FavoriteServiceTest extends IntegrationTest {
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private BookJpaRepository bookJpaRepository;
+  @Autowired private FavoriteJpaRepository favoriteJpaRepository;
 
   private Member member;
   private Book book;
@@ -39,28 +41,43 @@ class FavoriteServiceTest extends IntegrationTest {
                 authorJpaRepository.save(
                     AuthorFixture.create(
                         memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))))));
+
+    favoriteService.createFavorite(member.getMemberId(), book.getBookId());
   }
 
   @Test
-  @DisplayName("즐겨찾기 한 적이 없는 도서를 즐겨찾기하면 성공한다.")
+  @DisplayName("즐겨찾기 한 적이 없는 도서를 즐겨찾기하면 성공한다. 도서의 즐겨찾기 카운트가 1 증가한다.")
   void createFavoriteTest() {
-    // Given & When
+    // Given
+    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    Book book =
+        bookJpaRepository.save(
+            BookFixture.create(
+                authorJpaRepository.save(
+                    AuthorFixture.create(
+                        memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))))));
+    long prevFavoriteCount = book.getBookStatics().getFavoriteCount();
+
+    // When
     FavoritePostResult result =
         favoriteService.createFavorite(member.getMemberId(), book.getBookId());
 
     // Then
+    Long postFavoriteCount = book.getBookStatics().getFavoriteCount();
+
+    assertThat(postFavoriteCount).isEqualTo(prevFavoriteCount + 1);
     assertThat(result.favoriteId()).isPositive();
   }
 
   @Test
-  @DisplayName("이미 즐겨찾기한 도서를 다시 즐겨찾기하면 예외를 던진다.")
+  @DisplayName("이미 즐겨찾기한 도서를 다시 즐겨찾기하면 예외를 던진다. 도서의 즐겨찾기 카운트는 변하지 않는다.")
   void createFavorite_DuplicateFavorite_ExceptionTest() {
-    // Given
-    favoriteService.createFavorite(member.getMemberId(), book.getBookId());
+    // Given & When
+    Exception exception =
+        catchException(
+            () -> favoriteService.createFavorite(member.getMemberId(), book.getBookId()));
 
-    // When & Then
-    assertThrows(
-        DataIntegrityViolationException.class,
-        () -> favoriteService.createFavorite(member.getMemberId(), book.getBookId()));
+    // Then
+    assertThat(exception).isInstanceOf(DataIntegrityViolationException.class);
   }
 }
