@@ -5,6 +5,7 @@ import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.model.Favorite;
 import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
+import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteWhetherGetResult;
 import com.onetuks.goguma_bookstore.member.model.Member;
 import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -52,5 +53,11 @@ public class FavoriteService {
                 favoriteJpaRepository.delete(favorite);
               }
             });
+  }
+
+  @Transactional(readOnly = true)
+  public FavoriteWhetherGetResult readFavoriteExistance(long memberId, long bookId) {
+    return FavoriteWhetherGetResult.from(
+        favoriteJpaRepository.existsByMemberMemberIdAndBookBookId(memberId, bookId));
   }
 }

@@ -2,12 +2,15 @@ package com.onetuks.goguma_bookstore.favorite.controller;
 
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
 import com.onetuks.goguma_bookstore.favorite.controller.dto.response.FavoritePostResponse;
+import com.onetuks.goguma_bookstore.favorite.controller.dto.response.FavoriteWhetherGetResponse;
 import com.onetuks.goguma_bookstore.favorite.service.FavoriteService;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
+import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteWhetherGetResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,5 +56,21 @@ public class FavoriteRestController {
     favoriteService.deleteFavorite(memberId, favoriteId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * 즐겨찾기 여부 조회
+   *
+   * @param memberId : 로그인한 회원의 ID
+   * @param bookId
+   * @return
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<FavoriteWhetherGetResponse> getIsFavorited(
+      @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
+    FavoriteWhetherGetResult result = favoriteService.readFavoriteExistance(memberId, bookId);
+    FavoriteWhetherGetResponse response = FavoriteWhetherGetResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 }

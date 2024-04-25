@@ -96,4 +96,37 @@ class FavoriteServiceTest extends IntegrationTest {
 
     assertThat(postFavoriteCount).isEqualTo(prevFavoriteCount - 1);
   }
+
+  @Test
+  @DisplayName("유저가 즐겨찾기 하지 않은 도서를 이용해 즐겨찾기를 조회하면 false를 반환한다.")
+  void readFavoriteExistance_NotFavoritedTest() {
+    // Given
+    Member userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
+    Book notFavoritedBook =
+        bookJpaRepository.save(
+            BookFixture.create(
+                authorJpaRepository.save(
+                    AuthorFixture.create(
+                        memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))))));
+
+    // When
+    boolean result =
+        favoriteService
+            .readFavoriteExistance(userMember.getMemberId(), notFavoritedBook.getBookId())
+            .isFavorited();
+
+    // Then
+    assertThat(result).isFalse();
+  }
+
+  @Test
+  @DisplayName("유저가 즐겨찾기한 도서를 이용해 즐겨찾기를 조회하면 true를 반환한다.")
+  void readFavoriteExistance_FavoritedTest() {
+    // Given & When
+    boolean result =
+        favoriteService.readFavoriteExistance(member.getMemberId(), book.getBookId()).isFavorited();
+
+    // Then
+    assertThat(result).isTrue();
+  }
 }
