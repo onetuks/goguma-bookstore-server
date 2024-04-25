@@ -17,7 +17,7 @@ public record RegistrationIsbnResponse(
       throw new IllegalArgumentException("해당 ISBN 정보가 존재하지 않습니다.");
     }
 
-    IsbnDataResult data = result.docs().get(0);
+    IsbnDataResult data = result.docs().getFirst();
 
     Integer[] bookSizeInfo = parseBookSizeInfo(data.BOOK_SIZE());
 
@@ -33,7 +33,7 @@ public record RegistrationIsbnResponse(
 
   private static Long parsePageCountInfo(String pageCount) {
     try {
-      return Long.parseLong(pageCount.replaceAll("[^0-9]", ""));
+      return Long.parseLong(pageCount.replaceAll("\\D", ""));
     } catch (NumberFormatException e) {
       return null;
     }

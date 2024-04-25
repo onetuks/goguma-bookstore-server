@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 class CustomFileTest extends IntegrationTest {
 
-  private long id = 1L;
+  private final long id = 1L;
 
   @Test
   @DisplayName("목업 파일이 4개 미만인 경우 예외를 던진다.")

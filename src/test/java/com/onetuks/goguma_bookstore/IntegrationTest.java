@@ -5,6 +5,7 @@ import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.slf4j.Logger;
@@ -29,9 +30,9 @@ import org.testcontainers.utility.DockerImageName;
 public class IntegrationTest {
   // todo 한 번에 모든 bean 을 다 주입받아서 모든 테스트 클래스가 사용한다면 어떨까?
 
-  static ComposeContainer rdbms;
+  static final ComposeContainer rdbms;
   //  static RedisContainer redis;
-  static LocalStackContainer aws;
+  static final LocalStackContainer aws;
 
   @Autowired private TestFileCleaner testFileCleaner;
 
@@ -72,7 +73,7 @@ public class IntegrationTest {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
+    public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
       var rdbmsHost = rdbms.getServiceHost("local-db", 3306);

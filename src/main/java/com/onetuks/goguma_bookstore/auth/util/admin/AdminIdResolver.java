@@ -2,6 +2,7 @@ package com.onetuks.goguma_bookstore.auth.util.admin;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
 import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
@@ -25,11 +26,10 @@ public class AdminIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public Object resolveArgument(
-      MethodParameter parameter,
+      @Nonnull MethodParameter parameter,
       ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory)
-      throws Exception {
+      @Nonnull NativeWebRequest webRequest,
+      WebDataBinderFactory binderFactory) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     boolean isNotAdmin =
         authentication.getAuthorities().stream()

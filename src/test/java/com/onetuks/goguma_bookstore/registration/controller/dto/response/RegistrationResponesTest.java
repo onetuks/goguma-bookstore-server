@@ -60,7 +60,7 @@ class RegistrationResponesTest extends IntegrationTest {
             result -> {
               assertThat(result.registrationId()).isPositive();
               assertThat(result.approvalResult()).isTrue();
-              assertThat(result.approvalMemo()).isEqualTo(list.get(0).approvalMemo());
+              assertThat(result.approvalMemo()).isEqualTo(list.getFirst().approvalMemo());
               assertThat(result.title()).contains(String.valueOf(result.registrationId()));
               assertThat(result.oneLiner()).contains(String.valueOf(result.registrationId()));
               assertThat(result.summary()).contains(String.valueOf(result.registrationId()));

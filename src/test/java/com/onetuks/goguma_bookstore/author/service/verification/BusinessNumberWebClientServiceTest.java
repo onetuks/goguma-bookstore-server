@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.verification.dto.response.BusinessNumberResponse;
+import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ class BusinessNumberWebClientServiceTest extends IntegrationTest {
         () -> assertThat(result.status_code()).isEqualTo("OK"),
         () -> assertThat(result.match_cnt()).isPositive(),
         () -> assertThat(result.data()).isNotEmpty(),
-        () -> assertThat(result.data().get(0).b_no()).isEqualTo(businessNumber));
+        () ->
+            assertThat(Objects.requireNonNull(result.data()).getFirst().b_no())
+                .isEqualTo(businessNumber));
   }
 }
