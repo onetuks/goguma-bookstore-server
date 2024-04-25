@@ -16,7 +16,7 @@ class MailOrderSalesWebClientServiceTest extends IntegrationTest {
   @DisplayName("유효한 사업자등록번호를 이용해서 통신판매신고정보를 조회한다.")
   void requestDataTest() {
     // Given
-    String businessNumber = "8073401609";
+    String businessNumber = "6615900628";
 
     // When
     MailOrderSalesResponse result = service.requestData(businessNumber);

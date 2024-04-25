@@ -7,6 +7,8 @@ import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResu
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,5 +38,20 @@ public class FavoriteRestController {
     FavoritePostResponse response = FavoritePostResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 즐겨찾기 삭제
+   *
+   * @param memberId : 로그인 아이디
+   * @param favoriteId : 즐겨찾기 아이디
+   * @return Void
+   */
+  @DeleteMapping(path = "/{favoriteId}")
+  public ResponseEntity<Void> removeFavorite(
+      @LoginId Long memberId, @PathVariable(name = "favoriteId") Long favoriteId) {
+    favoriteService.deleteFavorite(memberId, favoriteId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

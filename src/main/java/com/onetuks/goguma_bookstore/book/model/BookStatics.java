@@ -70,4 +70,8 @@ public class BookStatics {
   public void increaseFavoriteCount() {
     this.favoriteCount++;
   }
+
+  public void decreaseFavoriteCount() {
+    this.favoriteCount--;
+  }
 }

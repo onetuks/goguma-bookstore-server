@@ -80,4 +80,20 @@ class FavoriteServiceTest extends IntegrationTest {
     // Then
     assertThat(exception).isInstanceOf(DataIntegrityViolationException.class);
   }
+
+  @Test
+  @DisplayName("즐겨찾기한 도서를 해제한다.")
+  void deleteFavoriteTest() {
+    // Given
+    long prevFavoriteCount = book.getBookStatics().getFavoriteCount();
+
+    // When
+    favoriteService.deleteFavorite(
+        member.getMemberId(), favoriteJpaRepository.findAll().get(0).getFavoriteId());
+
+    // Then
+    Long postFavoriteCount = book.getBookStatics().getFavoriteCount();
+
+    assertThat(postFavoriteCount).isEqualTo(prevFavoriteCount - 1);
+  }
 }

@@ -40,4 +40,17 @@ public class FavoriteService {
     return FavoritePostResult.from(
         favoriteJpaRepository.save(Favorite.builder().member(member).book(book).build()));
   }
+
+  @Transactional
+  public void deleteFavorite(long memberId, long favoriteId) {
+    favoriteJpaRepository
+        .findById(favoriteId)
+        .ifPresent(
+            favorite -> {
+              if (favorite.getMember().getMemberId() == memberId) {
+                favorite.getBook().getBookStatics().decreaseFavoriteCount();
+                favoriteJpaRepository.delete(favorite);
+              }
+            });
+  }
 }
