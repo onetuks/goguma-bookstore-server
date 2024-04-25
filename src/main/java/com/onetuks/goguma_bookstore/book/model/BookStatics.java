@@ -63,8 +63,15 @@ public class BookStatics {
     return new BookStatics(book, 0L, 0L, 0L, 0L, 0F);
   }
 
-  public BookStatics increaseViewCount() {
+  public void increaseViewCount() {
     this.viewCount++;
-    return this;
+  }
+
+  public void increaseFavoriteCount() {
+    this.favoriteCount++;
+  }
+
+  public void decreaseFavoriteCount() {
+    this.favoriteCount--;
   }
 }
