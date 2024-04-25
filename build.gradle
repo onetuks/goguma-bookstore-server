@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.asciidoctor.jvm.convert' version '4.0.2'
-    id 'com.epages.restdocs-api-spec' version '0.19.2'
     id 'jacoco'
     id 'org.sonarqube' version '5.0.0.4638'
     id 'com.diffplug.spotless' version '6.25.0'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+//    id 'org.asciidoctor.jvm.convert' version '4.0.2'
+//    id 'com.epages.restdocs-api-spec' version '0.19.2'
 }
 
 group = 'com.onetuks'
@@ -24,19 +24,19 @@ jacoco {
     toolVersion = '0.8.8'
 }
 
-openapi3 {
-    servers = List.of(
-            { url = "http://localhost:8080" },
-            { url = "http://server:8080" }
-//            { url = "https://서버url" }
-    )
-    title = "Goguma-Bookstore-Server-API"
-    description = "고구마서점 API"
-    version = getVersion()
-    format = "json" // (json / yaml)
-    outputDirectory = "src/main/resources/static"
-    outputFileNamePrefix = "swagger"
-}
+//openapi3 {
+//    servers = List.of(
+//            { url = "http://localhost:8080" },
+//            { url = "http://server:8080" }
+////            { url = "https://서버url" }
+//    )
+//    title = "Goguma-Bookstore-Server-API"
+//    description = "고구마서점 API"
+//    version = getVersion()
+//    format = "json" // (json / yaml)
+//    outputDirectory = "src/main/resources/static"
+//    outputFileNamePrefix = "swagger"
+//}
 
 configurations {
     compileOnly {
@@ -53,7 +53,7 @@ ext {
 }
 
 clean {
-    delete file ('src/main/generated')
+    delete file('src/main/generated')
 }
 
 dependencies {
@@ -86,14 +86,14 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-    // RestDocs
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
-    // Rest Docs API Spec
-    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
-
-    // Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+//    // RestDocs
+//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+//
+//    // Rest Docs API Spec
+//    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+//
+//    // Swagger UI
+//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -103,7 +103,7 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
 
     // Arch-Unit
-    testImplementation 'com.tngtech.archunit:archunit:1.2.1'
+    testImplementation 'com.tngtech.archunit:archunit:1.2.2'
 
     // Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -139,10 +139,10 @@ tasks.named('test') {
     finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
-}
+//tasks.named('asciidoctor') {
+//    inputs.dir snippetsDir
+//    dependsOn test
+//}
 
 tasks.jacocoTestReport {
     reports {
@@ -162,6 +162,7 @@ tasks.jacocoTestReport {
                     "**/Q*",
                     "**/global/config/*",
                     "**/global/error/*",
+                    "**/global/vo/file/*",
                     "**/auth/*",
                     "**/model/*",
                     "**/dto/*",
@@ -201,6 +202,7 @@ tasks.jacocoTestCoverageVerification {
                     "*.Q*",
                     "*.global.config.*",
                     "*.global.error.*",
+                    "*.global.vo.file.*",
                     "*.auth.*",
                     "*.model.*",
                     "*.dto.*",
@@ -229,7 +231,8 @@ sonar {
             property("sonar.projectName", "goguma-bookstore")
             property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
             property("sonar.coverage.exclusions",
-                    "**/Q*,**/global/config/**,**/global/error/**,**/dto/**,**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
+                    "**/Q*,**/global/config/**,**/global/error/**,**/global/vo/file/**,**/dto/**," +
+                            "**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
         }
     } else {
         println ".env file not exists"
