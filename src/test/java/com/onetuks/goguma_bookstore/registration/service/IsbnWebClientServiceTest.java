@@ -27,7 +27,7 @@ class IsbnWebClientServiceTest extends IntegrationTest {
     assertAll(
         () -> assertThat(Long.parseLong(result.TOTAL_COUNT())).isPositive(),
         () -> assertThat(result.docs()).isNotEmpty());
-    assertThat(result.docs().getFirst().EA_ISBN()).isEqualTo(isbn);
-    assertThat(result.docs().getFirst().TITLE()).isNotBlank();
+    assertThat(result.docs().get(0).EA_ISBN()).isEqualTo(isbn);
+    assertThat(result.docs().get(0).TITLE()).isNotBlank();
   }
 }

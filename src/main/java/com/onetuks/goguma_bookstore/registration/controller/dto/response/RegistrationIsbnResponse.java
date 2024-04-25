@@ -17,7 +17,7 @@ public record RegistrationIsbnResponse(
       throw new IllegalArgumentException("해당 ISBN 정보가 존재하지 않습니다.");
     }
 
-    IsbnDataResult data = result.docs().getFirst();
+    IsbnDataResult data = result.docs().get(0);
 
     Integer[] bookSizeInfo = parseBookSizeInfo(data.BOOK_SIZE());
 

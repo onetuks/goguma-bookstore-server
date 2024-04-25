@@ -29,7 +29,7 @@ class BusinessNumberWebClientServiceTest extends IntegrationTest {
         () -> assertThat(result.match_cnt()).isPositive(),
         () -> assertThat(result.data()).isNotEmpty(),
         () ->
-            assertThat(Objects.requireNonNull(result.data()).getFirst().b_no())
+            assertThat(Objects.requireNonNull(result.data()).get(0).b_no())
                 .isEqualTo(businessNumber));
   }
 }

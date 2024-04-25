@@ -56,7 +56,7 @@ class AuthorServiceTest extends IntegrationTest {
   @DisplayName("작가 프로필 정보 조회한다.")
   void readAuthorDetailsTest() {
     // Given
-    Author author = authors.getFirst();
+    Author author = authors.get(0);
 
     // When
     AuthorDetailsResult result = authorService.readAuthorDetails(author.getAuthorId());

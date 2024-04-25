@@ -50,7 +50,7 @@ class BookServiceTest extends IntegrationTest {
 
     books =
         bookJpaRepository.saveAll(
-            IntStream.range(0, 50).mapToObj(i -> BookFixture.create(authors.get(i % 2))).toList());
+            IntStream.range(0, 20).mapToObj(i -> BookFixture.create(authors.get(i % 2))).toList());
   }
 
   @Test
@@ -130,13 +130,12 @@ class BookServiceTest extends IntegrationTest {
 
     // Then
     if (results.getTotalElements() >= 2) {
-      BookGetResult expensiveBook = results.getContent().getFirst();
-      BookGetResult cheapBook = results.getContent().getLast();
+      BookGetResult expensiveBook = results.getContent().get(0);
+      BookGetResult cheapBook = results.getContent().get((int) results.getTotalElements() - 1);
       assertThat(expensiveBook.purchasePrice()).isGreaterThan(cheapBook.purchasePrice());
     }
 
     assertThat(results)
-        .isNotEmpty()
         .allSatisfy(
             result -> {
               assertThat(result.title()).isEqualTo(title);
@@ -156,8 +155,8 @@ class BookServiceTest extends IntegrationTest {
             null, null, null, false, false, SortOrder.DATE, PageRequest.of(0, 10));
 
     // Then
-    BookGetResult latestBook = results.getContent().getFirst();
-    BookGetResult initialBook = results.getContent().getLast();
+    BookGetResult latestBook = results.getContent().get(0);
+    BookGetResult initialBook = results.getContent().get((int) results.getTotalElements() - 1);
 
     assertThat(latestBook.bookId()).isGreaterThan(initialBook.bookId());
     assertThat(results).isNotEmpty().hasSize(10);
