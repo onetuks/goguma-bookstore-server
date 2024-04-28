@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.modulepersistence.author.model.Author;
 
 public record AuthorEditResult(
     long authorId,

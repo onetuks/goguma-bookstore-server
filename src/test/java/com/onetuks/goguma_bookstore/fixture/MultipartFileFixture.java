@@ -1,10 +1,11 @@
 package com.onetuks.goguma_bookstore.fixture;
 
+import static com.onetuks.goguma_bookstore.util.TestFileCleaner.getTestFilePath;
+
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockMultipartFile;
@@ -16,7 +17,7 @@ public class MultipartFileFixture {
 
   public static MultipartFile create(String fileName, FileType fileType) {
     try {
-      Path path = getTempFilePath(fileName);
+      Path path = getTestFilePath(fileName);
       Files.createDirectories(path.getParent());
       if (!Files.exists(path)) {
         Files.createFile(path);
@@ -28,9 +29,5 @@ public class MultipartFileFixture {
       log.info("Failed to create a mock file.", e);
       return null;
     }
-  }
-
-  public static Path getTempFilePath(String fileName) {
-    return Paths.get("src/test/resources/static" + fileName);
   }
 }

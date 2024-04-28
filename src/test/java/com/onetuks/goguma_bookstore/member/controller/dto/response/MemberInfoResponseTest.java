@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

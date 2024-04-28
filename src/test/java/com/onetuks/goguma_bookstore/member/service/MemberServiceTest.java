@@ -5,15 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
@@ -24,7 +20,11 @@ import com.onetuks.goguma_bookstore.member.service.dto.result.MemberDefaultCashR
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.member.vo.UserData;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import org.junit.jupiter.api.DisplayName;
@@ -123,17 +123,18 @@ class MemberServiceTest extends IntegrationTest {
     MemberProfileEditParam param =
         new MemberProfileEditParam(
             "빠니보틀니", true, "강원도 춘천시 중앙로", "킹갓 빠니보틀 생가", CashReceiptType.PERSON, "010-0101-0101");
-    CustomFile customFile = CustomFileFixture.createFile(member.getMemberId(), FileType.PROFILES);
+    FileWrapper fileWrapper =
+        FileWrapperFixture.createFile(member.getMemberId(), FileType.PROFILES);
 
     // When
     MemberProfileEditResult result =
-        memberService.updateMemberProfile(member.getMemberId(), param, customFile);
+        memberService.updateMemberProfile(member.getMemberId(), param, fileWrapper);
 
     // Then
-    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
+    File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
 
     assertAll(
-        () -> assertThat(savedProfileImgFile).hasSize(customFile.getMultipartFile().getSize()),
+        () -> assertThat(savedProfileImgFile).hasSize(fileWrapper.getMultipartFile().getSize()),
         () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
         () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
         () -> assertThat(result.alarmPermission()).isEqualTo(param.alarmPermission()),

@@ -1,8 +1,5 @@
 package com.onetuks.goguma_bookstore.author.service;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.model.embedded.EnrollmentInfo;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
@@ -11,10 +8,13 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDe
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
@@ -52,9 +52,9 @@ public class AuthorScmService {
         .findAll()
         .forEach(
             author -> {
-              LocalDateTime enrollmentAt = author.getEnrollmentInfo().getEnrollmentAt();
+              LocalDateTime enrollmentAt = author.getEnrollmentAt();
               if (enrollmentAt.isBefore(twoWeeksAgo)) {
-                s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
+                s3Service.deleteFile(author.getProfileImgUrl());
                 authorJpaRepository.delete(author);
               }
             });
@@ -70,7 +70,7 @@ public class AuthorScmService {
         authorJpaRepository.save(
             Author.builder()
                 .member(getUserMemberById(loginId))
-                .profileImgFile(CustomFile.of().toProfileImgFile())
+                .profileImgFilePath(FileWrapper.of().getUri())
                 .nickname(param.nickname())
                 .introduction(param.introduction())
                 .instagramUrl(param.instagramUrl())
@@ -104,7 +104,7 @@ public class AuthorScmService {
 
     checkIllegalArgument(author, loginAuthorId);
 
-    s3Service.deleteFile(author.getProfileImgFile().getProfileImgUri());
+    s3Service.deleteFile(author.getProfileImgUrl());
 
     authorJpaRepository.deleteById(authorId);
   }
@@ -128,16 +128,19 @@ public class AuthorScmService {
 
   @Transactional
   public AuthorEditResult updateAuthorProfile(
-      long loginAuthorId, long authorId, AuthorEditParam authorEditParam, CustomFile customFile) {
+      long loginAuthorId,
+      long authorId,
+      AuthorEditParam authorEditParam,
+      FileWrapper profileImgFile) {
     if (loginAuthorId != authorId) {
       throw new IllegalArgumentException("작가 정보를 수정할 권한이 없습니다.");
     }
 
-    s3Service.putFile(customFile);
+    s3Service.putFile(profileImgFile);
 
     return AuthorEditResult.from(
         getAuthorById(authorId)
-            .changeProfileImgFile(customFile.toProfileImgFile())
+            .changeProfileImgPath(profileImgFile.getUri())
             .changeAuthorProfile(
                 authorEditParam.nickname(),
                 authorEditParam.introduction(),

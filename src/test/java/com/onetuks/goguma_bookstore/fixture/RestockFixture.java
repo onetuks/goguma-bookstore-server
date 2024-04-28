@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.restock.model.Restock;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.restock.model.Restock;
 
 public class RestockFixture {
 

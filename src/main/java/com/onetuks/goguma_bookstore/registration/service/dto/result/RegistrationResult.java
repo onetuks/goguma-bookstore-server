@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.registration.service.dto.result;
 
-import com.onetuks.goguma_bookstore.book.vo.Category;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.registration.model.Registration;
 import java.util.List;
 
 public record RegistrationResult(
@@ -30,20 +30,20 @@ public record RegistrationResult(
   public static RegistrationResult from(Registration registration) {
     return new RegistrationResult(
         registration.getRegistrationId(),
-        registration.getApprovalInfo().getApprovalResult(),
-        registration.getApprovalInfo().getApprovalMemo(),
-        registration.getBookConceptualInfo().getTitle(),
-        registration.getBookConceptualInfo().getOneLiner(),
-        registration.getBookConceptualInfo().getSummary(),
-        registration.getBookConceptualInfo().getCategories(),
-        registration.getBookConceptualInfo().getIsbn(),
-        registration.getBookPhysicalInfo().getHeight(),
-        registration.getBookPhysicalInfo().getWidth(),
-        registration.getBookPhysicalInfo().getCoverType(),
-        registration.getBookPhysicalInfo().getPageCount(),
-        registration.getBookPriceInfo().getRegularPrice(),
-        registration.getBookPriceInfo().getPurchasePrice(),
-        registration.getBookPriceInfo().getPromotion(),
+        registration.getApprovalResult(),
+        registration.getApprovalMemo(),
+        registration.getTitle(),
+        registration.getOneLiner(),
+        registration.getSummary(),
+        registration.getCategories(),
+        registration.getIsbn(),
+        registration.getHeight(),
+        registration.getWidth(),
+        registration.getCoverType(),
+        registration.getPageCount(),
+        registration.getRegularPrice(),
+        registration.getPurchasePrice(),
+        registration.isPromotion(),
         registration.getPublisher(),
         registration.getStockCount(),
         registration.getCoverImgUrl(),

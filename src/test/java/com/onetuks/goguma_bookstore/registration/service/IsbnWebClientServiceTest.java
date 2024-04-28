@@ -4,7 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.IsbnWebClientService;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

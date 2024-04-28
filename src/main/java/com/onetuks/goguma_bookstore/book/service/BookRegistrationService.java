@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.book.service;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.registration.model.Registration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +28,9 @@ public class BookRegistrationService {
                 .bookConceptualInfo(registration.getBookConceptualInfo())
                 .bookPhysicalInfo(registration.getBookPhysicalInfo())
                 .bookPriceInfo(registration.getBookPriceInfo())
-                .publisher(registration.getPublisher())
-                .stockCount(registration.getStockCount())
-                .coverImgFile(registration.getCoverImgFile())
-                .detailImgFiles(registration.getDetailImgFiles())
-                .previewFiles(registration.getPreviewFiles())
+                .coverImgFilePath(registration.getCoverImgUri())
+                .detailImgFilePaths(registration.getDetailImgUris())
+                .previewFilePaths(registration.getPreviewUris())
                 .build())
         .getBookId();
   }

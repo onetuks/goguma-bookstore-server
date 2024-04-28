@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
+import com.onetuks.modulepersistence.author.model.Author;
 
 public record AuthorCreateEnrollmentResult(
     long authorId,
@@ -18,7 +18,7 @@ public record AuthorCreateEnrollmentResult(
         author.getNickname(),
         author.getIntroduction(),
         author.getInstagramUrl(),
-        author.getEnrollmentInfo().getBusinessNumber(),
-        author.getEnrollmentInfo().getMailOrderSalesNumber());
+        author.getBusinessNumber(),
+        author.getMailOrderSalesNumber());
   }
 }

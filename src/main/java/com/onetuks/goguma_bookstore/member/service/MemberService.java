@@ -1,10 +1,7 @@
 package com.onetuks.goguma_bookstore.member.service;
 
-import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberEntryInfoParam;
@@ -16,7 +13,10 @@ import com.onetuks.goguma_bookstore.member.service.dto.result.MemberEntryInfoRes
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberInfoResult;
 import com.onetuks.goguma_bookstore.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.goguma_bookstore.member.service.event.WithdrawalEventPublisher;
-import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.vo.UserData;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class MemberService {
                 memberJpaRepository.save(
                     Member.builder()
                         .authInfo(AuthInfo.from(userData))
-                        .profileImgFile(CustomFile.of().toProfileImgFile())
+                        .profileImgFilePath(FileWrapper.of().getUri())
                         .build())),
         optionalMember.isEmpty());
   }
@@ -65,13 +65,13 @@ public class MemberService {
 
   @Transactional
   public MemberProfileEditResult updateMemberProfile(
-      long memberId, MemberProfileEditParam param, CustomFile customFile) {
-    s3Service.putFile(customFile);
+      long memberId, MemberProfileEditParam param, FileWrapper profileImgFile) {
+    s3Service.putFile(profileImgFile);
 
     return MemberProfileEditResult.from(
         getMemberById(memberId)
             .changeNickname(param.nickname())
-            .changeProfileImgFile(customFile.toProfileImgFile())
+            .changeProfileImgFile(profileImgFile.getUri())
             .changeAlarmPermission(param.alarmPermission())
             .changeDefaultAddressInfo(param.defaultAddress(), param.defaultAddressDetail())
             .changeDefaultCashReceiptInfo(

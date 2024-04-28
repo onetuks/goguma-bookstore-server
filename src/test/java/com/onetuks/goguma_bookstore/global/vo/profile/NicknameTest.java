@@ -3,6 +3,7 @@ package com.onetuks.goguma_bookstore.global.vo.profile;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
+import com.onetuks.modulepersistence.global.vo.profile.Nickname;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -23,7 +23,7 @@ class EnrollmentInfoVerificationServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("존재하지 않는 사업자등록번호를 입력했을 때, IllegalArgumentException이 발생한다.")
+  @DisplayName("존재하지 않는 사업자등록번호를 입력했을 때, IllegalArgumentException 이 발생한다.")
   void verifyEnrollmentInfoTestWithInvalidBusinessNumber() {
     // Given
     String businessNumber = "1234567890";

@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.auth.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onetuks.goguma_bookstore.global.error.ErrorCode;
 import com.onetuks.goguma_bookstore.global.error.ErrorResponse;
+import com.onetuks.modulepersistence.global.error.ErrorCode;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

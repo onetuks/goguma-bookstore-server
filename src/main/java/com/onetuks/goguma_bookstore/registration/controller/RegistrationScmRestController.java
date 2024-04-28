@@ -2,8 +2,9 @@ package com.onetuks.goguma_bookstore.registration.controller;
 
 import com.onetuks.goguma_bookstore.auth.util.admin.AdminId;
 import com.onetuks.goguma_bookstore.auth.util.author.AuthorId;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.goguma_bookstore.registration.controller.dto.request.RegistrationInspectionRequest;
@@ -11,11 +12,11 @@ import com.onetuks.goguma_bookstore.registration.controller.dto.response.Registr
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationIsbnResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse;
 import com.onetuks.goguma_bookstore.registration.controller.dto.response.RegistrationResponse.RegistrationResponses;
-import com.onetuks.goguma_bookstore.registration.service.IsbnWebClientService;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.IsbnWebClientService;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,10 +75,10 @@ public class RegistrationScmRestController {
         registrationScmService.createRegistration(
             authorId,
             request.to(),
-            CustomFile.of(authorId, FileType.COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
-            CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
-            CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
+            FileWrapper.of(authorId, FileType.COVERS, coverImgFile),
+            FileWrapperCollection.of(authorId, FileType.DETAILS, detailImgFiles),
+            FileWrapperCollection.of(authorId, FileType.PREVIEWS, previewFiles),
+            FileWrapper.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationResponse response = RegistrationResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -133,10 +134,10 @@ public class RegistrationScmRestController {
         registrationScmService.updateRegistration(
             registrationId,
             request.to(),
-            CustomFile.of(authorId, FileType.COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
-            CustomFile.of(authorId, FileType.PREVIEWS, previewFiles),
-            CustomFile.of(authorId, FileType.SAMPLES, sampleFile));
+            FileWrapper.of(authorId, FileType.COVERS, coverImgFile),
+            FileWrapperCollection.of(authorId, FileType.DETAILS, detailImgFiles),
+            FileWrapperCollection.of(authorId, FileType.PREVIEWS, previewFiles),
+            FileWrapper.of(authorId, FileType.SAMPLES, sampleFile));
     RegistrationResponse response = RegistrationResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

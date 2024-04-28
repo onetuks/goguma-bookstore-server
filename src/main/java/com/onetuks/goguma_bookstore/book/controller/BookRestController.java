@@ -4,8 +4,8 @@ import com.onetuks.goguma_bookstore.book.controller.dto.response.BookGetResponse
 import com.onetuks.goguma_bookstore.book.controller.dto.response.BookGetResponse.BookGetResponses;
 import com.onetuks.goguma_bookstore.book.service.BookService;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookGetResult;
-import com.onetuks.goguma_bookstore.book.vo.Category;
-import com.onetuks.goguma_bookstore.book.vo.SortOrder;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.book.vo.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

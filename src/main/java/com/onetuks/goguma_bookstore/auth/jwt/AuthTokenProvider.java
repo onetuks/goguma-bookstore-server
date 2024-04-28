@@ -2,7 +2,7 @@ package com.onetuks.goguma_bookstore.auth.jwt;
 
 import static com.onetuks.goguma_bookstore.auth.jwt.AuthToken.AUTHORITIES_KEY;
 import static com.onetuks.goguma_bookstore.auth.jwt.AuthToken.LOGIN_ID_KEY;
-import static com.onetuks.goguma_bookstore.global.vo.auth.RoleType.USER;
+import static com.onetuks.modulepersistence.global.vo.auth.RoleType.USER;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;

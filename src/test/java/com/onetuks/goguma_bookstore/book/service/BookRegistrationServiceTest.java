@@ -4,16 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.RegistrationFixture;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
-import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +56,8 @@ class BookRegistrationServiceTest extends IntegrationTest {
         () -> assertThat(result.getBookPriceInfo()).isEqualTo(registration.getBookPriceInfo()),
         () -> assertThat(result.getPublisher()).isEqualTo(registration.getPublisher()),
         () -> assertThat(result.getStockCount()).isEqualTo(registration.getStockCount()),
-        () -> assertThat(result.getCoverImgFile()).isEqualTo(registration.getCoverImgFile()),
-        () -> assertThat(result.getDetailImgFiles()).isEqualTo(registration.getDetailImgFiles()),
-        () -> assertThat(result.getPreviewFiles()).isEqualTo(registration.getPreviewFiles()));
+        () -> assertThat(result.getCoverImgUrl()).isEqualTo(registration.getCoverImgUrl()),
+        () -> assertThat(result.getDetailImgUrls()).isEqualTo(registration.getDetailImgUrls()),
+        () -> assertThat(result.getPreviewUrls()).isEqualTo(registration.getPreviewUrls()));
   }
 }

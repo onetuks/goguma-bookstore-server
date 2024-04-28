@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.subscribe.model.Subscribe;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.subscribe.model.Subscribe;
 
 public class SubscribeFixture {
 

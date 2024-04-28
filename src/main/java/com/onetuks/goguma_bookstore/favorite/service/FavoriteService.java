@@ -1,14 +1,14 @@
 package com.onetuks.goguma_bookstore.favorite.service;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
-import com.onetuks.goguma_bookstore.favorite.model.Favorite;
-import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteWhetherGetResult;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.favorite.model.Favorite;
+import com.onetuks.modulepersistence.favorite.repository.FavoriteJpaRepository;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +59,7 @@ public class FavoriteService {
   }
 
   @Transactional(readOnly = true)
-  public FavoriteWhetherGetResult readFavoriteExistance(long memberId, long bookId) {
+  public FavoriteWhetherGetResult readFavoriteExistence(long memberId, long bookId) {
     return FavoriteWhetherGetResult.from(
         favoriteJpaRepository.existsByMemberMemberIdAndBookBookId(memberId, bookId));
   }

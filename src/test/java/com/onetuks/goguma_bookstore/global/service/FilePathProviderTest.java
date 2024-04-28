@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 class FilePathProviderTest extends IntegrationTest {
 
   @Test
-  @DisplayName("프로필 이미지 URI를 생성한다.")
+  @DisplayName("프로필 이미지 URI 를 생성한다.")
   void provideFileURITest() {
     // Given
     FileType fileType = FileType.PROFILES;

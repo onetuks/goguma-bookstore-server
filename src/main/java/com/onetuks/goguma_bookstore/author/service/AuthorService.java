@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.author.service;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorDetailsResult;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

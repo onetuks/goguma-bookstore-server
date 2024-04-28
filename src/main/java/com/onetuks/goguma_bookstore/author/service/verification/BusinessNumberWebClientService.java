@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.author.service.verification;
 
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.OPENAPI_REQUEST_ERROR;
+import static com.onetuks.modulepersistence.global.error.ErrorCode.OPENAPI_REQUEST_ERROR;
 
 import com.onetuks.goguma_bookstore.author.service.verification.dto.request.BusinessNumberRequest;
 import com.onetuks.goguma_bookstore.author.service.verification.dto.response.BusinessNumberResponse;

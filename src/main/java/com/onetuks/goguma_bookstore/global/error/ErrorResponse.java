@@ -1,5 +1,6 @@
 package com.onetuks.goguma_bookstore.global.error;
 
+import com.onetuks.modulepersistence.global.error.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -7,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
 
-/** Global Exception Rest Handler에서 발생한 에러에 대한 응답 처리를 관리 */
+/** Global Exception Rest Handler 에서 발생한 에러에 대한 응답 처리를 관리 */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {

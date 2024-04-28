@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.favorite.service.dto.result;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.vo.Category;
-import com.onetuks.goguma_bookstore.favorite.model.Favorite;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.favorite.model.Favorite;
 import java.util.List;
 
 public record FavoriteGetResult(
@@ -19,11 +19,11 @@ public record FavoriteGetResult(
     return new FavoriteGetResult(
         favorite.getFavoriteId(),
         book.getBookId(),
-        book.getCoverImgFile().getCoverImgUrl(),
-        book.getBookConceptualInfo().getTitle(),
+        book.getCoverImgUrl(),
+        book.getTitle(),
         book.getAuthorNickname(),
-        book.getBookPriceInfo().getRegularPrice(),
-        book.getBookPriceInfo().getPurchasePrice(),
-        book.getBookConceptualInfo().getCategories());
+        book.getRegularPrice(),
+        book.getPurchasePrice(),
+        book.getCategories());
   }
 }

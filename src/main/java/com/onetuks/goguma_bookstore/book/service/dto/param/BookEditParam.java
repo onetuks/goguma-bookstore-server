@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.book.service.dto.param;
 
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
 public record BookEditParam(

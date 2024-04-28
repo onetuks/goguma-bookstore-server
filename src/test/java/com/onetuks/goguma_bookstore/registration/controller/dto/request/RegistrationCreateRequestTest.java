@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

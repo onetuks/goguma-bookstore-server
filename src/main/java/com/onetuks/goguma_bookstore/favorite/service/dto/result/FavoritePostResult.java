@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.favorite.service.dto.result;
 
-import com.onetuks.goguma_bookstore.favorite.model.Favorite;
+import com.onetuks.modulepersistence.favorite.model.Favorite;
 
 public record FavoritePostResult(long favoriteId) {
 

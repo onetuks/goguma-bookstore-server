@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.goguma_bookstore.author.service.dto.param.AuthorEditParam;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
@@ -16,16 +14,17 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDe
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.goguma_bookstore.author.service.verification.EnrollmentInfoVerificationService;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import com.onetuks.goguma_bookstore.util.UUIDProvider;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -145,8 +144,7 @@ class AuthorScmServiceTest extends IntegrationTest {
     boolean result = authorJpaRepository.existsById(save.getAuthorId());
 
     assertThat(result).isFalse();
-    assertThrows(
-        NoSuchKeyException.class, () -> s3Service.getFile(save.getProfileImgFile().getUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(save.getProfileImgUrl()));
   }
 
   @Test
@@ -172,8 +170,8 @@ class AuthorScmServiceTest extends IntegrationTest {
     authorJpaRepository.flush();
 
     // 프로필 이미지 등록
-    ProfileImgFile profileImgFile =
-        CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES).toProfileImgFile();
+    FileWrapper profileImgFile =
+        FileWrapperFixture.createFile(author.getAuthorId(), FileType.PROFILES);
     AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미", "https://www.instagram.com/kwak");
     authorScmService.updateAuthorProfile(
         author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);
@@ -300,15 +298,16 @@ class AuthorScmServiceTest extends IntegrationTest {
     Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
     AuthorEditParam param =
         new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.PROFILES);
+    FileWrapper fileWrapper =
+        FileWrapperFixture.createFile(author.getAuthorId(), FileType.PROFILES);
 
     // When
     AuthorEditResult result =
         authorScmService.updateAuthorProfile(
-            author.getAuthorId(), author.getAuthorId(), param, customFile);
+            author.getAuthorId(), author.getAuthorId(), param, fileWrapper);
 
     // Then
-    File savedProfileImgFile = s3Service.getFile(customFile.getUri());
+    File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
 
     assertAll(
         () -> assertThat(savedProfileImgFile).exists(),
@@ -328,14 +327,15 @@ class AuthorScmServiceTest extends IntegrationTest {
             AuthorFixture.create(memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))));
     AuthorEditParam param =
         new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    CustomFile customFile = CustomFileFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
+    FileWrapper fileWrapper =
+        FileWrapperFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
 
     // When & Then
     assertThrows(
         IllegalArgumentException.class,
         () ->
             authorScmService.updateAuthorProfile(
-                author1.getAuthorId(), author0.getAuthorId(), param, customFile));
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
+                author1.getAuthorId(), author0.getAuthorId(), param, fileWrapper));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(fileWrapper.getUri()));
   }
 }

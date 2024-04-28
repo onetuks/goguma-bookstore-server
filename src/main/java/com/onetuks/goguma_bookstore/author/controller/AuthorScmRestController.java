@@ -17,8 +17,8 @@ import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnroll
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEditResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -157,7 +157,7 @@ public class AuthorScmRestController {
             loginAuthorId,
             authorId,
             request.to(),
-            CustomFile.of(loginAuthorId, FileType.PROFILES, profileImgFile));
+            FileWrapper.of(loginAuthorId, FileType.PROFILES, profileImgFile));
     AuthorEditResponse response = AuthorEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

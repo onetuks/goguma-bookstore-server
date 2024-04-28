@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 import org.springframework.data.domain.Page;
 

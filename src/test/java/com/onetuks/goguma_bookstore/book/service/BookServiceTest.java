@@ -4,18 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookGetResult;
-import com.onetuks.goguma_bookstore.book.vo.Category;
-import com.onetuks.goguma_bookstore.book.vo.SortOrder;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.BookFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.book.vo.SortOrder;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -92,8 +92,7 @@ class BookServiceTest extends IntegrationTest {
         () -> assertThat(result.promotion()).isEqualTo(expected.getBookPriceInfo().getPromotion()),
         () -> assertThat(result.publisher()).isEqualTo(expected.getPublisher()),
         () -> assertThat(result.stockCount()).isEqualTo(expected.getStockCount()),
-        () ->
-            assertThat(result.coverImgUrl()).isEqualTo(expected.getCoverImgFile().getCoverImgUrl()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(expected.getCoverImgUrl()),
         () -> assertThat(result.detailImgUrls()).isEqualTo(expected.getDetailImgUrls()),
         () -> assertThat(result.previewUrls()).isEqualTo(expected.getPreviewUrls()),
         () ->

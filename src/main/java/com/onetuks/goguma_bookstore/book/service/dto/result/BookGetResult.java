@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.book.service.dto.result;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.vo.Category;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
 public record BookGetResult(
@@ -36,27 +36,27 @@ public record BookGetResult(
         book.getBookId(),
         book.getAuthor().getAuthorId(),
         book.getAuthorNickname(),
-        book.getBookConceptualInfo().getTitle(),
-        book.getBookConceptualInfo().getOneLiner(),
-        book.getBookConceptualInfo().getSummary(),
-        book.getBookConceptualInfo().getCategories(),
-        book.getBookConceptualInfo().getIsbn(),
-        book.getBookPhysicalInfo().getHeight(),
-        book.getBookPhysicalInfo().getWidth(),
-        book.getBookPhysicalInfo().getCoverType(),
-        book.getBookPhysicalInfo().getPageCount(),
-        book.getBookPriceInfo().getRegularPrice(),
-        book.getBookPriceInfo().getPurchasePrice(),
-        book.getBookPriceInfo().getPromotion(),
+        book.getTitle(),
+        book.getOneLiner(),
+        book.getSummary(),
+        book.getCategories(),
+        book.getIsbn(),
+        book.getHeight(),
+        book.getWidth(),
+        book.getCoverType(),
+        book.getPageCount(),
+        book.getRegularPrice(),
+        book.getPurchasePrice(),
+        book.isPromotion(),
         book.getPublisher(),
         book.getStockCount(),
-        book.getCoverImgFile().getCoverImgUrl(),
+        book.getCoverImgUrl(),
         book.getDetailImgUrls(),
         book.getPreviewUrls(),
-        book.getBookStatics().getFavoriteCount(),
-        book.getBookStatics().getViewCount(),
-        book.getBookStatics().getSalesCount(),
-        book.getBookStatics().getReviewCount(),
-        book.getBookStatics().getReviewScore());
+        book.getFavoriteCount(),
+        book.getViewCount(),
+        book.getSalesCount(),
+        book.getReviewCount(),
+        book.getReviewScore());
   }
 }

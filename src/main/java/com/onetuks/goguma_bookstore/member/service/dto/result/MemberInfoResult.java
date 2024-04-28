@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.member.service.dto.result;
 
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 
 public record MemberInfoResult(
     long memberId,

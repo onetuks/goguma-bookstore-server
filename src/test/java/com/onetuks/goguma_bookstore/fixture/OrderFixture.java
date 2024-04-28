@@ -1,10 +1,10 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.order.model.Order;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
-import com.onetuks.goguma_bookstore.order.vo.PaymentClient;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.order.model.Order;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.modulepersistence.order.vo.PaymentClient;
 import java.time.LocalDateTime;
 
 public class OrderFixture {

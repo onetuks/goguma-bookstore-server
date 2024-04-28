@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult.IsbnDataResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;

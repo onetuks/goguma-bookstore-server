@@ -1,20 +1,10 @@
 package com.onetuks.goguma_bookstore.global.error;
 
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.DUPLICATED_COLUMN_VALUE;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.FILE_NOT_FOUND;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_ARGUMENT_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ILLEGAL_STATE_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INTERNAL_SERVER_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INVALID_INPUT_VALUE_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.INVALID_METHOD_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.NOT_FOUND_ENTITY;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.ONLY_FOR_ADMIN_METHOD;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_BODY_MISSING_ERROR;
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.REQUEST_PARAM_MISSING_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.onetuks.modulepersistence.global.error.ErrorCode;
 import java.io.UncheckedIOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,17 +33,19 @@ public class GlobalExceptionRestHandler {
       DataIntegrityViolationException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(DUPLICATED_COLUMN_VALUE, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.DUPLICATED_COLUMN_VALUE, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
 
-  /** 권한이 없는 사용자가 API를 호출한 경우 */
+  /** 권한이 없는 사용자가 API 를 호출한 경우 */
   @ExceptionHandler(AccessDeniedException.class)
   protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(ONLY_FOR_ADMIN_METHOD, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.ONLY_FOR_ADMIN_METHOD, e.getMessage());
 
     return ResponseEntity.status(UNAUTHORIZED).body(response);
   }
@@ -63,7 +55,7 @@ public class GlobalExceptionRestHandler {
   protected ResponseEntity<ErrorResponse> handleNoSuchKeyException(NoSuchKeyException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(FILE_NOT_FOUND, e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.FILE_NOT_FOUND, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -73,7 +65,7 @@ public class GlobalExceptionRestHandler {
   protected ResponseEntity<ErrorResponse> handleUncheckedIOException(UncheckedIOException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(FILE_NOT_FOUND, e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.FILE_NOT_FOUND, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -84,7 +76,8 @@ public class GlobalExceptionRestHandler {
       MethodArgumentNotValidException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(INVALID_METHOD_ERROR, e.getBindingResult());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.INVALID_METHOD_ERROR, e.getBindingResult());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -95,7 +88,8 @@ public class GlobalExceptionRestHandler {
       MissingServletRequestParameterException ex) {
     logging(ex);
 
-    final ErrorResponse response = ErrorResponse.of(REQUEST_PARAM_MISSING_ERROR, ex.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.REQUEST_PARAM_MISSING_ERROR, ex.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -109,7 +103,8 @@ public class GlobalExceptionRestHandler {
       MethodArgumentTypeMismatchException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE_ERROR, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -120,7 +115,8 @@ public class GlobalExceptionRestHandler {
       JsonProcessingException ex) {
     logging(ex);
 
-    final ErrorResponse response = ErrorResponse.of(REQUEST_BODY_MISSING_ERROR, ex.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.REQUEST_BODY_MISSING_ERROR, ex.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -131,7 +127,7 @@ public class GlobalExceptionRestHandler {
     logging(e);
 
     final ErrorResponse response =
-        ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getBindingResult());
+        ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE_ERROR, e.getBindingResult());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -142,7 +138,8 @@ public class GlobalExceptionRestHandler {
       HttpMediaTypeNotSupportedException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(INVALID_INPUT_VALUE_ERROR, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE_ERROR, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -153,7 +150,7 @@ public class GlobalExceptionRestHandler {
       ChangeSetPersister.NotFoundException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(NOT_FOUND_ENTITY, e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.NOT_FOUND_ENTITY, e.getMessage());
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
   }
@@ -162,7 +159,8 @@ public class GlobalExceptionRestHandler {
   public ResponseEntity<ErrorResponse> handleAllException(IllegalArgumentException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(ILLEGAL_ARGUMENT_ERROR, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.ILLEGAL_ARGUMENT_ERROR, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -171,7 +169,7 @@ public class GlobalExceptionRestHandler {
   public ResponseEntity<ErrorResponse> handleAllException(IllegalStateException e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(ILLEGAL_STATE_ERROR, e.getMessage());
+    final ErrorResponse response = ErrorResponse.of(ErrorCode.ILLEGAL_STATE_ERROR, e.getMessage());
 
     return ResponseEntity.status(BAD_REQUEST).body(response);
   }
@@ -181,7 +179,8 @@ public class GlobalExceptionRestHandler {
   public ResponseEntity<ErrorResponse> handleAllException(Exception e) {
     logging(e);
 
-    final ErrorResponse response = ErrorResponse.of(INTERNAL_SERVER_ERROR, e.getMessage());
+    final ErrorResponse response =
+        ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
   }

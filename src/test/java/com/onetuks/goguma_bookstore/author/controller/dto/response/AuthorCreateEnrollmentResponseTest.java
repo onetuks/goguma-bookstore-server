@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorCreateEnrollmentResult;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.global.vo.file.ProfileImgFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,12 +17,11 @@ class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
   void fromTest() {
     // Given
     long authorId = 1_000L;
-    ProfileImgFile profileImgFile =
-        CustomFileFixture.createFile(authorId, FileType.PROFILES).toProfileImgFile();
+    FileWrapper profileImgFile = FileWrapperFixture.createFile(authorId, FileType.PROFILES);
     AuthorCreateEnrollmentResult resultObject =
         new AuthorCreateEnrollmentResult(
             authorId,
-            profileImgFile.getProfileImgUrl(),
+            profileImgFile.getUri(),
             "빠니보틀",
             "빡친감자",
             "https://www.instagram.com/pannibottle",

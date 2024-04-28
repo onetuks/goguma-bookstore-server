@@ -1,13 +1,12 @@
 package com.onetuks.goguma_bookstore.util;
 
-import static com.onetuks.goguma_bookstore.fixture.MultipartFileFixture.getTempFilePath;
-
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Arrays;
@@ -21,7 +20,7 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
 
   private static final List<Path> staticDirectoryPaths =
       Arrays.stream(FileType.values())
-          .map(fileType -> getTempFilePath(fileType.getDirectoryPath()))
+          .map(fileType -> getTestFilePath(fileType.getDirectoryPath()))
           .toList();
 
   private final Logger log = LoggerFactory.getLogger(getClass());
@@ -60,5 +59,9 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
     } catch (IOException e) {
       log.info("Failed to find static test files and directories.", e);
     }
+  }
+
+  public static Path getTestFilePath(String fileName) {
+    return Paths.get("src/test/resources/static" + fileName);
   }
 }

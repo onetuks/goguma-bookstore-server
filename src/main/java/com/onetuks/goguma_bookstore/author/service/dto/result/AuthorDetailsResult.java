@@ -1,7 +1,6 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.model.AuthorStatics;
+import com.onetuks.modulepersistence.author.model.Author;
 
 public record AuthorDetailsResult(
     long authorId,
@@ -14,16 +13,14 @@ public record AuthorDetailsResult(
     long restockCount) {
 
   public static AuthorDetailsResult from(Author author) {
-    AuthorStatics authorStatics = author.getAuthorStatics();
-
     return new AuthorDetailsResult(
         author.getAuthorId(),
         author.getProfileImgUrl(),
         author.getNickname(),
         author.getIntroduction(),
         author.getInstagramUrl(),
-        authorStatics.getSubscribeCount(),
-        authorStatics.getBookCount(),
-        authorStatics.getRestockCount());
+        author.getSubscribeCount(),
+        author.getBookCount(),
+        author.getRestockCount());
   }
 }

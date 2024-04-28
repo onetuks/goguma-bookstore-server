@@ -1,14 +1,14 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
-import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.order.DefaultAddressInfo;
-import com.onetuks.goguma_bookstore.global.vo.order.DefaultCashReceiptInfo;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.vo.AuthInfo;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
 import com.onetuks.goguma_bookstore.util.UUIDProvider;
+import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.global.vo.order.DefaultAddressInfo;
+import com.onetuks.modulepersistence.global.vo.order.DefaultCashReceiptInfo;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.vo.UserData;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 
 public class MemberFixture {
 

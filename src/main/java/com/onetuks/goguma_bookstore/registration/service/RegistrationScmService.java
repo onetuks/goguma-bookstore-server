@@ -1,20 +1,20 @@
 package com.onetuks.goguma_bookstore.registration.service;
 
 import com.onetuks.goguma_bookstore.author.service.AuthorService;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
 import com.onetuks.goguma_bookstore.book.service.BookRegistrationService;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
-import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
+import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
+import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -44,16 +44,16 @@ public class RegistrationScmService {
   public RegistrationResult createRegistration(
       long authorId,
       RegistrationCreateParam param,
-      CustomFile coverImgFile,
-      List<CustomFile> detailImgFiles,
-      List<CustomFile> previewFiles,
-      CustomFile sampleFile) {
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles,
+      FileWrapper sampleFile) {
     checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     s3Service.putFile(coverImgFile);
     s3Service.putFile(sampleFile);
-    detailImgFiles.forEach(s3Service::putFile);
-    previewFiles.forEach(s3Service::putFile);
+    detailImgFiles.fileWrappers().forEach(s3Service::putFile);
+    previewFiles.fileWrappers().forEach(s3Service::putFile);
 
     return RegistrationResult.from(
         registrationJpaRepository.save(
@@ -65,6 +65,7 @@ public class RegistrationScmService {
                         .oneLiner(param.oneLiner())
                         .summary(param.summary())
                         .categories(param.categories())
+                        .publisher(param.publisher())
                         .isbn(param.isbn())
                         .build())
                 .bookPhysicalInfo(
@@ -79,13 +80,12 @@ public class RegistrationScmService {
                         .regularPrice(param.regularPrice())
                         .purchasePrice(param.purchasePrice())
                         .promotion(param.promotion())
+                        .stockCount(param.stockCount())
                         .build())
-                .publisher(param.publisher())
-                .stockCount(param.stockCount())
-                .coverImgFile(coverImgFile.toCoverImgFile())
-                .detailImgFiles(detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList())
-                .previewFiles(previewFiles.stream().map(CustomFile::toPreviewFile).toList())
-                .sampleFile(sampleFile.toSampleFile())
+                .coverImgFilePath(coverImgFile.getUri())
+                .detailImgFilePaths(detailImgFiles.getUris())
+                .previewFilePaths(previewFiles.getUris())
+                .sampleFilePath(sampleFile.getUri())
                 .build()));
   }
 
@@ -106,33 +106,27 @@ public class RegistrationScmService {
   public RegistrationResult updateRegistration(
       long registrationId,
       RegistrationEditParam param,
-      CustomFile coverImgFile,
-      List<CustomFile> detailImgFiles,
-      List<CustomFile> previewFiles,
-      CustomFile sampleFile) {
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles,
+      FileWrapper sampleFile) {
     Registration registration = getRegistrationById(registrationId);
 
     replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, sampleFile, registration);
 
     return RegistrationResult.from(
         registration.changeRegistration(
-            BookConceptualInfo.builder()
-                .title(registration.getBookConceptualInfo().getTitle())
-                .oneLiner(param.oneLiner())
-                .summary(param.summary())
-                .categories(param.categories())
-                .isbn(registration.getBookConceptualInfo().getIsbn())
-                .build(),
-            BookPriceInfo.builder()
-                .regularPrice(param.regularPrice())
-                .purchasePrice(param.purchasePrice())
-                .promotion(param.promotion())
-                .build(),
-            param.stockCount(),
-            coverImgFile.toCoverImgFile(),
-            detailImgFiles.stream().map(CustomFile::toDetailImgFile).toList(),
-            previewFiles.stream().map(CustomFile::toPreviewFile).toList(),
-            sampleFile.toSampleFile()));
+            registration
+                .getBookConceptualInfo()
+                .changeBookConceptualInfo(param.oneLiner(), param.summary(), param.categories()),
+            registration
+                .getBookPriceInfo()
+                .changeBookPriceInfo(param.regularPrice(), param.purchasePrice(), param.promotion())
+                .changeStockCount(param.stockCount()),
+            coverImgFile.getUri(),
+            detailImgFiles.getUris(),
+            previewFiles.getUris(),
+            sampleFile.getUri()));
   }
 
   @Transactional
@@ -143,8 +137,10 @@ public class RegistrationScmService {
       throw new AccessDeniedException("해당 신간등록을 삭제할 권한이 없습니다.");
     }
 
-    s3Service.deleteFile(registration.getCoverImgFile().getCoverImgUri());
-    s3Service.deleteFile(registration.getSampleFile().getSampleUri());
+    s3Service.deleteFile(registration.getCoverImgUrl());
+    s3Service.deleteFile(registration.getSampleUrl());
+    registration.getDetailImgUrls().forEach(s3Service::deleteFile);
+    registration.getPreviewUrls().forEach(s3Service::deleteFile);
 
     registrationJpaRepository.delete(registration);
   }
@@ -191,10 +187,10 @@ public class RegistrationScmService {
   }
 
   private void checkFileValidity(
-      CustomFile coverImgFile,
-      List<CustomFile> detailImgFiles,
-      List<CustomFile> previewFiles,
-      CustomFile sampleFile) {
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles,
+      FileWrapper sampleFile) {
     if (coverImgFile.isNullFile()
         || sampleFile.isNullFile()
         || detailImgFiles.isEmpty()
@@ -204,10 +200,10 @@ public class RegistrationScmService {
   }
 
   private void replaceIfValidFile(
-      CustomFile coverImgFile,
-      List<CustomFile> detailImgFiles,
-      List<CustomFile> previewFiles,
-      CustomFile sampleFile,
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles,
+      FileWrapper sampleFile,
       Registration registration) {
     if (!coverImgFile.isNullFile()) {
       s3Service.putFile(coverImgFile);
@@ -216,16 +212,12 @@ public class RegistrationScmService {
       s3Service.putFile(sampleFile);
     }
     if (!detailImgFiles.isEmpty()) {
-      registration
-          .getDetailImgFiles()
-          .forEach(detailImgFile -> s3Service.deleteFile(detailImgFile.getDetailImgUri()));
-      detailImgFiles.forEach(s3Service::putFile);
+      registration.getDetailImgFilePaths().getUrls().forEach(s3Service::deleteFile);
+      detailImgFiles.fileWrappers().forEach(s3Service::putFile);
     }
     if (!previewFiles.isEmpty()) {
-      registration
-          .getPreviewFiles()
-          .forEach(previewFile -> s3Service.deleteFile(previewFile.getPreviewFileUri()));
-      previewFiles.forEach(s3Service::putFile);
+      registration.getPreviewFilePaths().getUrls().forEach(s3Service::deleteFile);
+      previewFiles.fileWrappers().forEach(s3Service::putFile);
     }
   }
 }

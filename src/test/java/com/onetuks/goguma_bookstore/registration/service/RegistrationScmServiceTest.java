@@ -5,27 +5,29 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
 import com.onetuks.goguma_bookstore.fixture.RegistrationFixture;
 import com.onetuks.goguma_bookstore.global.service.S3Service;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
-import com.onetuks.goguma_bookstore.registration.repository.RegistrationJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,10 +83,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void createRegistrationTest() {
     // Given
     long authorId = author.getAuthorId();
-    CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
-    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
-    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(authorId, FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
     RegistrationResult result =
@@ -99,9 +103,11 @@ class RegistrationScmServiceTest extends IntegrationTest {
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
-        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        detailImgFiles.fileWrappers().stream()
+            .map(file -> s3Service.getFile(file.getUri()))
+            .toList();
     List<File> savedPreviewFiles =
-        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
@@ -133,10 +139,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void createRegistration_NoCoverImgFile_ExceptionTest() {
     // Given
     long authorId = author.getAuthorId();
-    CustomFile coverImgFile = CustomFileFixture.createNullFile();
-    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
-    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createNullFile();
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When & Then
     assertThrows(
@@ -156,10 +164,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void createRegistration_NoSampleFile_ExceptionTest() {
     // Given
     long authorId = author.getAuthorId();
-    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
-    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
-    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createNullFile();
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createNullFile();
 
     // When & Then
     assertThrows(
@@ -179,10 +189,11 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void createRegistration_NoMockUpFiles_ExceptionTest() {
     // Given
     long authorId = author.getAuthorId();
-    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
-    List<CustomFile> detailImgFiles = List.of();
-    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles = new FileWrapperCollection(Collections.emptyList());
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When & Then
     assertThrows(
@@ -202,10 +213,11 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void createRegistration_NoPreviewFiles_ExceptionTest() {
     // Given
     long authorId = author.getAuthorId();
-    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
-    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
-    List<CustomFile> previewFiles = List.of();
-    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.DETAILS);
+    FileWrapperCollection previewFiles = new FileWrapperCollection(Collections.emptyList());
+    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     // When & Then
     assertThrows(
@@ -236,11 +248,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
     // Then
     boolean existsBook =
         bookJpaRepository.findAll().stream()
-            .anyMatch(
-                book ->
-                    Objects.equals(
-                        book.getBookConceptualInfo().getIsbn(),
-                        save.getBookConceptualInfo().getIsbn()));
+            .anyMatch(book -> Objects.equals(book.getIsbn(), save.getIsbn()));
 
     assertThat(existsBook).isTrue();
     assertAll(
@@ -255,10 +263,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
     // Given
     long authorId = author.getAuthorId();
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
-    CustomFile coverImgFile = CustomFileFixture.createFile(authorId, FileType.COVERS);
-    List<CustomFile> detailImgFiles = CustomFileFixture.createFiles(authorId, FileType.DETAILS);
-    List<CustomFile> previewFiles = CustomFileFixture.createFiles(authorId, FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createFile(authorId, FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(authorId, FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(authorId, FileType.SAMPLES);
 
     // When
     RegistrationResult result =
@@ -273,25 +283,27 @@ class RegistrationScmServiceTest extends IntegrationTest {
     // Then
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
-        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        detailImgFiles.fileWrappers().stream()
+            .map(file -> s3Service.getFile(file.getUri()))
+            .toList();
     List<File> savedPreviewFiles =
-        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
         () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
         () -> assertThat(result.categories()).isEqualTo(editParam.categories()),
         () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
-        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
-        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
-        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
-        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getPageCount()),
         () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
         () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
         () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
@@ -307,10 +319,10 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void updateRegistration_NoFiles_Test() {
     // Given
     Registration save = registrationJpaRepository.save(RegistrationFixture.create(author));
-    CustomFile coverImgFile = CustomFileFixture.createNullFile();
-    List<CustomFile> detailImgFiles = List.of();
-    List<CustomFile> previewFiles = List.of();
-    CustomFile sampleFile = CustomFileFixture.createNullFile();
+    FileWrapper coverImgFile = FileWrapperFixture.createNullFile();
+    FileWrapperCollection detailImgFiles = new FileWrapperCollection(Collections.emptyList());
+    FileWrapperCollection previewFiles = new FileWrapperCollection(Collections.emptyList());
+    FileWrapper sampleFile = FileWrapperFixture.createNullFile();
 
     // When
     RegistrationResult result =
@@ -327,16 +339,16 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isPositive(),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
         () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
         () -> assertThat(result.categories()).isEqualTo(editParam.categories()),
         () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
-        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
-        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
-        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
-        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getPageCount()),
         () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
         () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
         () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
@@ -364,8 +376,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
     boolean result = registrationJpaRepository.existsById(save.getRegistrationId());
 
     assertThat(result).isFalse();
-    assertThrows(
-        NoSuchKeyException.class, () -> s3Service.getFile(save.getCoverImgFile().getCoverImgUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(save.getCoverImgUrl()));
   }
 
   @Test
@@ -373,12 +384,12 @@ class RegistrationScmServiceTest extends IntegrationTest {
   void deleteRegistration_NoAuthority_ExceptionTest() {
     // Given
     long otherAuthorId = 123_412L;
-    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
-    List<CustomFile> detailImgFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
-    List<CustomFile> previewFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
-    CustomFile sampleFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     RegistrationResult result =
         registrationScmService.createRegistration(
@@ -396,9 +407,11 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
-        detailImgFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        detailImgFiles.fileWrappers().stream()
+            .map(file -> s3Service.getFile(file.getUri()))
+            .toList();
     List<File> savedPreviewFiles =
-        previewFiles.stream().map(file -> s3Service.getFile(file.getUri())).toList();
+        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
     File savedSampleFile = s3Service.getFile(sampleFile.getUri());
 
     assertAll(
@@ -423,24 +436,20 @@ class RegistrationScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isEqualTo(save.getRegistrationId()),
         () -> assertThat(result.approvalResult()).isFalse(),
         () -> assertThat(result.approvalMemo()).isEqualTo("유효하지 않은 ISBN입니다."),
-        () -> assertThat(result.title()).isEqualTo(save.getBookConceptualInfo().getTitle()),
-        () -> assertThat(result.oneLiner()).isEqualTo(save.getBookConceptualInfo().getOneLiner()),
-        () -> assertThat(result.summary()).isEqualTo(save.getBookConceptualInfo().getSummary()),
-        () ->
-            assertThat(result.categories()).isEqualTo(save.getBookConceptualInfo().getCategories()),
+        () -> assertThat(result.title()).isEqualTo(save.getTitle()),
+        () -> assertThat(result.oneLiner()).isEqualTo(save.getOneLiner()),
+        () -> assertThat(result.summary()).isEqualTo(save.getSummary()),
+        () -> assertThat(result.categories()).isEqualTo(save.getCategories()),
         () -> assertThat(result.publisher()).isEqualTo(save.getPublisher()),
-        () -> assertThat(result.isbn()).isEqualTo(save.getBookConceptualInfo().getIsbn()),
-        () -> assertThat(result.height()).isEqualTo(save.getBookPhysicalInfo().getHeight()),
-        () -> assertThat(result.width()).isEqualTo(save.getBookPhysicalInfo().getWidth()),
-        () -> assertThat(result.coverType()).isEqualTo(save.getBookPhysicalInfo().getCoverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(save.getBookPhysicalInfo().getPageCount()),
-        () ->
-            assertThat(result.regularPrice()).isEqualTo(save.getBookPriceInfo().getRegularPrice()),
-        () ->
-            assertThat(result.purchasePrice())
-                .isEqualTo(save.getBookPriceInfo().getPurchasePrice()),
+        () -> assertThat(result.isbn()).isEqualTo(save.getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(save.getHeight()),
+        () -> assertThat(result.width()).isEqualTo(save.getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(save.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(save.getPageCount()),
+        () -> assertThat(result.regularPrice()).isEqualTo(save.getRegularPrice()),
+        () -> assertThat(result.purchasePrice()).isEqualTo(save.getPurchasePrice()),
         () -> assertThat(result.stockCount()).isEqualTo(save.getStockCount()),
-        () -> assertThat(result.promotion()).isEqualTo(save.getBookPriceInfo().getPromotion()));
+        () -> assertThat(result.promotion()).isEqualTo(save.isPromotion()));
   }
 
   @Test

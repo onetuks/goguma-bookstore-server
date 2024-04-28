@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.service;
 
-import static com.onetuks.goguma_bookstore.global.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
+import static com.onetuks.modulepersistence.global.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
 
 import com.onetuks.goguma_bookstore.auth.exception.TokenExpiredException;
 import com.onetuks.goguma_bookstore.auth.jwt.AuthToken;

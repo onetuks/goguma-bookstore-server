@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.service.dto.result;
 
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import java.time.LocalDateTime;
 
 public record AuthorEnrollmentDetailsResult(
@@ -26,9 +26,9 @@ public record AuthorEnrollmentDetailsResult(
         author.getNickname(),
         author.getIntroduction(),
         author.getInstagramUrl(),
-        author.getEnrollmentInfo().getBusinessNumber(),
-        author.getEnrollmentInfo().getMailOrderSalesNumber(),
-        author.getEnrollmentInfo().getEnrollmentPassed(),
-        author.getEnrollmentInfo().getEnrollmentAt());
+        author.getBusinessNumber(),
+        author.getMailOrderSalesNumber(),
+        author.getEnrollmentPassed(),
+        author.getEnrollmentAt());
   }
 }

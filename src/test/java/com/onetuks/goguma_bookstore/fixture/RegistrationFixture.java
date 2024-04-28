@@ -1,41 +1,27 @@
 package com.onetuks.goguma_bookstore.fixture;
 
-import static com.onetuks.goguma_bookstore.book.vo.Category.CARTOON;
-import static com.onetuks.goguma_bookstore.book.vo.Category.ESSEY;
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.COVERS;
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.DETAILS;
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.PREVIEWS;
-import static com.onetuks.goguma_bookstore.global.vo.file.FileType.SAMPLES;
-import static com.onetuks.goguma_bookstore.util.RandomValueProvider.createIsbn;
-
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookConceptualInfo;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookPhysicalInfo;
-import com.onetuks.goguma_bookstore.book.model.embedded.BookPriceInfo;
-import com.onetuks.goguma_bookstore.global.vo.file.CoverImgFile;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
-import com.onetuks.goguma_bookstore.global.vo.file.DetailImgFile;
-import com.onetuks.goguma_bookstore.global.vo.file.PreviewFile;
-import com.onetuks.goguma_bookstore.global.vo.file.SampleFile;
-import com.onetuks.goguma_bookstore.registration.model.Registration;
-import com.onetuks.goguma_bookstore.registration.model.embedded.ApprovalInfo;
+import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.goguma_bookstore.util.RandomValueProvider;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
+import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
+import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.model.embedded.ApprovalInfo;
 import java.util.List;
 
 public class RegistrationFixture {
 
   public static Registration create(Author author) {
-    CoverImgFile coverImgFile =
-        CustomFileFixture.createFile(author.getAuthorId(), COVERS).toCoverImgFile();
-    List<DetailImgFile> detailImgFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), DETAILS).stream()
-            .map(CustomFile::toDetailImgFile)
-            .toList();
-    List<PreviewFile> previewFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), PREVIEWS).stream()
-            .map(CustomFile::toPreviewFile)
-            .toList();
-    SampleFile sampleFile =
-        CustomFileFixture.createFile(author.getAuthorId(), SAMPLES).toSampleFile();
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
 
     return Registration.builder()
         .author(author)
@@ -43,12 +29,10 @@ public class RegistrationFixture {
         .bookConceptualInfo(createBookConceptualInfo())
         .bookPhysicalInfo(createBookPhysicalInfo())
         .bookPriceInfo(createBookPriceInfo())
-        .publisher("샌드박스")
-        .stockCount(10L)
-        .coverImgFile(coverImgFile)
-        .detailImgFiles(detailImgFiles)
-        .previewFiles(previewFiles)
-        .sampleFile(sampleFile)
+        .coverImgFilePath(coverImgFile.getUri())
+        .detailImgFilePaths(detailImgFiles.getUris())
+        .previewFilePaths(previewFiles.getUris())
+        .sampleFilePath(sampleFile.getUri())
         .build();
   }
 
@@ -64,8 +48,9 @@ public class RegistrationFixture {
         .title("아메리카 여행기")
         .oneLiner("대 빠니보틀 여행기")
         .summary("미국 갔다가 남극 직전에 돌아옴")
-        .categories(List.of(CARTOON, ESSEY))
-        .isbn(createIsbn())
+        .categories(List.of(Category.CARTOON, Category.ESSEY))
+        .publisher("샌드박스")
+        .isbn(RandomValueProvider.createIsbn())
         .build();
   }
 
@@ -83,6 +68,7 @@ public class RegistrationFixture {
         .regularPrice(10_000L)
         .purchasePrice(9_000L)
         .promotion(Boolean.TRUE)
+        .stockCount(10L)
         .build();
   }
 }

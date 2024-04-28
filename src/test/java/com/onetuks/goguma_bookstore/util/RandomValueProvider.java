@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.util;
 
-import com.onetuks.goguma_bookstore.book.vo.Category;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 import java.util.Random;
 

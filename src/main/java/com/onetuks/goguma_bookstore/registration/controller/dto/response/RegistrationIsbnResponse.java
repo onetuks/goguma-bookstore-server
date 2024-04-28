@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.registration.controller.dto.response;
 
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult;
-import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationIsbnResult.IsbnDataResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult;
+import com.onetuks.goguma_bookstore.registration.service.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
 
 public record RegistrationIsbnResponse(
     String isbn,

@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.member.service.dto.result;
 
-import com.onetuks.goguma_bookstore.member.model.Member;
+import com.onetuks.modulepersistence.member.model.Member;
 
 public record MemberDefaultAddressEditResult(String defaultAddress, String defaultAddressDetail) {
 

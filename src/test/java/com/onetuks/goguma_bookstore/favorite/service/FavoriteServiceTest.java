@@ -4,19 +4,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
-import com.onetuks.goguma_bookstore.favorite.repository.FavoriteJpaRepository;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.goguma_bookstore.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
 import com.onetuks.goguma_bookstore.fixture.BookFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.member.model.Member;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.favorite.repository.FavoriteJpaRepository;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,8 +104,8 @@ class FavoriteServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("유저가 즐겨찾기 하지 않은 도서를 이용해 즐겨찾기를 조회하면 false를 반환한다.")
-  void readFavoriteExistance_NotFavoritedTest() {
+  @DisplayName("유저가 즐겨찾기 하지 않은 도서를 이용해 즐겨찾기를 조회하면 false 를 반환한다.")
+  void readFavoriteExistence_NotFavoritedTest() {
     // Given
     Member userMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     Book notFavoritedBook =
@@ -118,7 +118,7 @@ class FavoriteServiceTest extends IntegrationTest {
     // When
     boolean result =
         favoriteService
-            .readFavoriteExistance(userMember.getMemberId(), notFavoritedBook.getBookId())
+            .readFavoriteExistence(userMember.getMemberId(), notFavoritedBook.getBookId())
             .isFavorited();
 
     // Then
@@ -126,11 +126,11 @@ class FavoriteServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("유저가 즐겨찾기한 도서를 이용해 즐겨찾기를 조회하면 true를 반환한다.")
-  void readFavoriteExistance_FavoritedTest() {
+  @DisplayName("유저가 즐겨찾기한 도서를 이용해 즐겨찾기를 조회하면 true 를 반환한다.")
+  void readFavoriteExistence_FavoritedTest() {
     // Given & When
     boolean result =
-        favoriteService.readFavoriteExistance(member.getMemberId(), book.getBookId()).isFavorited();
+        favoriteService.readFavoriteExistence(member.getMemberId(), book.getBookId()).isFavorited();
 
     // Then
     assertThat(result).isTrue();

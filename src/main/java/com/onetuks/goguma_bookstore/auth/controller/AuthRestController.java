@@ -15,7 +15,7 @@ import com.onetuks.goguma_bookstore.auth.service.dto.LoginResult;
 import com.onetuks.goguma_bookstore.auth.service.dto.LogoutResult;
 import com.onetuks.goguma_bookstore.auth.service.dto.RefreshResult;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
-import com.onetuks.goguma_bookstore.global.vo.auth.ClientProvider;
+import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

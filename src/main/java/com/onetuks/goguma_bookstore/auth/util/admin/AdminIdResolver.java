@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.auth.util.admin;
 
 import com.onetuks.goguma_bookstore.auth.jwt.CustomUserDetails;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;

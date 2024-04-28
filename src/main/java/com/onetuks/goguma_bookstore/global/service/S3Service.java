@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.global.service;
 
 import com.onetuks.goguma_bookstore.global.config.S3Config;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -29,7 +29,7 @@ public class S3Service {
   }
 
   @Transactional
-  public void putFile(CustomFile file) {
+  public void putFile(FileWrapper file) {
     if (file.isNullFile()) {
       return;
     }

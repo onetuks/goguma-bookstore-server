@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.member.controller.dto.request;
 
 import com.onetuks.goguma_bookstore.member.service.dto.param.MemberProfileEditParam;
-import com.onetuks.goguma_bookstore.order.vo.CashReceiptType;
+import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

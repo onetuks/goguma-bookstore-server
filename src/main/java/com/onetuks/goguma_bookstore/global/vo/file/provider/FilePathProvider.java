@@ -15,7 +15,7 @@ public class FilePathProvider {
     return fileType.getDirectoryPath() + id + "/" + index + fileType.getFileExtension();
   }
 
-  public static String provideDefaultProfileURI() {
-    return FileType.PROFILES.getDirectoryPath() + "default-profile.png";
+  public static String provideDefaultMemberProfileURI() {
+    return FileType.PROFILES.getDirectoryPath() + "default-member-profile.png";
   }
 }

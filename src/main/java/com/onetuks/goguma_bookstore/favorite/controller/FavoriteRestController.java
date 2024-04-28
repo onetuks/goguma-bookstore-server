@@ -74,7 +74,7 @@ public class FavoriteRestController {
   @GetMapping(path = "/whether", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoriteWhetherGetResponse> getIsFavorited(
       @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
-    FavoriteWhetherGetResult result = favoriteService.readFavoriteExistance(memberId, bookId);
+    FavoriteWhetherGetResult result = favoriteService.readFavoriteExistence(memberId, bookId);
     FavoriteWhetherGetResponse response = FavoriteWhetherGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

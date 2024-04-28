@@ -108,19 +108,6 @@ public class ArchitectureTest extends IntegrationTest {
     }
 
     @Test
-    @DisplayName("repository 패키지 안에 있는 클래스는 Repository 로 끝나고, 인터페이스이다.")
-    void repository_ClassNamePostfix_Test() {
-      ArchRule rule =
-          ArchRuleDefinition.classes()
-              .that()
-              .resideInAnyPackage("..repository..")
-              .should()
-              .haveSimpleNameEndingWith("Repository");
-
-      rule.check(javaClasses);
-    }
-
-    @Test
     @DisplayName("service 패키지 안에 있는 클래스는 Service 로 끝난다.")
     void service_ClassNamePostfix_Test() {
       ArchRule rule =
@@ -220,37 +207,6 @@ public class ArchitectureTest extends IntegrationTest {
               .should()
               .dependOnClassesThat()
               .resideInAnyPackage("..controller");
-
-      rule.check(javaClasses);
-    }
-
-    @Test
-    @DisplayName("Model은 오직 Service와 Repository, Component에 의해서만 의존한다")
-    void model_HaveDependancy_Test() {
-      ArchRule rule =
-          ArchRuleDefinition.classes()
-              .that()
-              .resideInAnyPackage("..model")
-              .should()
-              .onlyHaveDependentClassesThat()
-              .resideInAnyPackage(
-                  "..service..", "..repository..", "..model..", "..auth..", "..vo..");
-
-      rule.check(javaClasses);
-    }
-
-    @Test
-    @DisplayName("Model은 아무것도 의존하지 않는다.")
-    void model_NoDependOn_Test() {
-      ArchRule rule =
-          ArchRuleDefinition.classes()
-              .that()
-              .resideInAnyPackage("..model")
-              .and()
-              .haveSimpleNameNotStartingWith("Q")
-              .should()
-              .onlyDependOnClassesThat()
-              .resideInAnyPackage("..model..", "java..", "jakarta..", "lombok..", "..vo..");
 
       rule.check(javaClasses);
     }

@@ -1,6 +1,6 @@
 package com.onetuks.goguma_bookstore.auth.oauth.strategy;
 
-import com.onetuks.goguma_bookstore.auth.oauth.dto.UserData;
+import com.onetuks.modulepersistence.member.vo.UserData;
 
 public interface ClientProviderStrategy {
 

@@ -4,8 +4,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.goguma_bookstore.auth.jwt.AuthHeaderUtil;
 import com.onetuks.goguma_bookstore.auth.util.login.LoginId;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberDefaultCashReceiptEditRequest;
 import com.onetuks.goguma_bookstore.member.controller.dto.request.MemberEntryInfoRequest;
@@ -80,7 +80,7 @@ public class MemberRestController {
       @RequestPart(value = "profile-img-file", required = false) MultipartFile profileImgFile) {
     MemberProfileEditResult result =
         memberService.updateMemberProfile(
-            memberId, request.to(), CustomFile.of(memberId, FileType.PROFILES, profileImgFile));
+            memberId, request.to(), FileWrapper.of(memberId, FileType.PROFILES, profileImgFile));
     MemberProfileEditResponse response = MemberProfileEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -1,0 +1,47 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+repositories {
+	mavenCentral()
+}
+
+java {
+	sourceCompatibility = '17'
+}
+
+dependencies {
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Arch-Unit
+	testImplementation 'com.tngtech.archunit:archunit:1.2.2'
+
+	///
+
+	// Hypersistence Utils
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.4'
+
+	// Jackson
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+}

@@ -5,12 +5,32 @@ plugins {
     id 'com.diffplug.spotless' version '6.25.0'
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
-//    id 'org.asciidoctor.jvm.convert' version '4.0.2'
-//    id 'com.epages.restdocs-api-spec' version '0.19.2'
+    id 'org.asciidoctor.jvm.convert' version '4.0.2'
+    id 'com.epages.restdocs-api-spec' version '0.19.2'
 }
 
-group = 'com.onetuks'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'com.onetuks'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+    }
+
+    clean {
+        delete file('src/main/generated')
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 java {
     sourceCompatibility = '17'
@@ -24,39 +44,23 @@ jacoco {
     toolVersion = '0.8.8'
 }
 
-//openapi3 {
-//    servers = List.of(
-//            { url = "http://localhost:8080" },
-//            { url = "http://server:8080" }
-////            { url = "https://서버url" }
-//    )
-//    title = "Goguma-Bookstore-Server-API"
-//    description = "고구마서점 API"
-//    version = getVersion()
-//    format = "json" // (json / yaml)
-//    outputDirectory = "src/main/resources/static"
-//    outputFileNamePrefix = "swagger"
-//}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
-}
-
-clean {
-    delete file('src/main/generated')
+openapi3 {
+    servers = List.of(
+            { url = "http://localhost:8080" },
+            { url = "http://server:8080" }
+//            { url = "https://서버url" }
+    )
+    title = "Goguma-Bookstore-Server-API"
+    description = "고구마서점 API"
+    version = getVersion()
+    format = "json" // (json / yaml)
+    outputDirectory = "src/main/resources/static"
+    outputFileNamePrefix = "swagger"
 }
 
 dependencies {
+
+    implementation project(':module-persistence')
 
     // Netty/Resolver/DNS/Native/MacOS
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
@@ -86,14 +90,14 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-//    // RestDocs
-//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-//
-//    // Rest Docs API Spec
-//    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
-//
-//    // Swagger UI
-//    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    // RestDocs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+    // Rest Docs API Spec
+    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+
+    // Swagger UI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -122,11 +126,11 @@ dependencies {
     testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
 
     // AWS S3
-    implementation(platform('software.amazon.awssdk:bom:2.25.36'))
+    implementation(platform('software.amazon.awssdk:bom:2.25.39'))
     implementation('commons-io:commons-io:2.16.1')
     implementation('software.amazon.awssdk:aws-core:2.25.30')
-    implementation('software.amazon.awssdk:sdk-core:2.25.37')
-    implementation('software.amazon.awssdk:sts:2.25.34')
+    implementation('software.amazon.awssdk:sdk-core:2.25.38')
+    implementation('software.amazon.awssdk:sts:2.25.39')
     implementation('software.amazon.awssdk:s3:2.25.27')
     testImplementation('org.testcontainers:localstack')
 
@@ -139,10 +143,10 @@ tasks.named('test') {
     finalizedBy(tasks.jacocoTestReport)
 }
 
-//tasks.named('asciidoctor') {
-//    inputs.dir snippetsDir
-//    dependsOn test
-//}
+tasks.named('asciidoctor') {
+    inputs.dir snippetsDir
+    dependsOn test
+}
 
 tasks.jacocoTestReport {
     reports {
@@ -254,3 +258,5 @@ tasks.register("addGitPreCommitHook", Copy) {
     from 'script/pre-commit'
     into '.git/hooks'
 }
+
+project(':module-persistence') {}

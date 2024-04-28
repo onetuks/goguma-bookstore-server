@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
 import java.io.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,30 +23,30 @@ class S3ServiceTest extends IntegrationTest {
   void s3PutFileSuccessTest() {
     // Given
     long memberId = 1_0000L;
-    CustomFile customFile = CustomFileFixture.createFile(memberId, FileType.PROFILES);
+    FileWrapper fileWrapper = FileWrapperFixture.createFile(memberId, FileType.PROFILES);
 
     // When
-    s3Service.putFile(customFile);
+    s3Service.putFile(fileWrapper);
 
     // Then
-    File result = s3Service.getFile(customFile.getUri());
+    File result = s3Service.getFile(fileWrapper.getUri());
 
     assertAll(
         () -> assertThat(result).isFile(),
-        () -> assertThat(result).hasSize(customFile.getMultipartFile().getSize()));
+        () -> assertThat(result).hasSize(fileWrapper.getMultipartFile().getSize()));
   }
 
   @Test
   @DisplayName("파일이 없는 경우 파일 저장 로직을 실행하지 않고 바로 메소드가 종료된다.")
   void s3PutFile_NullFile_ReturnTest() {
     // Given
-    CustomFile customFile = CustomFileFixture.createNullFile();
+    FileWrapper fileWrapper = FileWrapperFixture.createNullFile();
 
     // When
-    s3Service.putFile(customFile);
+    s3Service.putFile(fileWrapper);
 
     // Then
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(fileWrapper.getUri()));
   }
 
   @Test
@@ -54,14 +54,14 @@ class S3ServiceTest extends IntegrationTest {
   void s3DeleteFileSuccessTest() {
     // Given
     long memberId = 1L;
-    CustomFile customFile = CustomFileFixture.createFile(memberId, FileType.PROFILES);
-    s3Service.putFile(customFile);
+    FileWrapper fileWrapper = FileWrapperFixture.createFile(memberId, FileType.PROFILES);
+    s3Service.putFile(fileWrapper);
 
     // When
-    s3Service.deleteFile(customFile.getUri());
+    s3Service.deleteFile(fileWrapper.getUri());
 
     // Then
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(customFile.getUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(fileWrapper.getUri()));
   }
 
   @Test

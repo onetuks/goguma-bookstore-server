@@ -1,7 +1,7 @@
 package com.onetuks.goguma_bookstore.author.controller.dto.response;
 
 import com.onetuks.goguma_bookstore.author.service.dto.result.AuthorEnrollmentDetailsResult;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 
@@ -12,7 +12,7 @@ public record AuthorEnrollmentDetailsResponse(
     String profileImgUrl,
     String nickname,
     String introduction,
-    String instragramUrl,
+    String instagramUrl,
     String escrowServiceUrl,
     String mailOrderSalesUrl,
     boolean enrollmentPassed,

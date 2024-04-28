@@ -5,25 +5,27 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.goguma_bookstore.IntegrationTest;
-import com.onetuks.goguma_bookstore.author.model.Author;
-import com.onetuks.goguma_bookstore.author.repository.AuthorJpaRepository;
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.book.service.dto.param.BookEditParam;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.fixture.AuthorFixture;
-import com.onetuks.goguma_bookstore.fixture.CustomFileFixture;
+import com.onetuks.goguma_bookstore.fixture.FileWrapperFixture;
 import com.onetuks.goguma_bookstore.fixture.MemberFixture;
-import com.onetuks.goguma_bookstore.global.vo.auth.RoleType;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
-import com.onetuks.goguma_bookstore.member.repository.MemberJpaRepository;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
 import com.onetuks.goguma_bookstore.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +37,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 
 class BookScmServiceTest extends IntegrationTest {
+
+  private static final String BASE_URL = "https://test-bucket-url.com";
 
   @Autowired private BookScmService bookScmService;
   @Autowired private RegistrationScmService registrationScmService;
@@ -83,10 +87,10 @@ class BookScmServiceTest extends IntegrationTest {
                 true,
                 "출판사J",
                 10L),
-            CustomFileFixture.createFile(authorId, FileType.COVERS),
-            CustomFileFixture.createFiles(authorId, FileType.DETAILS),
-            CustomFileFixture.createFiles(authorId, FileType.PREVIEWS),
-            CustomFileFixture.createFile(authorId, FileType.SAMPLES));
+            FileWrapperFixture.createFile(authorId, FileType.COVERS),
+            FileWrapperFixture.createFiles(authorId, FileType.DETAILS),
+            FileWrapperFixture.createFiles(authorId, FileType.PREVIEWS),
+            FileWrapperFixture.createFile(authorId, FileType.SAMPLES));
 
     registrationScmService.updateRegistrationApprovalInfo(
         registrationResult.registrationId(), true, "통과");
@@ -105,11 +109,11 @@ class BookScmServiceTest extends IntegrationTest {
   @DisplayName("도서 정보 수정 시 책 재고량이 0이 되고, 해당 신간등록이 검수 대기인 상태로 변경되며 신간등록 정보도 수정된다.")
   void updateBookTest() {
     // Given
-    CustomFile coverImgFile = CustomFileFixture.createFile(author.getAuthorId(), FileType.COVERS);
-    List<CustomFile> detailImgFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
-    List<CustomFile> previewFiles =
-        CustomFileFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+    FileWrapperCollection previewFiles =
+        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
 
     // When
     BookEditResult result =
@@ -127,46 +131,40 @@ class BookScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isEqualTo(registrationResult.registrationId()),
         () -> assertThat(result.approvalResult()).isEqualTo(registrationResult.approvalResult()),
         () -> assertThat(result.approvalMemo()).isEqualTo("도서 정보 수정으로 인한 재승인 필요"),
-        () -> assertThat(result.title()).isEqualTo(book.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.title()).isEqualTo(book.getTitle()),
         () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
         () ->
             assertThat(result.categories())
                 .containsExactlyInAnyOrderElementsOf(editParam.categories()),
-        () -> assertThat(result.isbn()).isEqualTo(book.getBookConceptualInfo().getIsbn()),
-        () -> assertThat(result.height()).isEqualTo(book.getBookPhysicalInfo().getHeight()),
-        () -> assertThat(result.width()).isEqualTo(book.getBookPhysicalInfo().getWidth()),
-        () -> assertThat(result.coverType()).isEqualTo(book.getBookPhysicalInfo().getCoverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(book.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.isbn()).isEqualTo(book.getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(book.getHeight()),
+        () -> assertThat(result.width()).isEqualTo(book.getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(book.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(book.getPageCount()),
         () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
         () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
         () -> assertThat(result.promotion()).isEqualTo(editParam.promotion()),
         () -> assertThat(result.publisher()).isEqualTo(book.getPublisher()),
         () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
-        () ->
-            assertThat(result.coverImgUrl())
-                .isEqualTo(coverImgFile.toCoverImgFile().getCoverImgUrl()),
+        () -> assertThat(result.coverImgUrl()).contains(coverImgFile.getUri()),
         () ->
             assertThat(result.detailImgUrls())
                 .containsExactlyInAnyOrderElementsOf(
-                    detailImgFiles.stream()
-                        .map(file -> file.toDetailImgFile().getDetailImgUrl())
-                        .toList()),
+                    detailImgFiles.getUris().stream().map(uri -> BASE_URL + uri).toList()),
         () ->
             assertThat(result.previewUrls())
                 .containsExactlyInAnyOrderElementsOf(
-                    previewFiles.stream()
-                        .map(file -> file.toPreviewFile().getPreviewUrl())
-                        .toList()));
+                    previewFiles.getUris().stream().map(uri -> BASE_URL + uri).toList()));
   }
 
   @Test
   @DisplayName("도서 정보 수정 시 책 재고량이 0이 되고, 해당 신간등록이 검수 대기인 상태로 변경되며 신간등록 정보도 수정된다.")
   void updateBook_NoFiles_Test() {
     // Given
-    CustomFile coverImgFile = CustomFileFixture.createNullFile();
-    List<CustomFile> detailImgFiles = List.of();
-    List<CustomFile> previewFiles = List.of();
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+    FileWrapperCollection detailImgFiles = new FileWrapperCollection(Collections.emptyList());
+    FileWrapperCollection previewFiles = new FileWrapperCollection(Collections.emptyList());
 
     // When
     BookEditResult result =
@@ -184,29 +182,31 @@ class BookScmServiceTest extends IntegrationTest {
         () -> assertThat(result.registrationId()).isEqualTo(registrationResult.registrationId()),
         () -> assertThat(result.approvalResult()).isEqualTo(registrationResult.approvalResult()),
         () -> assertThat(result.approvalMemo()).isEqualTo("도서 정보 수정으로 인한 재승인 필요"),
-        () -> assertThat(result.title()).isEqualTo(book.getBookConceptualInfo().getTitle()),
+        () -> assertThat(result.title()).isEqualTo(book.getTitle()),
         () -> assertThat(result.oneLiner()).isEqualTo(editParam.oneLiner()),
         () -> assertThat(result.summary()).isEqualTo(editParam.summary()),
         () ->
             assertThat(result.categories())
                 .containsExactlyInAnyOrderElementsOf(editParam.categories()),
-        () -> assertThat(result.isbn()).isEqualTo(book.getBookConceptualInfo().getIsbn()),
-        () -> assertThat(result.height()).isEqualTo(book.getBookPhysicalInfo().getHeight()),
-        () -> assertThat(result.width()).isEqualTo(book.getBookPhysicalInfo().getWidth()),
-        () -> assertThat(result.coverType()).isEqualTo(book.getBookPhysicalInfo().getCoverType()),
-        () -> assertThat(result.pageCount()).isEqualTo(book.getBookPhysicalInfo().getPageCount()),
+        () -> assertThat(result.isbn()).isEqualTo(book.getIsbn()),
+        () -> assertThat(result.height()).isEqualTo(book.getHeight()),
+        () -> assertThat(result.width()).isEqualTo(book.getWidth()),
+        () -> assertThat(result.coverType()).isEqualTo(book.getCoverType()),
+        () -> assertThat(result.pageCount()).isEqualTo(book.getPageCount()),
         () -> assertThat(result.regularPrice()).isEqualTo(editParam.regularPrice()),
         () -> assertThat(result.purchasePrice()).isEqualTo(editParam.purchasePrice()),
         () -> assertThat(result.promotion()).isEqualTo(editParam.promotion()),
         () -> assertThat(result.publisher()).isEqualTo(book.getPublisher()),
         () -> assertThat(result.stockCount()).isEqualTo(editParam.stockCount()),
-        () -> assertThat(result.coverImgUrl()).isEqualTo(book.getCoverImgFile().getCoverImgUrl()),
+        () -> assertThat(result.coverImgUrl()).isEqualTo(book.getCoverImgUrl()),
         () ->
             assertThat(result.detailImgUrls())
-                .containsExactlyInAnyOrderElementsOf(book.getDetailImgUrls()),
+                .containsExactlyInAnyOrderElementsOf(
+                    detailImgFiles.getUris().stream().map(uri -> BASE_URL + uri).toList()),
         () ->
             assertThat(result.previewUrls())
-                .containsExactlyInAnyOrderElementsOf(book.getPreviewUrls()));
+                .containsExactlyInAnyOrderElementsOf(
+                    previewFiles.getUris().stream().map(uri -> BASE_URL + uri).toList()));
   }
 
   @Test
@@ -223,9 +223,9 @@ class BookScmServiceTest extends IntegrationTest {
                 notAuthorityAuthorId,
                 book.getBookId(),
                 editParam,
-                CustomFileFixture.createFile(notAuthorityAuthorId, FileType.COVERS),
-                CustomFileFixture.createFiles(notAuthorityAuthorId, FileType.DETAILS),
-                CustomFileFixture.createFiles(notAuthorityAuthorId, FileType.PREVIEWS)));
+                FileWrapperFixture.createFile(notAuthorityAuthorId, FileType.COVERS),
+                FileWrapperFixture.createFiles(notAuthorityAuthorId, FileType.DETAILS),
+                FileWrapperFixture.createFiles(notAuthorityAuthorId, FileType.PREVIEWS)));
   }
 
   @Test
@@ -248,25 +248,22 @@ class BookScmServiceTest extends IntegrationTest {
               assertThat(result.bookId()).isEqualTo(book.getBookId());
               assertThat(result.authorId()).isEqualTo(author.getAuthorId());
               assertThat(result.authorNickname()).isEqualTo(author.getNickname());
-              assertThat(result.title()).isEqualTo(book.getBookConceptualInfo().getTitle());
-              assertThat(result.oneLiner()).isEqualTo(book.getBookConceptualInfo().getOneLiner());
-              assertThat(result.summary()).isEqualTo(book.getBookConceptualInfo().getSummary());
+              assertThat(result.title()).isEqualTo(book.getTitle());
+              assertThat(result.oneLiner()).isEqualTo(book.getOneLiner());
+              assertThat(result.summary()).isEqualTo(book.getSummary());
               assertThat(result.categories())
-                  .containsExactlyInAnyOrderElementsOf(
-                      book.getBookConceptualInfo().getCategories());
-              assertThat(result.isbn()).isEqualTo(book.getBookConceptualInfo().getIsbn());
-              assertThat(result.height()).isEqualTo(book.getBookPhysicalInfo().getHeight());
-              assertThat(result.width()).isEqualTo(book.getBookPhysicalInfo().getWidth());
-              assertThat(result.coverType()).isEqualTo(book.getBookPhysicalInfo().getCoverType());
-              assertThat(result.pageCount()).isEqualTo(book.getBookPhysicalInfo().getPageCount());
-              assertThat(result.regularPrice())
-                  .isEqualTo(book.getBookPriceInfo().getRegularPrice());
-              assertThat(result.purchasePrice())
-                  .isEqualTo(book.getBookPriceInfo().getPurchasePrice());
-              assertThat(result.promotion()).isEqualTo(book.getBookPriceInfo().getPromotion());
+                  .containsExactlyInAnyOrderElementsOf(book.getCategories());
+              assertThat(result.isbn()).isEqualTo(book.getIsbn());
+              assertThat(result.height()).isEqualTo(book.getHeight());
+              assertThat(result.width()).isEqualTo(book.getWidth());
+              assertThat(result.coverType()).isEqualTo(book.getCoverType());
+              assertThat(result.pageCount()).isEqualTo(book.getPageCount());
+              assertThat(result.regularPrice()).isEqualTo(book.getRegularPrice());
+              assertThat(result.purchasePrice()).isEqualTo(book.getPurchasePrice());
+              assertThat(result.promotion()).isEqualTo(book.isPromotion());
               assertThat(result.publisher()).isEqualTo(book.getPublisher());
               assertThat(result.stockCount()).isEqualTo(book.getStockCount());
-              assertThat(result.coverImgUrl()).isEqualTo(book.getCoverImgFile().getCoverImgUrl());
+              assertThat(result.coverImgUrl()).isEqualTo(book.getCoverImgUrl());
               assertThat(result.detailImgUrls())
                   .containsExactlyInAnyOrderElementsOf(book.getDetailImgUrls());
               assertThat(result.previewUrls())

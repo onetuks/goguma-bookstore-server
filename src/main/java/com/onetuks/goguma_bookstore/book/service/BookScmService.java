@@ -1,16 +1,16 @@
 package com.onetuks.goguma_bookstore.book.service;
 
-import com.onetuks.goguma_bookstore.book.model.Book;
-import com.onetuks.goguma_bookstore.book.repository.BookJpaRepository;
 import com.onetuks.goguma_bookstore.book.service.dto.param.BookEditParam;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.goguma_bookstore.registration.service.RegistrationScmService;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,15 +34,14 @@ public class BookScmService {
       long authorId,
       long bookId,
       BookEditParam param,
-      CustomFile coverImgFile,
-      List<CustomFile> detailImgFiles,
-      List<CustomFile> previewFiles) {
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles) {
     Book book = getBookById(authorId, bookId).changeStockCount(param.stockCount());
 
     long registrationId =
-        registrationScmService
-            .getRegistrationByIsbn(book.getBookConceptualInfo().getIsbn())
-            .getRegistrationId();
+        registrationScmService.getRegistrationByIsbn(book.getIsbn()).getRegistrationId();
+
     RegistrationInspectionResult inspection =
         registrationScmService.updateRegistrationApprovalInfo(
             registrationId, false, "도서 정보 수정으로 인한 재승인 필요");
@@ -53,7 +52,7 @@ public class BookScmService {
             coverImgFile,
             detailImgFiles,
             previewFiles,
-            CustomFile.of());
+            FileWrapper.of());
 
     return BookEditResult.from(bookId, update, inspection);
   }

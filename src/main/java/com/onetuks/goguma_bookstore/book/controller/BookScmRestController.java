@@ -7,8 +7,9 @@ import com.onetuks.goguma_bookstore.book.controller.dto.response.BookResponse.Bo
 import com.onetuks.goguma_bookstore.book.service.BookScmService;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookEditResult;
 import com.onetuks.goguma_bookstore.book.service.dto.result.BookResult;
-import com.onetuks.goguma_bookstore.global.vo.file.CustomFile;
 import com.onetuks.goguma_bookstore.global.vo.file.FileType;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper;
+import com.onetuks.goguma_bookstore.global.vo.file.FileWrapper.FileWrapperCollection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -63,9 +64,9 @@ public class BookScmRestController {
             authorId,
             bookId,
             request.to(),
-            CustomFile.of(authorId, FileType.COVERS, coverImgFile),
-            CustomFile.of(authorId, FileType.DETAILS, detailImgFiles),
-            CustomFile.of(authorId, FileType.PREVIEWS, previewFiles));
+            FileWrapper.of(authorId, FileType.COVERS, coverImgFile),
+            FileWrapperCollection.of(authorId, FileType.DETAILS, detailImgFiles),
+            FileWrapperCollection.of(authorId, FileType.PREVIEWS, previewFiles));
     BookEditResponse response = BookEditResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);

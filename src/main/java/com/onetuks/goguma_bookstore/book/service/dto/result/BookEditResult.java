@@ -1,8 +1,8 @@
 package com.onetuks.goguma_bookstore.book.service.dto.result;
 
-import com.onetuks.goguma_bookstore.book.vo.Category;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.goguma_bookstore.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
 public record BookEditResult(
