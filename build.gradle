@@ -61,6 +61,7 @@ openapi3 {
 dependencies {
 
     implementation project(':module-persistence')
+    implementation project(':module-reader')
 
     // Netty/Resolver/DNS/Native/MacOS
     implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
@@ -258,5 +259,3 @@ tasks.register("addGitPreCommitHook", Copy) {
     from 'script/pre-commit'
     into '.git/hooks'
 }
-
-project(':module-persistence') {}
