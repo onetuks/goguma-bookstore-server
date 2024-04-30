@@ -1,10 +1,12 @@
 package com.onetuks.modulereader.registration.controller;
 
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.verification.IsbnWebClientService;
+import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
 import com.onetuks.modulereader.auth.util.admin.AdminId;
 import com.onetuks.modulereader.auth.util.author.AuthorId;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationInspectionRequest;
@@ -15,8 +17,6 @@ import com.onetuks.modulereader.registration.controller.dto.response.Registratio
 import com.onetuks.modulereader.registration.service.RegistrationScmService;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
-import com.onetuks.modulereader.registration.service.verification.IsbnWebClientService;
-import com.onetuks.modulereader.registration.service.verification.dto.result.RegistrationIsbnResult;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.fixture;
 
-import com.onetuks.modulereader.util.UUIDProvider;
+import com.onetuks.modulecommon.util.UUIDProvider;
 import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.global.vo.order.DefaultAddressInfo;

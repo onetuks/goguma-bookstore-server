@@ -1,19 +1,15 @@
 package com.onetuks.modulepersistence.registration.model;
 
-
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
 import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulepersistence.global.vo.file.CoverImgFilePath;
-import com.onetuks.modulepersistence.global.vo.file.DetailImgFilePath;
 import com.onetuks.modulepersistence.global.vo.file.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.modulepersistence.global.vo.file.PreviewFilePath;
 import com.onetuks.modulepersistence.global.vo.file.PreviewFilePath.PreviewFilePaths;
 import com.onetuks.modulepersistence.global.vo.file.SampleFilePath;
 import com.onetuks.modulepersistence.registration.model.embedded.ApprovalInfo;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -30,7 +26,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,8 +42,7 @@ public class Registration {
   @JoinColumn(name = "author_id", nullable = false)
   private Author author;
 
-  @Embedded
-  private ApprovalInfo approvalInfo;
+  @Embedded private ApprovalInfo approvalInfo;
 
   @Embedded private BookConceptualInfo bookConceptualInfo;
 

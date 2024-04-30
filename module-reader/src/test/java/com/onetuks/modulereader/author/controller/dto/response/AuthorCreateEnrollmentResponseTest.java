@@ -2,12 +2,11 @@ package com.onetuks.modulereader.author.controller.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.author.controller.dto.response.AuthorCreateEnrollmentResponse;
 import com.onetuks.modulereader.author.service.dto.result.AuthorCreateEnrollmentResult;
-import com.onetuks.modulereader.fixture.FileWrapperFixture;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

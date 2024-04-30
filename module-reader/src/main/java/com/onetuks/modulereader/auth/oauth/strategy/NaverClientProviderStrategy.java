@@ -1,13 +1,13 @@
 package com.onetuks.modulereader.auth.oauth.strategy;
 
-import static com.onetuks.modulepersistence.global.error.ErrorCode.OAUTH_CLIENT_SERVER_ERROR;
-import static com.onetuks.modulepersistence.global.error.ErrorCode.UNAUTHORIZED_TOKEN;
+import static com.onetuks.modulecommon.error.ErrorCode.OAUTH_CLIENT_SERVER_ERROR;
+import static com.onetuks.modulecommon.error.ErrorCode.UNAUTHORIZED_TOKEN;
 
-import com.onetuks.modulereader.auth.exception.TokenValidFailedException;
-import com.onetuks.modulereader.auth.oauth.dto.NaverUser;
 import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.vo.UserData;
+import com.onetuks.modulereader.auth.exception.TokenValidFailedException;
+import com.onetuks.modulereader.auth.oauth.dto.NaverUser;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

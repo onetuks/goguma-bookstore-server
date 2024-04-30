@@ -3,6 +3,7 @@ package com.onetuks.modulereader.auth.controller;
 import static com.onetuks.modulereader.auth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
 import static org.springframework.http.HttpStatus.OK;
 
+import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulereader.auth.controller.dto.LoginResponse;
 import com.onetuks.modulereader.auth.controller.dto.LogoutResponse;
 import com.onetuks.modulereader.auth.controller.dto.RefreshResponse;
@@ -15,7 +16,6 @@ import com.onetuks.modulereader.auth.service.dto.LoginResult;
 import com.onetuks.modulereader.auth.service.dto.LogoutResult;
 import com.onetuks.modulereader.auth.service.dto.RefreshResult;
 import com.onetuks.modulereader.auth.util.login.LoginId;
-import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

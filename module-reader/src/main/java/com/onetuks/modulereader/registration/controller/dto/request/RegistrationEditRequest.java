@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.registration.controller.dto.request;
 
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

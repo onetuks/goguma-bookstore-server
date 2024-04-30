@@ -2,6 +2,8 @@ package com.onetuks.modulereader.author.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulereader.auth.util.admin.AdminId;
 import com.onetuks.modulereader.auth.util.author.AuthorId;
 import com.onetuks.modulereader.auth.util.login.LoginId;
@@ -17,8 +19,6 @@ import com.onetuks.modulereader.author.service.dto.result.AuthorCreateEnrollment
 import com.onetuks.modulereader.author.service.dto.result.AuthorEditResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

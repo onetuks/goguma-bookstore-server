@@ -1,7 +1,11 @@
 package com.onetuks.modulereader.member.service;
 
-import com.onetuks.modulereader.global.service.S3Service;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.vo.UserData;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberEntryInfoParam;
@@ -13,10 +17,6 @@ import com.onetuks.modulereader.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.modulereader.member.service.event.WithdrawalEventPublisher;
-import com.onetuks.modulepersistence.member.model.Member;
-import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulepersistence.member.vo.AuthInfo;
-import com.onetuks.modulepersistence.member.vo.UserData;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;

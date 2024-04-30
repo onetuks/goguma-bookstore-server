@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'java-test-fixtures'
     id 'org.sonarqube' version '5.0.0.4638'
     id 'com.diffplug.spotless' version '6.25.0'
     id 'org.springframework.boot' version '3.2.5'
@@ -10,6 +11,14 @@ plugins {
 }
 
 allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'java-test-fixtures'
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'com.diffplug.spotless'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
     group = 'com.onetuks'
     version = '0.0.1-SNAPSHOT'
 
@@ -24,24 +33,232 @@ allprojects {
     clean {
         delete file('src/main/generated')
     }
+
+    java {
+        sourceCompatibility = '17'
+    }
+
+    jar {
+        enabled = true // 여기?
+    }
+
+    jacoco {
+        toolVersion = '0.8.8'
+    }
+
+    dependencies {
+        // Netty/Resolver/DNS/Native/MacOS - global
+        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
+
+        // Lombok - global
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        // Test - global
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        // TestContainers - global
+        testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+        testImplementation 'org.testcontainers:junit-jupiter'
+
+        // Arch-Unit - global
+        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
+
+        // MySQL - global
+        runtimeOnly 'com.mysql:mysql-connector-j'
+
+        // JPA - global
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        // RestDocs - docs
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+        // Rest Docs API Spec - docs
+        testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+
+        // Swagger UI - docs
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+        // Spring Security - auth
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        testImplementation 'org.springframework.security:spring-security-test'
+
+        // OAuth2 - auth
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+        // JWT - auth
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
+
+        // REDIS - auth
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.4'
+        testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+
+
+        // Validation
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        // Spring Web
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // Webflux
+        implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+        // AWS S3
+        implementation(platform('software.amazon.awssdk:bom:2.25.41'))
+        implementation('commons-io:commons-io:2.16.1')
+        implementation('software.amazon.awssdk:aws-core:2.25.30')
+        implementation('software.amazon.awssdk:sdk-core:2.25.38')
+        implementation('software.amazon.awssdk:sts:2.25.39')
+        implementation('software.amazon.awssdk:s3:2.25.27')
+        testImplementation('org.testcontainers:localstack')
+    }
+
+    tasks.named('test') {
+        outputs.dir snippetsDir
+        useJUnitPlatform()
+
+        finalizedBy(tasks.jacocoTestReport)
+    }
+
+    tasks.jacocoTestReport {
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = false
+
+            xml.destination(file("build/jacoco/jacoco.xml"))
+            html.destination(file("build/jacoco/jacoco.html"))
+        }
+
+        finalizedBy(tasks.jacocoTestCoverageVerification)
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        "**/Q*",
+                        "**/global/config/*",
+                        "**/global/error/*",
+                        "**/global/vo/file/*",
+                        "**/auth/*",
+                        "**/model/*",
+                        "**/dto/*",
+                        "**/vo/*",
+                        "**/controller/*",
+                        "**/modulecommon/*",
+                        "**/ModuleCommonApplication.class",
+                        "**/ModulePersistenceApplication.class",
+                        "**/ModuleReaderApplication.class",
+                        "**/ModuleAuthorApplication.class",
+                        "**/ModuleAdminApplication.class",
+                        "**/GogumaBookStoreServerApplication.class"
+                ])
+            }))
+        }
+    }
+
+    tasks.jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+
+                // 클래스 당 커버리지 50% 이상
+                limit {
+                    counter = "LINE"
+                    value = "COVEREDRATIO"
+                    minimum = BigDecimal.valueOf(0.5)
+                }
+
+                // 클래스 당 150줄 미만
+                limit {
+                    counter = "LINE"
+                    value = "TOTALCOUNT"
+                    maximum = BigDecimal.valueOf(150)
+                }
+
+                limit {
+                    counter = 'COMPLEXITY'
+                    minimum = 0.5
+                }
+
+                excludes = [
+                        "*.Q*",
+                        "*.global.config.*",
+                        "*.global.error.*",
+                        "*.global.vo.file.*",
+                        "*.auth.*",
+                        "*.model.*",
+                        "*.dto.*",
+                        "*.vo.*",
+                        "*.controller.*",
+                        "*.modulecommon.*",
+                        "*.ModuleCommonApplication",
+                        "*.ModulePersistenceApplication",
+                        "*.ModuleReaderApplication",
+                        "*.ModuleAuthorApplication",
+                        "*.ModuleAdminApplication",
+                        "*.GogumaBookStoreServerApplication"
+                ]
+            }
+        }
+    }
+
+    sonar {
+        def envFile = file('../.env')
+        if (envFile.exists()) {
+            def env = new Properties()
+            envFile.withReader { reader ->
+                env.load(reader)
+            }
+
+            properties {
+                property("sonar.host.url", "http://localhost:9000")
+                property("sonar.login", env['SONAR_TOKEN'])
+                property("sonar.sources", "src/main/java")
+                property("sonar.tests", "src/test/java")
+                property("sonar.sourceEncoding", "UTF-8")
+                property("sonar.projectKey", "goguma-bookstore")
+                property("sonar.projectName", "goguma-bookstore")
+                property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
+                property("sonar.coverage.exclusions",
+                        "**/Q*,**/global/config/**,**/global/error/**,**/global/vo/file/**,**/dto/**,**/vo/**" +
+                                "**/model/**,**/auth/**,**/controller/**,**/modulecommon/**," +
+                                "**/ModuleCommonApplication.class" +
+                                "**/ModuleReaderApplication.class" +
+                                "**/ModuleAuthorApplication.class" +
+                                "**/ModuleAdminApplication.class" +
+                                "**/ModulePersistenceApplication.class" +
+                                "**/GogumaBookStoreServerApplication.class")
+            }
+        } else {
+            println ".env file not exists"
+        }
+    }
+
+    spotless {
+        java {
+            googleJavaFormat()
+
+            removeUnusedImports()
+            trimTrailingWhitespace() // 불필요한 공백 트림
+            indentWithSpaces(4) // 들여쓰기 4칸
+            endWithNewline() // 파일 끝에 개행 추가
+        }
+    }
+
+    tasks.register("addGitPreCommitHook", Copy) {
+        from 'script/pre-commit'
+        into '.git/hooks'
+    }
+
 }
 
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
-}
-
-java {
-    sourceCompatibility = '17'
-}
-
-jar {
-    enabled = false
-}
-
-jacoco {
-    toolVersion = '0.8.8'
 }
 
 openapi3 {
@@ -59,203 +276,12 @@ openapi3 {
 }
 
 dependencies {
-
+    implementation project(':module-common')
     implementation project(':module-persistence')
     implementation project(':module-reader')
-
-    // Netty/Resolver/DNS/Native/MacOS
-    implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
-
-    // Spring Web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    // Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-    // Validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-    // Lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    // MySQL
-    runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // JPA
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // QueryDSL
-    implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
-    annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
-    // RestDocs
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-
-    // Rest Docs API Spec
-    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
-
-    // Swagger UI
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-
-    // Test
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    // TestContainers
-    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
-    testImplementation 'org.testcontainers:junit-jupiter'
-
-    // Arch-Unit
-    testImplementation 'com.tngtech.archunit:archunit:1.2.2'
-
-    // Spring Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    // OAuth2
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-    // JWT
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
-
-    // REDIS
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.4'
-    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
-
-    // AWS S3
-    implementation(platform('software.amazon.awssdk:bom:2.25.39'))
-    implementation('commons-io:commons-io:2.16.1')
-    implementation('software.amazon.awssdk:aws-core:2.25.30')
-    implementation('software.amazon.awssdk:sdk-core:2.25.38')
-    implementation('software.amazon.awssdk:sts:2.25.39')
-    implementation('software.amazon.awssdk:s3:2.25.27')
-    testImplementation('org.testcontainers:localstack')
-
-}
-
-tasks.named('test') {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
-
-    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
-}
-
-tasks.jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-        csv.required = false
-
-        xml.destination(file("build/jacoco/jacoco.xml"))
-        html.destination(file("build/jacoco/jacoco.html"))
-    }
-
-    finalizedBy(tasks.jacocoTestCoverageVerification)
-
-    afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    "**/Q*",
-                    "**/global/config/*",
-                    "**/global/error/*",
-                    "**/global/vo/file/*",
-                    "**/auth/*",
-                    "**/model/*",
-                    "**/dto/*",
-                    "**/controller/*",
-                    "**/GogumaBookStoreServerApplication.class"
-            ])
-        }))
-    }
-}
-
-tasks.jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            enabled = true
-            element = 'CLASS'
-
-            // 클래스 당 커버리지 50% 이상
-            limit {
-                counter = "LINE"
-                value = "COVEREDRATIO"
-                minimum = BigDecimal.valueOf(0.5)
-            }
-
-            // 클래스 당 150줄 미만
-            limit {
-                counter = "LINE"
-                value = "TOTALCOUNT"
-                maximum = BigDecimal.valueOf(150)
-            }
-
-            limit {
-                counter = 'COMPLEXITY'
-                minimum = 0.5
-            }
-
-            excludes = [
-                    "*.Q*",
-                    "*.global.config.*",
-                    "*.global.error.*",
-                    "*.global.vo.file.*",
-                    "*.auth.*",
-                    "*.model.*",
-                    "*.dto.*",
-                    "*.controller.*",
-                    "com.onetuks.goguma_bookstore.GogumaBookStoreServerApplication"
-            ]
-        }
-    }
-}
-
-sonar {
-    def envFile = file('../.env')
-    if (envFile.exists()) {
-        def env = new Properties()
-        envFile.withReader { reader ->
-            env.load(reader)
-        }
-
-        properties {
-            property("sonar.host.url", "http://localhost:9000")
-            property("sonar.login", env['SONAR_TOKEN'])
-            property("sonar.sources", "src/main/java")
-            property("sonar.tests", "src/test/java")
-            property("sonar.sourceEncoding", "UTF-8")
-            property("sonar.projectKey", "goguma-bookstore")
-            property("sonar.projectName", "goguma-bookstore")
-            property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
-            property("sonar.coverage.exclusions",
-                    "**/Q*,**/global/config/**,**/global/error/**,**/global/vo/file/**,**/dto/**," +
-                            "**/model/**,**/auth/**,**/controller/**,**/GogumaBookStoreServerApplication.class")
-        }
-    } else {
-        println ".env file not exists"
-    }
-}
-
-spotless {
-    java {
-        googleJavaFormat()
-
-        removeUnusedImports()
-        trimTrailingWhitespace() // 불필요한 공백 트림
-        indentWithSpaces(4) // 들여쓰기 4칸
-        endWithNewline() // 파일 끝에 개행 추가
-    }
-}
-
-tasks.register("addGitPreCommitHook", Copy) {
-    from 'script/pre-commit'
-    into '.git/hooks'
 }

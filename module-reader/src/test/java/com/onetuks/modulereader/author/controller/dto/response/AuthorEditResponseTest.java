@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.author.controller.dto.response.AuthorEditResponse;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEditResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

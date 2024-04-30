@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.book.controller.dto.response;
 
-import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
 import java.util.List;
 
 public record BookEditResponse(

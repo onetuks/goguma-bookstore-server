@@ -1,19 +1,20 @@
 package com.onetuks.modulereader.book.service;
 
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulereader.book.service.dto.param.BookEditParam;
 import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
 import com.onetuks.modulereader.book.service.dto.result.BookResult;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulereader.registration.service.RegistrationScmService;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
-import com.onetuks.modulepersistence.book.model.Book;
-import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +62,7 @@ public class BookScmService {
   public Page<BookResult> getAllBooksByAuthor(
       long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
-      throw new AccessDeniedException("현재 작가에게 해당 도서 조회 권한이 없습니다.");
+      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
     }
 
     return bookJpaRepository.findAllByAuthorAuthorId(authorId, pageable).map(BookResult::from);
@@ -74,7 +75,7 @@ public class BookScmService {
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다."));
 
     if (book.getAuthor().getAuthorId() != authorId) {
-      throw new AccessDeniedException("현재 작가에게 해당 도서 수정 권한이 없습니다.");
+      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
     }
 
     return book;

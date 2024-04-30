@@ -1,16 +1,18 @@
 package com.onetuks.modulereader.fixture;
 
-import static com.onetuks.modulereader.util.RandomValueProvider.*;
-
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
+import com.onetuks.modulecommon.util.RandomValueProvider;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
-import com.onetuks.modulereader.util.RandomValueProvider;
+import com.onetuks.modulepersistence.book.vo.Category;
+import java.util.List;
+import java.util.Random;
 
 public class BookFixture {
 
@@ -38,7 +40,7 @@ public class BookFixture {
         .title(RandomValueProvider.createTitle())
         .oneLiner(RandomValueProvider.createOneLiner())
         .summary(RandomValueProvider.createSummary())
-        .categories(RandomValueProvider.createCategories())
+        .categories(createCategories())
         .publisher(RandomValueProvider.createPublisher())
         .isbn(RandomValueProvider.createIsbn())
         .build();
@@ -60,5 +62,17 @@ public class BookFixture {
         .promotion(RandomValueProvider.createPromotion())
         .stockCount(RandomValueProvider.createStockCount())
         .build();
+  }
+
+  private static List<Category> createCategories() {
+    Random random = new Random();
+    int count = random.nextInt(1, 4);
+    return random
+        .ints(0, Category.values().length)
+        .distinct()
+        .limit(count)
+        .boxed()
+        .map(index -> Category.values()[index])
+        .toList();
   }
 }

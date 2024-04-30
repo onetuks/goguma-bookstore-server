@@ -1,13 +1,13 @@
 package com.onetuks.modulereader.auth.service;
 
+import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
+import com.onetuks.modulepersistence.member.vo.UserData;
 import com.onetuks.modulereader.auth.jwt.AuthToken;
 import com.onetuks.modulereader.auth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.modulereader.auth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.modulereader.auth.service.dto.LoginResult;
 import com.onetuks.modulereader.member.service.MemberService;
 import com.onetuks.modulereader.member.service.dto.result.MemberCreateResult;
-import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
-import com.onetuks.modulepersistence.member.vo.UserData;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

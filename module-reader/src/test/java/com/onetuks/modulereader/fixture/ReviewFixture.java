@@ -1,7 +1,8 @@
 package com.onetuks.modulereader.fixture;
 
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.model.Review;
 import com.onetuks.modulepersistence.member.model.Member;

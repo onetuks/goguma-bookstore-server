@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.book.service.dto.param;
 
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
 import java.util.List;
 
 public record BookEditParam(

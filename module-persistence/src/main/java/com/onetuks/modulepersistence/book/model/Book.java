@@ -8,11 +8,8 @@ import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
 import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulepersistence.global.vo.file.CoverImgFilePath;
-import com.onetuks.modulepersistence.global.vo.file.DetailImgFilePath;
 import com.onetuks.modulepersistence.global.vo.file.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.modulepersistence.global.vo.file.PreviewFilePath;
 import com.onetuks.modulepersistence.global.vo.file.PreviewFilePath.PreviewFilePaths;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -31,7 +28,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,23 +49,17 @@ public class Book {
   @Column(name = "author_nickname", nullable = false)
   private String authorNickname;
 
-  @Embedded
-  private BookConceptualInfo bookConceptualInfo;
+  @Embedded private BookConceptualInfo bookConceptualInfo;
 
-  @Embedded
-  private BookPhysicalInfo bookPhysicalInfo;
+  @Embedded private BookPhysicalInfo bookPhysicalInfo;
 
-  @Embedded
-  private BookPriceInfo bookPriceInfo;
+  @Embedded private BookPriceInfo bookPriceInfo;
 
-  @Embedded
-  private CoverImgFilePath coverImgFilePath;
+  @Embedded private CoverImgFilePath coverImgFilePath;
 
-  @Embedded
-  private DetailImgFilePaths detailImgFilePaths;
+  @Embedded private DetailImgFilePaths detailImgFilePaths;
 
-  @Embedded
-  private PreviewFilePaths previewFilePaths;
+  @Embedded private PreviewFilePaths previewFilePaths;
 
   @OneToOne(
       mappedBy = "book",
@@ -187,8 +177,8 @@ public class Book {
   }
 
   public Book changeStockCount(long newStockCount) {
-    this.bookPriceInfo = this.bookPriceInfo.changeStockCount(
-        getStockCount() > NO_STOCK ? NO_STOCK : newStockCount);
+    this.bookPriceInfo =
+        this.bookPriceInfo.changeStockCount(getStockCount() > NO_STOCK ? NO_STOCK : newStockCount);
     return this;
   }
 

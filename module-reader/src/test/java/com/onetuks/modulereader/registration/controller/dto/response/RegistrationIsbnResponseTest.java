@@ -3,10 +3,9 @@ package com.onetuks.modulereader.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
+import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.registration.controller.dto.response.RegistrationIsbnResponse;
-import com.onetuks.modulereader.registration.service.verification.dto.result.RegistrationIsbnResult;
-import com.onetuks.modulereader.registration.service.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;

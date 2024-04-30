@@ -4,20 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulereader.fixture.FileWrapperFixture;
-import com.onetuks.modulereader.fixture.MemberFixture;
-import com.onetuks.modulereader.fixture.RegistrationFixture;
-import com.onetuks.modulereader.global.service.S3Service;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulereader.registration.service.RegistrationScmService;
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
+import com.onetuks.modulecommon.service.S3Service;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
@@ -27,6 +19,14 @@ import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.fixture.AuthorFixture;
+import com.onetuks.modulereader.fixture.MemberFixture;
+import com.onetuks.modulereader.fixture.RegistrationFixture;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class RegistrationScmServiceTest extends IntegrationTest {
@@ -403,7 +402,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
     // When & Then
     assertThrows(
-        AccessDeniedException.class,
+        ApiAccessDeniedException.class,
         () -> registrationScmService.deleteRegistration(otherAuthorId, result.registrationId()));
 
     File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
@@ -462,7 +461,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
     // When & Then
     assertThrows(
-        AccessDeniedException.class,
+        ApiAccessDeniedException.class,
         () -> registrationScmService.readRegistration(notAuthorityId, save.getRegistrationId()));
   }
 
@@ -521,7 +520,7 @@ class RegistrationScmServiceTest extends IntegrationTest {
 
     // When & Then
     assertThrows(
-        AccessDeniedException.class,
+        ApiAccessDeniedException.class,
         () ->
             registrationScmService.readAllRegistrationsByAuthor(
                 notAuthorityId, author.getAuthorId(), PageRequest.of(0, 10)));

@@ -3,12 +3,11 @@ package com.onetuks.modulereader.member.service.dto.result;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.fixture.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

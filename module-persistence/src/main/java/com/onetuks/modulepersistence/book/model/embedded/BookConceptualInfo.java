@@ -39,8 +39,12 @@ public class BookConceptualInfo {
 
   @Builder
   public BookConceptualInfo(
-      String title, String oneLiner, String summary,
-      List<Category> categories, String publisher, String isbn) {
+      String title,
+      String oneLiner,
+      String summary,
+      List<Category> categories,
+      String publisher,
+      String isbn) {
     this.title = title;
     this.oneLiner = oneLiner;
     this.summary = summary;

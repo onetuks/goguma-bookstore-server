@@ -1,6 +1,6 @@
 package com.onetuks.modulereader;
 
-import com.onetuks.modulereader.util.TestFileCleaner;
+import com.onetuks.modulecommon.util.TestFileCleaner;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
@@ -34,8 +34,7 @@ public class IntegrationTest {
   //  static RedisContainer redis;
   static final LocalStackContainer aws;
 
-  @Autowired
-  private TestFileCleaner testFileCleaner;
+  @Autowired private TestFileCleaner testFileCleaner;
 
   @AfterEach
   void tearDown() {
@@ -44,8 +43,9 @@ public class IntegrationTest {
 
   static {
     rdbms =
-        new ComposeContainer(new File(
-            "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
+        new ComposeContainer(
+                new File(
+                    "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
             .withExposedService(
                 "local-db",
                 3306,

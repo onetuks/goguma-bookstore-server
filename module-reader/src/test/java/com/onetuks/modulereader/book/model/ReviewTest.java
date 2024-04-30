@@ -2,11 +2,6 @@ package com.onetuks.modulereader.book.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulereader.fixture.BookFixture;
-import com.onetuks.modulereader.fixture.MemberFixture;
-import com.onetuks.modulereader.fixture.ReviewFixture;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.model.Review;
@@ -14,6 +9,11 @@ import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.fixture.AuthorFixture;
+import com.onetuks.modulereader.fixture.BookFixture;
+import com.onetuks.modulereader.fixture.MemberFixture;
+import com.onetuks.modulereader.fixture.ReviewFixture;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

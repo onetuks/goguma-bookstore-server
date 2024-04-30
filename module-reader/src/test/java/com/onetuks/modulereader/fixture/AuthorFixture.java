@@ -1,14 +1,15 @@
 package com.onetuks.modulereader.fixture;
 
-import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.util.RandomValueProvider;
-import com.onetuks.modulereader.util.UUIDProvider;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
+import com.onetuks.modulecommon.util.RandomValueProvider;
+import com.onetuks.modulecommon.util.UUIDProvider;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
 
 public class AuthorFixture {

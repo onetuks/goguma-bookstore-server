@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.auth.exception;
 
-import com.onetuks.modulepersistence.global.error.ErrorCode;
+import com.onetuks.modulecommon.error.ErrorCode;
 import lombok.Getter;
 
 @Getter

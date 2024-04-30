@@ -9,10 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ArchitectureTest {
+class ArchitectureTest extends PersistenceIntegrationTest {
 
   JavaClasses javaClasses;
 
@@ -21,7 +19,7 @@ class ArchitectureTest {
     javaClasses =
         new ClassFileImporter()
             .withImportOption(new ImportOption.DoNotIncludeTests()) // 테스트 클래스는 이 검증에서 제외
-            .importPackages("com.onetuks.goguma_bookstore");
+            .importPackages("com.onetuks.modulepersistence");
   }
 
   @Nested

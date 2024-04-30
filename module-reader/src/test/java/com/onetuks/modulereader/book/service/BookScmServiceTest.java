@@ -4,20 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.book.service.BookScmService;
-import com.onetuks.modulereader.book.service.dto.param.BookEditParam;
-import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
-import com.onetuks.modulereader.book.service.dto.result.BookResult;
-import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulereader.fixture.FileWrapperFixture;
-import com.onetuks.modulereader.fixture.MemberFixture;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulereader.registration.service.RegistrationScmService;
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.model.Book;
@@ -25,6 +16,15 @@ import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.book.service.dto.param.BookEditParam;
+import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
+import com.onetuks.modulereader.book.service.dto.result.BookResult;
+import com.onetuks.modulereader.fixture.AuthorFixture;
+import com.onetuks.modulereader.fixture.MemberFixture;
+import com.onetuks.modulereader.registration.service.RegistrationScmService;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
 
 class BookScmServiceTest extends IntegrationTest {
 
@@ -218,7 +217,7 @@ class BookScmServiceTest extends IntegrationTest {
 
     // When & Then
     assertThrows(
-        AccessDeniedException.class,
+        ApiAccessDeniedException.class,
         () ->
             bookScmService.updateBook(
                 notAuthorityAuthorId,
@@ -281,7 +280,7 @@ class BookScmServiceTest extends IntegrationTest {
 
     // When
     assertThrows(
-        AccessDeniedException.class,
+        ApiAccessDeniedException.class,
         () -> bookScmService.getAllBooksByAuthor(loginAuthorId, authorId, PageRequest.of(0, 10)));
   }
 }

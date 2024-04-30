@@ -2,7 +2,6 @@ package com.onetuks.modulepersistence.book.model.embedded;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.registration.controller.dto.response;
 
-import com.onetuks.modulereader.registration.service.verification.dto.result.RegistrationIsbnResult;
-import com.onetuks.modulereader.registration.service.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
+import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
+import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
 
 public record RegistrationIsbnResponse(
     String isbn,

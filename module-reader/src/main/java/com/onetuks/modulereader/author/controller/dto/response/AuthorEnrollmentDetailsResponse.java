@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.author.controller.dto.response;
 
-import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 

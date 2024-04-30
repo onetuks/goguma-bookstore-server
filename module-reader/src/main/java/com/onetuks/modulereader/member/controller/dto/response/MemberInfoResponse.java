@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.member.controller.dto.response;
 
-import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 
 public record MemberInfoResponse(
     long memberId,

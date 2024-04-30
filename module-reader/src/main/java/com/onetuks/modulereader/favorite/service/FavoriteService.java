@@ -1,14 +1,14 @@
 package com.onetuks.modulereader.favorite.service;
 
-import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
-import com.onetuks.modulereader.favorite.service.dto.result.FavoritePostResult;
-import com.onetuks.modulereader.favorite.service.dto.result.FavoriteWhetherGetResult;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.favorite.model.Favorite;
 import com.onetuks.modulepersistence.favorite.repository.FavoriteJpaRepository;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
+import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
+import com.onetuks.modulereader.favorite.service.dto.result.FavoritePostResult;
+import com.onetuks.modulereader.favorite.service.dto.result.FavoriteWhetherGetResult;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

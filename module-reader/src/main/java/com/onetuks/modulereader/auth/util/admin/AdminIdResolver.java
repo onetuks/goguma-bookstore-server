@@ -1,12 +1,13 @@
 package com.onetuks.modulereader.auth.util.admin;
 
-import com.onetuks.modulereader.auth.jwt.CustomUserDetails;
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulereader.auth.jwt.CustomUserDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class AdminIdResolver implements HandlerMethodArgumentResolver {
                     Objects.equals(grantedAuthority.getAuthority(), RoleType.ADMIN.name()));
 
     if (isNotAdmin) {
-      throw new AccessDeniedException("Only Admin role can access this method.");
+      throw new ApiAccessDeniedException(ErrorCode.ONLY_FOR_ADMIN_METHOD);
     }
     return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }

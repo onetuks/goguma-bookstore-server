@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.book.controller.dto.response;
 
-import com.onetuks.modulereader.book.service.dto.result.BookResult;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.book.service.dto.result.BookResult;
 import java.util.List;
 import org.springframework.data.domain.Page;
 

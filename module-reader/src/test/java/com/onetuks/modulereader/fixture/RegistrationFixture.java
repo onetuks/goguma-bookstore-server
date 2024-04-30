@@ -1,9 +1,10 @@
 package com.onetuks.modulereader.fixture;
 
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulereader.util.RandomValueProvider;
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
+import com.onetuks.modulecommon.util.RandomValueProvider;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;

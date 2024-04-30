@@ -3,10 +3,9 @@ package com.onetuks.modulereader.member.controller.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.member.controller.dto.request.MemberDefaultCashReceiptEditRequest;
-import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

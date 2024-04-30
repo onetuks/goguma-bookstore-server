@@ -1,23 +1,24 @@
 package com.onetuks.modulereader.registration.service;
 
-import com.onetuks.modulereader.author.service.AuthorService;
-import com.onetuks.modulereader.book.service.BookRegistrationService;
-import com.onetuks.modulereader.global.service.S3Service;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
-import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.modulecommon.service.S3Service;
 import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
+import com.onetuks.modulereader.author.service.AuthorService;
+import com.onetuks.modulereader.book.service.BookRegistrationService;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
+import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,7 +135,7 @@ public class RegistrationScmService {
     Registration registration = getRegistrationById(registrationId);
 
     if (registration.getAuthor().getAuthorId() != authorId) {
-      throw new AccessDeniedException("해당 신간등록을 삭제할 권한이 없습니다.");
+      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
     }
 
     s3Service.deleteFile(registration.getCoverImgUrl());
@@ -150,7 +151,7 @@ public class RegistrationScmService {
     Registration registration = getRegistrationById(registrationId);
 
     if (registration.getAuthor().getAuthorId() != authorId) {
-      throw new AccessDeniedException("해당 신간등록을 조회할 권한이 없습니다.");
+      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
     }
 
     return RegistrationResult.from(registration);
@@ -165,7 +166,7 @@ public class RegistrationScmService {
   public Page<RegistrationResult> readAllRegistrationsByAuthor(
       long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
-      throw new AccessDeniedException("해당 작가의 신간등록을 조회할 권한이 없습니다.");
+      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
     }
 
     return registrationJpaRepository

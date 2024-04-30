@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.member.controller.dto.request;
 
-import com.onetuks.modulereader.member.service.dto.param.MemberProfileEditParam;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.modulereader.member.service.dto.param.MemberProfileEditParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;

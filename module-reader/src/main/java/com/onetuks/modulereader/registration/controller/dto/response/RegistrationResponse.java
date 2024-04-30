@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.registration.controller.dto.response;
 
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.springframework.data.domain.Page;
 

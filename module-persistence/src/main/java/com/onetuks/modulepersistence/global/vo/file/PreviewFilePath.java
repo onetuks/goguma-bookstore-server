@@ -49,8 +49,7 @@ public class PreviewFilePath implements CustomFilePath {
     }
 
     public static PreviewFilePaths of(List<String> previewFileUris) {
-      return new PreviewFilePaths(
-          previewFileUris.stream().map(PreviewFilePath::new).toList());
+      return new PreviewFilePaths(previewFileUris.stream().map(PreviewFilePath::new).toList());
     }
 
     public List<String> getUris() {

@@ -1,13 +1,14 @@
 package com.onetuks.modulereader.auth.util.author;
 
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulereader.auth.jwt.CustomUserDetails;
 import com.onetuks.modulereader.author.service.AuthorService;
-import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +44,7 @@ public class AuthorIdResolver implements HandlerMethodArgumentResolver {
         authentication.getAuthorities().stream().noneMatch(this::isAdminOrAuthorRole);
 
     if (isNotAdminOrAuthor) {
-      throw new AccessDeniedException("Only Admin or Author Role can access this method.");
+      throw new ApiAccessDeniedException(ErrorCode.ONLY_AUTHOR_ADMIN_METHOD);
     }
 
     Long loginId = ((CustomUserDetails) authentication.getPrincipal()).getLoginId();

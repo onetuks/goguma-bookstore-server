@@ -1,11 +1,11 @@
 package com.onetuks.modulereader.book.service;
 
-import com.onetuks.modulereader.book.service.dto.result.BookGetResult;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.repository.BookJpaQueryDslRepository;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulepersistence.book.vo.SortOrder;
+import com.onetuks.modulereader.book.service.dto.result.BookGetResult;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

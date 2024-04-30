@@ -1,5 +1,8 @@
 package com.onetuks.modulereader.book.controller;
 
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulereader.auth.util.author.AuthorId;
 import com.onetuks.modulereader.book.controller.dto.request.BookEditRequest;
 import com.onetuks.modulereader.book.controller.dto.response.BookEditResponse;
@@ -7,9 +10,6 @@ import com.onetuks.modulereader.book.controller.dto.response.BookResponse.BookRe
 import com.onetuks.modulereader.book.service.BookScmService;
 import com.onetuks.modulereader.book.service.dto.result.BookEditResult;
 import com.onetuks.modulereader.book.service.dto.result.BookResult;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
-import com.onetuks.modulereader.global.vo.file.FileWrapper.FileWrapperCollection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

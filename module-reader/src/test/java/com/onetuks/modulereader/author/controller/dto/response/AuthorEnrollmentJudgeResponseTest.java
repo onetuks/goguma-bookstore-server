@@ -3,10 +3,9 @@ package com.onetuks.modulereader.author.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.author.controller.dto.response.AuthorEnrollmentJudgeResponse;
-import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

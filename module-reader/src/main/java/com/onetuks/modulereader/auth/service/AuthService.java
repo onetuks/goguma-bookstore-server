@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.auth.service;
 
-import static com.onetuks.modulepersistence.global.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
+import static com.onetuks.modulecommon.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
 
 import com.onetuks.modulereader.auth.exception.TokenExpiredException;
 import com.onetuks.modulereader.auth.jwt.AuthToken;

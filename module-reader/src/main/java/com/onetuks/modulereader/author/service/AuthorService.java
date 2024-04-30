@@ -1,8 +1,8 @@
 package com.onetuks.modulereader.author.service;
 
-import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

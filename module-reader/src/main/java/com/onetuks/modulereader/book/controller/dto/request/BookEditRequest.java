@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.book.controller.dto.request;
 
-import com.onetuks.modulereader.book.service.dto.param.BookEditParam;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.book.service.dto.param.BookEditParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

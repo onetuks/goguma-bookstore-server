@@ -1,8 +1,8 @@
 package com.onetuks.modulereader.book.service.dto.result;
 
+import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
-import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
 public record BookEditResult(

@@ -49,20 +49,15 @@ public class DetailImgFilePath implements CustomFilePath {
     }
 
     public static DetailImgFilePaths of(List<String> detailImgUris) {
-      return new DetailImgFilePaths(
-          detailImgUris.stream().map(DetailImgFilePath::new).toList());
+      return new DetailImgFilePaths(detailImgUris.stream().map(DetailImgFilePath::new).toList());
     }
 
     public List<String> getUris() {
-      return paths.stream()
-          .map(DetailImgFilePath::getUri)
-          .toList();
+      return paths.stream().map(DetailImgFilePath::getUri).toList();
     }
 
     public List<String> getUrls() {
-      return paths.stream()
-          .map(DetailImgFilePath::getUrl)
-          .toList();
+      return paths.stream().map(DetailImgFilePath::getUrl).toList();
     }
   }
 }

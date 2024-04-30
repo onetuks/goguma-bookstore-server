@@ -1,11 +1,11 @@
 package com.onetuks.modulereader.book.controller;
 
+import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.book.vo.SortOrder;
 import com.onetuks.modulereader.book.controller.dto.response.BookGetResponse;
 import com.onetuks.modulereader.book.controller.dto.response.BookGetResponse.BookGetResponses;
 import com.onetuks.modulereader.book.service.BookService;
 import com.onetuks.modulereader.book.service.dto.result.BookGetResult;
-import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulepersistence.book.vo.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

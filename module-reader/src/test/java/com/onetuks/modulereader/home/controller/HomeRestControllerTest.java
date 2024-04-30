@@ -3,9 +3,9 @@ package com.onetuks.modulereader.home.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import com.onetuks.modulecommon.home.HomeRestController;
+import com.onetuks.modulecommon.home.HomeRestController.HomeResponse;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.home.HomeRestController;
-import com.onetuks.modulereader.home.HomeRestController.HomeResponse;
 import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

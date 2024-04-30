@@ -2,11 +2,11 @@ package com.onetuks.modulereader.author.controller.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulereader.IntegrationTest;
 import com.onetuks.modulereader.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;

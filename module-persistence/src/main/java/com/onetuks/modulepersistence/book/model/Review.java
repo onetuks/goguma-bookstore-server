@@ -48,8 +48,7 @@ public class Review {
   @Column(name = "content", nullable = false)
   private String content;
 
-  @Embedded
-  private ReviewImgFilePaths reviewImgFilePaths;
+  @Embedded private ReviewImgFilePaths reviewImgFilePaths;
 
   @Builder
   public Review(

@@ -2,10 +2,10 @@ package com.onetuks.modulereader.member.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulereader.auth.jwt.AuthHeaderUtil;
 import com.onetuks.modulereader.auth.util.login.LoginId;
-import com.onetuks.modulereader.global.vo.file.FileType;
-import com.onetuks.modulereader.global.vo.file.FileWrapper;
 import com.onetuks.modulereader.member.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.modulereader.member.controller.dto.request.MemberDefaultCashReceiptEditRequest;
 import com.onetuks.modulereader.member.controller.dto.request.MemberEntryInfoRequest;

@@ -1,8 +1,8 @@
 package com.onetuks.modulereader.auth.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onetuks.modulereader.global.error.ErrorResponse;
-import com.onetuks.modulepersistence.global.error.ErrorCode;
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.error.ErrorResponse;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

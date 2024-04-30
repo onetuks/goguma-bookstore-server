@@ -2,9 +2,9 @@ package com.onetuks.modulepersistence.author.model;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
+import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
 import com.onetuks.modulepersistence.global.vo.file.ProfileImgFilePath;
 import com.onetuks.modulepersistence.global.vo.profile.Nickname;
-import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
 import com.onetuks.modulepersistence.member.model.Member;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,8 +39,7 @@ public class Author {
   @JoinColumn(name = "member_id", unique = true)
   private Member member;
 
-  @Embedded
-  private ProfileImgFilePath profileImgFilePath;
+  @Embedded private ProfileImgFilePath profileImgFilePath;
 
   @Column(nullable = false)
   @Embedded

@@ -3,10 +3,9 @@ package com.onetuks.modulereader.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.registration.controller.dto.response.RegistrationResponse;
-import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
