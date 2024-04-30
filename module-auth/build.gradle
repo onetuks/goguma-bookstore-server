@@ -1,0 +1,31 @@
+dependencies {
+
+    // Module
+    implementation project(':module-common')
+    implementation project(':module-persistence')
+
+    // Test
+    testImplementation testFixtures(project(':module-persistence'))
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+    // JWT
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
+
+    // REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.4'
+    testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
+
+    // Spring Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+}

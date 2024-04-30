@@ -39,7 +39,6 @@ class BookJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
 
   @BeforeEach
   void setUp() {
-
     Random random = new Random();
 
     List<Author> authors =

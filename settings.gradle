@@ -1,5 +1,6 @@
 rootProject.name = 'goguma-bookstore-server'
 
 include 'module-common'
+include 'module-auth'
 include 'module-persistence'
 include 'module-reader'

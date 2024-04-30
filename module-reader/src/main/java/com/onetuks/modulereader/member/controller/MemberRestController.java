@@ -87,20 +87,6 @@ public class MemberRestController {
   }
 
   /**
-   * 회원 탈퇴
-   *
-   * @param memberId : 로그인한 회원 ID
-   * @param request : HttpServletRequest
-   * @return void
-   */
-  @DeleteMapping
-  public ResponseEntity<Void> withdrawMember(@LoginId Long memberId, HttpServletRequest request) {
-    memberService.deleteMember(memberId, AuthHeaderUtil.extractAuthToken(request));
-
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-  }
-
-  /**
    * 기본 배송지 설정
    *
    * @param memberId : 로그인한 멤버 아이디

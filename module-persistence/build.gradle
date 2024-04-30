@@ -1,5 +1,11 @@
 dependencies {
-	testImplementation(testFixtures(project(':module-common')))
+
+	// Test Fixtures
+	testFixturesImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	testFixturesImplementation testFixtures(project(':module-common'))
+
+	// Test
+	testImplementation testFixtures(project(':module-common'))
 
 	// Hypersistence Utils
 	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.5'

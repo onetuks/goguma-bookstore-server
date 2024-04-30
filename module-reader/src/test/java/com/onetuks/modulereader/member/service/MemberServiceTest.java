@@ -11,7 +11,6 @@ import com.onetuks.modulecommon.service.S3Service;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulepersistence.member.vo.UserData;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import com.onetuks.modulereader.IntegrationTest;
 import com.onetuks.modulereader.fixture.MemberFixture;
@@ -19,7 +18,6 @@ import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEdi
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberEntryInfoParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberProfileEditParam;
-import com.onetuks.modulereader.member.service.dto.result.MemberCreateResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberDefaultAddressEditResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberDefaultCashReceiptEditResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberEntryInfoResult;
@@ -27,6 +25,7 @@ import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberProfileEditResult;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,59 +37,25 @@ class MemberServiceTest extends IntegrationTest {
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private S3Service s3Service;
 
-  @Test
-  @DisplayName("새로운 멤버를 생성한다.")
-  void saveMemberIfNotExists_NotExistsMember_Test() {
-    // Given
-    UserData userData = MemberFixture.createUserData(RoleType.USER);
+  private Member savedMember;
 
-    // When
-    MemberCreateResult result = memberService.saveMemberIfNotExists(userData);
-
-    // Then
-    assertAll(
-        () -> assertThat(result.memberId()).isInstanceOf(Long.class).isNotNull(),
-        () -> assertThat(result.name()).isEqualTo(userData.name()),
-        () -> assertThat(result.socialId()).isEqualTo(userData.socialId()),
-        () -> assertThat(result.clientProvider()).isEqualTo(userData.clientProvider()),
-        () -> assertThat(result.roleType()).isEqualTo(userData.roleType()),
-        () -> assertThat(result.isNewMember()).isTrue());
-  }
-
-  @Test
-  @DisplayName("이미 존재하는 멤버는 따로 생성하지 않고 해당 멤버를 반환한다.")
-  void saveMemberIfNotExists_ExistsMember_Test() {
-    // Given
-    UserData userData = MemberFixture.createUserData(RoleType.USER);
-    memberService.saveMemberIfNotExists(userData);
-
-    // When
-    MemberCreateResult result = memberService.saveMemberIfNotExists(userData);
-
-    // Then
-    assertAll(
-        () -> assertThat(result.memberId()).isInstanceOf(Long.class).isNotNull(),
-        () -> assertThat(result.name()).isEqualTo(userData.name()),
-        () -> assertThat(result.socialId()).isEqualTo(userData.socialId()),
-        () -> assertThat(result.clientProvider()).isEqualTo(userData.clientProvider()),
-        () -> assertThat(result.roleType()).isEqualTo(userData.roleType()),
-        () -> assertThat(result.isNewMember()).isFalse());
+  @BeforeEach
+  void setUp() {
+    savedMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
   }
 
   @Test
   @DisplayName("회원가입 정보를 업데이트한다.")
   void updateMemberInfo_Test() {
     // Given
-    UserData userData = MemberFixture.createUserData(RoleType.USER);
-    MemberCreateResult savedMember = memberService.saveMemberIfNotExists(userData);
     MemberEntryInfoParam param = new MemberEntryInfoParam("빠니보틀니", true);
 
     // When
-    MemberEntryInfoResult result = memberService.updateMemberInfo(savedMember.memberId(), param);
+    MemberEntryInfoResult result = memberService.updateMemberInfo(savedMember.getMemberId(), param);
 
     // Then
     assertAll(
-        () -> assertThat(result.memberId()).isEqualTo(savedMember.memberId()),
+        () -> assertThat(result.memberId()).isEqualTo(savedMember.getMemberId()),
         () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
         () -> assertThat(result.alarmPermission()).isEqualTo(param.alarmPermission()));
   }
@@ -99,18 +64,13 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("중복된 닉네임이 있는 경우 예외를 던진다.")
   void updateMemberInfo_DuplicatedNickname_ExceptionTest() {
     // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-    memberJpaRepository.flush();
-
-    UserData userData = MemberFixture.createUserData(RoleType.USER);
-    MemberCreateResult createResult = memberService.saveMemberIfNotExists(userData);
-    MemberEntryInfoParam param = new MemberEntryInfoParam(member.getNickname(), true);
+    MemberEntryInfoParam param = new MemberEntryInfoParam(savedMember.getNickname(), true);
 
     // When & Then
     assertThrows(
         DataIntegrityViolationException.class,
         () -> {
-          memberService.updateMemberInfo(createResult.memberId(), param);
+          memberService.updateMemberInfo(savedMember.getMemberId(), param);
           memberJpaRepository.flush();
         });
   }
@@ -119,23 +79,22 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("회원 프로필을 수정하면 멤버 정보가 수정되고, 프로필 이미지가 저장된다.")
   void updateMemberProfileTest() {
     // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     MemberProfileEditParam param =
         new MemberProfileEditParam(
             "빠니보틀니", true, "강원도 춘천시 중앙로", "킹갓 빠니보틀 생가", CashReceiptType.PERSON, "010-0101-0101");
     FileWrapper fileWrapper =
-        FileWrapperFixture.createFile(member.getMemberId(), FileType.PROFILES);
+        FileWrapperFixture.createFile(savedMember.getMemberId(), FileType.PROFILES);
 
     // When
     MemberProfileEditResult result =
-        memberService.updateMemberProfile(member.getMemberId(), param, fileWrapper);
+        memberService.updateMemberProfile(savedMember.getMemberId(), param, fileWrapper);
 
     // Then
     File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
 
     assertAll(
         () -> assertThat(savedProfileImgFile).hasSize(fileWrapper.getMultipartFile().getSize()),
-        () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
+        () -> assertThat(result.memberId()).isEqualTo(savedMember.getMemberId()),
         () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
         () -> assertThat(result.alarmPermission()).isEqualTo(param.alarmPermission()),
         () -> assertThat(result.defaultAddress()).isEqualTo(param.defaultAddress()),
@@ -147,34 +106,15 @@ class MemberServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("회원탈퇴한다.")
-  void deletMemberTest() {
-    // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-    String token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMTc1MTk1Nzc5NTA1NTg4NDczMjYiLCJsb2dpbklkIjozLCJyb2xlIjoiVVNFUiIsImV4cCI6MTcxMzAzOTU4NiwiaXNzIjoiZ29ndW1hIiwiaWF0IjoxNzEyOTUzMTg2fQ.oIxlLpioIkXI_Qr32HMuABHXyLjZQqYAclORQ8RZ7AI";
-    memberJpaRepository.flush();
-
-    // When
-    memberService.deleteMember(member.getMemberId(), token);
-
-    // Then
-    boolean result = memberJpaRepository.existsById(member.getMemberId());
-
-    assertThat(result).isFalse();
-  }
-
-  @Test
   @DisplayName("멤버 기본 배송지를 수정한다.")
   void updateDetaultAddressTest() {
     // Given
-    Member save = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     MemberDefaultAddressEditParam param =
         new MemberDefaultAddressEditParam("강원도 춘천시 중앙로", "킹갓 빠니보틀 생가");
 
     // When
     MemberDefaultAddressEditResult result =
-        memberService.updateDetaultAddress(save.getMemberId(), param);
+        memberService.updateDetaultAddress(savedMember.getMemberId(), param);
 
     // Then
     assertAll(
@@ -186,13 +126,12 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("기본 현금영수증 정보를 수정한다.")
   void changeDefaultCashReceiptInfoTest() {
     // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     MemberDefaultCashReceiptEditParam param =
         new MemberDefaultCashReceiptEditParam(CashReceiptType.PERSON, "010-0101-0101");
 
     // When
     MemberDefaultCashReceiptEditResult result =
-        memberService.updateDefaultCashReceipt(member.getMemberId(), param);
+        memberService.updateDefaultCashReceipt(savedMember.getMemberId(), param);
 
     // Then
     assertAll(
@@ -205,27 +144,23 @@ class MemberServiceTest extends IntegrationTest {
   @Test
   @DisplayName("멤버 정보를 조회한다.")
   void readMemberInfoTest() {
-    // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-    memberJpaRepository.flush();
-
-    // When
-    MemberInfoResult result = memberService.readMemberInfo(member.getMemberId());
+    // Given & When
+    MemberInfoResult result = memberService.readMemberInfo(savedMember.getMemberId());
 
     // Then
     assertAll(
-        () -> assertThat(result.memberId()).isEqualTo(member.getMemberId()),
-        () -> assertThat(result.nickname()).isEqualTo(member.getNickname()),
-        () -> assertThat(result.profileImgUrl()).isEqualTo(member.getProfileImgUrl()),
-        () -> assertThat(result.alarmPermission()).isEqualTo(member.getAlarmPermission()),
-        () -> assertThat(result.defaultAddress()).isEqualTo(member.getDefaultAddress()),
-        () -> assertThat(result.defaultAddressDetail()).isEqualTo(member.getDefaultAddressDetail()),
+        () -> assertThat(result.memberId()).isEqualTo(savedMember.getMemberId()),
+        () -> assertThat(result.nickname()).isEqualTo(savedMember.getNickname()),
+        () -> assertThat(result.profileImgUrl()).isEqualTo(savedMember.getProfileImgUrl()),
+        () -> assertThat(result.alarmPermission()).isEqualTo(savedMember.getAlarmPermission()),
+        () -> assertThat(result.defaultAddress()).isEqualTo(savedMember.getDefaultAddress()),
+        () -> assertThat(result.defaultAddressDetail()).isEqualTo(savedMember.getDefaultAddressDetail()),
         () ->
             assertThat(result.defaultCashReceiptType())
-                .isEqualTo(member.getDefaultCashReceiptType()),
+                .isEqualTo(savedMember.getDefaultCashReceiptType()),
         () ->
             assertThat(result.defaultCashReceiptNumber())
-                .isEqualTo(member.getDefaultCashReceiptNumber()));
+                .isEqualTo(savedMember.getDefaultCashReceiptNumber()));
   }
 
   @Test

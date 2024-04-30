@@ -18,12 +18,20 @@ allprojects {
     apply plugin: 'com.diffplug.spotless'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.asciidoctor.jvm.convert'
+    apply plugin: 'com.epages.restdocs-api-spec'
 
     group = 'com.onetuks'
     version = '0.0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
 
     ext {
@@ -46,73 +54,52 @@ allprojects {
         toolVersion = '0.8.8'
     }
 
+    openapi3 {
+        servers = List.of(
+                { url = "http://localhost:8080" },
+                { url = "http://server:8080" }
+//            { url = "https://서버url" }
+        )
+        title = "Goguma-Bookstore-Server-API"
+        description = "고구마서점 API"
+        version = getVersion()
+        format = "json" // (json / yaml)
+        outputDirectory = "src/main/resources/static"
+        outputFileNamePrefix = "swagger"
+    }
+
     dependencies {
-        // Netty/Resolver/DNS/Native/MacOS - global
+        // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
 
-        // Lombok - global
+        // Lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
 
-        // Test - global
+        // Test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-        // TestContainers - global
+        // TestContainers
         testImplementation 'org.springframework.boot:spring-boot-testcontainers'
         testImplementation 'org.testcontainers:junit-jupiter'
 
-        // Arch-Unit - global
+        // Arch-Unit
         testImplementation 'com.tngtech.archunit:archunit:1.2.2'
 
-        // MySQL - global
+        // MySQL
         runtimeOnly 'com.mysql:mysql-connector-j'
 
-        // JPA - global
+        // JPA
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-        // RestDocs - docs
+        // RestDocs
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
-        // Rest Docs API Spec - docs
+        // Rest Docs API Spec
         testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
 
-        // Swagger UI - docs
+        // Swagger UI
         implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-
-        // Spring Security - auth
-        implementation 'org.springframework.boot:spring-boot-starter-security'
-        testImplementation 'org.springframework.security:spring-security-test'
-
-        // OAuth2 - auth
-        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-        // JWT - auth
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.3'
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
-
-        // REDIS - auth
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.4'
-        testImplementation 'com.redis.testcontainers:testcontainers-redis-junit:1.6.4'
-
-
-        // Validation
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-        // Spring Web
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-
-        // Webflux
-        implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
-        // AWS S3
-        implementation(platform('software.amazon.awssdk:bom:2.25.41'))
-        implementation('commons-io:commons-io:2.16.1')
-        implementation('software.amazon.awssdk:aws-core:2.25.30')
-        implementation('software.amazon.awssdk:sdk-core:2.25.38')
-        implementation('software.amazon.awssdk:sts:2.25.39')
-        implementation('software.amazon.awssdk:s3:2.25.27')
-        testImplementation('org.testcontainers:localstack')
     }
 
     tasks.named('test') {
@@ -253,35 +240,15 @@ allprojects {
         into '.git/hooks'
     }
 
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    tasks.named('asciidoctor') {
+        inputs.dir snippetsDir
+        dependsOn test
     }
-}
-
-openapi3 {
-    servers = List.of(
-            { url = "http://localhost:8080" },
-            { url = "http://server:8080" }
-//            { url = "https://서버url" }
-    )
-    title = "Goguma-Bookstore-Server-API"
-    description = "고구마서점 API"
-    version = getVersion()
-    format = "json" // (json / yaml)
-    outputDirectory = "src/main/resources/static"
-    outputFileNamePrefix = "swagger"
 }
 
 dependencies {
     implementation project(':module-common')
+    implementation project(':module-auth')
     implementation project(':module-persistence')
     implementation project(':module-reader')
-}
-
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
 }

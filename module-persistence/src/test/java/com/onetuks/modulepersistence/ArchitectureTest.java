@@ -51,7 +51,7 @@ class ArchitectureTest extends PersistenceIntegrationTest {
               .should()
               .onlyHaveDependentClassesThat()
               .resideInAnyPackage(
-                  "..service..", "..repository..", "..model..", "..auth..", "..vo..");
+                  "..service..", "..repository..", "..model..", "..vo..", "..fixture..");
 
       rule.check(javaClasses);
     }

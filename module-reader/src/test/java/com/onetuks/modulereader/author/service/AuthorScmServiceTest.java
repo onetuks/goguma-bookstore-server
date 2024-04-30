@@ -40,11 +40,16 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorScmServiceTest extends IntegrationTest {
 
-  @Autowired private AuthorScmService authorScmService;
-  @Autowired private MemberJpaRepository memberJpaRepository;
-  @Autowired private AuthorJpaRepository authorJpaRepository;
-  @Autowired private S3Service s3Service;
-  @MockBean private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
+  @Autowired
+  private AuthorScmService authorScmService;
+  @Autowired
+  private MemberJpaRepository memberJpaRepository;
+  @Autowired
+  private AuthorJpaRepository authorJpaRepository;
+  @Autowired
+  private S3Service s3Service;
+  @MockBean
+  private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
   private Member userMember;
   private Member authorMember;

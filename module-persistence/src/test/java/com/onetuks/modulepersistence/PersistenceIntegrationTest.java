@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Ignore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -47,8 +45,6 @@ public class PersistenceIntegrationTest {
 
   static class PersistenceIntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {

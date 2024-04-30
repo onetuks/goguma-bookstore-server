@@ -28,10 +28,8 @@ import org.testcontainers.utility.DockerImageName;
 @Transactional
 @ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
 public class IntegrationTest {
-  // todo 한 번에 모든 bean 을 다 주입받아서 모든 테스트 클래스가 사용한다면 어떨까?
 
   static final ComposeContainer rdbms;
-  //  static RedisContainer redis;
   static final LocalStackContainer aws;
 
   @Autowired private TestFileCleaner testFileCleaner;
@@ -57,15 +55,12 @@ public class IntegrationTest {
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
                     .withStartupTimeout(Duration.ofSeconds(300)));
 
-    //    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
-
     aws =
         new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(Service.S3)
             .withStartupTimeout(Duration.ofSeconds(600));
 
     rdbms.start();
-    //    redis.start();
     aws.start();
   }
 
@@ -85,12 +80,6 @@ public class IntegrationTest {
           "spring.datasource.url",
           "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
       properties.put("spring.datasource.password", "root1234!");
-
-      //      var redistHost = redis.getHost();
-      //      var redistPort = redis.getFirstMappedPort();
-      //
-      //      properties.put("spring.data.redis.host", redistHost);
-      //      properties.put("spring.data.redis.port", String.valueOf(redistPort));
 
       try {
         aws.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
