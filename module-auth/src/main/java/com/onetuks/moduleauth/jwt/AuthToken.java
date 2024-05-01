@@ -1,5 +1,6 @@
 package com.onetuks.moduleauth.jwt;
 
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -18,8 +19,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @Slf4j
 public class AuthToken {
 
-  protected static final String AUTHORITIES_KEY = "role";
+  protected static final String AUTHORITIES_KEY = "roleType";
   protected static final String LOGIN_ID_KEY = "loginId";
+  protected static final String AUTHOR_ID_KEY = "authorId";
 
   @Getter private final String token;
   private final SecretKey secretKey;
@@ -33,13 +35,20 @@ public class AuthToken {
     return getTokenClaims().getSubject();
   }
 
+  public List<RoleType> getRoleTypes() {
+    return Arrays.stream(getTokenClaims().get(AUTHORITIES_KEY, String[].class))
+        .map(RoleType::valueOf)
+        .toList();
+  }
+
   public Authentication getAuthentication() {
     Claims claims = getTokenClaims();
 
     String socialId = claims.getSubject();
-    Long loginId = ((Integer) claims.get(LOGIN_ID_KEY)).longValue();
+    Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
+    Long authorId = claims.get(AUTHOR_ID_KEY, Long.class);
+    String[] roles = claims.get(AUTHORITIES_KEY, String[].class);
 
-    String[] roles = {claims.get(AUTHORITIES_KEY).toString()};
     List<SimpleGrantedAuthority> authorities =
         Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
 
@@ -47,6 +56,7 @@ public class AuthToken {
         CustomUserDetails.builder()
             .socialId(socialId)
             .loginId(loginId)
+            .authorId(authorId)
             .authorities(authorities)
             .build();
 

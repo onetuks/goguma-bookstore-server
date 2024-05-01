@@ -62,7 +62,7 @@ public class BookScmService {
   public Page<BookResult> getAllBooksByAuthor(
       long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
-      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
     return bookJpaRepository.findAllByAuthorAuthorId(authorId, pageable).map(BookResult::from);
@@ -75,7 +75,7 @@ public class BookScmService {
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다."));
 
     if (book.getAuthor().getAuthorId() != authorId) {
-      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
     return book;

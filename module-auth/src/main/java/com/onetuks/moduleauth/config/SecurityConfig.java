@@ -1,5 +1,7 @@
 package com.onetuks.moduleauth.config;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import com.onetuks.moduleauth.exception.SecurityExceptionHandlerFilter;
 import com.onetuks.moduleauth.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -38,7 +40,7 @@ public class SecurityConfig {
                     .anyRequest()
                     .authenticated())
         .cors(cors -> corsConfig.corsConfigurationSource())
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
         .csrf(AbstractHttpConfigurer::disable)
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)

@@ -1,9 +1,9 @@
 package com.onetuks.moduleauth.util.admin;
 
+import com.onetuks.moduleauth.jwt.CustomUserDetails;
 import com.onetuks.modulecommon.error.ErrorCode;
 import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.moduleauth.jwt.CustomUserDetails;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
@@ -32,14 +32,15 @@ public class AdminIdResolver implements HandlerMethodArgumentResolver {
       @Nonnull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
     boolean isNotAdmin =
         authentication.getAuthorities().stream()
-            .noneMatch(
+            .anyMatch(
                 grantedAuthority ->
                     Objects.equals(grantedAuthority.getAuthority(), RoleType.ADMIN.name()));
 
     if (isNotAdmin) {
-      throw new ApiAccessDeniedException(ErrorCode.ONLY_FOR_ADMIN_METHOD);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
     return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }

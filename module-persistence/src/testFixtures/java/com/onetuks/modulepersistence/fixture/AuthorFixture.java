@@ -26,7 +26,7 @@ public class AuthorFixture {
             EnrollmentInfo.builder()
                 .businessNumber(RandomValueProvider.createBusinessNumber())
                 .mailOrderSalesNumber(RandomValueProvider.createMailOrderSalesNumber())
-                .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
+                .enrollmentPassed(member.getRoleTypes().contains(RoleType.AUTHOR))
                 .enrollmentAt(LocalDateTime.now())
                 .build())
         .build();
@@ -45,7 +45,7 @@ public class AuthorFixture {
             EnrollmentInfo.builder()
                 .businessNumber(RandomValueProvider.createBusinessNumber())
                 .mailOrderSalesNumber(RandomValueProvider.createMailOrderSalesNumber())
-                .enrollmentPassed(member.getRoleType() == RoleType.AUTHOR)
+                .enrollmentPassed(member.getRoleTypes().contains(RoleType.AUTHOR))
                 .enrollmentAt(enrollmentAt)
                 .build())
         .build();

@@ -3,6 +3,7 @@ package com.onetuks.moduleauth.jwt;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,49 +12,48 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-  private final Long loginId;
   private final String socialId;
+  private final Long loginId;
+  private final Long authorId;
   private final List<? extends GrantedAuthority> authorities;
 
   @Builder
   public CustomUserDetails(
-      Long loginId, String socialId, List<? extends GrantedAuthority> authorities) {
-    this.loginId = loginId;
+      String socialId, Long loginId, Long authorId, List<? extends GrantedAuthority> authorities) {
     this.socialId = socialId;
+    this.loginId = loginId;
+    this.authorId = authorId;
     this.authorities = authorities;
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
+  public boolean equals(Object o) {
+    if (this == o) {
       return true;
     }
-    if (obj == null || obj.getClass() != this.getClass()) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    var that = (CustomUserDetails) obj;
-    return Objects.equals(this.loginId, that.loginId)
-        && Objects.equals(this.socialId, that.socialId)
-        && Objects.equals(this.authorities, that.authorities);
+    CustomUserDetails that = (CustomUserDetails) o;
+    return Objects.equals(socialId, that.socialId)
+        && Objects.equals(loginId, that.loginId)
+        && Objects.equals(authorId, that.authorId)
+        && Objects.equals(authorities, that.authorities);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(loginId, socialId, authorities);
+    return Objects.hash(socialId, loginId, authorId, authorities);
   }
 
   @Override
   public String toString() {
-    return "CustomUserDetails["
-        + "loginId="
-        + loginId
-        + ", "
-        + "socialId="
-        + socialId
-        + ", "
-        + "authorities="
-        + authorities
-        + ']';
+    return new StringJoiner(", ", CustomUserDetails.class.getSimpleName() + "[", "]")
+        .add("socialId='" + socialId + "'")
+        .add("loginId=" + loginId)
+        .add("authorId=" + authorId)
+        .add("authorities=" + authorities)
+        .toString();
   }
 
   @Override
@@ -68,7 +68,7 @@ public class CustomUserDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    return socialId;
+    return this.socialId;
   }
 
   @Override

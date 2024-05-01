@@ -42,7 +42,7 @@ public class GlobalExceptionRestHandler {
     logging(e);
 
     final ErrorResponse response =
-        ErrorResponse.of(ErrorCode.ONLY_FOR_ADMIN_METHOD, e.getMessage());
+        ErrorResponse.of(ErrorCode.UNAUTHORITY_ACCESS_DENIED, e.getMessage());
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
   }

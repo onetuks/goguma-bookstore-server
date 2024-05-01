@@ -1,6 +1,9 @@
 package com.onetuks.moduleauth.controller;
 
-import static org.springframework.http.HttpStatus.OK;
+import static com.onetuks.moduleauth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
+import static com.onetuks.modulepersistence.global.vo.auth.ClientProvider.GOOGLE;
+import static com.onetuks.modulepersistence.global.vo.auth.ClientProvider.KAKAO;
+import static com.onetuks.modulepersistence.global.vo.auth.ClientProvider.NAVER;
 
 import com.onetuks.moduleauth.controller.dto.LoginResponse;
 import com.onetuks.moduleauth.controller.dto.LogoutResponse;
@@ -15,7 +18,6 @@ import com.onetuks.moduleauth.service.dto.LoginResult;
 import com.onetuks.moduleauth.service.dto.LogoutResult;
 import com.onetuks.moduleauth.service.dto.RefreshResult;
 import com.onetuks.moduleauth.util.login.LoginId;
-import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,8 +52,7 @@ public class AuthRestController {
   @PostMapping(path = "/kakao")
   public ResponseEntity<LoginResponse> kakaoLogin(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(ClientProvider.KAKAO, request.getHeader(
-            AuthHeaderUtil.HEADER_AUTHORIZATION));
+        oAuth2ClientService.login(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
@@ -59,8 +60,7 @@ public class AuthRestController {
   @PostMapping(path = "/google")
   public ResponseEntity<LoginResponse> googleLogin(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(ClientProvider.GOOGLE, request.getHeader(
-            AuthHeaderUtil.HEADER_AUTHORIZATION));
+        oAuth2ClientService.login(GOOGLE, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
@@ -68,8 +68,7 @@ public class AuthRestController {
   @PostMapping(path = "/naver")
   public ResponseEntity<LoginResponse> naverLogin(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(ClientProvider.NAVER, request.getHeader(
-            AuthHeaderUtil.HEADER_AUTHORIZATION));
+        oAuth2ClientService.login(NAVER, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
@@ -79,7 +78,8 @@ public class AuthRestController {
       HttpServletRequest request, @LoginId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
-    RefreshResult authRefreshResult = authService.updateAccessToken(authToken, loginId);
+    RefreshResult authRefreshResult =
+        authService.updateAccessToken(authToken, loginId, authToken.getRoleTypes());
 
     return ResponseEntity.status(HttpStatus.OK).body(RefreshResponse.from(authRefreshResult));
   }

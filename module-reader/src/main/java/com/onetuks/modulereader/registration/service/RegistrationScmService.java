@@ -135,7 +135,7 @@ public class RegistrationScmService {
     Registration registration = getRegistrationById(registrationId);
 
     if (registration.getAuthor().getAuthorId() != authorId) {
-      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
     s3Service.deleteFile(registration.getCoverImgUrl());
@@ -151,7 +151,7 @@ public class RegistrationScmService {
     Registration registration = getRegistrationById(registrationId);
 
     if (registration.getAuthor().getAuthorId() != authorId) {
-      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
     return RegistrationResult.from(registration);
@@ -166,7 +166,7 @@ public class RegistrationScmService {
   public Page<RegistrationResult> readAllRegistrationsByAuthor(
       long loginAuthorId, long authorId, Pageable pageable) {
     if (loginAuthorId != authorId) {
-      throw new ApiAccessDeniedException(ErrorCode.NOT_AUTHORITY_AUTHOR);
+      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
     return registrationJpaRepository

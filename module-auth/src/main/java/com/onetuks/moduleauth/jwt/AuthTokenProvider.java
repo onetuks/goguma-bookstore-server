@@ -1,6 +1,7 @@
 package com.onetuks.moduleauth.jwt;
 
-import static com.onetuks.modulepersistence.global.vo.auth.RoleType.USER;
+import static com.onetuks.moduleauth.jwt.AuthToken.AUTHORITIES_KEY;
+import static com.onetuks.moduleauth.jwt.AuthToken.LOGIN_ID_KEY;
 
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +9,7 @@ import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
+import java.util.List;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,15 +32,15 @@ public class AuthTokenProvider {
     this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
   }
 
-  public AuthToken provideAccessToken(String socialId, Long loginId) {
+  public AuthToken provideAccessToken(String socialId, Long loginId, List<RoleType> roleTypes) {
     return new AuthToken(
-        createToken(socialId, loginId, RoleType.USER.name(), getExpiryDate(accessTokenExpiryPeriod)),
+        createToken(socialId, loginId, roleTypes, getExpiryDate(accessTokenExpiryPeriod)),
         secretKey);
   }
 
-  public AuthToken provideRefreshToken(String socialId, Long loginId) {
+  public AuthToken provideRefreshToken(String socialId, Long loginId, List<RoleType> roleTypes) {
     return new AuthToken(
-        createToken(socialId, loginId, RoleType.USER.name(), getExpiryDate(refreshTokenExpiryPeriod)),
+        createToken(socialId, loginId, roleTypes, getExpiryDate(refreshTokenExpiryPeriod)),
         secretKey);
   }
 
@@ -50,11 +52,11 @@ public class AuthTokenProvider {
     return new Date(System.currentTimeMillis() + expiryPeriod);
   }
 
-  private String createToken(String socialId, Long loginId, String role, Date expiry) {
+  private String createToken(String socialId, Long loginId, List<RoleType> roleTypes, Date expiry) {
     return Jwts.builder()
         .subject(socialId)
-        .claim(AuthToken.LOGIN_ID_KEY, loginId)
-        .claim(AuthToken.AUTHORITIES_KEY, role)
+        .claim(LOGIN_ID_KEY, loginId)
+        .claim(AUTHORITIES_KEY, roleTypes.stream().map(RoleType::name).toArray(String[]::new))
         .signWith(secretKey, SIG.HS256)
         .expiration(expiry)
         .issuer(issuer)

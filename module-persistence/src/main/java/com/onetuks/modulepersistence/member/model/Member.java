@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
@@ -95,18 +96,18 @@ public class Member {
     return this.defaultCashReceiptInfo.getDefaultCashReceiptNumber();
   }
 
-  public RoleType getRoleType() {
-    return this.authInfo.getRoleType();
+  public List<RoleType> getRoleTypes() {
+    return this.authInfo.getRoleTypes();
   }
 
-  public RoleType grantAuthorRole() {
-    this.authInfo = authInfo.changeRole(RoleType.AUTHOR);
-    return getRoleType();
+  public List<RoleType> grantAuthorRole() {
+    this.authInfo = authInfo.addRole(RoleType.AUTHOR);
+    return getRoleTypes();
   }
 
-  public RoleType revokeAuthorRole() {
-    this.authInfo = authInfo.changeRole(RoleType.USER);
-    return getRoleType();
+  public List<RoleType> revokeAuthorRole() {
+    this.authInfo = authInfo.removeRole(RoleType.AUTHOR);
+    return getRoleTypes();
   }
 
   public Member changeNickname(String nickname) {

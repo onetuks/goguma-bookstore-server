@@ -1,7 +1,5 @@
 package com.onetuks.moduleauth.oauth.dto;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AccessLevel;

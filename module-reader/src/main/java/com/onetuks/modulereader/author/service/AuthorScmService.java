@@ -153,7 +153,7 @@ public class AuthorScmService {
             .findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
-    if (member.getRoleType() != RoleType.USER) {
+    if (member.getRoleTypes() != RoleType.USER) {
       throw new IllegalStateException("이미 작가인 멤버입니다.");
     }
     return member;

@@ -21,7 +21,7 @@ public record AuthorEnrollmentDetailsResult(
     return new AuthorEnrollmentDetailsResult(
         author.getAuthorId(),
         author.getMember().getMemberId(),
-        author.getMember().getRoleType(),
+        author.getMember().getRoleTypes(),
         author.getProfileImgUrl(),
         author.getNickname(),
         author.getIntroduction(),

@@ -1,12 +1,12 @@
 package com.onetuks.moduleauth.service;
 
+import com.onetuks.moduleauth.jwt.AuthToken;
+import com.onetuks.moduleauth.oauth.ClientProviderStrategyHandler;
+import com.onetuks.moduleauth.oauth.dto.UserData;
+import com.onetuks.moduleauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.moduleauth.service.dto.LoginResult;
 import com.onetuks.moduleauth.service.dto.MemberCreateResult;
 import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
-import com.onetuks.modulepersistence.member.vo.UserData;
-import com.onetuks.moduleauth.jwt.AuthToken;
-import com.onetuks.moduleauth.oauth.ClientProviderStrategyHandler;
-import com.onetuks.moduleauth.oauth.strategy.ClientProviderStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +32,18 @@ public class OAuth2ClientService {
         clientProviderStrategyHandler.getClientStrategy(clientProvider);
 
     UserData clientMember = clientProviderStrategy.getUserData(accessToken);
-    String socialId = clientMember.socialId();
 
     MemberCreateResult savedMember = memberAuthService.saveMemberIfNotExists(clientMember);
 
-    AuthToken newAuthToken = authService.saveAccessToken(socialId, savedMember.memberId());
+    AuthToken newAuthToken =
+        authService.saveAccessToken(
+            clientMember.socialId(), savedMember.memberId(), savedMember.roleTypes());
 
     return LoginResult.of(
         newAuthToken.getToken(),
         savedMember.isNewMember(),
         savedMember.memberId(),
-        savedMember.name());
+        savedMember.name(),
+        savedMember.roleTypes());
   }
 }

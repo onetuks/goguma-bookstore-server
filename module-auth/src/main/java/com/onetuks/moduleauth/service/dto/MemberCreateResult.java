@@ -4,13 +4,14 @@ import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import java.util.List;
 
 public record MemberCreateResult(
     long memberId,
     String name,
     String socialId,
     ClientProvider clientProvider,
-    RoleType roleType,
+    List<RoleType> roleTypes,
     boolean isNewMember) {
 
   public static MemberCreateResult from(Member member, boolean isNewMember) {
@@ -21,7 +22,7 @@ public record MemberCreateResult(
         authInfo.getName(),
         authInfo.getSocialId(),
         authInfo.getClientProvider(),
-        authInfo.getRoleType(),
+        authInfo.getRoleTypes(),
         isNewMember);
   }
 }

@@ -1,13 +1,12 @@
 package com.onetuks.moduleauth.oauth.strategy;
 
-import static com.onetuks.modulecommon.error.ErrorCode.OAUTH_CLIENT_SERVER_ERROR;
-import static com.onetuks.modulecommon.error.ErrorCode.UNAUTHORIZED_TOKEN;
-
-import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
-import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulepersistence.member.vo.UserData;
 import com.onetuks.moduleauth.exception.TokenValidFailedException;
 import com.onetuks.moduleauth.oauth.dto.NaverUser;
+import com.onetuks.moduleauth.oauth.dto.UserData;
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -33,8 +32,8 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
             .retrieve()
             .onStatus(
                 HttpStatusCode::is4xxClientError,
-                clientResponse -> Mono.error(new TokenValidFailedException(
-                    ErrorCode.UNAUTHORIZED_TOKEN)))
+                clientResponse ->
+                    Mono.error(new TokenValidFailedException(ErrorCode.UNAUTHORIZED_TOKEN)))
             .onStatus(
                 HttpStatusCode::is5xxServerError,
                 clientResponse ->
@@ -49,7 +48,7 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
         .name(naverUser.getResponse().getName())
         .socialId(naverUser.getResponse().getId())
         .clientProvider(ClientProvider.NAVER)
-        .roleType(RoleType.USER)
+        .roleTypes(List.of(RoleType.USER))
         .build();
   }
 }

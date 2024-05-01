@@ -1,6 +1,5 @@
 package com.onetuks.moduleauth;
 
-
 import com.onetuks.moduleauth.AuthIntegrationTest.AuthIntegrationTestInitializer;
 import com.redis.testcontainers.RedisContainer;
 import java.io.File;
@@ -30,8 +29,8 @@ public class AuthIntegrationTest {
   static {
     rdbms =
         new ComposeContainer(
-            new File(
-                "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
+                new File(
+                    "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
             .withExposedService(
                 "local-db",
                 3306,

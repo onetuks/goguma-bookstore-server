@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS members
     name                        VARCHAR(255)                     NOT NULL COMMENT '멤버 실명',
     social_id                   VARCHAR(255)                     NOT NULL COMMENT '로그인 소셜 아이디',
     client_provider             VARCHAR(255)                     NOT NULL COMMENT '로그인 클라이언트',
-    role_type                   enum ('USER', 'AUTHOR', 'ADMIN') NOT NULL COMMENT '멤버 타입',
+    role_types                  JSON                             NOT NULL COMMENT '멤버 타입',
     nickname                    VARCHAR(255) UNIQUE COMMENT '멤버 닉네임',
     profile_img_uri             VARCHAR(255) COMMENT '멤버 프로필 이미지 URI',
     alarm_permission            BOOLEAN                          NOT NULL DEFAULT TRUE COMMENT '알람 수신 여부',

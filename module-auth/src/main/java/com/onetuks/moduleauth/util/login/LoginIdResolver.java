@@ -28,6 +28,7 @@ public class LoginIdResolver implements HandlerMethodArgumentResolver {
       @Nonnull NativeWebRequest webRequest,
       WebDataBinderFactory binderFactory) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
     return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }
 }

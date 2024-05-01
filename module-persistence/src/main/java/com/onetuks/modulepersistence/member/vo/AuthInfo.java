@@ -4,12 +4,17 @@ import static jakarta.persistence.EnumType.STRING;
 
 import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,23 +31,30 @@ public class AuthInfo {
   @Column(name = "client_provider", nullable = false)
   private ClientProvider clientProvider;
 
-  @Enumerated(value = STRING)
-  @Column(name = "role_type", nullable = false)
-  private RoleType roleType;
+  @Type(JsonType.class)
+  @Column(name = "role_types", nullable = false)
+  private List<RoleType> roleTypes;
 
-  public AuthInfo(String name, String socialId, ClientProvider clientProvider, RoleType roleType) {
+  @Builder
+  public AuthInfo(
+      String name, String socialId, ClientProvider clientProvider, List<RoleType> roleTypes) {
     this.name = name;
     this.socialId = socialId;
     this.clientProvider = clientProvider;
-    this.roleType = roleType;
+    this.roleTypes = roleTypes;
   }
 
-  public static AuthInfo from(UserData userData) {
-    return new AuthInfo(
-        userData.name(), userData.socialId(), userData.clientProvider(), userData.roleType());
+  public AuthInfo addRole(RoleType roleType) {
+    List<RoleType> newRoleTypes = new ArrayList<>(this.roleTypes);
+    newRoleTypes.add(roleType);
+
+    return new AuthInfo(this.name, this.socialId, this.clientProvider, newRoleTypes);
   }
 
-  public AuthInfo changeRole(RoleType roleType) {
-    return new AuthInfo(this.name, this.socialId, this.clientProvider, roleType);
+  public AuthInfo removeRole(RoleType roleType) {
+    List<RoleType> newRoleTypes = new ArrayList<>(this.roleTypes);
+    newRoleTypes.remove(roleType);
+
+    return new AuthInfo(this.name, this.socialId, this.clientProvider, newRoleTypes);
   }
 }

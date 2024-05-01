@@ -1,8 +1,17 @@
 package com.onetuks.moduleauth.service.dto;
 
-public record LoginResult(String accessToken, boolean isNewMember, long loginId, String name) {
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import java.util.List;
 
-  public static LoginResult of(String accessToken, boolean isNewMember, Long loginId, String name) {
-    return new LoginResult(accessToken, isNewMember, loginId, name);
+public record LoginResult(
+    String accessToken, boolean isNewMember, long loginId, String name, List<RoleType> roleTypes) {
+
+  public static LoginResult of(
+      String accessToken,
+      boolean isNewMember,
+      Long loginId,
+      String name,
+      List<RoleType> roleTypes) {
+    return new LoginResult(accessToken, isNewMember, loginId, name, roleTypes);
   }
 }

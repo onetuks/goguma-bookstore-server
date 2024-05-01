@@ -1,14 +1,14 @@
 package com.onetuks.moduleauth.service;
 
-import static com.onetuks.modulecommon.error.ErrorCode.EXPIRED_REFRESH_TOKEN;
-
-import com.onetuks.moduleauth.service.dto.LogoutResult;
-import com.onetuks.moduleauth.service.dto.RefreshResult;
 import com.onetuks.moduleauth.exception.TokenExpiredException;
 import com.onetuks.moduleauth.jwt.AuthToken;
 import com.onetuks.moduleauth.jwt.AuthTokenProvider;
 import com.onetuks.moduleauth.jwt.AuthTokenRepository;
+import com.onetuks.moduleauth.service.dto.LogoutResult;
+import com.onetuks.moduleauth.service.dto.RefreshResult;
 import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,9 @@ public class AuthService {
   }
 
   @Transactional
-  public AuthToken saveAccessToken(String socialId, Long memberId) {
-    AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, memberId);
-    AuthToken refreshToken = authTokenProvider.provideRefreshToken(socialId, memberId);
+  public AuthToken saveAccessToken(String socialId, Long loginId, List<RoleType> roleTypes) {
+    AuthToken accessToken = authTokenProvider.provideAccessToken(socialId, loginId, roleTypes);
+    AuthToken refreshToken = authTokenProvider.provideRefreshToken(socialId, loginId, roleTypes);
 
     authTokenRepository.save(accessToken.getToken(), refreshToken.getToken());
 
@@ -34,13 +34,14 @@ public class AuthService {
   }
 
   @Transactional
-  public RefreshResult updateAccessToken(AuthToken accessToken, Long loginId) {
+  public RefreshResult updateAccessToken(
+      AuthToken accessToken, Long loginId, List<RoleType> roleTypes) {
     String socialId = accessToken.getSocialId();
 
     validateRefreshToken(accessToken.getToken());
 
     authTokenRepository.delete(accessToken.getToken());
-    AuthToken newAccessToken = saveAccessToken(socialId, loginId);
+    AuthToken newAccessToken = saveAccessToken(socialId, loginId, roleTypes);
 
     return RefreshResult.of(newAccessToken.getToken(), loginId);
   }

@@ -1,6 +1,6 @@
 package com.onetuks.moduleauth.oauth.strategy;
 
-import com.onetuks.modulepersistence.member.vo.UserData;
+import com.onetuks.moduleauth.oauth.dto.UserData;
 
 public interface ClientProviderStrategy {
 

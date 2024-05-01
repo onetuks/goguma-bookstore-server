@@ -7,8 +7,8 @@ import com.onetuks.modulepersistence.global.vo.order.DefaultAddressInfo;
 import com.onetuks.modulepersistence.global.vo.order.DefaultCashReceiptInfo;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.vo.AuthInfo;
-import com.onetuks.modulepersistence.member.vo.UserData;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import java.util.List;
 
 public class MemberFixture {
 
@@ -30,16 +30,12 @@ public class MemberFixture {
         .build();
   }
 
-  public static UserData createUserData(RoleType roleType) {
-    return UserData.builder()
-        .name("빠니보틀" + UUIDProvider.getUUID())
+  private static AuthInfo createAuthInfo(RoleType roleType) {
+    return AuthInfo.builder()
+        .name("빠니보틀")
         .socialId(UUIDProvider.getUUID())
         .clientProvider(ClientProvider.NAVER)
-        .roleType(roleType)
+        .roleTypes(List.of(roleType))
         .build();
-  }
-
-  private static AuthInfo createAuthInfo(RoleType roleType) {
-    return AuthInfo.from(createUserData(roleType));
   }
 }
