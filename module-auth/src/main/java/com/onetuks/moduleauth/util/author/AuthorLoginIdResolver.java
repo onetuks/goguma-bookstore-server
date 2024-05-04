@@ -17,12 +17,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AuthorIdResolver implements HandlerMethodArgumentResolver {
+public class AuthorLoginIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return Arrays.stream(parameter.getParameterAnnotations())
-        .anyMatch(annotation -> annotation.annotationType().equals(AuthorId.class));
+        .anyMatch(annotation -> annotation.annotationType().equals(AuthorLoginId.class));
   }
 
   @Override
@@ -43,6 +43,6 @@ public class AuthorIdResolver implements HandlerMethodArgumentResolver {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    return ((CustomUserDetails) authentication.getPrincipal()).getAuthorId();
+    return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }
 }

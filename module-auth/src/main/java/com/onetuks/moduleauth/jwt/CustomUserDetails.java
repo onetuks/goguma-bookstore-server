@@ -14,15 +14,13 @@ public class CustomUserDetails implements UserDetails {
 
   private final String socialId;
   private final Long loginId;
-  private final Long authorId;
   private final List<? extends GrantedAuthority> authorities;
 
   @Builder
   public CustomUserDetails(
-      String socialId, Long loginId, Long authorId, List<? extends GrantedAuthority> authorities) {
+      String socialId, Long loginId, List<? extends GrantedAuthority> authorities) {
     this.socialId = socialId;
     this.loginId = loginId;
-    this.authorId = authorId;
     this.authorities = authorities;
   }
 
@@ -37,13 +35,12 @@ public class CustomUserDetails implements UserDetails {
     CustomUserDetails that = (CustomUserDetails) o;
     return Objects.equals(socialId, that.socialId)
         && Objects.equals(loginId, that.loginId)
-        && Objects.equals(authorId, that.authorId)
         && Objects.equals(authorities, that.authorities);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(socialId, loginId, authorId, authorities);
+    return Objects.hash(socialId, loginId, authorities);
   }
 
   @Override
@@ -51,7 +48,6 @@ public class CustomUserDetails implements UserDetails {
     return new StringJoiner(", ", CustomUserDetails.class.getSimpleName() + "[", "]")
         .add("socialId='" + socialId + "'")
         .add("loginId=" + loginId)
-        .add("authorId=" + authorId)
         .add("authorities=" + authorities)
         .toString();
   }

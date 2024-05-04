@@ -17,6 +17,7 @@ import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetail
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -92,21 +93,19 @@ public class AuthorScmService {
     Member member = author.getMember();
 
     boolean enrollmentJudgeStatus = author.convertEnrollmentJudgeStatus();
-    RoleType roleType =
+    List<RoleType> roleTypes =
         enrollmentJudgeStatus ? member.grantAuthorRole() : member.revokeAuthorRole();
 
-    return new AuthorEnrollmentJudgeResult(enrollmentJudgeStatus, member.getMemberId(), roleType);
+    return new AuthorEnrollmentJudgeResult(enrollmentJudgeStatus, member.getMemberId(), roleTypes);
   }
 
   @Transactional
-  public void deleteAuthorEnrollment(long loginAuthorId, long authorId) {
-    Author author = getAuthorById(authorId);
-
-    checkIllegalArgument(author, loginAuthorId);
+  public void deleteAuthorEnrollment(long authorLoginId) {
+    Author author = getAuthorByMemberId(authorLoginId);
 
     s3Service.deleteFile(author.getProfileImgUrl());
 
-    authorJpaRepository.deleteById(authorId);
+    authorJpaRepository.deleteById(author.getAuthorId());
   }
 
   @Transactional(readOnly = true)
@@ -126,34 +125,13 @@ public class AuthorScmService {
         .map(AuthorEnrollmentDetailsResult::from);
   }
 
-  @Transactional
-  public AuthorEditResult updateAuthorProfile(
-      long loginAuthorId,
-      long authorId,
-      AuthorEditParam authorEditParam,
-      FileWrapper profileImgFile) {
-    if (loginAuthorId != authorId) {
-      throw new IllegalArgumentException("작가 정보를 수정할 권한이 없습니다.");
-    }
-
-    s3Service.putFile(profileImgFile);
-
-    return AuthorEditResult.from(
-        getAuthorById(authorId)
-            .changeProfileImgPath(profileImgFile.getUri())
-            .changeAuthorProfile(
-                authorEditParam.nickname(),
-                authorEditParam.introduction(),
-                authorEditParam.instagramUrl()));
-  }
-
   private Member getUserMemberById(long loginId) {
     Member member =
         memberJpaRepository
             .findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
-    if (member.getRoleTypes() != RoleType.USER) {
+    if (member.getRoleTypes().contains(RoleType.USER)) {
       throw new IllegalStateException("이미 작가인 멤버입니다.");
     }
     return member;
@@ -165,9 +143,14 @@ public class AuthorScmService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 
-  private void checkIllegalArgument(Author author, long loginAuthorId) {
-    if (author.getAuthorId() != loginAuthorId) {
+  private void checkIllegalArgument(Author author, long loginId) {
+    if (author.getMember().getMemberId() != loginId) {
       throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
     }
+  }
+
+  private Author getAuthorByMemberId(long authorLoginId) {
+    return authorJpaRepository.findByMemberMemberId(authorLoginId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 }

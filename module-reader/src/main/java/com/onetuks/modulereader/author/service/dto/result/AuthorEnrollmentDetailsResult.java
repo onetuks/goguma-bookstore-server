@@ -3,11 +3,12 @@ package com.onetuks.modulereader.author.service.dto.result;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record AuthorEnrollmentDetailsResult(
     long authorId,
     long memberId,
-    RoleType roleType,
+    List<RoleType> roleTypes,
     String profileImgUrl,
     String nickname,
     String introduction,

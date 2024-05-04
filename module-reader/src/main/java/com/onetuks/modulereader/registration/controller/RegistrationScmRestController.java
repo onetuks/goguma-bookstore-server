@@ -1,12 +1,12 @@
 package com.onetuks.modulereader.registration.controller;
 
+import com.onetuks.moduleauth.util.admin.AdminLoginId;
+import com.onetuks.moduleauth.util.author.AuthorLoginId;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.verification.IsbnWebClientService;
 import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
-import com.onetuks.modulereader.auth.util.admin.AdminId;
-import com.onetuks.modulereader.auth.util.author.AuthorId;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.modulereader.registration.controller.dto.request.RegistrationInspectionRequest;
@@ -65,7 +65,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> addRegistration(
-      @AuthorId Long authorId,
+      @AuthorLoginId Long authorId,
       @RequestBody @Valid RegistrationCreateRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
       @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
@@ -97,7 +97,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationInspectionResponse> inspectRegistration(
-      @AdminId Long adminId,
+      @AdminLoginId Long adminId,
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationInspectionRequest request) {
     RegistrationInspectionResult result =
@@ -123,7 +123,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> editRegistration(
-      @AuthorId Long authorId,
+      @AuthorLoginId Long authorId,
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationEditRequest request,
       @RequestPart(name = "cover-img-file", required = false) MultipartFile coverImgFile,
@@ -152,7 +152,7 @@ public class RegistrationScmRestController {
    */
   @DeleteMapping(path = "/{registrationId}")
   public ResponseEntity<Void> removeRegistration(
-      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+      @AuthorLoginId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
     registrationScmService.deleteRegistration(authorId, registrationId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -167,7 +167,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> getRegistration(
-      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+      @AuthorLoginId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
     RegistrationResult result = registrationScmService.readRegistration(authorId, registrationId);
     RegistrationResponse response = RegistrationResponse.from(result);
 
@@ -182,7 +182,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponses> getAllRegistrations(
-      @AdminId Long adminId,
+      @AdminLoginId Long adminId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationResult> result = registrationScmService.readAllRegistrations(pageable);
     RegistrationResponses response = RegistrationResponses.from(result);
@@ -199,7 +199,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponses> getAllRegistrationsByAuthor(
-      @AuthorId Long loginAuthorId,
+      @AuthorLoginId Long loginAuthorId,
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationResult> result =

@@ -2,10 +2,9 @@ package com.onetuks.modulereader.member.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import com.onetuks.moduleauth.util.login.LoginId;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulereader.auth.jwt.AuthHeaderUtil;
-import com.onetuks.modulereader.auth.util.login.LoginId;
 import com.onetuks.modulereader.member.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.modulereader.member.controller.dto.request.MemberDefaultCashReceiptEditRequest;
 import com.onetuks.modulereader.member.controller.dto.request.MemberEntryInfoRequest;
@@ -57,7 +56,8 @@ public class MemberRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberEntryInfoResponse> entryMemberInfo(
-      @LoginId Long memberId, @RequestBody @Valid MemberEntryInfoRequest request) {
+      @LoginId Long memberId,
+      @RequestBody @Valid MemberEntryInfoRequest request) {
     MemberEntryInfoResult result = memberService.updateMemberInfo(memberId, request.to());
     MemberEntryInfoResponse response = MemberEntryInfoResponse.from(result);
 

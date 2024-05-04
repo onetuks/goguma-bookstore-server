@@ -46,7 +46,6 @@ public class AuthToken {
 
     String socialId = claims.getSubject();
     Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
-    Long authorId = claims.get(AUTHOR_ID_KEY, Long.class);
     String[] roles = claims.get(AUTHORITIES_KEY, String[].class);
 
     List<SimpleGrantedAuthority> authorities =
@@ -56,7 +55,6 @@ public class AuthToken {
         CustomUserDetails.builder()
             .socialId(socialId)
             .loginId(loginId)
-            .authorId(authorId)
             .authorities(authorities)
             .build();
 

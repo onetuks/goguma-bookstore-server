@@ -3,12 +3,13 @@ package com.onetuks.modulereader.author.controller.dto.response;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.data.domain.Page;
 
 public record AuthorEnrollmentDetailsResponse(
     long authorId,
     long memberId,
-    RoleType roleType,
+    List<RoleType> roleTypes,
     String profileImgUrl,
     String nickname,
     String introduction,
@@ -22,7 +23,7 @@ public record AuthorEnrollmentDetailsResponse(
     return new AuthorEnrollmentDetailsResponse(
         result.authorId(),
         result.memberId(),
-        result.roleType(),
+        result.roleTypes(),
         result.profileImgUrl(),
         result.nickname(),
         result.introduction(),

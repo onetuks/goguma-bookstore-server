@@ -45,7 +45,7 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
         .hasSize(list.size())
         .allSatisfy(
             response -> {
-              assertThat(response.roleType()).isEqualTo(RoleType.USER);
+              assertThat(response.roleTypes()).isEqualTo(RoleType.USER);
               assertThat(response.enrollmentPassed()).isFalse();
               assertThat(response.profileImgUrl()).contains(String.valueOf(response.authorId()));
             });

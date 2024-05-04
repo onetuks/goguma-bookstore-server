@@ -17,12 +17,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AdminIdResolver implements HandlerMethodArgumentResolver {
+public class AdminLoginIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return Arrays.stream(parameter.getParameterAnnotations())
-        .anyMatch(annotation -> annotation.annotationType().equals(AdminId.class));
+        .anyMatch(annotation -> annotation.annotationType().equals(AdminLoginId.class));
   }
 
   @Override
