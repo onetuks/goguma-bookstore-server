@@ -1,0 +1,40 @@
+allprojects {
+    apply plugin: 'org.asciidoctor.jvm.convert'
+    apply plugin: 'com.epages.restdocs-api-spec'
+
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+    }
+
+    tasks.named('asciidoctor') {
+        inputs.dir snippetsDir
+        dependsOn test
+    }
+}
+
+subprojects {
+    dependencies {
+        // RestDocs
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+        // Rest Docs API Spec
+        testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.19.2'
+
+        // Swagger UI
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    }
+}
+
+openapi3 {
+    servers = List.of(
+            { url = "http://localhost:8080" },
+            { url = "http://server:8080" }
+//            { url = "https://서버url" }
+    )
+    title = "Goguma-Bookstore-Server-API"
+    description = "고구마서점 API"
+    version = getVersion()
+    format = "json" // (json / yaml)
+    outputDirectory = "src/main/resources/static"
+    outputFileNamePrefix = "swagger"
+}

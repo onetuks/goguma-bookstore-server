@@ -1,10 +1,12 @@
 package com.onetuks.modulecommon.file;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.modulecommon.CommonIntegrationTest;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.file.provider.FilePathProvider;
+import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.fixture.MultipartFileFixture;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
@@ -70,5 +72,16 @@ class FileWrapperTest extends CommonIntegrationTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> FileWrapperCollection.of(id, FileType.PREVIEWS, multipartFiles));
+  }
+
+  @Test
+  void equalsAndHashCodeTest() {
+    // Given & When
+    FileWrapper file1 = FileWrapperFixture.createFile(id, FileType.PROFILES);
+    FileWrapper file2 = FileWrapperFixture.createFile(id, FileType.PROFILES);
+
+    // Then
+    assertThat(file1.equals(file2)).isTrue();
+    assertThat(file1).hasSameHashCodeAs(file2);
   }
 }

@@ -1,0 +1,98 @@
+def jacocoExclude = List.of(
+        "**/Q*",
+        "**/error/*",
+        "**/exception/*",
+        "**/model/*",
+        "**/dto/*",
+        "**/vo/*",
+        "**/config/*",
+        "**/controller/*",
+        "**/moduleauth/*",
+        "**/*Application.class"
+)
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'jacoco-report-aggregation'
+
+    jacoco {
+        toolVersion = '0.8.8'
+    }
+}
+
+subprojects {
+    tasks.jacocoTestReport {
+        reports {
+            xml.required = true
+            html.required = true
+            csv.required = false
+
+            xml.destination(file("build/jacoco/jacoco.xml"))
+            html.destination(file("build/jacoco/jacoco.html"))
+        }
+
+        finalizedBy(tasks.jacocoTestCoverageVerification)
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExclude)
+            }))
+        }
+    }
+
+    tasks.jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+
+                // 클래스 당 커버리지 50% 이상
+                limit {
+                    counter = "LINE"
+                    value = "COVEREDRATIO"
+                    minimum = BigDecimal.valueOf(0.5)
+                }
+
+                // 클래스 당 150줄 미만
+                limit {
+                    counter = "LINE"
+                    value = "TOTALCOUNT"
+                    maximum = BigDecimal.valueOf(150)
+                }
+
+                limit {
+                    counter = 'COMPLEXITY'
+                    minimum = 0.5
+                }
+
+                excludes = [
+                        "*.Q*",
+                        "*.error.*",
+                        "*.exception.*",
+                        "*.model.*",
+                        "*.dto.*",
+                        "*.vo.*",
+                        "*.config.*",
+                        "*.controller.*",
+                        "*.moduleauth.*",
+                        "*.*Application"
+                ]
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
+}
+
+tasks.testCodeCoverageReport {
+    dependsOn(subprojects.tasks.jacocoTestReport)
+
+    afterEvaluate {
+        classDirectories.setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExclude)
+        })
+    }
+}
