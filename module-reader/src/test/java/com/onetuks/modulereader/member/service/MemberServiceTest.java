@@ -8,12 +8,12 @@ import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.MemberFixture;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberEntryInfoParam;
@@ -34,8 +34,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 class MemberServiceTest extends IntegrationTest {
 
   @Autowired private MemberService memberService;
-  @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private S3Service s3Service;
+
+  @Autowired private MemberJpaRepository memberJpaRepository;
 
   private Member savedMember;
 
@@ -64,13 +65,14 @@ class MemberServiceTest extends IntegrationTest {
   @DisplayName("중복된 닉네임이 있는 경우 예외를 던진다.")
   void updateMemberInfo_DuplicatedNickname_ExceptionTest() {
     // Given
+    Member otherMember = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
     MemberEntryInfoParam param = new MemberEntryInfoParam(savedMember.getNickname(), true);
 
     // When & Then
     assertThrows(
         DataIntegrityViolationException.class,
         () -> {
-          memberService.updateMemberInfo(savedMember.getMemberId(), param);
+          memberService.updateMemberInfo(otherMember.getMemberId(), param);
           memberJpaRepository.flush();
         });
   }
@@ -154,7 +156,9 @@ class MemberServiceTest extends IntegrationTest {
         () -> assertThat(result.profileImgUrl()).isEqualTo(savedMember.getProfileImgUrl()),
         () -> assertThat(result.alarmPermission()).isEqualTo(savedMember.getAlarmPermission()),
         () -> assertThat(result.defaultAddress()).isEqualTo(savedMember.getDefaultAddress()),
-        () -> assertThat(result.defaultAddressDetail()).isEqualTo(savedMember.getDefaultAddressDetail()),
+        () ->
+            assertThat(result.defaultAddressDetail())
+                .isEqualTo(savedMember.getDefaultAddressDetail()),
         () ->
             assertThat(result.defaultCashReceiptType())
                 .isEqualTo(savedMember.getDefaultCashReceiptType()),

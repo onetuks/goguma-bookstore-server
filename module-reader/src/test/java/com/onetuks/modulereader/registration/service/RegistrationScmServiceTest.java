@@ -14,15 +14,15 @@ import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.modulepersistence.fixture.AuthorFixture;
+import com.onetuks.modulepersistence.fixture.MemberFixture;
+import com.onetuks.modulepersistence.fixture.RegistrationFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulereader.fixture.MemberFixture;
-import com.onetuks.modulereader.fixture.RegistrationFixture;
 import com.onetuks.modulereader.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.modulereader.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.modulereader.registration.service.dto.result.RegistrationInspectionResult;
@@ -185,8 +185,8 @@ class RegistrationScmServiceTest extends IntegrationTest {
   }
 
   @Test
-  @DisplayName("신간 등록 요청할 때 목업 파일이 없으면 예외가 발생한다.")
-  void createRegistration_NoMockUpFiles_ExceptionTest() {
+  @DisplayName("신간 등록 요청할 때 상세 파일이 없으면 예외가 발생한다.")
+  void createRegistration_NoDetailImgFiles_ExceptionTest() {
     // Given
     long authorId = author.getAuthorId();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);

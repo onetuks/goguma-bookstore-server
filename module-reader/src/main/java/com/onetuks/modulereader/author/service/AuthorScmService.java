@@ -10,9 +10,7 @@ import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulereader.author.service.dto.param.AuthorCreateEnrollmentParam;
-import com.onetuks.modulereader.author.service.dto.param.AuthorEditParam;
 import com.onetuks.modulereader.author.service.dto.result.AuthorCreateEnrollmentResult;
-import com.onetuks.modulereader.author.service.dto.result.AuthorEditResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
 import jakarta.persistence.EntityNotFoundException;
@@ -131,7 +129,7 @@ public class AuthorScmService {
             .findById(loginId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));
 
-    if (member.getRoleTypes().contains(RoleType.USER)) {
+    if (member.getRoleTypes().contains(RoleType.AUTHOR)) {
       throw new IllegalStateException("이미 작가인 멤버입니다.");
     }
     return member;
@@ -143,14 +141,15 @@ public class AuthorScmService {
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 
-  private void checkIllegalArgument(Author author, long loginId) {
-    if (author.getMember().getMemberId() != loginId) {
+  private void checkIllegalArgument(Author author, long authorLoginId) {
+    if (author.getMember().getMemberId() != authorLoginId) {
       throw new IllegalArgumentException("유효하지 않은 유저가 작가 입점 신청을 진행하고 있습니다.");
     }
   }
 
   private Author getAuthorByMemberId(long authorLoginId) {
-    return authorJpaRepository.findByMemberMemberId(authorLoginId)
+    return authorJpaRepository
+        .findByMemberMemberId(authorLoginId)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 }

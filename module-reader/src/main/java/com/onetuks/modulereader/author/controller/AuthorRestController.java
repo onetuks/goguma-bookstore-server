@@ -41,9 +41,9 @@ public class AuthorRestController {
   /**
    * 작가 프로필 수정
    *
-   * @param loginAuthorId  : 로그인한 작가 ID
-   * @param authorId       : 수정할 작가 ID
-   * @param request        : 작가 프로필 수정 내용
+   * @param loginAuthorId : 로그인한 작가 ID
+   * @param authorId : 수정할 작가 ID
+   * @param request : 작가 프로필 수정 내용
    * @param profileImgFile : 작가 프로필 수정 이미지 (같은 이미지여도 덮어쓰기)
    * @return authorId, profileImgUrl, nickname, introduction
    */

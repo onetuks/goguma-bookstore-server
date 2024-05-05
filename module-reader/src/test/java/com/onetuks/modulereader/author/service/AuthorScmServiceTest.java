@@ -13,6 +13,8 @@ import com.onetuks.modulecommon.util.UUIDProvider;
 import com.onetuks.modulecommon.verification.EnrollmentInfoVerificationService;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
+import com.onetuks.modulepersistence.fixture.AuthorFixture;
+import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
@@ -20,11 +22,8 @@ import com.onetuks.modulereader.IntegrationTest;
 import com.onetuks.modulereader.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.modulereader.author.service.dto.param.AuthorEditParam;
 import com.onetuks.modulereader.author.service.dto.result.AuthorCreateEnrollmentResult;
-import com.onetuks.modulereader.author.service.dto.result.AuthorEditResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
-import com.onetuks.modulereader.fixture.AuthorFixture;
-import com.onetuks.modulereader.fixture.MemberFixture;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -40,16 +39,14 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class AuthorScmServiceTest extends IntegrationTest {
 
-  @Autowired
-  private AuthorScmService authorScmService;
-  @Autowired
-  private MemberJpaRepository memberJpaRepository;
-  @Autowired
-  private AuthorJpaRepository authorJpaRepository;
-  @Autowired
-  private S3Service s3Service;
-  @MockBean
-  private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
+  @Autowired private AuthorScmService authorScmService;
+  @Autowired private AuthorService authorService;
+  @Autowired private S3Service s3Service;
+
+  @Autowired private MemberJpaRepository memberJpaRepository;
+  @Autowired private AuthorJpaRepository authorJpaRepository;
+
+  @MockBean private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
 
   private Member userMember;
   private Member authorMember;
@@ -116,7 +113,7 @@ class AuthorScmServiceTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.enrollmentPassed()).isTrue(),
         () -> assertThat(result.memberId()).isEqualTo(userMember.getMemberId()),
-        () -> assertThat(result.roleType()).isEqualTo(RoleType.AUTHOR));
+        () -> assertThat(result.roleTypes()).contains(RoleType.AUTHOR));
   }
 
   @Test
@@ -133,7 +130,7 @@ class AuthorScmServiceTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.enrollmentPassed()).isFalse(),
         () -> assertThat(result.memberId()).isEqualTo(authorMember.getMemberId()),
-        () -> assertThat(result.roleType()).isEqualTo(RoleType.USER));
+        () -> assertThat(result.roleTypes()).doesNotContain(RoleType.AUTHOR));
   }
 
   @Test
@@ -143,7 +140,7 @@ class AuthorScmServiceTest extends IntegrationTest {
     Author save = authorJpaRepository.save(AuthorFixture.create(authorMember));
 
     // When
-    authorScmService.deleteAuthorEnrollment(save.getAuthorId(), save.getAuthorId());
+    authorScmService.deleteAuthorEnrollment(authorMember.getMemberId());
 
     // Then
     boolean result = authorJpaRepository.existsById(save.getAuthorId());
@@ -157,11 +154,7 @@ class AuthorScmServiceTest extends IntegrationTest {
   void deleteAuthorEnrollment_NotExistsAuthor_ExceptionTest() {
     // Given & When
     long notExistsAuthorId = 1_000L;
-    Exception e =
-        catchException(
-            () ->
-                authorScmService.deleteAuthorEnrollment(
-                    authorMember.getMemberId(), notExistsAuthorId));
+    Exception e = catchException(() -> authorScmService.deleteAuthorEnrollment(notExistsAuthorId));
 
     // Then
     assertThat(e).isInstanceOf(EntityNotFoundException.class);
@@ -178,15 +171,13 @@ class AuthorScmServiceTest extends IntegrationTest {
     FileWrapper profileImgFile =
         FileWrapperFixture.createFile(author.getAuthorId(), FileType.PROFILES);
     AuthorEditParam editParam = new AuthorEditParam("곽튜브", "귀요미", "https://www.instagram.com/kwak");
-    authorScmService.updateAuthorProfile(
+    authorService.updateAuthorProfile(
         author.getAuthorId(), author.getAuthorId(), editParam, profileImgFile);
 
     // When & Then
     assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            authorScmService.deleteAuthorEnrollment(
-                userMember.getMemberId(), author.getAuthorId()));
+        EntityNotFoundException.class,
+        () -> authorScmService.deleteAuthorEnrollment(userMember.getMemberId()));
 
     File savedProfileImgFile = s3Service.getFile(profileImgFile.getUri());
 
@@ -203,13 +194,13 @@ class AuthorScmServiceTest extends IntegrationTest {
     // When
     AuthorEnrollmentDetailsResult result =
         authorScmService.readAuthorEnrollmentDetails(
-            createResult.authorId(), createResult.authorId());
+            userMember.getMemberId(), createResult.authorId());
 
     // Then
     assertAll(
         () -> assertThat(result.authorId()).isEqualTo(createResult.authorId()),
         () -> assertThat(result.memberId()).isEqualTo(userMember.getMemberId()),
-        () -> assertThat(result.roleType()).isEqualTo(RoleType.USER),
+        () -> assertThat(result.roleTypes()).contains(RoleType.USER),
         () -> assertThat(result.enrollmentPassed()).isFalse());
   }
 
@@ -253,7 +244,7 @@ class AuthorScmServiceTest extends IntegrationTest {
         .allSatisfy(
             result -> {
               assertThat(result.enrollmentPassed()).isFalse();
-              assertThat(result.roleType()).isEqualTo(RoleType.USER);
+              assertThat(result.roleTypes()).contains(RoleType.USER);
             });
   }
 
@@ -294,53 +285,5 @@ class AuthorScmServiceTest extends IntegrationTest {
         authorScmService.readAllAuthorEnrollmentDetails(PageRequest.of(0, 10));
 
     assertThat(results).hasSize(1);
-  }
-
-  @Test
-  @DisplayName("작가 정보를 수정한다. 작가 프로필은 S3에 저장된다.")
-  void changeAuthorProfileTest() {
-    // Given
-    Author author = authorJpaRepository.save(AuthorFixture.create(authorMember));
-    AuthorEditParam param =
-        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    FileWrapper fileWrapper =
-        FileWrapperFixture.createFile(author.getAuthorId(), FileType.PROFILES);
-
-    // When
-    AuthorEditResult result =
-        authorScmService.updateAuthorProfile(
-            author.getAuthorId(), author.getAuthorId(), param, fileWrapper);
-
-    // Then
-    File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
-
-    assertAll(
-        () -> assertThat(savedProfileImgFile).exists(),
-        () -> assertThat(result.authorId()).isEqualTo(author.getAuthorId()),
-        () -> assertThat(result.profileImgUrl()).contains(String.valueOf(author.getAuthorId())),
-        () -> assertThat(result.nickname()).isEqualTo(param.nickname()),
-        () -> assertThat(result.introduction()).isEqualTo(param.introduction()));
-  }
-
-  @Test
-  @DisplayName("로그인 작가 아이디와 요청 작가 아이디가 일치하지 않으면 예외를 던진다. 프로필 이미지는 저장되지 않는다.")
-  void changeAuthorProfile_NotSameAuthorId_ExceptionTest() {
-    // Given
-    Author author0 = authorJpaRepository.save(AuthorFixture.create(authorMember));
-    Author author1 =
-        authorJpaRepository.save(
-            AuthorFixture.create(memberJpaRepository.save(MemberFixture.create(RoleType.AUTHOR))));
-    AuthorEditParam param =
-        new AuthorEditParam("빠니보틀", "유튜브 대통령", "https://www.instagram.com/pannibottle");
-    FileWrapper fileWrapper =
-        FileWrapperFixture.createFile(author0.getAuthorId(), FileType.PROFILES);
-
-    // When & Then
-    assertThrows(
-        IllegalArgumentException.class,
-        () ->
-            authorScmService.updateAuthorProfile(
-                author1.getAuthorId(), author0.getAuthorId(), param, fileWrapper));
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(fileWrapper.getUri()));
   }
 }

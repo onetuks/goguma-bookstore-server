@@ -31,7 +31,7 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
                 createDetailsResult(),
                 createDetailsResult(),
                 createDetailsResult())
-            .filter(result -> result.roleType() == RoleType.USER)
+            .filter(result -> result.roleTypes().contains(RoleType.USER))
             .toList();
 
     Page<AuthorEnrollmentDetailsResult> results =
@@ -45,7 +45,7 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
         .hasSize(list.size())
         .allSatisfy(
             response -> {
-              assertThat(response.roleTypes()).isEqualTo(RoleType.USER);
+              assertThat(response.roleTypes()).contains(RoleType.USER);
               assertThat(response.enrollmentPassed()).isFalse();
               assertThat(response.profileImgUrl()).contains(String.valueOf(response.authorId()));
             });
@@ -57,7 +57,7 @@ class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
     return new AuthorEnrollmentDetailsResult(
         authorId,
         System.currentTimeMillis(),
-        isAuthorMember ? RoleType.AUTHOR : RoleType.USER,
+        List.of(isAuthorMember ? RoleType.AUTHOR : RoleType.USER),
         "profile_" + authorId + ".png",
         RandomValueProvider.createAuthorNickname() + authorId,
         "유튜브 대통령" + authorId,

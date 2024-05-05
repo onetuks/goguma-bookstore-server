@@ -16,8 +16,8 @@ class FileWrapperTest extends CommonIntegrationTest {
   private final long id = 1L;
 
   @Test
-  @DisplayName("목업 파일이 4개 미만인 경우 예외를 던진다.")
-  void of_LessThan4MockUpFile_ExceptionTest() {
+  @DisplayName("상세 이미지 파일이 4개 미만인 경우 예외를 던진다.")
+  void of_LessThan4DetailImgFile_ExceptionTest() {
     // Given
     FileType fileType = FileType.DETAILS;
     MultipartFile[] multipartFiles =
@@ -35,8 +35,8 @@ class FileWrapperTest extends CommonIntegrationTest {
   }
 
   @Test
-  @DisplayName("목업 파일이 10개 초과인 경우 예외를 던진다.")
-  void of_GreaterThan10MockUpFile_ExceptionTest() {
+  @DisplayName("상세 이미지 파일이 10개 초과인 경우 예외를 던진다.")
+  void of_GreaterThan10DetailImgFile_ExceptionTest() {
     // Given
     FileType fileType = FileType.DETAILS;
     MultipartFile[] multipartFiles =

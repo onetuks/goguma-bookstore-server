@@ -74,7 +74,7 @@ public class FileWrapper {
 
       if (fileType == FileType.DETAILS
           && (fileCount < MOCK_UPS_LOWER_BOUND || fileCount > MOCK_UPS_UPPER_BOUND)) {
-        throw new IllegalArgumentException("목업 파일은 4개 이상 10개 이하로 등록해야 합니다.");
+        throw new IllegalArgumentException("상세 이미지 파일은 4개 이상 10개 이하로 등록해야 합니다.");
       } else if (fileType == FileType.PREVIEWS && fileCount < PREVIEWS_COUNT) {
         throw new IllegalArgumentException("미리보기 파일은 25개 이상 등록해야 합니다.");
       }

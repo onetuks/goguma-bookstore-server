@@ -42,8 +42,7 @@ public class FavoriteRestController {
    */
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoritePostResponse> addFavorite(
-      @LoginId Long memberId,
-      @RequestParam(name = "bookId") Long bookId) {
+      @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     FavoritePostResult result = favoriteService.createFavorite(memberId, bookId);
     FavoritePostResponse response = FavoritePostResponse.from(result);
 
@@ -59,8 +58,7 @@ public class FavoriteRestController {
    */
   @DeleteMapping(path = "/{favoriteId}")
   public ResponseEntity<Void> removeFavorite(
-      @LoginId Long memberId,
-      @PathVariable(name = "favoriteId") Long favoriteId) {
+      @LoginId Long memberId, @PathVariable(name = "favoriteId") Long favoriteId) {
     favoriteService.deleteFavorite(memberId, favoriteId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -75,8 +73,7 @@ public class FavoriteRestController {
    */
   @GetMapping(path = "/whether", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoriteWhetherGetResponse> getIsFavorited(
-      @LoginId Long memberId,
-      @RequestParam(name = "bookId") Long bookId) {
+      @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     FavoriteWhetherGetResult result = favoriteService.readFavoriteExistence(memberId, bookId);
     FavoriteWhetherGetResponse response = FavoriteWhetherGetResponse.from(result);
 

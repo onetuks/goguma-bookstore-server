@@ -13,7 +13,6 @@ plugins {
 allprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'java-test-fixtures'
     apply plugin: 'org.sonarqube'
     apply plugin: 'com.diffplug.spotless'
     apply plugin: 'org.springframework.boot'
@@ -47,37 +46,57 @@ allprojects {
     }
 
     jar {
-        enabled = true // 여기?
+        enabled = false
     }
 
     jacoco {
         toolVersion = '0.8.8'
     }
 
-    openapi3 {
-        servers = List.of(
-                { url = "http://localhost:8080" },
-                { url = "http://server:8080" }
-//            { url = "https://서버url" }
-        )
-        title = "Goguma-Bookstore-Server-API"
-        description = "고구마서점 API"
-        version = getVersion()
-        format = "json" // (json / yaml)
-        outputDirectory = "src/main/resources/static"
-        outputFileNamePrefix = "swagger"
-    }
-
     dependencies {
         // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
 
+        // Test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        // JPA
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    }
+
+    spotless {
+        java {
+            googleJavaFormat()
+
+            removeUnusedImports()
+            trimTrailingWhitespace() // 불필요한 공백 트림
+            indentWithSpaces(4) // 들여쓰기 4칸
+            endWithNewline() // 파일 끝에 개행 추가
+        }
+    }
+
+    tasks.register("addGitPreCommitHook", Copy) {
+        from 'script/pre-commit'
+        into '.git/hooks'
+    }
+
+    tasks.named('asciidoctor') {
+        inputs.dir snippetsDir
+        dependsOn test
+    }
+}
+
+subprojects {
+    apply plugin: 'java-test-fixtures'
+
+    jar {
+        enabled = true
+    }
+
+    dependencies {
         // Lombok
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
-
-        // Test
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
         // TestContainers
         testImplementation 'org.springframework.boot:spring-boot-testcontainers'
@@ -88,9 +107,6 @@ allprojects {
 
         // MySQL
         runtimeOnly 'com.mysql:mysql-connector-j'
-
-        // JPA
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
         // RestDocs
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
@@ -125,21 +141,15 @@ allprojects {
             classDirectories.setFrom(files(classDirectories.files.collect {
                 fileTree(dir: it, exclude: [
                         "**/Q*",
-                        "**/global/config/*",
-                        "**/global/error/*",
-                        "**/global/vo/file/*",
-                        "**/auth/*",
+                        "**/error/*",
+                        "**/exception/*",
                         "**/model/*",
                         "**/dto/*",
                         "**/vo/*",
+                        "**/config/*",
                         "**/controller/*",
-                        "**/modulecommon/*",
-                        "**/ModuleCommonApplication.class",
-                        "**/ModulePersistenceApplication.class",
-                        "**/ModuleReaderApplication.class",
-                        "**/ModuleAuthorApplication.class",
-                        "**/ModuleAdminApplication.class",
-                        "**/GogumaBookStoreServerApplication.class"
+                        "**/moduleauth/*",
+                        "**/*Application.class"
                 ])
             }))
         }
@@ -172,77 +182,18 @@ allprojects {
 
                 excludes = [
                         "*.Q*",
-                        "*.global.config.*",
-                        "*.global.error.*",
-                        "*.global.vo.file.*",
-                        "*.auth.*",
+                        "*.error.*",
+                        "*.exception.*",
                         "*.model.*",
                         "*.dto.*",
                         "*.vo.*",
+                        "*.config.*",
                         "*.controller.*",
-                        "*.modulecommon.*",
-                        "*.ModuleCommonApplication",
-                        "*.ModulePersistenceApplication",
-                        "*.ModuleReaderApplication",
-                        "*.ModuleAuthorApplication",
-                        "*.ModuleAdminApplication",
-                        "*.GogumaBookStoreServerApplication"
+                        "*.moduleauth.*",
+                        "*.*Application"
                 ]
             }
         }
-    }
-
-    sonar {
-        def envFile = file('../.env')
-        if (envFile.exists()) {
-            def env = new Properties()
-            envFile.withReader { reader ->
-                env.load(reader)
-            }
-
-            properties {
-                property("sonar.host.url", "http://localhost:9000")
-                property("sonar.login", env['SONAR_TOKEN'])
-                property("sonar.sources", "src/main/java")
-                property("sonar.tests", "src/test/java")
-                property("sonar.sourceEncoding", "UTF-8")
-                property("sonar.projectKey", "goguma-bookstore")
-                property("sonar.projectName", "goguma-bookstore")
-                property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
-                property("sonar.coverage.exclusions",
-                        "**/Q*,**/global/config/**,**/global/error/**,**/global/vo/file/**,**/dto/**,**/vo/**" +
-                                "**/model/**,**/auth/**,**/controller/**,**/modulecommon/**," +
-                                "**/ModuleCommonApplication.class" +
-                                "**/ModuleReaderApplication.class" +
-                                "**/ModuleAuthorApplication.class" +
-                                "**/ModuleAdminApplication.class" +
-                                "**/ModulePersistenceApplication.class" +
-                                "**/GogumaBookStoreServerApplication.class")
-            }
-        } else {
-            println ".env file not exists"
-        }
-    }
-
-    spotless {
-        java {
-            googleJavaFormat()
-
-            removeUnusedImports()
-            trimTrailingWhitespace() // 불필요한 공백 트림
-            indentWithSpaces(4) // 들여쓰기 4칸
-            endWithNewline() // 파일 끝에 개행 추가
-        }
-    }
-
-    tasks.register("addGitPreCommitHook", Copy) {
-        from 'script/pre-commit'
-        into '.git/hooks'
-    }
-
-    tasks.named('asciidoctor') {
-        inputs.dir snippetsDir
-        dependsOn test
     }
 }
 
@@ -251,4 +202,65 @@ dependencies {
     implementation project(':module-auth')
     implementation project(':module-persistence')
     implementation project(':module-reader')
+}
+
+tasks.register('jacocoRootReport', JacocoReport) {
+    dependsOn = subprojects.tasks.jacocoTestReport
+
+    sourceDirectories.from = files(subprojects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(subprojects.sourceSets.main.output)
+    executionData.from = fileTree(dir: '.', include: '**/build/jacoco/test.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+openapi3 {
+    servers = List.of(
+            { url = "http://localhost:8080" },
+            { url = "http://server:8080" }
+//            { url = "https://서버url" }
+    )
+    title = "Goguma-Bookstore-Server-API"
+    description = "고구마서점 API"
+    version = getVersion()
+    format = "json" // (json / yaml)
+    outputDirectory = "src/main/resources/static"
+    outputFileNamePrefix = "swagger"
+}
+
+sonar {
+    def envFile = file('../.env')
+    if (envFile.exists()) {
+        def env = new Properties()
+        envFile.withReader { reader ->
+            env.load(reader)
+        }
+
+        properties {
+            property("sonar.host.url", "http://localhost:9000")
+            property("sonar.login", env['SONAR_TOKEN'])
+            property("sonar.sources", "src/main/java")
+            property("sonar.tests", "src/test/java")
+            property("sonar.sourceEncoding", "UTF-8")
+            property("sonar.projectKey", "goguma-bookstore")
+            property("sonar.projectName", "goguma-bookstore")
+            property("sonar.converage.jacoco.xmlReportPaths", "build/jacoco/jacoco.xml")
+            property("sonar.coverage.exclusions",
+                    "**/Q*" +
+                    "**/error/*" +
+                    "**/exception/*" +
+                    "**/model/*" +
+                    "**/dto/*" +
+                    "**/vo/*" +
+                    "**/config/*" +
+                    "**/controller/*" +
+                    "**/moduleauth/*" +
+                    "**/*Application.class")
+        }
+    } else {
+        println ".env file not exists"
+    }
 }

@@ -3,10 +3,10 @@ package com.onetuks.modulereader.member.service.dto.result;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulereader.IntegrationTest;
-import com.onetuks.modulereader.fixture.MemberFixture;
 import org.junit.jupiter.api.Test;
 
 class MemberDefaultAddressEditResultTest extends IntegrationTest {

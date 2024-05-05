@@ -13,7 +13,7 @@ public record AuthorEnrollmentDetailsResult(
     String nickname,
     String introduction,
     String instagramUrl,
-    String escrowServiceUrl,
+    String businessNumber,
     String mailOrderSalesUrl,
     boolean enrollmentPassed,
     LocalDateTime enrollmentAt) {

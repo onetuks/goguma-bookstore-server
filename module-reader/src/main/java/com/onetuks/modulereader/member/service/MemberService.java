@@ -23,8 +23,7 @@ public class MemberService {
   private final MemberJpaRepository memberJpaRepository;
   private final S3Service s3Service;
 
-  public MemberService(
-      MemberJpaRepository memberJpaRepository, S3Service s3Service) {
+  public MemberService(MemberJpaRepository memberJpaRepository, S3Service s3Service) {
     this.memberJpaRepository = memberJpaRepository;
     this.s3Service = s3Service;
   }

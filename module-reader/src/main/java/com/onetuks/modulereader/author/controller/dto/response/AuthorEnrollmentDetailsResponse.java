@@ -14,7 +14,7 @@ public record AuthorEnrollmentDetailsResponse(
     String nickname,
     String introduction,
     String instagramUrl,
-    String escrowServiceUrl,
+    String businessNumber,
     String mailOrderSalesUrl,
     boolean enrollmentPassed,
     LocalDateTime enrollmentAt) {
@@ -28,7 +28,7 @@ public record AuthorEnrollmentDetailsResponse(
         result.nickname(),
         result.introduction(),
         result.instagramUrl(),
-        result.escrowServiceUrl(),
+        result.businessNumber(),
         result.mailOrderSalesUrl(),
         result.enrollmentPassed(),
         result.enrollmentAt());

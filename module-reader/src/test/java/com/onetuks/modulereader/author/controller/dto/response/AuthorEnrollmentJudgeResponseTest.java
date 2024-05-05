@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulereader.IntegrationTest;
 import com.onetuks.modulereader.author.service.dto.result.AuthorEnrollmentJudgeResult;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +18,9 @@ class AuthorEnrollmentJudgeResponseTest extends IntegrationTest {
     // Given
     boolean enrollmentPassed = true;
     long memberId = 1_000L;
-    RoleType roleType = RoleType.AUTHOR;
+    List<RoleType> roleTypes = List.of(RoleType.AUTHOR);
     AuthorEnrollmentJudgeResult judgeResult =
-        new AuthorEnrollmentJudgeResult(enrollmentPassed, memberId, roleType);
+        new AuthorEnrollmentJudgeResult(enrollmentPassed, memberId, roleTypes);
 
     // When
     AuthorEnrollmentJudgeResponse result = AuthorEnrollmentJudgeResponse.from(judgeResult);
@@ -28,6 +29,6 @@ class AuthorEnrollmentJudgeResponseTest extends IntegrationTest {
     assertAll(
         () -> assertThat(result.enrollmentPassed()).isTrue(),
         () -> assertThat(result.memberId()).isEqualTo(memberId),
-        () -> assertThat(result.roleType()).isEqualTo(RoleType.AUTHOR));
+        () -> assertThat(result.roleTypes()).contains(RoleType.AUTHOR));
   }
 }

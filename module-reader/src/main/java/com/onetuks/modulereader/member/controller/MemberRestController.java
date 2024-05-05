@@ -20,11 +20,9 @@ import com.onetuks.modulereader.member.service.dto.result.MemberDefaultCashRecei
 import com.onetuks.modulereader.member.service.dto.result.MemberEntryInfoResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 import com.onetuks.modulereader.member.service.dto.result.MemberProfileEditResult;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,8 +54,7 @@ public class MemberRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberEntryInfoResponse> entryMemberInfo(
-      @LoginId Long memberId,
-      @RequestBody @Valid MemberEntryInfoRequest request) {
+      @LoginId Long memberId, @RequestBody @Valid MemberEntryInfoRequest request) {
     MemberEntryInfoResult result = memberService.updateMemberInfo(memberId, request.to());
     MemberEntryInfoResponse response = MemberEntryInfoResponse.from(result);
 
