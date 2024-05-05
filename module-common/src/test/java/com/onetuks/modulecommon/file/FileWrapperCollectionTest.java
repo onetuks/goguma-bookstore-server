@@ -21,7 +21,10 @@ class FileWrapperCollectionTest extends CommonIntegrationTest {
     FileType fileType = FileType.DETAILS;
     MultipartFile[] multipartFiles =
         IntStream.range(0, 10)
-            .mapToObj(i -> MultipartFileFixture.create(FilePathProvider.provideFileURI(fileType, id), fileType))
+            .mapToObj(
+                i ->
+                    MultipartFileFixture.create(
+                        FilePathProvider.provideFileURI(fileType, id), fileType))
             .toArray(MultipartFile[]::new);
 
     // When

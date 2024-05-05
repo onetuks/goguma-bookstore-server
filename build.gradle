@@ -16,6 +16,7 @@ apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/docs.gradle'
 apply from: 'gradle/spotless.gradle'
 apply from: 'gradle/test.gradle'
+apply from: 'gradle/cloud-config.gradle'
 
 allprojects {
     apply plugin: 'java'
@@ -51,8 +52,15 @@ allprojects {
         // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
 
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
         // JPA
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        // Spring Boot Actuator
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
     }
 }
 
@@ -62,16 +70,13 @@ subprojects {
     }
 
     dependencies {
-        // Lombok
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-
         // MySQL
         runtimeOnly 'com.mysql:mysql-connector-j'
     }
 }
 
 dependencies {
+
     implementation project(':module-common')
     implementation project(':module-auth')
     implementation project(':module-persistence')

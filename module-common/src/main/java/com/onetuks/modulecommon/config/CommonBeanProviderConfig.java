@@ -11,4 +11,4 @@ import org.springframework.context.annotation.FilterType;
         @ComponentScan.Filter(
             type = FilterType.ASSIGNABLE_TYPE,
             classes = {CommonJpaConfig.class}))
-public class CommonProviderConfig {}
+public class CommonBeanProviderConfig {}
