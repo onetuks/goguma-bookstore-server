@@ -38,29 +38,20 @@ public class BookStatics {
   @Column(name = "sales_count", nullable = false)
   private Long salesCount;
 
-  @Column(name = "review_count", nullable = false)
-  private Long reviewCount;
-
-  @Column(name = "review_score", nullable = false)
-  private Float reviewScore;
+  @Column(name = "comment_count", nullable = false)
+  private Long commentCount;
 
   public BookStatics(
-      Book book,
-      Long favoriteCount,
-      Long viewCount,
-      Long salesCount,
-      Long reviewCount,
-      Float reviewScore) {
+      Book book, Long favoriteCount, Long viewCount, Long salesCount, Long commentCount) {
     this.book = book;
     this.favoriteCount = favoriteCount;
     this.viewCount = viewCount;
     this.salesCount = salesCount;
-    this.reviewCount = reviewCount;
-    this.reviewScore = reviewScore;
+    this.commentCount = commentCount;
   }
 
   public static BookStatics init(Book book) {
-    return new BookStatics(book, 0L, 0L, 0L, 0L, 0F);
+    return new BookStatics(book, 0L, 0L, 0L, 0L);
   }
 
   public void increaseViewCount() {

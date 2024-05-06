@@ -16,7 +16,7 @@ public enum SortOrder {
   SALES("book.salesRate", Direction.DESC, bookStatics.salesCount, Order.DESC),
   FAVORITE("book.bookStatics.favoriteCount", Direction.DESC, bookStatics.favoriteCount, Order.DESC),
   VIEW("book.bookStatics.viewCount", Direction.DESC, bookStatics.viewCount, Order.DESC),
-  SCORE("book.bookStatics.reviewScore", Direction.DESC, bookStatics.reviewScore, Order.DESC);
+  COMMENT("book.bookStatics.commentCount", Direction.DESC, bookStatics.commentCount, Order.DESC);
 
   private final String property;
   private final Direction direction;

@@ -13,12 +13,12 @@ import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class RegistrationInspectionResultTest extends IntegrationTest {
+class RegistrationInspectionResultTest extends ScmIntegrationTest {
 
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
   @Autowired private MemberJpaRepository memberJpaRepository;

@@ -18,7 +18,7 @@ import com.onetuks.modulepersistence.fixture.AuthorFixture;
 import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.book.service.BookScmService;
 import com.onetuks.modulescm.book.service.dto.param.BookEditParam;
 import com.onetuks.modulescm.book.service.dto.result.BookEditResult;
@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-class BookScmServiceTest extends IntegrationTest {
+class BookScmServiceTest extends ScmIntegrationTest {
 
   private static final String BASE_URL = "https://test-bucket-url.com";
 

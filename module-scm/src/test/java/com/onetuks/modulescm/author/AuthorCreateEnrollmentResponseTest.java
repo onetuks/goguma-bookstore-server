@@ -5,13 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.controller.dto.response.AuthorCreateEnrollmentResponse;
 import com.onetuks.modulescm.author.service.dto.result.AuthorCreateEnrollmentResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorCreateEnrollmentResponseTest extends IntegrationTest {
+class AuthorCreateEnrollmentResponseTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("생성 결과 객체에서 생성 응답 객체로 변환한다.")

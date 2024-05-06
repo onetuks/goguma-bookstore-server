@@ -1,6 +1,7 @@
-package com.onetuks.modulereader;
+package com.onetuks.modulescm;
 
 import com.onetuks.modulecommon.util.TestFileCleaner;
+import com.onetuks.modulescm.ScmIntegrationTest.ScmIntegrationTestInitializer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
@@ -26,8 +27,8 @@ import org.testcontainers.utility.DockerImageName;
 @Ignore
 @SpringBootTest
 @Transactional
-@ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
-public class IntegrationTest {
+@ContextConfiguration(initializers = ScmIntegrationTestInitializer.class)
+public class ScmIntegrationTest {
 
   static final ComposeContainer rdbms;
   static final LocalStackContainer aws;
@@ -64,7 +65,7 @@ public class IntegrationTest {
     aws.start();
   }
 
-  static class IntegrationTestInitializer
+  static class ScmIntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

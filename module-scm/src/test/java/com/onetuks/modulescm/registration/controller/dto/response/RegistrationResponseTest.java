@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationResponseTest extends IntegrationTest {
+class RegistrationResponseTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("신간등록 조회 결과 객체에서 응답 객체로 변환한다.")

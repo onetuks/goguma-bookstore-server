@@ -10,14 +10,14 @@ import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class AuthorEnrollmentDetailsResultTest extends IntegrationTest {
+class AuthorEnrollmentDetailsResultTest extends ScmIntegrationTest {
 
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;

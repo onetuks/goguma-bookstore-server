@@ -3,12 +3,12 @@ package com.onetuks.modulereader.author.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorDetailsResponseTest extends IntegrationTest {
+class AuthorDetailsResponseTest extends ReaderIntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 조회 결과 객체를 응답 객체로 변환한다.")

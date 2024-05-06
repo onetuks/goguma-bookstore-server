@@ -5,13 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
 import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationIsbnResponseTest extends IntegrationTest {
+class RegistrationIsbnResponseTest extends ScmIntegrationTest {
 
   private final String publisher = "출판사";
   private final String formDetail = "양장본";

@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.registration.service.dto.param.RegistrationCreateParam;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationCreateRequestTest extends IntegrationTest {
+class RegistrationCreateRequestTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("신간등록 수정 요청 객체를 파람 객체로 변환한다.")

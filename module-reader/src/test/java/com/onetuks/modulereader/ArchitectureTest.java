@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
-public class ArchitectureTest extends IntegrationTest {
+public class ArchitectureTest extends ReaderIntegrationTest {
 
   JavaClasses javaClasses;
 

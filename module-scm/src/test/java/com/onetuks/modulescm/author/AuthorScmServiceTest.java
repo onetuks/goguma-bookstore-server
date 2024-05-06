@@ -18,7 +18,7 @@ import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.service.AuthorScmService;
 import com.onetuks.modulescm.author.service.dto.param.AuthorCreateEnrollmentParam;
 import com.onetuks.modulescm.author.service.dto.result.AuthorCreateEnrollmentResult;
@@ -38,7 +38,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-class AuthorScmServiceTest extends IntegrationTest {
+class AuthorScmServiceTest extends ScmIntegrationTest {
 
   @Autowired private AuthorScmService authorScmService;
   @Autowired private S3Service s3Service;

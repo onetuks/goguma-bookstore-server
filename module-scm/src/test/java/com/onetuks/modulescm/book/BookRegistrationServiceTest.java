@@ -13,13 +13,13 @@ import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.book.service.BookRegistrationService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class BookRegistrationServiceTest extends IntegrationTest {
+class BookRegistrationServiceTest extends ScmIntegrationTest {
 
   @Autowired private BookRegistrationService bookRegistrationService;
   @Autowired private BookJpaRepository bookJpaRepository;

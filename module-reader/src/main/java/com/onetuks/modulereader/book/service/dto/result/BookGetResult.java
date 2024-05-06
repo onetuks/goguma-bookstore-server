@@ -28,8 +28,7 @@ public record BookGetResult(
     long favoriteCount,
     long viewCount,
     long salesCount,
-    long reviewCount,
-    float reviewScore) {
+    long commentCount) {
 
   public static BookGetResult from(Book book) {
     return new BookGetResult(
@@ -56,7 +55,6 @@ public record BookGetResult(
         book.getFavoriteCount(),
         book.getViewCount(),
         book.getSalesCount(),
-        book.getReviewCount(),
-        book.getReviewScore());
+        book.getCommentCount());
   }
 }

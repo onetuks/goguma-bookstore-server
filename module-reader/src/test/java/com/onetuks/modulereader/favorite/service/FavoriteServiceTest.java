@@ -14,7 +14,7 @@ import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoritePostResult;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-class FavoriteServiceTest extends IntegrationTest {
+class FavoriteServiceTest extends ReaderIntegrationTest {
 
   @Autowired private FavoriteService favoriteService;
   @Autowired private MemberJpaRepository memberJpaRepository;

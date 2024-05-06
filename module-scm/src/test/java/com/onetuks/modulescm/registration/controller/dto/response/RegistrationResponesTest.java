@@ -3,7 +3,7 @@ package com.onetuks.modulescm.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.registration.controller.dto.response.RegistrationResponse.RegistrationResponses;
 import com.onetuks.modulescm.registration.service.dto.result.RegistrationResult;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-class RegistrationResponesTest extends IntegrationTest {
+class RegistrationResponesTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("신간등록 다건 조회 결과 객체에서 응답 객체로 변환한다.")

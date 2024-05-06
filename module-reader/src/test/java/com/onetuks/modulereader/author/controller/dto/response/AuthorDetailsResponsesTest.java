@@ -2,7 +2,7 @@ package com.onetuks.modulereader.author.controller.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.author.controller.dto.response.AuthorDetailsResponse.AuthorDetailsResponses;
 import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-class AuthorDetailsResponsesTest extends IntegrationTest {
+class AuthorDetailsResponsesTest extends ReaderIntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 다건 조회 결과 객체를 응답 객체로 변환한다.")

@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.member.service.dto.param.MemberProfileEditParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class MemberProfileEditRequestTest extends IntegrationTest {
+class MemberProfileEditRequestTest extends ReaderIntegrationTest {
 
   @Test
   @DisplayName("멤버 프로필 수정 요청 객체에서 파람 객체로 변환한다.")

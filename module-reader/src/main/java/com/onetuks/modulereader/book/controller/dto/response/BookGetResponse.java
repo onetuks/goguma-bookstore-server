@@ -29,8 +29,7 @@ public record BookGetResponse(
     long favoriteCount,
     long viewCount,
     long salesCount,
-    long reviewCount,
-    float reviewScore) {
+    long commentCount) {
 
   public record BookGetResponses(Page<BookGetResponse> responses) {
 
@@ -64,7 +63,6 @@ public record BookGetResponse(
         result.favoriteCount(),
         result.viewCount(),
         result.salesCount(),
-        result.reviewCount(),
-        result.reviewScore());
+        result.commentCount());
   }
 }

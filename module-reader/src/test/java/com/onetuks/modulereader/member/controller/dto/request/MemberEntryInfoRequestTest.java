@@ -3,12 +3,12 @@ package com.onetuks.modulereader.member.controller.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.member.service.dto.param.MemberEntryInfoParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class MemberEntryInfoRequestTest extends IntegrationTest {
+class MemberEntryInfoRequestTest extends ReaderIntegrationTest {
 
   @Test
   @DisplayName("회원가입 정보 요청 객체를 파람 객체로 변환한다.")

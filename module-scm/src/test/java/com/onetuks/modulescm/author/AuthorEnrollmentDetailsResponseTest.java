@@ -7,7 +7,7 @@ import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.util.RandomValueProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.controller.dto.response.AuthorEnrollmentDetailsResponse;
 import com.onetuks.modulescm.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorEnrollmentDetailsResponseTest extends IntegrationTest {
+class AuthorEnrollmentDetailsResponseTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("작가 입점 정보 요청 결과 객체에서 응답 객체로 변환한다.")

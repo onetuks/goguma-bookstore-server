@@ -14,7 +14,7 @@ import com.onetuks.modulepersistence.fixture.BookFixture;
 import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.book.service.dto.result.BookGetResult;
 import java.util.List;
 import java.util.Random;
@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-class BookServiceTest extends IntegrationTest {
+class BookServiceTest extends ReaderIntegrationTest {
 
   @Autowired private BookService bookService;
   @Autowired private MemberJpaRepository memberJpaRepository;
@@ -101,9 +101,8 @@ class BookServiceTest extends IntegrationTest {
         () -> assertThat(result.viewCount()).isEqualTo(expectedViewCount + 1),
         () -> assertThat(result.salesCount()).isEqualTo(expected.getBookStatics().getSalesCount()),
         () ->
-            assertThat(result.reviewCount()).isEqualTo(expected.getBookStatics().getReviewCount()),
-        () ->
-            assertThat(result.reviewScore()).isEqualTo(expected.getBookStatics().getReviewScore()));
+            assertThat(result.commentCount())
+                .isEqualTo(expected.getBookStatics().getCommentCount()));
   }
 
   @Test

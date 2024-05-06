@@ -3,13 +3,13 @@ package com.onetuks.modulescm.author;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.controller.dto.request.AuthorCreateEnrollmentRequest;
 import com.onetuks.modulescm.author.service.dto.param.AuthorCreateEnrollmentParam;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class AuthorCreateEnrollmentRequestTest extends IntegrationTest {
+class AuthorCreateEnrollmentRequestTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("정상적인 값으로 객체 생성 성공한다.")

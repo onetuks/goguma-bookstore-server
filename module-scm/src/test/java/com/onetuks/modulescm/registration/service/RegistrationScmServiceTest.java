@@ -22,7 +22,7 @@ import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.registration.model.Registration;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.registration.service.dto.param.RegistrationCreateParam;
 import com.onetuks.modulescm.registration.service.dto.param.RegistrationEditParam;
 import com.onetuks.modulescm.registration.service.dto.result.RegistrationInspectionResult;
@@ -39,7 +39,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-class RegistrationScmServiceTest extends IntegrationTest {
+class RegistrationScmServiceTest extends ScmIntegrationTest {
 
   @Autowired private RegistrationScmService registrationScmService;
   @Autowired private MemberJpaRepository memberJpaRepository;

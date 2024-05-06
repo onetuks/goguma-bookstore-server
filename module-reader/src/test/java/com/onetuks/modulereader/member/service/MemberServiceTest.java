@@ -13,7 +13,7 @@ import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
-import com.onetuks.modulereader.IntegrationTest;
+import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberEntryInfoParam;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 
-class MemberServiceTest extends IntegrationTest {
+class MemberServiceTest extends ReaderIntegrationTest {
 
   @Autowired private MemberService memberService;
   @Autowired private S3Service s3Service;

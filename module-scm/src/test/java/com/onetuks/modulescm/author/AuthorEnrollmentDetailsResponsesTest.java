@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.modulecommon.util.RandomValueProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.author.controller.dto.response.AuthorEnrollmentDetailsResponse.AuthorEnrollmentDetailsResponses;
 import com.onetuks.modulescm.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-class AuthorEnrollmentDetailsResponsesTest extends IntegrationTest {
+class AuthorEnrollmentDetailsResponsesTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("입점 심사 상세 다건 조회 결과 객체를 응답 객체로 변환한다.")

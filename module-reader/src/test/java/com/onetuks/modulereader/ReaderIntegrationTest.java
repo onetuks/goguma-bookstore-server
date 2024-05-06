@@ -1,6 +1,7 @@
-package com.onetuks.modulescm;
+package com.onetuks.modulereader;
 
 import com.onetuks.modulecommon.util.TestFileCleaner;
+import com.onetuks.modulereader.ReaderIntegrationTest.ReaderIntegrationTestInitializer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
@@ -26,11 +27,13 @@ import org.testcontainers.utility.DockerImageName;
 @Ignore
 @SpringBootTest
 @Transactional
-@ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
-public class IntegrationTest {
+@ContextConfiguration(initializers = ReaderIntegrationTestInitializer.class)
+public class ReaderIntegrationTest {
 
   static final ComposeContainer rdbms;
   static final LocalStackContainer aws;
+
+  private static final String PATHNAME = "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml";
 
   @Autowired private TestFileCleaner testFileCleaner;
 
@@ -41,9 +44,7 @@ public class IntegrationTest {
 
   static {
     rdbms =
-        new ComposeContainer(
-                new File(
-                    "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
+        new ComposeContainer(new File(PATHNAME))
             .withExposedService(
                 "local-db",
                 3306,
@@ -54,17 +55,16 @@ public class IntegrationTest {
                 0,
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
                     .withStartupTimeout(Duration.ofSeconds(300)));
+    rdbms.start();
 
     aws =
         new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(Service.S3)
             .withStartupTimeout(Duration.ofSeconds(600));
-
-    rdbms.start();
     aws.start();
   }
 
-  static class IntegrationTestInitializer
+  static class ReaderIntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

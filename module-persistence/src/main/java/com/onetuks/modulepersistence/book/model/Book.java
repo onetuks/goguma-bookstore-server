@@ -168,12 +168,8 @@ public class Book {
     return this.bookStatics.getSalesCount();
   }
 
-  public long getReviewCount() {
-    return this.bookStatics.getReviewCount();
-  }
-
-  public float getReviewScore() {
-    return this.bookStatics.getReviewScore();
+  public long getCommentCount() {
+    return this.bookStatics.getCommentCount();
   }
 
   public Book changeStockCount(long newStockCount) {

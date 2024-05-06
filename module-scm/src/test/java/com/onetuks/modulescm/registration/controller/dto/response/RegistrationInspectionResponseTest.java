@@ -3,12 +3,12 @@ package com.onetuks.modulescm.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulescm.IntegrationTest;
+import com.onetuks.modulescm.ScmIntegrationTest;
 import com.onetuks.modulescm.registration.service.dto.result.RegistrationInspectionResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class RegistrationInspectionResponseTest extends IntegrationTest {
+class RegistrationInspectionResponseTest extends ScmIntegrationTest {
 
   @Test
   @DisplayName("신간등록 섬수 결과 객체에서 응답 객체로 변환한다.")
