@@ -6,6 +6,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.parameters.P;
 
 @Slf4j
 public class AuthToken {
 
-  protected static final String AUTHORITIES_KEY = "roleType";
+  protected static final String AUTHORITIES_KEY = "roleTypes";
   protected static final String LOGIN_ID_KEY = "loginId";
-  protected static final String AUTHOR_ID_KEY = "authorId";
 
   @Getter private final String token;
   private final SecretKey secretKey;
@@ -46,10 +47,10 @@ public class AuthToken {
 
     String socialId = claims.getSubject();
     Long loginId = claims.get(LOGIN_ID_KEY, Long.class);
-    String[] roles = claims.get(AUTHORITIES_KEY, String[].class);
+    List<String> roles = claims.get(AUTHORITIES_KEY, List.class);
 
     List<SimpleGrantedAuthority> authorities =
-        Arrays.stream(roles).map(SimpleGrantedAuthority::new).toList();
+        roles.stream().map(SimpleGrantedAuthority::new).toList();
 
     CustomUserDetails customUserDetails =
         CustomUserDetails.builder()
