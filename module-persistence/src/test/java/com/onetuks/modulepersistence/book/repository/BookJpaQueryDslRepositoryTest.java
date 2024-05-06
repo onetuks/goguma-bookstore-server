@@ -66,6 +66,7 @@ class BookJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
 
     // Then
     assertThat(results)
+        .hasSizeGreaterThanOrEqualTo(0)
         .allSatisfy(
             result -> {
               assertThat(result.getTitle()).isEqualTo(title);

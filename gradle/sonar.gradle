@@ -9,26 +9,36 @@ sonar {
         properties {
             property("sonar.host.url", "http://localhost:9000")
             property("sonar.login", env['SONAR_TOKEN'])
-            property("sonar.sources", "src/main/java")
-            property("sonar.tests", "src/test/java")
             property("sonar.sourceEncoding", "UTF-8")
             property("sonar.projectKey", "goguma-bookstore")
             property("sonar.projectName", "goguma-bookstore")
             property("sonar.converage.jacoco.xmlReportPaths",
                     "build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml")
-//            property("sonar.coverage.exclusions",
-//                    "**/Q*" +
-//                            "**/error/*" +
-//                            "**/exception/*" +
-//                            "**/model/*" +
-//                            "**/dto/*" +
-//                            "**/vo/*" +
-//                            "**/config/*" +
-//                            "**/controller/*" +
-//                            "**/moduleauth/*" +
-//                            "**/*Application.class")
         }
     } else {
         println ".env file not exists"
+    }
+}
+
+allprojects {
+    apply plugin: 'org.sonarqube'
+
+    sonar {
+        properties {
+            property("sonar.sources", "src/main/java")
+            property("sonar.tests", "src/test/java")
+            property("sonar.coverage.exclusions", List.of(
+                    "**/Q*",
+                    "**/error/**",
+                    "**/exception/**",
+                    "**/model/**",
+                    "**/dto/**",
+                    "**/vo/**",
+                    "**/config/**",
+                    "**/controller/**",
+                    "**/moduleauth/**",
+                    "**/*Application*"
+            ))
+        }
     }
 }

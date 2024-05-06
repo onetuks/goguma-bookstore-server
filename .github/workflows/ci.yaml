@@ -20,7 +20,8 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v3
+      - name: Build Filter
+        uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |

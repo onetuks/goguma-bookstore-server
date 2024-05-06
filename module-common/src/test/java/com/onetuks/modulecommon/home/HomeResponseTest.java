@@ -8,7 +8,7 @@ import com.onetuks.modulecommon.home.HomeRestController.HomeResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class HomeResponseTest extends CommonIntegrationTest {
+class HomeResponseTest extends CommonIntegrationTest {
 
   @Test
   @DisplayName("홈 접근 시 가능한 로그인 정보를 얻는다.")
