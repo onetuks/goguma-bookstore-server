@@ -1,0 +1,26 @@
+dependencies {
+
+    // Module
+    implementation project(':module-auth')
+    implementation project(':module-common')
+    implementation project(':module-persistence')
+
+    // Test
+    testImplementation testFixtures(project(':module-common'))
+    testImplementation testFixtures(project(':module-persistence'))
+
+    // Validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Spring Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // AWS S3
+    implementation(platform('software.amazon.awssdk:bom:2.25.41'))
+    implementation('commons-io:commons-io:2.16.1')
+    implementation('software.amazon.awssdk:aws-core:2.25.30')
+    implementation('software.amazon.awssdk:sdk-core:2.25.44')
+    implementation('software.amazon.awssdk:sts:2.25.43')
+    implementation('software.amazon.awssdk:s3:2.25.27')
+    testImplementation('org.testcontainers:localstack')
+}

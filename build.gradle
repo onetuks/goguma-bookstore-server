@@ -81,4 +81,5 @@ dependencies {
     implementation project(':module-auth')
     implementation project(':module-persistence')
     implementation project(':module-reader')
+    implementation project(':module-scm')
 }

@@ -57,18 +57,9 @@ public class AuthorService {
         .map(AuthorDetailsResult::from);
   }
 
-  @Transactional(readOnly = true)
-  public Author getAuthorById(long authorId) {
+  private Author getAuthorById(long authorId) {
     return authorJpaRepository
         .findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."));
-  }
-
-  @Transactional(readOnly = true)
-  public Long getAuthorIdByMemberId(long loginId) {
-    return authorJpaRepository
-        .findByMemberMemberId(loginId)
-        .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."))
-        .getAuthorId();
   }
 }

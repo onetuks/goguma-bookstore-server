@@ -164,29 +164,4 @@ class AuthorServiceTest extends IntegrationTest {
     assertThrows(
         EntityNotFoundException.class, () -> authorService.readAuthorDetails(notExistAuthorId));
   }
-
-  @Test
-  @DisplayName("멤버 아이디로 작가 아이디를 조회한다.")
-  void getAuthorIdByMemberIdTest() {
-    // Given
-    Author author = authors.get(0);
-
-    // When
-    Long authorId = authorService.getAuthorIdByMemberId(author.getMember().getMemberId());
-
-    // Then
-    assertThat(authorId).isEqualTo(author.getAuthorId());
-  }
-
-  @Test
-  @DisplayName("작가 입점을 하지 않은 멤버 아이디로 작가 아이디 조회 시 예외가 발생한다.")
-  void getAuthorIdByMemberId_NotAuthor_ExceptionTest() {
-    // Given
-    Member member = memberJpaRepository.save(MemberFixture.create(RoleType.USER));
-
-    // When & Then
-    assertThrows(
-        EntityNotFoundException.class,
-        () -> authorService.getAuthorIdByMemberId(member.getMemberId()));
-  }
 }

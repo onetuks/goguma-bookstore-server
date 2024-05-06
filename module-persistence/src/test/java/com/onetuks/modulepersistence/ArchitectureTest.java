@@ -19,7 +19,7 @@ class ArchitectureTest extends PersistenceIntegrationTest {
     javaClasses =
         new ClassFileImporter()
             .withImportOption(new ImportOption.DoNotIncludeTests()) // 테스트 클래스는 이 검증에서 제외
-            .importPackages("com.onetuks.modulepersistence");
+            .importPackages(getClass().getPackageName());
   }
 
   @Nested

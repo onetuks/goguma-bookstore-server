@@ -6,7 +6,5 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(value = {
-    PersistenceBeanProviderConfig.class,
-    CommonBeanProviderConfig.class})
+@Import(value = {PersistenceBeanProviderConfig.class, CommonBeanProviderConfig.class})
 public class BeanInjectionConfig {}
