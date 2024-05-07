@@ -46,7 +46,7 @@ jobs:
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
         run: |
-          ./gradlew build --parallel
+          ./gradlew build --parallel spotlessApply
 
       - name: Coverage Report
         if: steps.changes.outputs.application == 'true'

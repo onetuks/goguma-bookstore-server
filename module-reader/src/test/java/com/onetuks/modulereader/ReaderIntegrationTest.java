@@ -33,7 +33,8 @@ public class ReaderIntegrationTest {
   static final ComposeContainer rdbms;
   static final LocalStackContainer aws;
 
-  private static final String PATHNAME = "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml";
+  private static final String PATHNAME =
+      "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml";
 
   @Autowired private TestFileCleaner testFileCleaner;
 

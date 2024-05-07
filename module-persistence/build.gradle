@@ -1,3 +1,9 @@
+evaluationDependsOn(':module-common')
+
+test {
+	mustRunAfter(':module-common:test')
+}
+
 dependencies {
 
 	// Test Fixtures

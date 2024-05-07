@@ -31,7 +31,7 @@ public class IntegrationTest {
             .withExposedService(
                 "cloud-config",
                 8888,
-                Wait.forLogMessage(".*ready for connections.*", 1)
+                Wait.forLogMessage(".*ready for connections.*", 3)
                     .withStartupTimeout(Duration.ofSeconds(300)));
 
     cloudConfig.start();
@@ -44,8 +44,14 @@ public class IntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
+      var cloudConfigHost = cloudConfig.getServiceHost("cloud-config", 8888);
+      var cloudConfigPort = cloudConfig.getServicePort("cloud-config", 8888);
+
       properties.put("spring.application.name", "goguma");
       properties.put("spring.profiles.active", "dev");
+      properties.put(
+          "spring.config.import",
+          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
 
       TestPropertyValues.of(properties).applyTo(applicationContext);
     }

@@ -19,3 +19,12 @@ services:
     volumes:
       - ../flyway.conf:/flyway/conf/flyway.conf
       - ../migration:/flyway/sql
+
+  cloud-config:
+    image: seyoe/config-server:latest
+    platform: linux/amd64
+    restart: always
+    ports:
+      - '8888:8888'
+    environment:
+      SPRING_PROFILES_ACTIVE: dev

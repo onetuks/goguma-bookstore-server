@@ -1,3 +1,11 @@
+evaluationDependsOn(':module-common')
+evaluationDependsOn(':module-persistence')
+
+test {
+    mustRunAfter(':module-common:test')
+    mustRunAfter(':module-persistence:test')
+}
+
 dependencies {
 
     // Module
