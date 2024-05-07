@@ -2,58 +2,41 @@ package com.onetuks.goguma_bookstore;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.util.TestPropertyValues;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-@Ignore
 @SpringBootTest
 @Transactional
-@ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
 public class IntegrationTest {
 
-  static final ComposeContainer cloudConfig;
+  static final ComposeContainer containers;
+
+  private static final int LOCAL_DB_PORT = 3306;
+  private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int CLOUD_CONFIG_PORT = 8888;
+  private static final int DURATION = 300;
+  private static final String DOCKER_COMPOSE_PATH =
+      System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
   static {
-    cloudConfig =
-        new ComposeContainer(
-                new File(
-                    "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
+    containers =
+        new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
             .withExposedService(
                 "cloud-config",
-                8888,
-                Wait.forLogMessage(".*ready for connections.*", 3)
-                    .withStartupTimeout(Duration.ofSeconds(300)));
-
-    cloudConfig.start();
-  }
-
-  static class IntegrationTestInitializer
-      implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-    @Override
-    public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
-      Map<String, String> properties = new HashMap<>();
-
-      var cloudConfigHost = cloudConfig.getServiceHost("cloud-config", 8888);
-      var cloudConfigPort = cloudConfig.getServicePort("cloud-config", 8888);
-
-      properties.put("spring.application.name", "goguma");
-      properties.put("spring.profiles.active", "dev");
-      properties.put(
-          "spring.config.import",
-          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
-
-      TestPropertyValues.of(properties).applyTo(applicationContext);
-    }
+                CLOUD_CONFIG_PORT,
+                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
+            .withExposedService(
+                "local-db",
+                LOCAL_DB_PORT,
+                Wait.forLogMessage(".*ready for connections.*", 1)
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
+            .withExposedService(
+                "local-db-migrate",
+                LOCAL_DB_MIGRATION_PORT,
+                Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)));
+    containers.start();
   }
 }

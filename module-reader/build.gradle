@@ -3,6 +3,8 @@ evaluationDependsOn(':module-common')
 evaluationDependsOn(':module-persistence')
 
 test {
+	systemProperty('rootDir', project.rootDir)
+
 	mustRunAfter(':module-auth:test')
 	mustRunAfter(':module-common:test')
 	mustRunAfter(':module-persistence:test')

@@ -7,7 +7,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,17 +23,20 @@ import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
 
-@Ignore
 @SpringBootTest
 @Transactional
 @ContextConfiguration(initializers = ReaderIntegrationTestInitializer.class)
 public class ReaderIntegrationTest {
 
-  static final ComposeContainer rdbms;
-  static final LocalStackContainer aws;
+  static final ComposeContainer containers;
+  static final LocalStackContainer localStack;
 
-  private static final String PATHNAME =
-      "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml";
+  private static final int LOCAL_DB_PORT = 3306;
+  private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int CLOUD_CONFIG_PORT = 8888;
+  private static final int DURATION = 300;
+  private static final String DOCKER_COMPOSE_PATH =
+      System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
   @Autowired private TestFileCleaner testFileCleaner;
 
@@ -44,25 +46,29 @@ public class ReaderIntegrationTest {
   }
 
   static {
-    rdbms =
-        new ComposeContainer(new File(PATHNAME))
+    containers =
+        new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
+            .withExposedService(
+                "cloud-config",
+                CLOUD_CONFIG_PORT,
+                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
-                3306,
+                LOCAL_DB_PORT,
                 Wait.forLogMessage(".*ready for connections.*", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)))
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db-migrate",
-                0,
+                LOCAL_DB_MIGRATION_PORT,
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)));
-    rdbms.start();
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)));
+    containers.start();
 
-    aws =
+    localStack =
         new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(Service.S3)
-            .withStartupTimeout(Duration.ofSeconds(600));
-    aws.start();
+            .withStartupTimeout(Duration.ofSeconds(DURATION));
+    localStack.start();
   }
 
   static class ReaderIntegrationTestInitializer
@@ -74,18 +80,10 @@ public class ReaderIntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
-      var rdbmsHost = rdbms.getServiceHost("local-db", 3306);
-      var rdbmsPort = rdbms.getServicePort("local-db", 3306);
-
-      properties.put(
-          "spring.datasource.url",
-          "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
-      properties.put("spring.datasource.password", "root1234!");
-
       try {
-        aws.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
+        localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
 
-        properties.put("aws.endpoint", String.valueOf(aws.getEndpoint()));
+        properties.put("aws.endpoint", String.valueOf(localStack.getEndpoint()));
         properties.put("aws.bucket-name", "test-bucket");
       } catch (Exception e) {
         log.info("aws test initialize failed");

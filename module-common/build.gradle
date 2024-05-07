@@ -1,14 +1,18 @@
+test {
+    systemProperty('rootDir', project.rootDir)
+}
+
 dependencies {
 
     // Test Fixtures
-    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testFixturesImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testFixturesImplementation('org.springframework.boot:spring-boot-starter-test')
+    testFixturesImplementation('org.springframework.boot:spring-boot-starter-web')
 
     // Spring Web
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-web')
 
     // Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation('org.springframework.boot:spring-boot-starter-webflux')
 
     // AWS S3
     implementation(platform('software.amazon.awssdk:bom:2.25.46'))

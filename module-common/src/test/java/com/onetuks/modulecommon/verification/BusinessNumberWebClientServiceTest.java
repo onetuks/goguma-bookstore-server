@@ -18,7 +18,7 @@ class BusinessNumberWebClientServiceTest extends CommonIntegrationTest {
   @DisplayName("유효한 사업자번호를 이용해서 정상 상태를 조회한다.")
   void requestDataTest() {
     // Given
-    String businessNumber = "8073401609";
+    String businessNumber = "8188700775";
 
     // When
     BusinessNumberResponse result = service.requestData(businessNumber);

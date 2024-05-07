@@ -7,7 +7,6 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -17,34 +16,41 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-@Ignore
 @SpringBootTest
 @Transactional
 @ContextConfiguration(initializers = AuthIntegrationTestInitializer.class)
 public class AuthIntegrationTest {
 
-  static final ComposeContainer rdbms;
+  static final ComposeContainer containers;
   static final RedisContainer redis;
 
+  private static final int LOCAL_DB_PORT = 3306;
+  private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int CLOUD_CONFIG_PORT = 8888;
+  private static final int DURATION = 300;
+  private static final String DOCKER_COMPOSE_PATH =
+      System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
+
   static {
-    rdbms =
-        new ComposeContainer(
-                new File(
-                    "/Users/onetuks/Documents/CodeSpace/projects/goguma-bookstore/goguma-bookstore-server/db/test/docker-compose.yaml"))
+    containers =
+        new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
+            .withExposedService(
+                "cloud-config",
+                CLOUD_CONFIG_PORT,
+                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
-                3306,
+                LOCAL_DB_PORT,
                 Wait.forLogMessage(".*ready for connections.*", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)))
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db-migrate",
-                0,
+                LOCAL_DB_MIGRATION_PORT,
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)));
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)));
+    containers.start();
 
     redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
-
-    rdbms.start();
     redis.start();
   }
 
@@ -54,14 +60,6 @@ public class AuthIntegrationTest {
     @Override
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
-
-      var rdbmsHost = rdbms.getServiceHost("local-db", 3306);
-      var rdbmsPort = rdbms.getServicePort("local-db", 3306);
-
-      properties.put(
-          "spring.datasource.url",
-          "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
-      properties.put("spring.datasource.password", "root1234!");
 
       var redistHost = redis.getHost();
       var redistPort = redis.getFirstMappedPort();

@@ -1,6 +1,8 @@
 evaluationDependsOn(':module-common')
 
 test {
+	systemProperty('rootDir', project.rootDir)
+
 	mustRunAfter(':module-common:test')
 }
 

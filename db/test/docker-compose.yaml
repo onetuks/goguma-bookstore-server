@@ -3,6 +3,7 @@ version: "3.8"
 services:
   local-db:
     image: mysql:8.0
+    restart: always
     environment:
       MYSQL_DATABASE: goguma-bookstore
       MYSQL_ROOT_PASSWORD: root1234!
@@ -25,6 +26,6 @@ services:
     platform: linux/amd64
     restart: always
     ports:
-      - '8888:8888'
+      - '8888'
     environment:
       SPRING_PROFILES_ACTIVE: dev
