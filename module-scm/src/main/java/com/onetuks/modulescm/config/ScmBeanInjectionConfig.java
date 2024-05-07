@@ -1,4 +1,4 @@
-package com.onetuks.modulereader.config;
+package com.onetuks.modulescm.config;
 
 import com.onetuks.modulecommon.config.CommonBeanProviderConfig;
 import com.onetuks.modulepersistence.global.config.PersistenceBeanProviderConfig;
@@ -7,4 +7,4 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(value = {PersistenceBeanProviderConfig.class, CommonBeanProviderConfig.class})
-public class BeanInjectionConfig {}
+public class ScmBeanInjectionConfig {}

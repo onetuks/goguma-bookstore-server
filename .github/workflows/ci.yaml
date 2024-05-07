@@ -28,6 +28,16 @@ jobs:
             application:
               - 'build.gradle'
               - 'src/**'
+              - 'module-auth/build.gradle'
+              - 'module-auth/src/**'
+              - 'module-common/build.gradle'
+              - 'module-common/src/**'
+              - 'module-persistence/build.gradle'
+              - 'module-persistence/src/**'
+              - 'module-reader/build.gradle'
+              - 'module-reader/src/**'
+              - 'module-scm/build.gradle'
+              - 'module-scm/src/**'
 
       - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
@@ -36,12 +46,6 @@ jobs:
           java-version: 17
           distribution: zulu
           cache: 'gradle'
-
-      - name: application.yaml Creation
-        if: steps.changes.outputs.application == 'true'
-        run: |
-          mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_YAML_CONTENT }}" > src/main/resources/application.yaml
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
@@ -58,7 +62,7 @@ jobs:
           min-coverage-overall: 10
           min-coverage-changed-files: 10
           paths: |
-            ${{ github.workspace }}/**/build/jacoco/jacoco.xml
+            ${{ github.workspace }}/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
 
   style-test:
     runs-on: ubuntu-latest
@@ -73,8 +77,18 @@ jobs:
             application:
               - 'build.gradle'
               - 'src/**'
+              - 'module-auth/build.gradle'
+              - 'module-auth/src/**'
+              - 'module-common/build.gradle'
+              - 'module-common/src/**'
+              - 'module-persistence/build.gradle'
+              - 'module-persistence/src/**'
+              - 'module-reader/build.gradle'
+              - 'module-reader/src/**'
+              - 'module-scm/build.gradle'
+              - 'module-scm/src/**'
 
-      - name: JDK 설치
+      - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
         uses: actions/setup-java@v4
         with:
