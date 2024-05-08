@@ -87,7 +87,7 @@ public class CommonIntegrationTest {
 
       properties.put(
           "spring.config.import",
-          "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");

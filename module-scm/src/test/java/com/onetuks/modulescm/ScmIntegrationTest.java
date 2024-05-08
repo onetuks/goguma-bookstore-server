@@ -87,11 +87,10 @@ public class ScmIntegrationTest {
 
       properties.put(
           "spring.config.import",
-          "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.username", "root");
       properties.put("spring.datasource.password", "root1234!");
 
       try {
