@@ -3,6 +3,10 @@ spring:
     name: goguma
   profiles:
     active: dev
+  cloud:
+    config:
+      name: goguma
+      profile: dev
   config:
     import: optional:configserver:http://localhost:8888
 
