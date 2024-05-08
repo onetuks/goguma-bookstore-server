@@ -80,18 +80,19 @@ public class CommonIntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
-      var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
-      var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
       var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
       var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
+      var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
+      var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
-      properties.put(
-          "spring.datasource.url",
-          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.password", "root1234!");
       properties.put(
           "spring.config.import",
           "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+      properties.put(
+          "spring.datasource.url",
+          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
+      properties.put("spring.datasource.username", "root");
+      properties.put("spring.datasource.password", "root1234!");
 
       try {
         localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
