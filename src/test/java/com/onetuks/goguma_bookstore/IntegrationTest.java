@@ -61,6 +61,8 @@ public class IntegrationTest {
       var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
       var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
+      properties.put("spring.application.name", "goguma");
+      properties.put("spring.profiles.active", "dev");
       properties.put(
           "spring.config.import",
           "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
