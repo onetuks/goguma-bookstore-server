@@ -91,7 +91,6 @@ public class CommonIntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.username", "root");
       properties.put("spring.datasource.password", "root1234!");
 
       try {
