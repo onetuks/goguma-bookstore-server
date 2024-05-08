@@ -85,9 +85,13 @@ public class ReaderIntegrationTest {
       var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
       var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
 
-      properties.put("spring.datasource.url", "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
+      properties.put(
+          "spring.datasource.url",
+          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
       properties.put("spring.datasource.password", "root1234!");
-      properties.put("spring.config.import", "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+      properties.put(
+          "spring.config.import",
+          "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
 
       try {
         localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
