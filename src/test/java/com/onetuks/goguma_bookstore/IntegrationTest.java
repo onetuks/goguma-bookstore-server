@@ -63,7 +63,8 @@ public class IntegrationTest {
 
       properties.put(
           "spring.config.import",
-          "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
+      properties.put("spring.datasource.driver-class-name", "com.mysql.cj.jdbc.Driver");
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
