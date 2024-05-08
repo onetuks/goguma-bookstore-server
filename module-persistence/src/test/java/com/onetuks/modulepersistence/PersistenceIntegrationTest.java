@@ -2,11 +2,18 @@ package com.onetuks.modulepersistence;
 
 import com.onetuks.modulecommon.config.CommonTestBeanProviderConfig;
 import com.onetuks.modulecommon.util.TestFileCleaner;
+import com.onetuks.modulepersistence.PersistenceIntegrationTest.PersistenceIntegrationTestInitializer;
 import java.io.File;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
@@ -14,7 +21,9 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 @SpringBootTest
 @Transactional
-@ContextConfiguration(classes = {CommonTestBeanProviderConfig.class})
+@ContextConfiguration(
+    initializers = PersistenceIntegrationTestInitializer.class,
+    classes = {CommonTestBeanProviderConfig.class})
 public class PersistenceIntegrationTest {
 
   static final ComposeContainer containers;
@@ -51,5 +60,25 @@ public class PersistenceIntegrationTest {
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
                     .withStartupTimeout(Duration.ofSeconds(DURATION)));
     containers.start();
+  }
+
+  static class PersistenceIntegrationTestInitializer
+      implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+    @Override
+    public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
+      Map<String, String> properties = new HashMap<>();
+
+      var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
+      var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
+      var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
+      var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
+
+      properties.put("spring.datasource.url", "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
+      properties.put("spring.datasource.password", "root1234!");
+      properties.put("spring.config.import", "optional:configserver:" + cloudConfigHost + ":" + cloudConfigPort);
+
+      TestPropertyValues.of(properties).applyTo(applicationContext);
+    }
   }
 }

@@ -39,6 +39,10 @@ jobs:
               - 'module-scm/build.gradle'
               - 'module-scm/src/**'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
       - name: JDK Setup
         if: steps.changes.outputs.application == 'true'
         uses: actions/setup-java@v4
