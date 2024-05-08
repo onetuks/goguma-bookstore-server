@@ -25,22 +25,17 @@ jobs:
         id: changes
         with:
           filters: |
-            root:
+            application:
               - 'build.gradle'
               - 'src/**'
-            module-auth:
               - 'module-auth/build.gradle'
               - 'module-auth/src/**'
-            module-common:
               - 'module-common/build.gradle'
               - 'module-common/src/**'
-            module-persistence:
               - 'module-persistence/build.gradle'
               - 'module-persistence/src/**'
-            module-reader:
               - 'module-reader/build.gradle'
               - 'module-reader/src/**'
-            module-scm:
               - 'module-scm/build.gradle'
               - 'module-scm/src/**'
 
