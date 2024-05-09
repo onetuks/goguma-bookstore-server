@@ -56,7 +56,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           registry: docker.io
-          image: seyoe/config-server:latest
+          image: seyoe/cloud-config:latest
           run: echo "Spring Cloud Config Server Running..."
 
       - name: Gradle Build
