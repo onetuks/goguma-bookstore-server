@@ -51,7 +51,7 @@ public class ScmIntegrationTest {
             .withExposedService(
                 "cloud-config",
                 CLOUD_CONFIG_PORT,
-                Wait.forHttp("/health")
+                Wait.forHttp("/actuator/health")
                     .forStatusCode(200)
                     .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
