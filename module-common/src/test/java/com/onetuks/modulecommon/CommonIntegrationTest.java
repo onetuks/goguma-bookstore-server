@@ -34,7 +34,7 @@ public class CommonIntegrationTest {
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
   private static final int CLOUD_CONFIG_PORT = 8888;
-  private static final int DURATION = 300;
+  private static final int DURATION = 600;
   private static final String DOCKER_COMPOSE_PATH =
       System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
@@ -96,6 +96,8 @@ public class CommonIntegrationTest {
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
       properties.put("spring.datasource.username", "root");
       properties.put("spring.datasource.password", "root1234!");
+
+      // todo : github action 에서 cloud config 값을 가져오지 못함
 
       try {
         localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");

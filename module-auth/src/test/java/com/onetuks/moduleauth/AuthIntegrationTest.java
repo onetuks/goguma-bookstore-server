@@ -27,7 +27,7 @@ public class AuthIntegrationTest {
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
   private static final int CLOUD_CONFIG_PORT = 8888;
-  private static final int DURATION = 300;
+  private static final int DURATION = 600;
   private static final String DOCKER_COMPOSE_PATH =
       System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
