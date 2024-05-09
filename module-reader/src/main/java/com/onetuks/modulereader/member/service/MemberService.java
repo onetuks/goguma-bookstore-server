@@ -75,7 +75,8 @@ public class MemberService {
     return MemberInfoResult.from(getMemberById(memberId));
   }
 
-  private Member getMemberById(long memberId) {
+  @Transactional(readOnly = true)
+  public Member getMemberById(long memberId) {
     return memberJpaRepository
         .findById(memberId)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));

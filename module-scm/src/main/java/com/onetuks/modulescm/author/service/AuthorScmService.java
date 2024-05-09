@@ -123,6 +123,13 @@ public class AuthorScmService {
         .map(AuthorEnrollmentDetailsResult::from);
   }
 
+  @Transactional(readOnly = true)
+  public Author getAuthorById(long authorId) {
+    return authorJpaRepository
+        .findById(authorId)
+        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
+  }
+
   private Member getUserMemberById(long loginId) {
     Member member =
         memberJpaRepository
@@ -133,12 +140,6 @@ public class AuthorScmService {
       throw new IllegalStateException("이미 작가인 멤버입니다.");
     }
     return member;
-  }
-
-  public Author getAuthorById(long authorId) {
-    return authorJpaRepository
-        .findById(authorId)
-        .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 작가입니다."));
   }
 
   private void checkIllegalArgument(Author author, long authorLoginId) {

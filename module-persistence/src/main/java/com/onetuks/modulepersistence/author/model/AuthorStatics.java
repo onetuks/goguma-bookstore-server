@@ -48,20 +48,11 @@ public class AuthorStatics {
     this.restockCount = Objects.requireNonNullElse(restockCount, 0L);
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    AuthorStatics that = (AuthorStatics) o;
-    return Objects.equals(authorStaticsId, that.authorStaticsId);
+  public void increaseSubscribeCount() {
+    this.subscribeCount++;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(authorStaticsId);
+  public void decreaseSubscribeCount() {
+    this.subscribeCount--;
   }
 }

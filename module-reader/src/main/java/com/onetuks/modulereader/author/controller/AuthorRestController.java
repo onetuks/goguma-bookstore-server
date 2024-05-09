@@ -54,7 +54,7 @@ public class AuthorRestController {
   public ResponseEntity<AuthorEditResponse> editAuthorProfile(
       @AuthorLoginId Long loginAuthorId,
       @PathVariable(name = "authorId") Long authorId,
-      @Valid @RequestBody AuthorEditRequest request,
+      @RequestBody @Valid AuthorEditRequest request,
       @RequestPart(name = "profile-img-file", required = false) MultipartFile profileImgFile) {
     AuthorEditResult result =
         authorService.updateAuthorProfile(
