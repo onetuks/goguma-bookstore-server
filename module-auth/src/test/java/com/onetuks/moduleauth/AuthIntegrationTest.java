@@ -66,8 +66,6 @@ public class AuthIntegrationTest {
       var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
       var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
-      properties.put("spring.application.name", "goguma");
-      properties.put("spring.profiles.active", "dev");
       properties.put(
           "spring.config.import",
           "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
@@ -75,14 +73,7 @@ public class AuthIntegrationTest {
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.username", "root");
       properties.put("spring.datasource.password", "root1234!");
-      properties.put(
-          "openapi.data-go-kr.secret-key",
-          "HJGVGr90METjyp2CXImquifQLs4eOdNEkTGf31Da6kqByBCIbkbn8FxO%2BgxrKvAaNzQx7FpjSqNvZCSzBIOY9Q%3D%3D");
-      properties.put(
-          "openapi.center-lib.secret-key",
-          "6d8a07116c7eab073f5d98230fc96f44fb8285eaa18f2bc8481c3f85ea789a8b");
 
       var redistHost = redis.getHost();
       var redistPort = redis.getFirstMappedPort();

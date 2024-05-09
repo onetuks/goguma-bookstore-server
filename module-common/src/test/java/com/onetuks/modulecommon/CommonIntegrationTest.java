@@ -103,20 +103,10 @@ public class CommonIntegrationTest {
       properties.put(
           "spring.config.import",
           "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
-      properties.put("spring.datasource.driver-class-name", "com.mysql.cj.jdbc.Driver");
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.username", "root");
       properties.put("spring.datasource.password", "root1234!");
-      properties.put(
-          "openapi.data-go-kr.secret-key",
-          "HJGVGr90METjyp2CXImquifQLs4eOdNEkTGf31Da6kqByBCIbkbn8FxO%2BgxrKvAaNzQx7FpjSqNvZCSzBIOY9Q%3D%3D");
-      properties.put(
-          "openapi.center-lib.secret-key",
-          "6d8a07116c7eab073f5d98230fc96f44fb8285eaa18f2bc8481c3f85ea789a8b");
-
-      // todo : github action 에서 cloud config 값을 가져오지 못함
 
       try {
         localStack.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
