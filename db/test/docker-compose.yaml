@@ -5,27 +5,18 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_DATABASE: goguma-bookstore
-      MYSQL_ROOT_PASSWORD: root1234!
+      MYSQL_DATABASE: goguma-bookstore-test
+      MYSQL_ROOT_PASSWORD: password
     ports:
       - '3306'
 
   local-db-migrate:
     image: flyway/flyway:7
     environment:
-      FLYWAY_DB_URL: jdbc:mysql://local-db/goguma-bookstore
+      FLYWAY_DB_URL: jdbc:mysql://local-db/goguma-bookstore-test
       FLYWAY_DB_USER: root
-      FLYWAY_DB_PASSWORD: root1234!
+      FLYWAY_DB_PASSWORD: password
     command: migrate
     volumes:
       - ../flyway.conf:/flyway/conf/flyway.conf
       - ../migration:/flyway/sql
-
-  cloud-config:
-    image: seyoe/config-server:latest
-    platform: linux/amd64
-    restart: always
-    ports:
-      - '8888'
-    environment:
-      SPRING_PROFILES_ACTIVE: dev

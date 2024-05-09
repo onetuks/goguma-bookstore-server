@@ -11,11 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
+@ActiveProfiles(value = "test")
 @SpringBootTest
 @Transactional
 @ContextConfiguration(initializers = AuthIntegrationTestInitializer.class)
@@ -26,7 +28,6 @@ public class AuthIntegrationTest {
 
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
-  private static final int CLOUD_CONFIG_PORT = 8888;
   private static final int DURATION = 300;
   private static final String DOCKER_COMPOSE_PATH =
       System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
@@ -34,12 +35,6 @@ public class AuthIntegrationTest {
   static {
     containers =
         new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
-            .withExposedService(
-                "cloud-config",
-                CLOUD_CONFIG_PORT,
-                Wait.forHttp("/actuator/health")
-                    .forStatusCode(200)
-                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
                 LOCAL_DB_PORT,
@@ -63,19 +58,12 @@ public class AuthIntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
-      var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
-      var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
       var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
       var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
       properties.put(
-          "spring.config.import",
-          "optional:configserver:http://" + cloudConfigHost + ":" + cloudConfigPort);
-      properties.put("spring.datasource.driver-class-name", "com.mysql.cj.jdbc.Driver");
-      properties.put(
           "spring.datasource.url",
-          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore");
-      properties.put("spring.datasource.password", "root1234!");
+          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore-test");
 
       var redistHost = redis.getHost();
       var redistPort = redis.getFirstMappedPort();

@@ -1,12 +1,8 @@
 spring:
   application:
-    name: goguma
+    name: goguma-bookstore
   profiles:
     active: dev
-  cloud:
-    config:
-      name: goguma
-      profile: dev
   config:
     import: optional:configserver:http://localhost:8888
 
