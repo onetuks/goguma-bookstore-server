@@ -8,7 +8,9 @@ import com.onetuks.modulepersistence.subscribe.repository.SubscribeJpaRepository
 import com.onetuks.modulereader.author.service.AuthorService;
 import com.onetuks.modulereader.member.service.MemberService;
 import com.onetuks.modulereader.subscribe.service.dto.param.SubscribePostParam;
-import com.onetuks.modulereader.subscribe.service.dto.result.SubscribePostResult;
+import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +31,11 @@ public class SubscribeService {
   }
 
   @Transactional
-  public SubscribePostResult createSubscribe(long memberId, SubscribePostParam param) {
+  public SubscribeResult createSubscribe(long memberId, SubscribePostParam param) {
     Author author = authorService.getAuthorById(param.authorId());
     author.getAuthorStatics().increaseSubscribeCount();
 
-    return SubscribePostResult.from(
+    return SubscribeResult.from(
         subscribeJpaRepository.save(
             Subscribe.builder()
                 .member(memberService.getMemberById(memberId))
@@ -41,6 +43,7 @@ public class SubscribeService {
                 .build()));
   }
 
+  @Transactional
   public void deleteSubcribe(long memberId, long subscribeId) {
     Subscribe subscribe = getSubscribeById(subscribeId);
 
@@ -50,6 +53,18 @@ public class SubscribeService {
 
     subscribe.getAuthor().getAuthorStatics().decreaseSubscribeCount();
     subscribeJpaRepository.deleteById(subscribeId);
+  }
+
+  @Transactional(readOnly = true)
+  public boolean readIsSubscribedAuthor(long memberId, long authorId) {
+    return subscribeJpaRepository.existsByMemberMemberIdAndAuthorAuthorId(memberId, authorId);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<SubscribeResult> readAllSubscribes(long memberId, Pageable pageable) {
+    return subscribeJpaRepository
+        .findAllByMemberMemberId(memberId, pageable)
+        .map(SubscribeResult::from);
   }
 
   private Subscribe getSubscribeById(long subscribeId) {

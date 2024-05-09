@@ -1,5 +1,7 @@
 package com.onetuks.modulereader.favorite.service;
 
+import com.onetuks.modulecommon.error.ErrorCode;
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulepersistence.book.model.Book;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.favorite.model.Favorite;
@@ -51,10 +53,12 @@ public class FavoriteService {
         .findById(favoriteId)
         .ifPresent(
             favorite -> {
-              if (favorite.getMember().getMemberId() == memberId) {
-                favorite.getBook().getBookStatics().decreaseFavoriteCount();
-                favoriteJpaRepository.delete(favorite);
+              if (favorite.getMember().getMemberId() != memberId) {
+                throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
               }
+
+              favorite.getBook().getBookStatics().decreaseFavoriteCount();
+              favoriteJpaRepository.delete(favorite);
             });
   }
 

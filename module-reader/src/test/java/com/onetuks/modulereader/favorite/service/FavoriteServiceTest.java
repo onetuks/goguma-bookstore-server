@@ -1,8 +1,10 @@
 package com.onetuks.modulereader.favorite.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchException;
 
+import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.model.Book;
@@ -29,11 +31,16 @@ import org.springframework.data.domain.PageRequest;
 
 class FavoriteServiceTest extends ReaderIntegrationTest {
 
-  @Autowired private FavoriteService favoriteService;
-  @Autowired private MemberJpaRepository memberJpaRepository;
-  @Autowired private AuthorJpaRepository authorJpaRepository;
-  @Autowired private BookJpaRepository bookJpaRepository;
-  @Autowired private FavoriteJpaRepository favoriteJpaRepository;
+  @Autowired
+  private FavoriteService favoriteService;
+  @Autowired
+  private MemberJpaRepository memberJpaRepository;
+  @Autowired
+  private AuthorJpaRepository authorJpaRepository;
+  @Autowired
+  private BookJpaRepository bookJpaRepository;
+  @Autowired
+  private FavoriteJpaRepository favoriteJpaRepository;
 
   private Member member;
   private Book book;
@@ -101,6 +108,20 @@ class FavoriteServiceTest extends ReaderIntegrationTest {
     Long postFavoriteCount = book.getBookStatics().getFavoriteCount();
 
     assertThat(postFavoriteCount).isEqualTo(prevFavoriteCount - 1);
+  }
+
+  @Test
+  @DisplayName("권한 없는 유저가 즐겨찾기 도서를 해제하려고 하면 예외를 던진다.")
+  void deleteFavorite_AccessDenied_ExceptionTest() {
+    // Given
+    long notExistsMemberId = 123_141_145_123L;
+
+    // When & Then
+    assertThatThrownBy(
+        () ->
+            favoriteService.deleteFavorite(
+                notExistsMemberId, favoriteJpaRepository.findAll().get(0).getFavoriteId()))
+        .isInstanceOf(ApiAccessDeniedException.class);
   }
 
   @Test

@@ -43,19 +43,6 @@ public class CommonIntegrationTest {
 
   @Autowired private TestFileCleaner testFileCleaner;
 
-  @Autowired private Environment env;
-  private static final Logger log = LoggerFactory.getLogger(CommonIntegrationTest.class);
-
-  @Test
-  void test() {
-    log.info("=== Start of properties logging ===");
-    for (String key : env.getActiveProfiles()) {
-      String value = env.getProperty(key);
-      log.info("Property: {} = {}", key, value);
-    }
-    log.info("=== End of properties logging ===");
-  }
-
   @AfterEach
   void tearDown() {
     testFileCleaner.deleteAllTestStatic();

@@ -9,9 +9,9 @@ public class PageableConfig {
 
   @Bean
   public PageableHandlerMethodArgumentResolverCustomizer customize() {
-    return p -> {
-      p.setOneIndexedParameters(true);
-      p.setMaxPageSize(10);
+    return pageConfig -> {
+      pageConfig.setOneIndexedParameters(true);
+      pageConfig.setMaxPageSize(10);
     };
   }
 }

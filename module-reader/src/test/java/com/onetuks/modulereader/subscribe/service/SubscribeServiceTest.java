@@ -14,12 +14,14 @@ import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulepersistence.subscribe.repository.SubscribeJpaRepository;
 import com.onetuks.modulereader.ReaderIntegrationTest;
 import com.onetuks.modulereader.subscribe.service.dto.param.SubscribePostParam;
-import com.onetuks.modulereader.subscribe.service.dto.result.SubscribePostResult;
+import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 class SubscribeServiceTest extends ReaderIntegrationTest {
 
@@ -48,7 +50,7 @@ class SubscribeServiceTest extends ReaderIntegrationTest {
     Long previousSubscribeCount = author.getAuthorStatics().getSubscribeCount();
 
     // When
-    SubscribePostResult result = subscribeService.createSubscribe(member.getMemberId(), param);
+    SubscribeResult result = subscribeService.createSubscribe(member.getMemberId(), param);
 
     // Then
     Long postSubscribeCount = author.getAuthorStatics().getSubscribeCount();
@@ -78,7 +80,7 @@ class SubscribeServiceTest extends ReaderIntegrationTest {
   void deleteSubcribeTest() {
     // Given
     SubscribePostParam param = new SubscribePostParam(author.getAuthorId());
-    SubscribePostResult postResult = subscribeService.createSubscribe(member.getMemberId(), param);
+    SubscribeResult postResult = subscribeService.createSubscribe(member.getMemberId(), param);
     long previousSubscribeCount = author.getAuthorStatics().getSubscribeCount();
 
     // When
@@ -108,9 +110,67 @@ class SubscribeServiceTest extends ReaderIntegrationTest {
             })
         .isInstanceOf(IllegalArgumentException.class);
 
-    long postSubscribeCount = authorJpaRepository.findById(author.getAuthorId())
-        .orElseThrow().getAuthorStatics().getSubscribeCount();
+    long postSubscribeCount =
+        authorJpaRepository
+            .findById(author.getAuthorId())
+            .orElseThrow()
+            .getAuthorStatics()
+            .getSubscribeCount();
 
     assertThat(postSubscribeCount).isEqualTo(previousSubscribeCount);
+  }
+
+  @Test
+  @DisplayName("다른 유저가 구독 정보를 제거하려고 하면 예외를 던진다. 구독자수는 감소하지 않는다.")
+  void deleteSubsribe_AccessDenied_Exception() {
+    // Given
+    long notAuthorizedMemberId = 11_231_231L;
+    SubscribePostParam param = new SubscribePostParam(author.getAuthorId());
+    SubscribeResult postResult = subscribeService.createSubscribe(member.getMemberId(), param);
+    long previousSubscribeCount = author.getAuthorStatics().getSubscribeCount();
+
+    // When & Then
+    assertThatThrownBy(
+            () -> subscribeService.deleteSubcribe(notAuthorizedMemberId, postResult.subscribeId()))
+        .isInstanceOf(ApiAccessDeniedException.class);
+
+    long postSubscribeCount =
+        authorJpaRepository
+            .findById(author.getAuthorId())
+            .orElseThrow()
+            .getAuthorStatics()
+            .getSubscribeCount();
+
+    assertThat(postSubscribeCount).isEqualTo(previousSubscribeCount);
+  }
+
+  @Test
+  @DisplayName("해당 작가에 대해서 구독이 되어있는지 여부를 조회한다.")
+  void readIsSubscribedAuthorTest() {
+    // Given
+    SubscribePostParam param = new SubscribePostParam(author.getAuthorId());
+    subscribeService.createSubscribe(member.getMemberId(), param);
+
+    // When
+    boolean result =
+        subscribeService.readIsSubscribedAuthor(member.getMemberId(), author.getAuthorId());
+
+    // Then
+    assertThat(result).isTrue();
+  }
+
+  @Test
+  @DisplayName("유저의 모든 구독 정보를 조회한다.")
+  void readAllSubscribesTest() {
+    // Given
+    SubscribePostParam param = new SubscribePostParam(author.getAuthorId());
+    subscribeService.createSubscribe(member.getMemberId(), param);
+
+    // When
+    Page<SubscribeResult> result =
+        subscribeService.readAllSubscribes(member.getMemberId(), PageRequest.of(0, 10));
+
+    // Then
+    assertThat(result).hasSize(1);
   }
 }

@@ -3,17 +3,24 @@ package com.onetuks.modulereader.subscribe.controller;
 import com.onetuks.moduleauth.util.login.LoginId;
 import com.onetuks.modulereader.subscribe.controller.dto.request.SubscribePostRequest;
 import com.onetuks.modulereader.subscribe.controller.dto.response.SubscribeResponse;
+import com.onetuks.modulereader.subscribe.controller.dto.response.SubscribeResponse.SubscribeResponses;
 import com.onetuks.modulereader.subscribe.service.SubscribeService;
-import com.onetuks.modulereader.subscribe.service.dto.result.SubscribePostResult;
+import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,17 +45,49 @@ public class SubscribeRestController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SubscribeResponse> postSubscribe(
       @LoginId Long loginId, @RequestBody @Valid SubscribePostRequest request) {
-    SubscribePostResult result = subscribeService.createSubscribe(loginId, request.to());
+    SubscribeResult result = subscribeService.createSubscribe(loginId, request.to());
     SubscribeResponse response = SubscribeResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
+  /**
+   * 구독 취소
+   *
+   * @param loginId : 로그인 아이디
+   * @param subscribeId : 구독 아이디
+   * @return 204 No Content
+   */
   @DeleteMapping(path = "/{subscribeId}")
   public ResponseEntity<Void> cancelSubscribe(
       @LoginId Long loginId, @PathVariable(name = "subscribeId") Long subscribeId) {
     subscribeService.deleteSubcribe(loginId, subscribeId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
+
+  /**
+   * 작가 구독 여부 조회
+   *
+   * @param loginId : 로그인 아이디
+   * @param authorId : 작가 아이디
+   * @return SubscribeResponse
+   */
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Boolean> getIsSubscribedAuthor(
+      @LoginId Long loginId, @RequestParam(name = "authorId") Long authorId) {
+    boolean response = subscribeService.readIsSubscribedAuthor(loginId, authorId);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @GetMapping(path = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SubscribeResponses> getAllMySubscribes(
+      @LoginId Long loginId,
+      @PageableDefault(sort = "subscribeId", direction = Direction.DESC) Pageable pageable) {
+    Page<SubscribeResult> result = subscribeService.readAllSubscribes(loginId, pageable);
+    SubscribeResponses responses = SubscribeResponses.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 }
