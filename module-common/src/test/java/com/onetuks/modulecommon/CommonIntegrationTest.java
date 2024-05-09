@@ -66,7 +66,9 @@ public class CommonIntegrationTest {
             .withExposedService(
                 "cloud-config",
                 CLOUD_CONFIG_PORT,
-                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
+                Wait.forHttp("/health")
+                    .forStatusCode(200)
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
                 LOCAL_DB_PORT,
