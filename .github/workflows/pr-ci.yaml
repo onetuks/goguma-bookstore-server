@@ -51,13 +51,16 @@ jobs:
           distribution: zulu
           cache: 'gradle'
 
-      - uses: addnab/docker-run-action@v3
+      - name: Docker Login
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          registry: docker.io
-          image: seyoe/cloud-config:latest
-          run: echo "Spring Cloud Config Server Running..."
+
+      - name: Cloud Config Pull & Run
+        run: |
+          docker pull seyoe/cloud-config:latest
+          docker run -d --name cloud-config -p 8888:8888 seyoe/cloud-config:latest
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
