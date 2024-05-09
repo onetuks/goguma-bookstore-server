@@ -1,0 +1,12 @@
+flowchart
+
+    module-auth --> module-common
+    module-auth --> module-persistence
+
+    module-reader --> module-auth
+    module-reader --> module-common
+    module-reader --> module-persistence
+
+    module-scm --> module-auth
+    module-scm --> module-common
+    module-scm --> module-persistence

@@ -1,103 +1,64 @@
 package com.onetuks.goguma_bookstore;
 
-import com.onetuks.goguma_bookstore.util.TestFileCleaner;
+import com.onetuks.goguma_bookstore.IntegrationTest.IntegrationTestInitializer;
 import java.io.File;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Ignore;
-import org.junit.jupiter.api.AfterEach;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer;
-import org.testcontainers.containers.localstack.LocalStackContainer.Service;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.utility.DockerImageName;
 
-@Ignore
+@ActiveProfiles(value = "test")
 @SpringBootTest
 @Transactional
-@ContextConfiguration(initializers = IntegrationTest.IntegrationTestInitializer.class)
+@ContextConfiguration(initializers = IntegrationTestInitializer.class)
 public class IntegrationTest {
-  // todo 한 번에 모든 bean 을 다 주입받아서 모든 테스트 클래스가 사용한다면 어떨까?
 
-  static final ComposeContainer rdbms;
-  //  static RedisContainer redis;
-  static final LocalStackContainer aws;
+  static final ComposeContainer containers;
 
-  @Autowired private TestFileCleaner testFileCleaner;
-
-  @AfterEach
-  void tearDown() {
-    testFileCleaner.deleteAllTestStatic();
-  }
+  private static final int LOCAL_DB_PORT = 3306;
+  private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int DURATION = 300;
+  private static final String DOCKER_COMPOSE_PATH =
+      System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
   static {
-    rdbms =
-        new ComposeContainer(new File("db/test/docker-compose.yaml"))
+    containers =
+        new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
             .withExposedService(
                 "local-db",
-                3306,
+                LOCAL_DB_PORT,
                 Wait.forLogMessage(".*ready for connections.*", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)))
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db-migrate",
-                0,
+                LOCAL_DB_MIGRATION_PORT,
                 Wait.forLogMessage("(.*Successfully applied.*)|(.*Successfully validated.*)", 1)
-                    .withStartupTimeout(Duration.ofSeconds(300)));
-
-    //    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
-
-    aws =
-        new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
-            .withServices(Service.S3)
-            .withStartupTimeout(Duration.ofSeconds(600));
-
-    rdbms.start();
-    //    redis.start();
-    aws.start();
+                    .withStartupTimeout(Duration.ofSeconds(DURATION)));
+    containers.start();
   }
 
   static class IntegrationTestInitializer
       implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     @Override
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
-      var rdbmsHost = rdbms.getServiceHost("local-db", 3306);
-      var rdbmsPort = rdbms.getServicePort("local-db", 3306);
+      var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
+      var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
       properties.put(
           "spring.datasource.url",
-          "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/goguma-bookstore");
-      properties.put("spring.datasource.password", "root1234!");
-
-      //      var redistHost = redis.getHost();
-      //      var redistPort = redis.getFirstMappedPort();
-      //
-      //      properties.put("spring.data.redis.host", redistHost);
-      //      properties.put("spring.data.redis.port", String.valueOf(redistPort));
-
-      try {
-        aws.execInContainer("awslocal", "s3api", "create-bucket", "--bucket", "test-bucket");
-
-        properties.put("aws.endpoint", String.valueOf(aws.getEndpoint()));
-        properties.put("aws.bucket-name", "test-bucket");
-      } catch (Exception e) {
-        log.info("aws test initialize failed");
-      }
+          "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore-test");
 
       TestPropertyValues.of(properties).applyTo(applicationContext);
     }

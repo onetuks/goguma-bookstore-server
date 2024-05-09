@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS members
     name                        VARCHAR(255)                     NOT NULL COMMENT '멤버 실명',
     social_id                   VARCHAR(255)                     NOT NULL COMMENT '로그인 소셜 아이디',
     client_provider             VARCHAR(255)                     NOT NULL COMMENT '로그인 클라이언트',
-    role_type                   enum ('USER', 'AUTHOR', 'ADMIN') NOT NULL COMMENT '멤버 타입',
+    role_types                  JSON                             NOT NULL COMMENT '멤버 타입',
     nickname                    VARCHAR(255) UNIQUE COMMENT '멤버 닉네임',
     profile_img_uri             VARCHAR(255) COMMENT '멤버 프로필 이미지 URI',
     alarm_permission            BOOLEAN                          NOT NULL DEFAULT TRUE COMMENT '알람 수신 여부',
@@ -121,22 +121,20 @@ CREATE TABLE IF NOT EXISTS book_statics
     favorite_count  BIGINT NOT NULL DEFAULT 0 COMMENT '좋아요 수',
     view_count      BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
     sales_count     BIGINT NOT NULL DEFAULT 0 COMMENT '판매량',
-    review_count    BIGINT NOT NULL DEFAULT 0 COMMENT '리뷰 수',
-    review_score    FLOAT  NOT NULL DEFAULT 0 COMMENT '평점',
+    comment_count    BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
     PRIMARY KEY (book_statics_id),
     FOREIGN KEY (book_id) REFERENCES books (book_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE IF NOT EXISTS reviews
+CREATE TABLE IF NOT EXISTS comments
 (
-    review_id       BIGINT       NOT NULL AUTO_INCREMENT COMMENT '서평 식별자',
+    comment_id       BIGINT       NOT NULL AUTO_INCREMENT COMMENT '서평 식별자',
     book_id         BIGINT       NOT NULL COMMENT '도서 식별자',
     member_id       BIGINT       NOT NULL COMMENT '멤버 식별자',
-    score           FLOAT        NOT NULL DEFAULT 0 COMMENT '평점',
+    title           VARCHAR(255) NOT NULL COMMENT '서평 제목',
     content         VARCHAR(255) NOT NULL COMMENT '서평 내용',
-    review_img_uris JSON                  COMMENT '서평 이미지 URI',
-    PRIMARY KEY (review_id),
+    PRIMARY KEY (comment_id),
     FOREIGN KEY (book_id) REFERENCES books (book_id) ON DELETE CASCADE,
     FOREIGN KEY (member_id) REFERENCES members (member_id),
     UNIQUE KEY unique_bookid_memberid (book_id, member_id)

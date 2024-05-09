@@ -1,0 +1,26 @@
+allprojects {
+    dependencies {
+        // Test
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        // TestContainers
+        testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+        testImplementation 'org.testcontainers:junit-jupiter'
+    }
+}
+
+subprojects {
+    apply plugin: 'java-test-fixtures'
+
+    dependencies {
+        // Arch-Unit
+        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
+    }
+
+    tasks.named('test') {
+        outputs.dir snippetsDir
+        useJUnitPlatform()
+
+        finalizedBy(tasks.jacocoTestReport)
+    }
+}
