@@ -39,6 +39,16 @@ jobs:
               - 'module-scm/build.gradle'
               - 'module-scm/src/**'
 
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle- 
+
       - name: Gradlew +x permission grant
         run: chmod +x ./gradlew
         shell: bash
@@ -65,7 +75,7 @@ jobs:
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
         run: |
-          ./gradlew build spotlessApply --parallel --info
+          ./gradlew build spotlessApply --parallel
 
       - name: Coverage Report
         if: steps.changes.outputs.application == 'true'
