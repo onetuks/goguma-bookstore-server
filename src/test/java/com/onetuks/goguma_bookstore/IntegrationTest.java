@@ -26,6 +26,7 @@ public class IntegrationTest {
 
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int CLOUD_CONFIG_PORT = 8888;
   private static final int DURATION = 300;
   private static final String DOCKER_COMPOSE_PATH =
       System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
@@ -33,6 +34,10 @@ public class IntegrationTest {
   static {
     containers =
         new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
+            .withExposedService(
+                "cloud-config",
+                CLOUD_CONFIG_PORT,
+                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
                 LOCAL_DB_PORT,
@@ -53,9 +58,13 @@ public class IntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
+      var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
+      var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
       var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
       var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
+      properties.put(
+          "spring.cloud.config.uri", "http://" + cloudConfigHost + ":" + cloudConfigPort);
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore-test");

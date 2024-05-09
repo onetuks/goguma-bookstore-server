@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,24 +35,12 @@ public class CommonIntegrationTest {
 
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
+  private static final int CLOUD_CONFIG_PORT = 8888;
   private static final int DURATION = 300;
   private static final String DOCKER_COMPOSE_PATH =
       System.getProperty("rootDir") + "/db/test/docker-compose.yaml";
 
   @Autowired private TestFileCleaner testFileCleaner;
-
-  @Autowired private Environment env;
-  private static final Logger log = LoggerFactory.getLogger(CommonIntegrationTest.class);
-
-  @Test
-  void test() {
-    log.info("=== Start of properties logging ===");
-    for (String key : env.getActiveProfiles()) {
-      String value = env.getProperty(key);
-      log.info("Property: {} = {}", key, value);
-    }
-    log.info("=== End of properties logging ===");
-  }
 
   @AfterEach
   void tearDown() {
@@ -64,6 +50,10 @@ public class CommonIntegrationTest {
   static {
     containers =
         new ComposeContainer(new File(DOCKER_COMPOSE_PATH))
+            .withExposedService(
+                "cloud-config",
+                CLOUD_CONFIG_PORT,
+                Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(DURATION)))
             .withExposedService(
                 "local-db",
                 LOCAL_DB_PORT,
@@ -92,9 +82,13 @@ public class CommonIntegrationTest {
     public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
       Map<String, String> properties = new HashMap<>();
 
+      var cloudConfigHost = containers.getServiceHost("cloud-config", CLOUD_CONFIG_PORT);
+      var cloudConfigPort = containers.getServicePort("cloud-config", CLOUD_CONFIG_PORT);
       var localDbHost = containers.getServiceHost("local-db", LOCAL_DB_PORT);
       var localDbPort = containers.getServicePort("local-db", LOCAL_DB_PORT);
 
+      properties.put(
+          "spring.cloud.config.uri", "http://" + cloudConfigHost + ":" + cloudConfigPort);
       properties.put(
           "spring.datasource.url",
           "jdbc:mysql://" + localDbHost + ":" + localDbPort + "/goguma-bookstore-test");
