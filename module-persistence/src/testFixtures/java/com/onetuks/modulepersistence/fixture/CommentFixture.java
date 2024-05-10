@@ -1,15 +1,15 @@
 package com.onetuks.modulepersistence.fixture;
 
-import com.onetuks.modulepersistence.book.model.Book;
-import com.onetuks.modulepersistence.book.model.Comment;
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
+import com.onetuks.modulepersistence.book.entity.CommentEntity;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 
 public class CommentFixture {
 
-  public static Comment create(Book book, Member member) {
-    return Comment.builder()
-        .book(book)
-        .member(member)
+  public static CommentEntity create(BookEntity bookEntity, MemberEntity memberEntity) {
+    return CommentEntity.builder()
+        .book(bookEntity)
+        .member(memberEntity)
         .title("최고의 저녁 반찬")
         .content("암튼 저녁먹을때 보면 밥도둑임")
         .build();

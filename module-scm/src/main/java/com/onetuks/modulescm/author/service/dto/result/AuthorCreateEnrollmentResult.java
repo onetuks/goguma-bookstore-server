@@ -1,6 +1,6 @@
 package com.onetuks.modulescm.author.service.dto.result;
 
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 
 public record AuthorCreateEnrollmentResult(
     long authorId,
@@ -11,14 +11,14 @@ public record AuthorCreateEnrollmentResult(
     String businessNumber,
     String mailOrderSalesNumber) {
 
-  public static AuthorCreateEnrollmentResult from(Author author) {
+  public static AuthorCreateEnrollmentResult from(AuthorEntity authorEntity) {
     return new AuthorCreateEnrollmentResult(
-        author.getAuthorId(),
-        author.getProfileImgUrl(),
-        author.getNickname(),
-        author.getIntroduction(),
-        author.getInstagramUrl(),
-        author.getBusinessNumber(),
-        author.getMailOrderSalesNumber());
+        authorEntity.getAuthorId(),
+        authorEntity.getProfileImgUrl(),
+        authorEntity.getNickname(),
+        authorEntity.getIntroduction(),
+        authorEntity.getInstagramUrl(),
+        authorEntity.getBusinessNumber(),
+        authorEntity.getMailOrderSalesNumber());
   }
 }

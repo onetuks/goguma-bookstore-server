@@ -1,8 +1,8 @@
 package com.onetuks.modulereader.favorite.service.dto.result;
 
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulepersistence.favorite.model.Favorite;
+import com.onetuks.modulepersistence.favorite.entity.FavoriteEntity;
 import java.util.List;
 
 public record FavoriteGetResult(
@@ -15,15 +15,15 @@ public record FavoriteGetResult(
     long purchasePrice,
     List<Category> categories) {
 
-  public static FavoriteGetResult from(Favorite favorite, Book book) {
+  public static FavoriteGetResult from(FavoriteEntity favoriteEntity, BookEntity bookEntity) {
     return new FavoriteGetResult(
-        favorite.getFavoriteId(),
-        book.getBookId(),
-        book.getCoverImgUrl(),
-        book.getTitle(),
-        book.getAuthorNickname(),
-        book.getRegularPrice(),
-        book.getPurchasePrice(),
-        book.getCategories());
+        favoriteEntity.getFavoriteId(),
+        bookEntity.getBookId(),
+        bookEntity.getCoverImgUrl(),
+        bookEntity.getTitle(),
+        bookEntity.getAuthorNickname(),
+        bookEntity.getRegularPrice(),
+        bookEntity.getPurchasePrice(),
+        bookEntity.getCategories());
   }
 }

@@ -2,8 +2,8 @@ package com.onetuks.moduleauth.service.dto;
 
 import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulepersistence.member.model.Member;
-import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
+import com.onetuks.modulepersistence.member.embedded.AuthInfo;
 import java.util.List;
 
 public record MemberCreateResult(
@@ -14,11 +14,11 @@ public record MemberCreateResult(
     List<RoleType> roleTypes,
     boolean isNewMember) {
 
-  public static MemberCreateResult from(Member member, boolean isNewMember) {
-    AuthInfo authInfo = member.getAuthInfo();
+  public static MemberCreateResult from(MemberEntity memberEntity, boolean isNewMember) {
+    AuthInfo authInfo = memberEntity.getAuthInfo();
 
     return new MemberCreateResult(
-        member.getMemberId(),
+        memberEntity.getMemberId(),
         authInfo.getName(),
         authInfo.getSocialId(),
         authInfo.getClientProvider(),

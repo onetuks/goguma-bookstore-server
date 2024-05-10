@@ -5,19 +5,19 @@ import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.util.RandomValueProvider;
 import com.onetuks.modulecommon.util.UUIDProvider;
-import com.onetuks.modulepersistence.author.model.Author;
-import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
+import com.onetuks.modulepersistence.author.entity.embedded.EnrollmentInfo;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 import java.time.LocalDateTime;
 
 public class AuthorFixture {
 
-  public static Author create(Member member) {
+  public static AuthorEntity create(MemberEntity memberEntity) {
     FileWrapper profileImgFile = FileWrapperFixture.createNullFile();
 
-    return Author.builder()
-        .member(member)
+    return AuthorEntity.builder()
+        .member(memberEntity)
         .profileImgFilePath(profileImgFile.getUri())
         .nickname(RandomValueProvider.createAuthorNickname() + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
@@ -26,18 +26,18 @@ public class AuthorFixture {
             EnrollmentInfo.builder()
                 .businessNumber(RandomValueProvider.createBusinessNumber())
                 .mailOrderSalesNumber(RandomValueProvider.createMailOrderSalesNumber())
-                .enrollmentPassed(member.getRoleTypes().contains(RoleType.AUTHOR))
+                .enrollmentPassed(memberEntity.getRoleTypes().contains(RoleType.AUTHOR))
                 .enrollmentAt(LocalDateTime.now())
                 .build())
         .build();
   }
 
-  public static Author createWithEnrollmentAt(Member member, LocalDateTime enrollmentAt) {
+  public static AuthorEntity createWithEnrollmentAt(MemberEntity memberEntity, LocalDateTime enrollmentAt) {
     FileWrapper profileImgFile =
-        FileWrapperFixture.createFile(member.getMemberId(), FileType.PROFILES);
+        FileWrapperFixture.createFile(memberEntity.getMemberId(), FileType.PROFILES);
 
-    return Author.builder()
-        .member(member)
+    return AuthorEntity.builder()
+        .member(memberEntity)
         .profileImgFilePath(profileImgFile.getUri())
         .nickname(RandomValueProvider.createAuthorNickname() + UUIDProvider.getUUID())
         .introduction("유튜브 대통령")
@@ -45,7 +45,7 @@ public class AuthorFixture {
             EnrollmentInfo.builder()
                 .businessNumber(RandomValueProvider.createBusinessNumber())
                 .mailOrderSalesNumber(RandomValueProvider.createMailOrderSalesNumber())
-                .enrollmentPassed(member.getRoleTypes().contains(RoleType.AUTHOR))
+                .enrollmentPassed(memberEntity.getRoleTypes().contains(RoleType.AUTHOR))
                 .enrollmentAt(enrollmentAt)
                 .build())
         .build();

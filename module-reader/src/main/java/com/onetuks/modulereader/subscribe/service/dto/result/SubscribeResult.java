@@ -1,13 +1,13 @@
 package com.onetuks.modulereader.subscribe.service.dto.result;
 
-import com.onetuks.modulepersistence.subscribe.model.Subscribe;
+import com.onetuks.modulepersistence.subscribe.entity.SubscribeEntity;
 
 public record SubscribeResult(long subscribeId, long memberId, long authorId) {
 
-  public static SubscribeResult from(Subscribe subscribe) {
+  public static SubscribeResult from(SubscribeEntity subscribeEntity) {
     return new SubscribeResult(
-        subscribe.getSubscribeId(),
-        subscribe.getMember().getMemberId(),
-        subscribe.getAuthor().getAuthorId());
+        subscribeEntity.getSubscribeId(),
+        subscribeEntity.getMemberEntity().getMemberId(),
+        subscribeEntity.getAuthorEntity().getAuthorId());
   }
 }

@@ -5,15 +5,15 @@ import com.onetuks.modulepersistence.global.vo.auth.ClientProvider;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.global.vo.order.DefaultAddressInfo;
 import com.onetuks.modulepersistence.global.vo.order.DefaultCashReceiptInfo;
-import com.onetuks.modulepersistence.member.model.Member;
-import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
+import com.onetuks.modulepersistence.member.embedded.AuthInfo;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import java.util.List;
 
 public class MemberFixture {
 
-  public static Member create(RoleType roleType) {
-    return Member.builder()
+  public static MemberEntity create(RoleType roleType) {
+    return MemberEntity.builder()
         .authInfo(createAuthInfo(roleType))
         .nickname("빡친감자" + UUIDProvider.getUUID())
         .alarmPermission(true)

@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.book.service;
 
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.repository.BookJpaQueryDslRepository;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulepersistence.book.vo.Category;
@@ -27,14 +27,14 @@ public class BookService {
 
   @Transactional(readOnly = true)
   public BookGetResult readBook(long bookId) {
-    Book book =
+    BookEntity bookEntity =
         bookJpaRepository
             .findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("해당 도서가 존재하지 않습니다."));
 
-    book.getBookStatics().increaseViewCount();
+    bookEntity.getBookStaticsEntity().increaseViewCount();
 
-    return BookGetResult.from(book);
+    return BookGetResult.from(bookEntity);
   }
 
   @Transactional(readOnly = true)

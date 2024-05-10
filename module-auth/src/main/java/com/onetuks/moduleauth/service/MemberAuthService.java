@@ -3,9 +3,9 @@ package com.onetuks.moduleauth.service;
 import com.onetuks.moduleauth.oauth.dto.UserData;
 import com.onetuks.moduleauth.service.dto.MemberCreateResult;
 import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
-import com.onetuks.modulepersistence.member.vo.AuthInfo;
+import com.onetuks.modulepersistence.member.embedded.AuthInfo;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class MemberAuthService {
 
   @Transactional
   public MemberCreateResult saveMemberIfNotExists(UserData userData) {
-    Optional<Member> optionalMember =
+    Optional<MemberEntity> optionalMember =
         memberJpaRepository.findByAuthInfoSocialIdAndAuthInfoClientProvider(
             userData.socialId(), userData.clientProvider());
 
@@ -29,7 +29,7 @@ public class MemberAuthService {
         optionalMember.orElseGet(
             () ->
                 memberJpaRepository.save(
-                    Member.builder()
+                    MemberEntity.builder()
                         .authInfo(
                             AuthInfo.builder()
                                 .name(userData.name())

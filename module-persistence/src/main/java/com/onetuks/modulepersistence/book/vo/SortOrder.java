@@ -1,7 +1,7 @@
 package com.onetuks.modulepersistence.book.vo;
 
-import static com.onetuks.modulepersistence.book.model.QBook.book;
-import static com.onetuks.modulepersistence.book.model.QBookStatics.bookStatics;
+import static com.onetuks.modulepersistence.book.entity.QBook.book;
+import static com.onetuks.modulepersistence.book.entity.QBookStatics.bookStatics;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.dsl.NumberPath;

@@ -1,16 +1,16 @@
 package com.onetuks.modulepersistence.author.repository;
 
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AuthorJpaRepository extends JpaRepository<Author, Long> {
+public interface AuthorJpaRepository extends JpaRepository<AuthorEntity, Long> {
 
-  Page<Author> findAuthorsByEnrollmentInfoEnrollmentPassedFalse(Pageable pageable);
+  Page<AuthorEntity> findAuthorsByEnrollmentInfoEnrollmentPassedFalse(Pageable pageable);
 
-  Page<Author> findAuthorsByEnrollmentInfoEnrollmentPassedTrue(Pageable pageable);
+  Page<AuthorEntity> findAuthorsByEnrollmentInfoEnrollmentPassedTrue(Pageable pageable);
 
-  Optional<Author> findByMemberMemberId(long memberId);
+  Optional<AuthorEntity> findByMemberMemberId(long memberId);
 }

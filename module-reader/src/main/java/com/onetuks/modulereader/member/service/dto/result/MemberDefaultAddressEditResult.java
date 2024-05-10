@@ -1,11 +1,11 @@
 package com.onetuks.modulereader.member.service.dto.result;
 
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 
 public record MemberDefaultAddressEditResult(String defaultAddress, String defaultAddressDetail) {
 
-  public static MemberDefaultAddressEditResult from(Member member) {
+  public static MemberDefaultAddressEditResult from(MemberEntity memberEntity) {
     return new MemberDefaultAddressEditResult(
-        member.getDefaultAddress(), member.getDefaultAddressDetail());
+        memberEntity.getDefaultAddress(), memberEntity.getDefaultAddressDetail());
   }
 }

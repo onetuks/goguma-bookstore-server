@@ -1,7 +1,7 @@
 package com.onetuks.modulescm.registration.service.dto.result;
 
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.entity.RegistrationEntity;
 import java.util.List;
 
 public record RegistrationResult(
@@ -27,28 +27,28 @@ public record RegistrationResult(
     List<String> previewUrls,
     String sampleUrl) {
 
-  public static RegistrationResult from(Registration registration) {
+  public static RegistrationResult from(RegistrationEntity registrationEntity) {
     return new RegistrationResult(
-        registration.getRegistrationId(),
-        registration.getApprovalResult(),
-        registration.getApprovalMemo(),
-        registration.getTitle(),
-        registration.getOneLiner(),
-        registration.getSummary(),
-        registration.getCategories(),
-        registration.getIsbn(),
-        registration.getHeight(),
-        registration.getWidth(),
-        registration.getCoverType(),
-        registration.getPageCount(),
-        registration.getRegularPrice(),
-        registration.getPurchasePrice(),
-        registration.isPromotion(),
-        registration.getPublisher(),
-        registration.getStockCount(),
-        registration.getCoverImgUrl(),
-        registration.getDetailImgUrls(),
-        registration.getPreviewUrls(),
-        registration.getSampleUrl());
+        registrationEntity.getRegistrationId(),
+        registrationEntity.getApprovalResult(),
+        registrationEntity.getApprovalMemo(),
+        registrationEntity.getTitle(),
+        registrationEntity.getOneLiner(),
+        registrationEntity.getSummary(),
+        registrationEntity.getCategories(),
+        registrationEntity.getIsbn(),
+        registrationEntity.getHeight(),
+        registrationEntity.getWidth(),
+        registrationEntity.getCoverType(),
+        registrationEntity.getPageCount(),
+        registrationEntity.getRegularPrice(),
+        registrationEntity.getPurchasePrice(),
+        registrationEntity.isPromotion(),
+        registrationEntity.getPublisher(),
+        registrationEntity.getStockCount(),
+        registrationEntity.getCoverImgUrl(),
+        registrationEntity.getDetailImgUrls(),
+        registrationEntity.getPreviewUrls(),
+        registrationEntity.getSampleUrl());
   }
 }

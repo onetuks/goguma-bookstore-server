@@ -5,10 +5,10 @@ import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.service.S3Repository;
-import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
-import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.book.entity.embedded.BookConceptualInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPhysicalInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPriceInfo;
+import com.onetuks.modulepersistence.registration.entity.RegistrationEntity;
 import com.onetuks.modulepersistence.registration.repository.RegistrationJpaRepository;
 import com.onetuks.modulescm.author.service.AuthorScmService;
 import com.onetuks.modulescm.book.service.BookRegistrationService;
@@ -58,7 +58,7 @@ public class RegistrationScmService {
 
     return RegistrationResult.from(
         registrationJpaRepository.save(
-            Registration.builder()
+            RegistrationEntity.builder()
                 .author(authorScmService.getAuthorById(authorId))
                 .bookConceptualInfo(
                     BookConceptualInfo.builder()
@@ -93,14 +93,14 @@ public class RegistrationScmService {
   @Transactional
   public RegistrationInspectionResult updateRegistrationApprovalInfo(
       long registrationId, boolean approvalResult, String approvalMemo) {
-    Registration updatedRegistration =
+    RegistrationEntity updatedRegistrationEntity =
         getRegistrationById(registrationId).changeApprovalInfo(approvalResult, approvalMemo);
 
     if (approvalResult) {
-      bookRegistrationService.createBook(updatedRegistration);
+      bookRegistrationService.createBook(updatedRegistrationEntity);
     }
 
-    return RegistrationInspectionResult.from(updatedRegistration);
+    return RegistrationInspectionResult.from(updatedRegistrationEntity);
   }
 
   @Transactional
@@ -111,16 +111,16 @@ public class RegistrationScmService {
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles,
       FileWrapper sampleFile) {
-    Registration registration = getRegistrationById(registrationId);
+    RegistrationEntity registrationEntity = getRegistrationById(registrationId);
 
-    replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, sampleFile, registration);
+    replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, sampleFile, registrationEntity);
 
     return RegistrationResult.from(
-        registration.changeRegistration(
-            registration
+        registrationEntity.changeRegistration(
+            registrationEntity
                 .getBookConceptualInfo()
                 .changeBookConceptualInfo(param.oneLiner(), param.summary(), param.categories()),
-            registration
+            registrationEntity
                 .getBookPriceInfo()
                 .changeBookPriceInfo(param.regularPrice(), param.purchasePrice(), param.promotion())
                 .changeStockCount(param.stockCount()),
@@ -132,29 +132,29 @@ public class RegistrationScmService {
 
   @Transactional
   public void deleteRegistration(long authorId, long registrationId) {
-    Registration registration = getRegistrationById(registrationId);
+    RegistrationEntity registrationEntity = getRegistrationById(registrationId);
 
-    if (registration.getAuthor().getAuthorId() != authorId) {
+    if (registrationEntity.getAuthorEntity().getAuthorId() != authorId) {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    s3Repository.deleteFile(registration.getCoverImgUrl());
-    s3Repository.deleteFile(registration.getSampleUrl());
-    registration.getDetailImgUrls().forEach(s3Repository::deleteFile);
-    registration.getPreviewUrls().forEach(s3Repository::deleteFile);
+    s3Repository.deleteFile(registrationEntity.getCoverImgUrl());
+    s3Repository.deleteFile(registrationEntity.getSampleUrl());
+    registrationEntity.getDetailImgUrls().forEach(s3Repository::deleteFile);
+    registrationEntity.getPreviewUrls().forEach(s3Repository::deleteFile);
 
-    registrationJpaRepository.delete(registration);
+    registrationJpaRepository.delete(registrationEntity);
   }
 
   @Transactional(readOnly = true)
   public RegistrationResult readRegistration(long authorId, long registrationId) {
-    Registration registration = getRegistrationById(registrationId);
+    RegistrationEntity registrationEntity = getRegistrationById(registrationId);
 
-    if (registration.getAuthor().getAuthorId() != authorId) {
+    if (registrationEntity.getAuthorEntity().getAuthorId() != authorId) {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    return RegistrationResult.from(registration);
+    return RegistrationResult.from(registrationEntity);
   }
 
   @Transactional(readOnly = true)
@@ -170,18 +170,18 @@ public class RegistrationScmService {
     }
 
     return registrationJpaRepository
-        .findByAuthorAuthorId(authorId, pageable)
+        .findByAuthorEntityAuthorId(authorId, pageable)
         .map(RegistrationResult::from);
   }
 
   @Transactional(readOnly = true)
-  public Registration getRegistrationByIsbn(String isbn) {
+  public RegistrationEntity getRegistrationByIsbn(String isbn) {
     return registrationJpaRepository
         .findByBookConceptualInfoIsbn(isbn)
         .orElseThrow(() -> new EntityNotFoundException("해당 ISBN을 가진 신간등록이 존재하지 않습니다."));
   }
 
-  private Registration getRegistrationById(long registrationId) {
+  private RegistrationEntity getRegistrationById(long registrationId) {
     return registrationJpaRepository
         .findById(registrationId)
         .orElseThrow(() -> new IllegalArgumentException("해당 신간등록이 존재하지 않습니다."));
@@ -205,7 +205,7 @@ public class RegistrationScmService {
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles,
       FileWrapper sampleFile,
-      Registration registration) {
+      RegistrationEntity registrationEntity) {
     if (!coverImgFile.isNullFile()) {
       s3Repository.putFile(coverImgFile);
     }
@@ -213,11 +213,11 @@ public class RegistrationScmService {
       s3Repository.putFile(sampleFile);
     }
     if (!detailImgFiles.isEmpty()) {
-      registration.getDetailImgFilePaths().getUrls().forEach(s3Repository::deleteFile);
+      registrationEntity.getDetailImgFilePaths().getUrls().forEach(s3Repository::deleteFile);
       detailImgFiles.fileWrappers().forEach(s3Repository::putFile);
     }
     if (!previewFiles.isEmpty()) {
-      registration.getPreviewFilePaths().getUrls().forEach(s3Repository::deleteFile);
+      registrationEntity.getPreviewFilePaths().getUrls().forEach(s3Repository::deleteFile);
       previewFiles.fileWrappers().forEach(s3Repository::putFile);
     }
   }

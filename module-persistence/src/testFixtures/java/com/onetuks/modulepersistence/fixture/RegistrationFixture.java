@@ -5,27 +5,27 @@ import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.util.RandomValueProvider;
-import com.onetuks.modulepersistence.author.model.Author;
-import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
+import com.onetuks.modulepersistence.book.entity.embedded.BookConceptualInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPhysicalInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPriceInfo;
 import com.onetuks.modulepersistence.book.vo.Category;
-import com.onetuks.modulepersistence.registration.model.Registration;
-import com.onetuks.modulepersistence.registration.model.embedded.ApprovalInfo;
+import com.onetuks.modulepersistence.registration.entity.RegistrationEntity;
+import com.onetuks.modulepersistence.registration.entity.embedded.ApprovalInfo;
 import java.util.List;
 
 public class RegistrationFixture {
 
-  public static Registration create(Author author) {
-    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+  public static RegistrationEntity create(AuthorEntity authorEntity) {
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(authorEntity.getAuthorId(), FileType.COVERS);
     FileWrapperCollection detailImgFiles =
-        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+        FileWrapperFixture.createFiles(authorEntity.getAuthorId(), FileType.DETAILS);
     FileWrapperCollection previewFiles =
-        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
-    FileWrapper sampleFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.SAMPLES);
+        FileWrapperFixture.createFiles(authorEntity.getAuthorId(), FileType.PREVIEWS);
+    FileWrapper sampleFile = FileWrapperFixture.createFile(authorEntity.getAuthorId(), FileType.SAMPLES);
 
-    return Registration.builder()
-        .author(author)
+    return RegistrationEntity.builder()
+        .author(authorEntity)
         .approvalInfo(createApprovalInfo())
         .bookConceptualInfo(createBookConceptualInfo())
         .bookPhysicalInfo(createBookPhysicalInfo())

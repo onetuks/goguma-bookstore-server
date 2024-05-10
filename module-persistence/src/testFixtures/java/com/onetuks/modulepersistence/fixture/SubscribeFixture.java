@@ -1,12 +1,12 @@
 package com.onetuks.modulepersistence.fixture;
 
-import com.onetuks.modulepersistence.author.model.Author;
-import com.onetuks.modulepersistence.member.model.Member;
-import com.onetuks.modulepersistence.subscribe.model.Subscribe;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
+import com.onetuks.modulepersistence.subscribe.entity.SubscribeEntity;
 
 public class SubscribeFixture {
 
-  public static Subscribe create(Member member, Author author) {
-    return Subscribe.builder().member(member).author(author).build();
+  public static SubscribeEntity create(MemberEntity memberEntity, AuthorEntity authorEntity) {
+    return SubscribeEntity.builder().member(memberEntity).author(authorEntity).build();
   }
 }

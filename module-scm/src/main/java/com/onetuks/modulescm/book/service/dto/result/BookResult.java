@@ -1,6 +1,6 @@
 package com.onetuks.modulescm.book.service.dto.result;
 
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
@@ -26,27 +26,27 @@ public record BookResult(
     List<String> detailImgUrls,
     List<String> previewUrls) {
 
-  public static BookResult from(Book book) {
+  public static BookResult from(BookEntity bookEntity) {
     return new BookResult(
-        book.getBookId(),
-        book.getAuthor().getAuthorId(),
-        book.getAuthorNickname(),
-        book.getTitle(),
-        book.getOneLiner(),
-        book.getSummary(),
-        book.getCategories(),
-        book.getIsbn(),
-        book.getHeight(),
-        book.getWidth(),
-        book.getCoverType(),
-        book.getPageCount(),
-        book.getRegularPrice(),
-        book.getPurchasePrice(),
-        book.isPromotion(),
-        book.getPublisher(),
-        book.getStockCount(),
-        book.getCoverImgUrl(),
-        book.getDetailImgUrls(),
-        book.getPreviewUrls());
+        bookEntity.getBookId(),
+        bookEntity.getAuthorEntity().getAuthorId(),
+        bookEntity.getAuthorNickname(),
+        bookEntity.getTitle(),
+        bookEntity.getOneLiner(),
+        bookEntity.getSummary(),
+        bookEntity.getCategories(),
+        bookEntity.getIsbn(),
+        bookEntity.getHeight(),
+        bookEntity.getWidth(),
+        bookEntity.getCoverType(),
+        bookEntity.getPageCount(),
+        bookEntity.getRegularPrice(),
+        bookEntity.getPurchasePrice(),
+        bookEntity.isPromotion(),
+        bookEntity.getPublisher(),
+        bookEntity.getStockCount(),
+        bookEntity.getCoverImgUrl(),
+        bookEntity.getDetailImgUrls(),
+        bookEntity.getPreviewUrls());
   }
 }

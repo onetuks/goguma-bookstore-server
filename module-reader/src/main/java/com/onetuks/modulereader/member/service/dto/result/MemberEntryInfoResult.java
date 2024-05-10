@@ -1,11 +1,11 @@
 package com.onetuks.modulereader.member.service.dto.result;
 
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 
 public record MemberEntryInfoResult(long memberId, String nickname, boolean alarmPermission) {
 
-  public static MemberEntryInfoResult from(Member member) {
+  public static MemberEntryInfoResult from(MemberEntity memberEntity) {
     return new MemberEntryInfoResult(
-        member.getMemberId(), member.getNickname(), member.getAlarmPermission());
+        memberEntity.getMemberId(), memberEntity.getNickname(), memberEntity.getAlarmPermission());
   }
 }

@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.member.service.dto.result;
 
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 
 public record MemberProfileEditResult(
@@ -13,15 +13,15 @@ public record MemberProfileEditResult(
     CashReceiptType defaultCashReceiptType,
     String defaultCashReceiptNumber) {
 
-  public static MemberProfileEditResult from(Member member) {
+  public static MemberProfileEditResult from(MemberEntity memberEntity) {
     return new MemberProfileEditResult(
-        member.getMemberId(),
-        member.getNickname(),
-        member.getProfileImgUrl(),
-        member.getAlarmPermission(),
-        member.getDefaultAddress(),
-        member.getDefaultAddressDetail(),
-        member.getDefaultCashReceiptType(),
-        member.getDefaultCashReceiptNumber());
+        memberEntity.getMemberId(),
+        memberEntity.getNickname(),
+        memberEntity.getProfileImgUrl(),
+        memberEntity.getAlarmPermission(),
+        memberEntity.getDefaultAddress(),
+        memberEntity.getDefaultAddressDetail(),
+        memberEntity.getDefaultCashReceiptType(),
+        memberEntity.getDefaultCashReceiptNumber());
   }
 }

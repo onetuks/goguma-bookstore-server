@@ -1,6 +1,6 @@
 package com.onetuks.modulescm.author.service.dto.result;
 
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,18 +18,18 @@ public record AuthorEnrollmentDetailsResult(
     boolean enrollmentPassed,
     LocalDateTime enrollmentAt) {
 
-  public static AuthorEnrollmentDetailsResult from(Author author) {
+  public static AuthorEnrollmentDetailsResult from(AuthorEntity authorEntity) {
     return new AuthorEnrollmentDetailsResult(
-        author.getAuthorId(),
-        author.getMember().getMemberId(),
-        author.getMember().getRoleTypes(),
-        author.getProfileImgUrl(),
-        author.getNickname(),
-        author.getIntroduction(),
-        author.getInstagramUrl(),
-        author.getBusinessNumber(),
-        author.getMailOrderSalesNumber(),
-        author.getEnrollmentPassed(),
-        author.getEnrollmentAt());
+        authorEntity.getAuthorId(),
+        authorEntity.getMemberEntity().getMemberId(),
+        authorEntity.getMemberEntity().getRoleTypes(),
+        authorEntity.getProfileImgUrl(),
+        authorEntity.getNickname(),
+        authorEntity.getIntroduction(),
+        authorEntity.getInstagramUrl(),
+        authorEntity.getBusinessNumber(),
+        authorEntity.getMailOrderSalesNumber(),
+        authorEntity.getEnrollmentPassed(),
+        authorEntity.getEnrollmentAt());
   }
 }

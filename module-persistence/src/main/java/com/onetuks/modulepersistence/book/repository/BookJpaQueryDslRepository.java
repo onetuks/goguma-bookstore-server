@@ -1,8 +1,8 @@
 package com.onetuks.modulepersistence.book.repository;
 
-import static com.onetuks.modulepersistence.book.model.QBook.book;
+import static com.onetuks.modulepersistence.book.entity.QBook.book;
 
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.vo.Category;
 import com.onetuks.modulepersistence.book.vo.SortOrder;
 import com.querydsl.core.types.OrderSpecifier;
@@ -26,7 +26,7 @@ public class BookJpaQueryDslRepository {
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> findByConditionsAndOrderByCriterias(
+  public Page<BookEntity> findByConditionsAndOrderByCriterias(
       String title,
       String authorNickname,
       Category category,
@@ -34,7 +34,7 @@ public class BookJpaQueryDslRepository {
       boolean exceptSoldOut,
       SortOrder sortOrder,
       Pageable pageable) {
-    List<Book> books =
+    List<BookEntity> bookEntities =
         queryFactory
             .selectFrom(book)
             .where(
@@ -48,7 +48,7 @@ public class BookJpaQueryDslRepository {
             .limit(pageable.getPageSize())
             .fetch();
 
-    return new PageImpl<>(books, pageable, books.size());
+    return new PageImpl<>(bookEntities, pageable, bookEntities.size());
   }
 
   private BooleanExpression containsTitle(String title) {

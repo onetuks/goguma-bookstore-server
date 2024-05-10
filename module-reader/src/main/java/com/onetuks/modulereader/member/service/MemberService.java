@@ -2,7 +2,7 @@ package com.onetuks.modulereader.member.service;
 
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.service.S3Repository;
-import com.onetuks.modulepersistence.member.model.Member;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEditParam;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
@@ -76,7 +76,7 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member getMemberById(long memberId) {
+  public MemberEntity getMemberById(long memberId) {
     return memberJpaRepository
         .findById(memberId)
         .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 멤버입니다."));

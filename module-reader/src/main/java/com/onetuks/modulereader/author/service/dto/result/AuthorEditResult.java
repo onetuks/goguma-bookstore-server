@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.author.service.dto.result;
 
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 
 public record AuthorEditResult(
     long authorId,
@@ -9,12 +9,12 @@ public record AuthorEditResult(
     String introduction,
     String instagramUrl) {
 
-  public static AuthorEditResult from(Author author) {
+  public static AuthorEditResult from(AuthorEntity authorEntity) {
     return new AuthorEditResult(
-        author.getAuthorId(),
-        author.getProfileImgUrl(),
-        author.getNickname(),
-        author.getIntroduction(),
-        author.getInstagramUrl());
+        authorEntity.getAuthorId(),
+        authorEntity.getProfileImgUrl(),
+        authorEntity.getNickname(),
+        authorEntity.getIntroduction(),
+        authorEntity.getInstagramUrl());
   }
 }

@@ -1,14 +1,14 @@
 package com.onetuks.modulescm.registration.service.dto.result;
 
-import com.onetuks.modulepersistence.registration.model.Registration;
+import com.onetuks.modulepersistence.registration.entity.RegistrationEntity;
 
 public record RegistrationInspectionResult(
     long registrationId, boolean approvalResult, String approvalMemo) {
 
-  public static RegistrationInspectionResult from(Registration registration) {
+  public static RegistrationInspectionResult from(RegistrationEntity registrationEntity) {
     return new RegistrationInspectionResult(
-        registration.getRegistrationId(),
-        registration.getApprovalResult(),
-        registration.getApprovalMemo());
+        registrationEntity.getRegistrationId(),
+        registrationEntity.getApprovalResult(),
+        registrationEntity.getApprovalMemo());
   }
 }

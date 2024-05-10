@@ -4,7 +4,7 @@ import com.onetuks.modulecommon.error.ErrorCode;
 import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
 import com.onetuks.modulescm.book.service.dto.param.BookEditParam;
 import com.onetuks.modulescm.book.service.dto.result.BookEditResult;
@@ -38,10 +38,10 @@ public class BookScmService {
       FileWrapper coverImgFile,
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles) {
-    Book book = getBookById(authorId, bookId).changeStockCount(param.stockCount());
+    BookEntity bookEntity = getBookById(authorId, bookId).changeStockCount(param.stockCount());
 
     long registrationId =
-        registrationScmService.getRegistrationByIsbn(book.getIsbn()).getRegistrationId();
+        registrationScmService.getRegistrationByIsbn(bookEntity.getIsbn()).getRegistrationId();
 
     RegistrationInspectionResult inspection =
         registrationScmService.updateRegistrationApprovalInfo(
@@ -65,19 +65,19 @@ public class BookScmService {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    return bookJpaRepository.findAllByAuthorAuthorId(authorId, pageable).map(BookResult::from);
+    return bookJpaRepository.findAllByAuthorEntityAuthorId(authorId, pageable).map(BookResult::from);
   }
 
-  private Book getBookById(long authorId, long bookId) {
-    Book book =
+  private BookEntity getBookById(long authorId, long bookId) {
+    BookEntity bookEntity =
         bookJpaRepository
             .findById(bookId)
             .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 도서입니다."));
 
-    if (book.getAuthor().getAuthorId() != authorId) {
+    if (bookEntity.getAuthorEntity().getAuthorId() != authorId) {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    return book;
+    return bookEntity;
   }
 }

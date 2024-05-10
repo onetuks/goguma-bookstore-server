@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.book.service.dto.result;
 
-import com.onetuks.modulepersistence.book.model.Book;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
 import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 
@@ -30,31 +30,31 @@ public record BookGetResult(
     long salesCount,
     long commentCount) {
 
-  public static BookGetResult from(Book book) {
+  public static BookGetResult from(BookEntity bookEntity) {
     return new BookGetResult(
-        book.getBookId(),
-        book.getAuthor().getAuthorId(),
-        book.getAuthorNickname(),
-        book.getTitle(),
-        book.getOneLiner(),
-        book.getSummary(),
-        book.getCategories(),
-        book.getIsbn(),
-        book.getHeight(),
-        book.getWidth(),
-        book.getCoverType(),
-        book.getPageCount(),
-        book.getRegularPrice(),
-        book.getPurchasePrice(),
-        book.isPromotion(),
-        book.getPublisher(),
-        book.getStockCount(),
-        book.getCoverImgUrl(),
-        book.getDetailImgUrls(),
-        book.getPreviewUrls(),
-        book.getFavoriteCount(),
-        book.getViewCount(),
-        book.getSalesCount(),
-        book.getCommentCount());
+        bookEntity.getBookId(),
+        bookEntity.getAuthorEntity().getAuthorId(),
+        bookEntity.getAuthorNickname(),
+        bookEntity.getTitle(),
+        bookEntity.getOneLiner(),
+        bookEntity.getSummary(),
+        bookEntity.getCategories(),
+        bookEntity.getIsbn(),
+        bookEntity.getHeight(),
+        bookEntity.getWidth(),
+        bookEntity.getCoverType(),
+        bookEntity.getPageCount(),
+        bookEntity.getRegularPrice(),
+        bookEntity.getPurchasePrice(),
+        bookEntity.isPromotion(),
+        bookEntity.getPublisher(),
+        bookEntity.getStockCount(),
+        bookEntity.getCoverImgUrl(),
+        bookEntity.getDetailImgUrls(),
+        bookEntity.getPreviewUrls(),
+        bookEntity.getFavoriteCount(),
+        bookEntity.getViewCount(),
+        bookEntity.getSalesCount(),
+        bookEntity.getCommentCount());
   }
 }

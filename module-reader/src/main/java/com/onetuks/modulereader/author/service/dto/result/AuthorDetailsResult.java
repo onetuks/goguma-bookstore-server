@@ -1,6 +1,6 @@
 package com.onetuks.modulereader.author.service.dto.result;
 
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 
 public record AuthorDetailsResult(
     long authorId,
@@ -12,15 +12,15 @@ public record AuthorDetailsResult(
     long bookCount,
     long restockCount) {
 
-  public static AuthorDetailsResult from(Author author) {
+  public static AuthorDetailsResult from(AuthorEntity authorEntity) {
     return new AuthorDetailsResult(
-        author.getAuthorId(),
-        author.getProfileImgUrl(),
-        author.getNickname(),
-        author.getIntroduction(),
-        author.getInstagramUrl(),
-        author.getSubscribeCount(),
-        author.getBookCount(),
-        author.getRestockCount());
+        authorEntity.getAuthorId(),
+        authorEntity.getProfileImgUrl(),
+        authorEntity.getNickname(),
+        authorEntity.getIntroduction(),
+        authorEntity.getInstagramUrl(),
+        authorEntity.getSubscribeCount(),
+        authorEntity.getBookCount(),
+        authorEntity.getRestockCount());
   }
 }

@@ -2,8 +2,8 @@ package com.onetuks.modulereader.subscribe.service;
 
 import com.onetuks.modulecommon.error.ErrorCode;
 import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
-import com.onetuks.modulepersistence.author.model.Author;
-import com.onetuks.modulepersistence.subscribe.model.Subscribe;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
+import com.onetuks.modulepersistence.subscribe.entity.SubscribeEntity;
 import com.onetuks.modulepersistence.subscribe.repository.SubscribeJpaRepository;
 import com.onetuks.modulereader.author.service.AuthorService;
 import com.onetuks.modulereader.member.service.MemberService;
@@ -32,42 +32,42 @@ public class SubscribeService {
 
   @Transactional
   public SubscribeResult createSubscribe(long memberId, SubscribePostParam param) {
-    Author author = authorService.getAuthorById(param.authorId());
-    author.getAuthorStatics().increaseSubscribeCount();
+    AuthorEntity authorEntity = authorService.getAuthorById(param.authorId());
+    authorEntity.getAuthorStaticsEntity().increaseSubscribeCount();
 
     return SubscribeResult.from(
         subscribeJpaRepository.save(
-            Subscribe.builder()
+            SubscribeEntity.builder()
                 .member(memberService.getMemberById(memberId))
-                .author(author)
+                .author(authorEntity)
                 .build()));
   }
 
   @Transactional
   public void deleteSubcribe(long memberId, long subscribeId) {
-    Subscribe subscribe = getSubscribeById(subscribeId);
+    SubscribeEntity subscribeEntity = getSubscribeById(subscribeId);
 
-    if (subscribe.getMember().getMemberId() != memberId) {
+    if (subscribeEntity.getMemberEntity().getMemberId() != memberId) {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    subscribe.getAuthor().getAuthorStatics().decreaseSubscribeCount();
+    subscribeEntity.getAuthorEntity().getAuthorStaticsEntity().decreaseSubscribeCount();
     subscribeJpaRepository.deleteById(subscribeId);
   }
 
   @Transactional(readOnly = true)
   public boolean readIsSubscribedAuthor(long memberId, long authorId) {
-    return subscribeJpaRepository.existsByMemberMemberIdAndAuthorAuthorId(memberId, authorId);
+    return subscribeJpaRepository.existsByMemberEntityMemberIdAndAuthorEntityAuthorId(memberId, authorId);
   }
 
   @Transactional(readOnly = true)
   public Page<SubscribeResult> readAllSubscribes(long memberId, Pageable pageable) {
     return subscribeJpaRepository
-        .findAllByMemberMemberId(memberId, pageable)
+        .findAllByMemberEntityMemberId(memberId, pageable)
         .map(SubscribeResult::from);
   }
 
-  private Subscribe getSubscribeById(long subscribeId) {
+  private SubscribeEntity getSubscribeById(long subscribeId) {
     return subscribeJpaRepository
         .findById(subscribeId)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 구독입니다."));

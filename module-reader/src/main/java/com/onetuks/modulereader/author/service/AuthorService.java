@@ -2,7 +2,7 @@ package com.onetuks.modulereader.author.service;
 
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.service.S3Repository;
-import com.onetuks.modulepersistence.author.model.Author;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulereader.author.service.dto.param.AuthorEditParam;
 import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
@@ -58,7 +58,7 @@ public class AuthorService {
   }
 
   @Transactional(readOnly = true)
-  public Author getAuthorById(long authorId) {
+  public AuthorEntity getAuthorById(long authorId) {
     return authorJpaRepository
         .findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("해당 작가를 찾을 수 없습니다."));

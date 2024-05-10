@@ -1,0 +1,67 @@
+package com.onetuks.modulepersistence.order.entity;
+
+import com.onetuks.modulepersistence.book.entity.BookEntity;
+import com.onetuks.modulepersistence.member.entity.MemberEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.util.Objects;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Table(name = "items")
+public class ItemEntity {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "item_id", nullable = false)
+  private Long itemId;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @JoinColumn(name = "book_id", nullable = false)
+  private BookEntity bookEntity;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "member_id", nullable = false)
+  private MemberEntity memberEntity;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @JoinColumn(name = "order_id", nullable = false)
+  private OrderEntity orderEntity;
+
+  @Builder
+  public ItemEntity(BookEntity bookEntity, MemberEntity memberEntity, OrderEntity orderEntity) {
+    this.bookEntity = bookEntity;
+    this.memberEntity = memberEntity;
+    this.orderEntity = orderEntity;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    ItemEntity itemEntity = (ItemEntity) o;
+    return Objects.equals(itemId, itemEntity.itemId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(itemId);
+  }
+}

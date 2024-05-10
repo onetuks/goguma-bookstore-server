@@ -1,13 +1,13 @@
 package com.onetuks.modulepersistence.subscribe.repository;
 
-import com.onetuks.modulepersistence.subscribe.model.Subscribe;
+import com.onetuks.modulepersistence.subscribe.entity.SubscribeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SubscribeJpaRepository extends JpaRepository<Subscribe, Long> {
+public interface SubscribeJpaRepository extends JpaRepository<SubscribeEntity, Long> {
 
-  boolean existsByMemberMemberIdAndAuthorAuthorId(long memberId, long authorId);
+  boolean existsByMemberEntityMemberIdAndAuthorEntityAuthorId(long memberId, long authorId);
 
-  Page<Subscribe> findAllByMemberMemberId(long memberId, Pageable pageable);
+  Page<SubscribeEntity> findAllByMemberEntityMemberId(long memberId, Pageable pageable);
 }

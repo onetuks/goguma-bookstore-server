@@ -5,27 +5,27 @@ import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
 import com.onetuks.modulecommon.util.RandomValueProvider;
-import com.onetuks.modulepersistence.author.model.Author;
-import com.onetuks.modulepersistence.book.model.Book;
-import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
-import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
+import com.onetuks.modulepersistence.author.entity.AuthorEntity;
+import com.onetuks.modulepersistence.book.entity.BookEntity;
+import com.onetuks.modulepersistence.book.entity.embedded.BookConceptualInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPhysicalInfo;
+import com.onetuks.modulepersistence.book.entity.embedded.BookPriceInfo;
 import com.onetuks.modulepersistence.book.vo.Category;
 import java.util.List;
 import java.util.Random;
 
 public class BookFixture {
 
-  public static Book create(Author author) {
-    FileWrapper coverImgFile = FileWrapperFixture.createFile(author.getAuthorId(), FileType.COVERS);
+  public static BookEntity create(AuthorEntity authorEntity) {
+    FileWrapper coverImgFile = FileWrapperFixture.createFile(authorEntity.getAuthorId(), FileType.COVERS);
     FileWrapperCollection detailImgFiles =
-        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.DETAILS);
+        FileWrapperFixture.createFiles(authorEntity.getAuthorId(), FileType.DETAILS);
     FileWrapperCollection previewFiles =
-        FileWrapperFixture.createFiles(author.getAuthorId(), FileType.PREVIEWS);
+        FileWrapperFixture.createFiles(authorEntity.getAuthorId(), FileType.PREVIEWS);
 
-    return Book.builder()
-        .author(author)
-        .authorNickname(author.getNickname())
+    return BookEntity.builder()
+        .author(authorEntity)
+        .authorNickname(authorEntity.getNickname())
         .bookConceptualInfo(createBookConceptualInfo())
         .bookPhysicalInfo(createBookPhysicalInfo())
         .bookPriceInfo(createBookPriceInfo())
