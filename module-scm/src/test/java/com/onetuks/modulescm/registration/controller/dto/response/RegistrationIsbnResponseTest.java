@@ -3,8 +3,8 @@ package com.onetuks.modulescm.registration.controller.dto.response;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
-import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult.IsbnDataResult;
+import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult;
+import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult.IsbnDataResult;
 import com.onetuks.modulescm.ScmIntegrationTest;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;

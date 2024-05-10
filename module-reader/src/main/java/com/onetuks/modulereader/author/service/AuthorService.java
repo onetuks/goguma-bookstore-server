@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.author.service;
 
 import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulereader.author.service.dto.param.AuthorEditParam;
@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthorService {
 
   private final AuthorJpaRepository authorJpaRepository;
-  private final S3Service s3Service;
+  private final S3Repository s3Repository;
 
-  public AuthorService(AuthorJpaRepository authorJpaRepository, S3Service s3Service) {
+  public AuthorService(AuthorJpaRepository authorJpaRepository, S3Repository s3Repository) {
     this.authorJpaRepository = authorJpaRepository;
-    this.s3Service = s3Service;
+    this.s3Repository = s3Repository;
   }
 
   @Transactional
@@ -34,7 +34,7 @@ public class AuthorService {
       throw new IllegalArgumentException("작가 정보를 수정할 권한이 없습니다.");
     }
 
-    s3Service.putFile(profileImgFile);
+    s3Repository.putFile(profileImgFile);
 
     return AuthorEditResult.from(
         getAuthorById(authorId)

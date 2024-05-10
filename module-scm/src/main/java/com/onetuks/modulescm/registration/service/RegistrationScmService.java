@@ -4,7 +4,7 @@ import com.onetuks.modulecommon.error.ErrorCode;
 import com.onetuks.modulecommon.exception.ApiAccessDeniedException;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.book.model.embedded.BookConceptualInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPhysicalInfo;
 import com.onetuks.modulepersistence.book.model.embedded.BookPriceInfo;
@@ -27,17 +27,17 @@ public class RegistrationScmService {
 
   private final RegistrationJpaRepository registrationJpaRepository;
   private final AuthorScmService authorScmService;
-  private final S3Service s3Service;
+  private final S3Repository s3Repository;
   private final BookRegistrationService bookRegistrationService;
 
   public RegistrationScmService(
       RegistrationJpaRepository registrationJpaRepository,
       AuthorScmService authorScmService,
-      S3Service s3Service,
+      S3Repository s3Repository,
       BookRegistrationService bookRegistrationService) {
     this.registrationJpaRepository = registrationJpaRepository;
     this.authorScmService = authorScmService;
-    this.s3Service = s3Service;
+    this.s3Repository = s3Repository;
     this.bookRegistrationService = bookRegistrationService;
   }
 
@@ -51,10 +51,10 @@ public class RegistrationScmService {
       FileWrapper sampleFile) {
     checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
-    s3Service.putFile(coverImgFile);
-    s3Service.putFile(sampleFile);
-    detailImgFiles.fileWrappers().forEach(s3Service::putFile);
-    previewFiles.fileWrappers().forEach(s3Service::putFile);
+    s3Repository.putFile(coverImgFile);
+    s3Repository.putFile(sampleFile);
+    detailImgFiles.fileWrappers().forEach(s3Repository::putFile);
+    previewFiles.fileWrappers().forEach(s3Repository::putFile);
 
     return RegistrationResult.from(
         registrationJpaRepository.save(
@@ -138,10 +138,10 @@ public class RegistrationScmService {
       throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
     }
 
-    s3Service.deleteFile(registration.getCoverImgUrl());
-    s3Service.deleteFile(registration.getSampleUrl());
-    registration.getDetailImgUrls().forEach(s3Service::deleteFile);
-    registration.getPreviewUrls().forEach(s3Service::deleteFile);
+    s3Repository.deleteFile(registration.getCoverImgUrl());
+    s3Repository.deleteFile(registration.getSampleUrl());
+    registration.getDetailImgUrls().forEach(s3Repository::deleteFile);
+    registration.getPreviewUrls().forEach(s3Repository::deleteFile);
 
     registrationJpaRepository.delete(registration);
   }
@@ -207,18 +207,18 @@ public class RegistrationScmService {
       FileWrapper sampleFile,
       Registration registration) {
     if (!coverImgFile.isNullFile()) {
-      s3Service.putFile(coverImgFile);
+      s3Repository.putFile(coverImgFile);
     }
     if (!sampleFile.isNullFile()) {
-      s3Service.putFile(sampleFile);
+      s3Repository.putFile(sampleFile);
     }
     if (!detailImgFiles.isEmpty()) {
-      registration.getDetailImgFilePaths().getUrls().forEach(s3Service::deleteFile);
-      detailImgFiles.fileWrappers().forEach(s3Service::putFile);
+      registration.getDetailImgFilePaths().getUrls().forEach(s3Repository::deleteFile);
+      detailImgFiles.fileWrappers().forEach(s3Repository::putFile);
     }
     if (!previewFiles.isEmpty()) {
-      registration.getPreviewFilePaths().getUrls().forEach(s3Service::deleteFile);
-      previewFiles.fileWrappers().forEach(s3Service::putFile);
+      registration.getPreviewFilePaths().getUrls().forEach(s3Repository::deleteFile);
+      previewFiles.fileWrappers().forEach(s3Repository::putFile);
     }
   }
 }

@@ -33,6 +33,7 @@ subprojects {
         }
 
         finalizedBy(tasks.jacocoTestCoverageVerification)
+        finalizedBy(rootProject.tasks.testCodeCoverageReport)
 
         afterEvaluate {
             classDirectories.setFrom(files(classDirectories.files.collect {
@@ -83,13 +84,7 @@ subprojects {
     }
 }
 
-tasks.named('check') {
-    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
-}
-
 tasks.testCodeCoverageReport {
-    dependsOn(subprojects.tasks.jacocoTestReport)
-
     afterEvaluate {
         classDirectories.setFrom(classDirectories.files.collect {
             fileTree(dir: it, exclude: jacocoExclude)

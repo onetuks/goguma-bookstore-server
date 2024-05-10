@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.fixture.MemberFixture;
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
 import com.onetuks.modulepersistence.member.model.Member;
@@ -34,7 +34,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 class MemberServiceTest extends ReaderIntegrationTest {
 
   @Autowired private MemberService memberService;
-  @Autowired private S3Service s3Service;
+  @Autowired private S3Repository s3Repository;
 
   @Autowired private MemberJpaRepository memberJpaRepository;
 
@@ -92,7 +92,7 @@ class MemberServiceTest extends ReaderIntegrationTest {
         memberService.updateMemberProfile(savedMember.getMemberId(), param, fileWrapper);
 
     // Then
-    File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
+    File savedProfileImgFile = s3Repository.getFile(fileWrapper.getUri());
 
     assertAll(
         () -> assertThat(savedProfileImgFile).hasSize(fileWrapper.getMultipartFile().getSize()),

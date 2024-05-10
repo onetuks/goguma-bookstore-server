@@ -1,8 +1,8 @@
 package com.onetuks.modulescm.author.service;
 
 import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.service.S3Service;
-import com.onetuks.modulecommon.verification.EnrollmentInfoVerificationService;
+import com.onetuks.modulecommon.service.S3Repository;
+import com.onetuks.modulecommon.verification.EnrollmentInfoVerifier;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.model.embedded.EnrollmentInfo;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
@@ -28,18 +28,18 @@ public class AuthorScmService {
   private final AuthorJpaRepository authorJpaRepository;
   private final MemberJpaRepository memberJpaRepository;
 
-  private final S3Service s3Service;
-  private final EnrollmentInfoVerificationService enrollmentInfoVerificationService;
+  private final S3Repository s3Repository;
+  private final EnrollmentInfoVerifier enrollmentInfoVerifier;
 
   public AuthorScmService(
       AuthorJpaRepository authorJpaRepository,
       MemberJpaRepository memberJpaRepository,
-      S3Service s3Service,
-      EnrollmentInfoVerificationService enrollmentInfoVerificationService) {
+      S3Repository s3Repository,
+      EnrollmentInfoVerifier enrollmentInfoVerifier) {
     this.authorJpaRepository = authorJpaRepository;
     this.memberJpaRepository = memberJpaRepository;
-    this.s3Service = s3Service;
-    this.enrollmentInfoVerificationService = enrollmentInfoVerificationService;
+    this.s3Repository = s3Repository;
+    this.enrollmentInfoVerifier = enrollmentInfoVerifier;
   }
 
   /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
@@ -53,7 +53,7 @@ public class AuthorScmService {
             author -> {
               LocalDateTime enrollmentAt = author.getEnrollmentAt();
               if (enrollmentAt.isBefore(twoWeeksAgo)) {
-                s3Service.deleteFile(author.getProfileImgUrl());
+                s3Repository.deleteFile(author.getProfileImgUrl());
                 authorJpaRepository.delete(author);
               }
             });
@@ -62,7 +62,7 @@ public class AuthorScmService {
   @Transactional
   public AuthorCreateEnrollmentResult createAuthorEnrollment(
       long loginId, AuthorCreateEnrollmentParam param) {
-    enrollmentInfoVerificationService.verifyEnrollmentInfo(
+    enrollmentInfoVerifier.verifyEnrollmentInfo(
         param.businessNumber(), param.mailOrderSalesNumber());
 
     Author temporaryAuthor =
@@ -101,7 +101,7 @@ public class AuthorScmService {
   public void deleteAuthorEnrollment(long authorLoginId) {
     Author author = getAuthorByMemberId(authorLoginId);
 
-    s3Service.deleteFile(author.getProfileImgUrl());
+    s3Repository.deleteFile(author.getProfileImgUrl());
 
     authorJpaRepository.deleteById(author.getAuthorId());
   }

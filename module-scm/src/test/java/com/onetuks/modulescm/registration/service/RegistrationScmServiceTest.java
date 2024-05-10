@@ -9,7 +9,7 @@ import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.book.repository.BookJpaRepository;
@@ -45,7 +45,7 @@ class RegistrationScmServiceTest extends ScmIntegrationTest {
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
   @Autowired private RegistrationJpaRepository registrationJpaRepository;
-  @Autowired private S3Service s3Service;
+  @Autowired private S3Repository s3Repository;
   @Autowired private BookJpaRepository bookJpaRepository;
 
   private Author author;
@@ -101,14 +101,14 @@ class RegistrationScmServiceTest extends ScmIntegrationTest {
             sampleFile);
 
     // Then
-    File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    File savedCoverImgFile = s3Repository.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
         detailImgFiles.fileWrappers().stream()
-            .map(file -> s3Service.getFile(file.getUri()))
+            .map(file -> s3Repository.getFile(file.getUri()))
             .toList();
     List<File> savedPreviewFiles =
-        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
-    File savedSampleFile = s3Service.getFile(sampleFile.getUri());
+        previewFiles.fileWrappers().stream().map(file -> s3Repository.getFile(file.getUri())).toList();
+    File savedSampleFile = s3Repository.getFile(sampleFile.getUri());
 
     assertAll(
         () -> assertThat(result.registrationId()).isPositive(),
@@ -281,14 +281,14 @@ class RegistrationScmServiceTest extends ScmIntegrationTest {
             sampleFile);
 
     // Then
-    File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    File savedCoverImgFile = s3Repository.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
         detailImgFiles.fileWrappers().stream()
-            .map(file -> s3Service.getFile(file.getUri()))
+            .map(file -> s3Repository.getFile(file.getUri()))
             .toList();
     List<File> savedPreviewFiles =
-        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
-    File savedSampleFile = s3Service.getFile(sampleFile.getUri());
+        previewFiles.fileWrappers().stream().map(file -> s3Repository.getFile(file.getUri())).toList();
+    File savedSampleFile = s3Repository.getFile(sampleFile.getUri());
 
     assertAll(
         () -> assertThat(result.registrationId()).isPositive(),
@@ -376,7 +376,7 @@ class RegistrationScmServiceTest extends ScmIntegrationTest {
     boolean result = registrationJpaRepository.existsById(save.getRegistrationId());
 
     assertThat(result).isFalse();
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(save.getCoverImgUrl()));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(save.getCoverImgUrl()));
   }
 
   @Test
@@ -405,14 +405,14 @@ class RegistrationScmServiceTest extends ScmIntegrationTest {
         ApiAccessDeniedException.class,
         () -> registrationScmService.deleteRegistration(otherAuthorId, result.registrationId()));
 
-    File savedCoverImgFile = s3Service.getFile(coverImgFile.getUri());
+    File savedCoverImgFile = s3Repository.getFile(coverImgFile.getUri());
     List<File> savedDetailImgFiles =
         detailImgFiles.fileWrappers().stream()
-            .map(file -> s3Service.getFile(file.getUri()))
+            .map(file -> s3Repository.getFile(file.getUri()))
             .toList();
     List<File> savedPreviewFiles =
-        previewFiles.fileWrappers().stream().map(file -> s3Service.getFile(file.getUri())).toList();
-    File savedSampleFile = s3Service.getFile(sampleFile.getUri());
+        previewFiles.fileWrappers().stream().map(file -> s3Repository.getFile(file.getUri())).toList();
+    File savedSampleFile = s3Repository.getFile(sampleFile.getUri());
 
     assertAll(
         () -> assertThat(savedCoverImgFile).exists(),

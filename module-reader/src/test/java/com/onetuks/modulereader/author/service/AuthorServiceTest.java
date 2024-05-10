@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.fixture.AuthorFixture;
@@ -34,7 +34,7 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 class AuthorServiceTest extends ReaderIntegrationTest {
 
   @Autowired private AuthorService authorService;
-  @Autowired private S3Service s3Service;
+  @Autowired private S3Repository s3Repository;
 
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
@@ -78,7 +78,7 @@ class AuthorServiceTest extends ReaderIntegrationTest {
             author.getAuthorId(), author.getAuthorId(), param, fileWrapper);
 
     // Then
-    File savedProfileImgFile = s3Service.getFile(fileWrapper.getUri());
+    File savedProfileImgFile = s3Repository.getFile(fileWrapper.getUri());
 
     assertAll(
         () -> assertThat(savedProfileImgFile).exists(),
@@ -108,7 +108,7 @@ class AuthorServiceTest extends ReaderIntegrationTest {
         () ->
             authorService.updateAuthorProfile(
                 author1.getAuthorId(), author0.getAuthorId(), param, fileWrapper));
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(fileWrapper.getUri()));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(fileWrapper.getUri()));
   }
 
   @Test

@@ -1,7 +1,7 @@
 package com.onetuks.modulereader.member.service;
 
 import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulepersistence.member.model.Member;
 import com.onetuks.modulepersistence.member.repository.MemberJpaRepository;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultAddressEditParam;
@@ -21,11 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
   private final MemberJpaRepository memberJpaRepository;
-  private final S3Service s3Service;
+  private final S3Repository s3Repository;
 
-  public MemberService(MemberJpaRepository memberJpaRepository, S3Service s3Service) {
+  public MemberService(MemberJpaRepository memberJpaRepository, S3Repository s3Repository) {
     this.memberJpaRepository = memberJpaRepository;
-    this.s3Service = s3Service;
+    this.s3Repository = s3Repository;
   }
 
   @Transactional
@@ -39,7 +39,7 @@ public class MemberService {
   @Transactional
   public MemberProfileEditResult updateMemberProfile(
       long memberId, MemberProfileEditParam param, FileWrapper profileImgFile) {
-    s3Service.putFile(profileImgFile);
+    s3Repository.putFile(profileImgFile);
 
     return MemberProfileEditResult.from(
         getMemberById(memberId)

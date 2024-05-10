@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.fixture.FileWrapperFixture;
-import com.onetuks.modulecommon.service.S3Service;
+import com.onetuks.modulecommon.service.S3Repository;
 import com.onetuks.modulecommon.util.UUIDProvider;
-import com.onetuks.modulecommon.verification.EnrollmentInfoVerificationService;
+import com.onetuks.modulecommon.verification.EnrollmentInfoVerifier;
 import com.onetuks.modulepersistence.author.model.Author;
 import com.onetuks.modulepersistence.author.repository.AuthorJpaRepository;
 import com.onetuks.modulepersistence.fixture.AuthorFixture;
@@ -41,12 +41,12 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 class AuthorScmServiceTest extends ScmIntegrationTest {
 
   @Autowired private AuthorScmService authorScmService;
-  @Autowired private S3Service s3Service;
+  @Autowired private S3Repository s3Repository;
 
   @Autowired private MemberJpaRepository memberJpaRepository;
   @Autowired private AuthorJpaRepository authorJpaRepository;
 
-  @MockBean private EnrollmentInfoVerificationService enrollmentInfoVerificationService;
+  @MockBean private EnrollmentInfoVerifier enrollmentInfoVerifier;
 
   private Member userMember;
   private Member authorMember;
@@ -146,7 +146,7 @@ class AuthorScmServiceTest extends ScmIntegrationTest {
     boolean result = authorJpaRepository.existsById(save.getAuthorId());
 
     assertThat(result).isFalse();
-    assertThrows(NoSuchKeyException.class, () -> s3Service.getFile(save.getProfileImgUrl()));
+    assertThrows(NoSuchKeyException.class, () -> s3Repository.getFile(save.getProfileImgUrl()));
   }
 
   @Test
@@ -170,14 +170,14 @@ class AuthorScmServiceTest extends ScmIntegrationTest {
     // 프로필 이미지 등록
     FileWrapper profileImgFile =
         FileWrapperFixture.createFile(author.getAuthorId(), FileType.PROFILES);
-    s3Service.putFile(profileImgFile);
+    s3Repository.putFile(profileImgFile);
 
     // When & Then
     assertThrows(
         EntityNotFoundException.class,
         () -> authorScmService.deleteAuthorEnrollment(userMember.getMemberId()));
 
-    File savedProfileImgFile = s3Service.getFile(profileImgFile.getUri());
+    File savedProfileImgFile = s3Repository.getFile(profileImgFile.getUri());
 
     assertThat(savedProfileImgFile).exists();
   }

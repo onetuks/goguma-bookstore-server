@@ -5,8 +5,8 @@ import com.onetuks.moduleauth.util.author.AuthorLoginId;
 import com.onetuks.modulecommon.file.FileType;
 import com.onetuks.modulecommon.file.FileWrapper;
 import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulecommon.verification.IsbnWebClientService;
-import com.onetuks.modulecommon.verification.dto.result.RegistrationIsbnResult;
+import com.onetuks.modulecommon.verification.webclient.IsbnWebClient;
+import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult;
 import com.onetuks.modulescm.registration.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.modulescm.registration.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.modulescm.registration.controller.dto.request.RegistrationInspectionRequest;
@@ -42,12 +42,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class RegistrationScmRestController {
 
   private final RegistrationScmService registrationScmService;
-  private final IsbnWebClientService isbnWebClientService;
+  private final IsbnWebClient isbnWebClient;
 
   public RegistrationScmRestController(
-      RegistrationScmService registrationScmService, IsbnWebClientService isbnWebClientService) {
+      RegistrationScmService registrationScmService, IsbnWebClient isbnWebClient) {
     this.registrationScmService = registrationScmService;
-    this.isbnWebClientService = isbnWebClientService;
+    this.isbnWebClient = isbnWebClient;
   }
 
   /**
@@ -218,7 +218,7 @@ public class RegistrationScmRestController {
   @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationIsbnResponse> getBookInfoByIsbn(
       @PathVariable(name = "isbn") String isbn) {
-    RegistrationIsbnResult result = isbnWebClientService.requestData(isbn);
+    RegistrationIsbnResult result = isbnWebClient.requestData(isbn);
     RegistrationIsbnResponse response = RegistrationIsbnResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
