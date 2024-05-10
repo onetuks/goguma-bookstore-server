@@ -4,10 +4,10 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.onetuks.modulepersistence.global.vo.auth.RoleType;
-import com.onetuks.modulepersistence.global.vo.file.ProfileImgFilePath;
-import com.onetuks.modulepersistence.global.vo.order.DefaultAddressInfo;
-import com.onetuks.modulepersistence.global.vo.order.DefaultCashReceiptInfo;
-import com.onetuks.modulepersistence.global.vo.profile.Nickname;
+import com.onetuks.modulepersistence.order.vo.ProfileImgFilePath;
+import com.onetuks.modulepersistence.order.vo.DefaultAddressInfo;
+import com.onetuks.modulepersistence.order.vo.DefaultCashReceiptInfo;
+import com.onetuks.modulepersistence.order.vo.Nickname;
 import com.onetuks.modulepersistence.member.embedded.AuthInfo;
 import com.onetuks.modulepersistence.order.vo.CashReceiptType;
 import jakarta.persistence.Column;

@@ -3,8 +3,8 @@ package com.onetuks.modulepersistence.author.entity;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.modulepersistence.author.entity.embedded.EnrollmentInfo;
-import com.onetuks.modulepersistence.global.vo.file.ProfileImgFilePath;
-import com.onetuks.modulepersistence.global.vo.profile.Nickname;
+import com.onetuks.modulepersistence.order.vo.ProfileImgFilePath;
+import com.onetuks.modulepersistence.order.vo.Nickname;
 import com.onetuks.modulepersistence.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

@@ -1,8 +1,6 @@
 package com.onetuks.modulepersistence.global.vo.order;
 
-import static jakarta.persistence.EnumType.STRING;
-
-import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.coreenum.vo.payment.CashReceiptType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
@@ -16,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class DefaultCashReceiptInfo {
 
-  @Enumerated(value = STRING)
+  @Enumerated(value = EnumType.STRING)
   @Column(name = "default_cash_receipt_type")
   private CashReceiptType defaultCashReceiptType;
 

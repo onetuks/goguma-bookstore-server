@@ -1,6 +1,7 @@
 subprojects {
     dependencies {
         compileOnly(project(':module-auth'))
+        implementation(project(':core-vo'))
 
         // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'

@@ -3,6 +3,7 @@ package com.onetuks.modulepersistence.global.vo.profile;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.modulepersistence.PersistenceIntegrationTest;
+import com.onetuks.modulepersistence.order.vo.Nickname;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
