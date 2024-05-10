@@ -3,11 +3,11 @@ def jacocoExclude = List.of(
         "**/error/*",
         "**/exception/*",
         "**/model/*",
+        "**/entity/*",
         "**/dto/*",
         "**/vo/*",
         "**/config/*",
-        "**/controller/*",
-        "**/moduleauth/*",
+        "**/api/*",
         "**/*Application.class"
 )
 
@@ -72,11 +72,11 @@ subprojects {
                         "*.error.*",
                         "*.exception.*",
                         "*.model.*",
+                        "*.entity.*",
                         "*.dto.*",
                         "*.vo.*",
                         "*.config.*",
-                        "*.controller.*",
-                        "*.moduleauth.*",
+                        "*.api.*",
                         "*.*Application"
                 ]
             }
