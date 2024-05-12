@@ -17,8 +17,6 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java-test-fixtures'
-
     dependencies {
         // Arch-Unit
         testImplementation 'com.tngtech.archunit:archunit:1.2.2'
