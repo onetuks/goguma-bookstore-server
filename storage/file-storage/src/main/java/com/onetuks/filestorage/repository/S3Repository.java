@@ -1,13 +1,13 @@
-package com.onetuks.modulecommon.service;
+package com.onetuks.filestorage.repository;
 
-import com.onetuks.modulecommon.config.S3Config;
-import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.filestorage.config.S3Config;
+import com.onetuks.coreobj.vo.FileWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Repository
-public class S3Repository {
+public class S3Repository implements FileRepository {
 
   private final S3Client s3Client;
   private final S3Config s3Config;
@@ -28,6 +28,7 @@ public class S3Repository {
     this.s3Config = s3Config;
   }
 
+  @Override
   public void putFile(FileWrapper file) {
     if (file.isNullFile()) {
       return;
@@ -59,6 +60,7 @@ public class S3Repository {
     }
   }
 
+  @Override
   public void deleteFile(String uri) {
     try {
       s3Client.deleteObject(

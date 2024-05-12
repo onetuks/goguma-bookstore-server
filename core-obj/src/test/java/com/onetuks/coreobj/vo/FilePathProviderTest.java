@@ -2,13 +2,12 @@ package com.onetuks.coreobj.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.onetuks.coreobj.CoreObjIntegrationTest;
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FilePathProvider;
-import com.onetuks.filestorage.CommonIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class FilePathProviderTest extends CommonIntegrationTest {
+class FilePathProviderTest extends CoreObjIntegrationTest {
 
   @Test
   @DisplayName("프로필 이미지 URI 를 생성한다.")

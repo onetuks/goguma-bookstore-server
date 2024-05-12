@@ -1,0 +1,9 @@
+subprojects {
+    dependencies {
+        implementation(project(':core-obj'))
+        compileOnly(project(':domain:core-domain'))
+
+        // Test
+        testImplementation(project(':domain:core-domain'))
+    }
+}

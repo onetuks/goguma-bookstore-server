@@ -3,18 +3,16 @@ package com.onetuks.coreobj.vo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.onetuks.coreobj.FileWrapperFixture;
+import com.onetuks.coreobj.MultipartFileFixture;
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FilePathProvider;
-import com.onetuks.coreobj.vo.FileWrapper;
-import com.onetuks.filestorage.CommonIntegrationTest;
 import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
-import com.onetuks.filestorage.fixture.FileWrapperFixture;
-import com.onetuks.filestorage.fixture.MultipartFileFixture;
+import com.onetuks.coreobj.CoreObjIntegrationTest;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class FileWrapperTest extends CommonIntegrationTest {
+class FileWrapperTest extends CoreObjIntegrationTest {
 
   private final long id = 1L;
 

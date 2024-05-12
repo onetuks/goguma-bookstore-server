@@ -1,6 +1,6 @@
-package com.onetuks.modulecommon.util;
+package com.onetuks.filestorage.util;
 
-import com.onetuks.modulecommon.file.FileType;
+import com.onetuks.coreobj.enums.file.FileType;
 import java.io.IOException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileVisitResult;

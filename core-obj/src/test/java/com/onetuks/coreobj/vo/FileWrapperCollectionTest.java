@@ -2,17 +2,16 @@ package com.onetuks.coreobj.vo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.onetuks.coreobj.CoreObjIntegrationTest;
+import com.onetuks.coreobj.MultipartFileFixture;
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FilePathProvider;
-import com.onetuks.filestorage.CommonIntegrationTest;
 import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
-import com.onetuks.filestorage.fixture.MultipartFileFixture;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.multipart.MultipartFile;
 
-class FileWrapperCollectionTest extends CommonIntegrationTest {
+class FileWrapperCollectionTest extends CoreObjIntegrationTest {
 
   @Test
   @DisplayName("여러개의 멀티파트파일을 묶어 하나의 파일 래퍼 컬렉션으로 생성한다.")

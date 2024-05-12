@@ -1,4 +1,4 @@
-package com.onetuks.modulecommon.config;
+package com.onetuks.filestorage.config;
 
 import java.net.URI;
 import java.util.List;

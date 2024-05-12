@@ -1,20 +1,20 @@
-package com.onetuks.modulecommon.service;
+package com.onetuks.filestorage.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.onetuks.modulecommon.CommonIntegrationTest;
-import com.onetuks.modulecommon.file.FileType;
-import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.fixture.FileWrapperFixture;
+import com.onetuks.coreobj.enums.file.FileType;
+import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.filestorage.FileStorageIntegrationTest;
+import com.onetuks.filestorage.fixture.FileWrapperFixture;
 import java.io.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-class S3RepositoryTest extends CommonIntegrationTest {
+class S3RepositoryTest extends FileStorageIntegrationTest {
 
   @Autowired private S3Repository s3Repository;
 
