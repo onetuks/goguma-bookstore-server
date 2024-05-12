@@ -1,12 +1,12 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.moduleauth.util.admin.AdminLoginId;
-import com.onetuks.moduleauth.util.author.AuthorLoginId;
-import com.onetuks.modulecommon.file.FileType;
-import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
-import com.onetuks.modulecommon.verification.webclient.IsbnWebClient;
-import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult;
+import com.onetuks.coreauth.util.admin.AdminLoginId;
+import com.onetuks.coreauth.util.author.AuthorLoginId;
+import com.onetuks.filestorage.vo.FileType;
+import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
+import com.onetuks.filestorage.verification.webclient.IsbnWebClient;
+import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult;
 import com.onetuks.scmapi.controller.dto.request.RegistrationCreateRequest;
 import com.onetuks.scmapi.controller.dto.request.RegistrationEditRequest;
 import com.onetuks.scmapi.controller.dto.request.RegistrationInspectionRequest;

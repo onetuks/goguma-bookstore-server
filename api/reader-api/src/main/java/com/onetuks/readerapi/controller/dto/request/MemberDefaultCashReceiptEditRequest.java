@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller.dto.request;
 
-import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.dbstorage.order.vo.CashReceiptType;
 import com.onetuks.modulereader.member.service.dto.param.MemberDefaultCashReceiptEditParam;
 import jakarta.validation.constraints.NotBlank;
 

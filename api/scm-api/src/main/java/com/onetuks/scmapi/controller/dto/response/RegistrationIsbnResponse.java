@@ -1,7 +1,7 @@
 package com.onetuks.scmapi.controller.dto.response;
 
-import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult;
-import com.onetuks.modulecommon.verification.webclient.dto.result.RegistrationIsbnResult.IsbnDataResult;
+import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult;
+import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult.IsbnDataResult;
 
 public record RegistrationIsbnResponse(
     String isbn,

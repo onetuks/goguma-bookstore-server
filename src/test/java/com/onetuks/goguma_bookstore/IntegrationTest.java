@@ -12,13 +12,11 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 @ActiveProfiles(value = "test")
 @SpringBootTest
-@Transactional
 @ContextConfiguration(initializers = IntegrationTestInitializer.class)
 public class IntegrationTest {
 

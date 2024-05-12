@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller.dto.response;
 
-import com.onetuks.modulepersistence.order.vo.CashReceiptType;
+import com.onetuks.dbstorage.order.vo.CashReceiptType;
 import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
 
 public record MemberInfoResponse(

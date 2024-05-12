@@ -1,9 +1,9 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.moduleauth.util.author.AuthorLoginId;
-import com.onetuks.modulecommon.file.FileType;
-import com.onetuks.modulecommon.file.FileWrapper;
-import com.onetuks.modulecommon.file.FileWrapper.FileWrapperCollection;
+import com.onetuks.coreauth.util.author.AuthorLoginId;
+import com.onetuks.filestorage.vo.FileType;
+import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
 import com.onetuks.scmapi.controller.dto.request.BookEditRequest;
 import com.onetuks.scmapi.controller.dto.response.BookEditResponse;
 import com.onetuks.scmapi.controller.dto.response.BookResponse.BookResponses;

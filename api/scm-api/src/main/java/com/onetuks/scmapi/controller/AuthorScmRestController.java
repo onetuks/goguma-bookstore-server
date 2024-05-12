@@ -1,8 +1,8 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.moduleauth.util.admin.AdminLoginId;
-import com.onetuks.moduleauth.util.author.AuthorLoginId;
-import com.onetuks.moduleauth.util.login.LoginId;
+import com.onetuks.coreauth.util.admin.AdminLoginId;
+import com.onetuks.coreauth.util.author.AuthorLoginId;
+import com.onetuks.coreauth.util.login.LoginId;
 import com.onetuks.scmapi.controller.dto.request.AuthorCreateEnrollmentRequest;
 import com.onetuks.scmapi.controller.dto.response.AuthorCreateEnrollmentResponse;
 import com.onetuks.scmapi.controller.dto.response.AuthorEnrollmentDetailsResponse;

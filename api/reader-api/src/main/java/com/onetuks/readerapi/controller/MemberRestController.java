@@ -2,9 +2,9 @@ package com.onetuks.readerapi.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.onetuks.moduleauth.util.login.LoginId;
-import com.onetuks.modulecommon.file.FileType;
-import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.filestorage.vo.FileType;
+import com.onetuks.coreobj.vo.FileWrapper;
 import com.onetuks.readerapi.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.readerapi.controller.dto.request.MemberDefaultCashReceiptEditRequest;
 import com.onetuks.readerapi.controller.dto.request.MemberEntryInfoRequest;
@@ -47,7 +47,7 @@ public class MemberRestController {
    *
    * @param memberId : 로그인한 회원 ID
    * @param request : 회원가입 정보
-   * @return memberId, nickname, alarmPermission
+   * @return memberId, nickname, isAlarmPermitted
    */
   @PatchMapping(
       path = "/entry",
@@ -67,7 +67,7 @@ public class MemberRestController {
    * @param memberId : 로그인한 회원 ID
    * @param request : 수정할 회원 프로필 정보
    * @param profileImgFile : 프로필 이미지
-   * @return memberId, nickname, alarmPermission, profileImgUri, defaultAddress,
+   * @return memberId, nickname, isAlarmPermitted, profileImgUri, defaultAddress,
    *     defaultAddressDetail, defaultCashReceiptType, defaultCashReceiptNumber
    */
   @PatchMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
@@ -128,7 +128,7 @@ public class MemberRestController {
    * 멤버 정보 조회
    *
    * @param memberId : 조회할 멤버 아이디
-   * @return memberId, nickname, alarmPermission, profileImgUri, defaultAddress,
+   * @return memberId, nickname, isAlarmPermitted, profileImgUri, defaultAddress,
    *     defaultAddressDetail, defaultCashReceiptType, defaultCashReceiptNumber
    */
   @GetMapping(path = "/{memberId}", produces = APPLICATION_JSON_VALUE)

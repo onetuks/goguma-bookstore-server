@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller;
 
-import com.onetuks.moduleauth.util.login.LoginId;
+import com.onetuks.coreauth.util.login.LoginId;
 import com.onetuks.readerapi.controller.dto.response.FavoriteGetResponse.FavoriteGetResponses;
 import com.onetuks.readerapi.controller.dto.response.FavoritePostResponse;
 import com.onetuks.readerapi.controller.dto.response.FavoriteWhetherGetResponse;

@@ -1,6 +1,6 @@
 package com.onetuks.scmapi.controller.dto.response;
 
-import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.modulescm.book.service.dto.result.BookEditResult;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.onetuks.scmapi.controller.dto.response;
 
-import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.modulescm.registration.service.dto.result.RegistrationResult;
 import java.util.List;
 import org.springframework.data.domain.Page;

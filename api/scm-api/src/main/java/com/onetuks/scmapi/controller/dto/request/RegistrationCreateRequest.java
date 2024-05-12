@@ -1,6 +1,6 @@
 package com.onetuks.scmapi.controller.dto.request;
 
-import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.modulescm.registration.service.dto.param.RegistrationCreateParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

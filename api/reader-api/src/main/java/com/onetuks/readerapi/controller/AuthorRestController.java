@@ -2,9 +2,9 @@ package com.onetuks.readerapi.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.onetuks.moduleauth.util.author.AuthorLoginId;
-import com.onetuks.modulecommon.file.FileType;
-import com.onetuks.modulecommon.file.FileWrapper;
+import com.onetuks.coreauth.util.author.AuthorLoginId;
+import com.onetuks.filestorage.vo.FileType;
+import com.onetuks.coreobj.vo.FileWrapper;
 import com.onetuks.readerapi.controller.dto.request.AuthorEditRequest;
 import com.onetuks.readerapi.controller.dto.response.AuthorDetailsResponse;
 import com.onetuks.readerapi.controller.dto.response.AuthorDetailsResponse.AuthorDetailsResponses;

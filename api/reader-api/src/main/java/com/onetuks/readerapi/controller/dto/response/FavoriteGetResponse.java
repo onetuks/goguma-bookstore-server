@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller.dto.response;
 
-import com.onetuks.modulepersistence.book.vo.Category;
+import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
 import java.util.List;
 import org.springframework.data.domain.Page;

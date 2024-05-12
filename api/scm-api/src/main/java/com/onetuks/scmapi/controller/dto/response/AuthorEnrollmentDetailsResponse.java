@@ -1,6 +1,6 @@
 package com.onetuks.scmapi.controller.dto.response;
 
-import com.onetuks.modulepersistence.global.vo.auth.RoleType;
+import com.onetuks.dbstorage.global.vo.auth.RoleType;
 import com.onetuks.modulescm.author.service.dto.result.AuthorEnrollmentDetailsResult;
 import java.time.LocalDateTime;
 import java.util.List;
