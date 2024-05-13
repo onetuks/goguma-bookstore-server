@@ -1,7 +1,6 @@
 package com.onetuks.scmdomain.verification.webclient;
 
 import com.onetuks.scmdomain.verification.webclient.dto.result.RegistrationIsbnResult;
-import com.onetuks.filestorage.repository.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

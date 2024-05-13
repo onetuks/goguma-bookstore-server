@@ -1,17 +1,16 @@
 package com.onetuks.scmdomain.verification;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.onetuks.filestorage.CommonIntegrationTest;
-import com.onetuks.filestorage.verification.webclient.dto.response.MailOrderSalesResponse;
 import com.onetuks.filestorage.verification.webclient.MailOrderSalesWebClient;
+import com.onetuks.filestorage.verification.webclient.dto.response.MailOrderSalesResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class MailOrderSalesWebClientTest extends CommonIntegrationTest {
 
-  @Autowired private MailOrderSalesWebClient service;
+  @Autowired
+  private MailOrderSalesWebClient service;
 
   @Test
   @DisplayName("유효한 사업자등록번호를 이용해서 통신판매신고정보를 조회한다.")

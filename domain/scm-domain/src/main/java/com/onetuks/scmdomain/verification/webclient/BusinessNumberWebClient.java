@@ -1,6 +1,5 @@
 package com.onetuks.scmdomain.verification.webclient;
 
-import com.onetuks.filestorage.repository.URIBuilder;
 import com.onetuks.scmdomain.verification.webclient.dto.request.BusinessNumberRequest;
 import com.onetuks.scmdomain.verification.webclient.dto.response.BusinessNumberResponse;
 import java.util.List;

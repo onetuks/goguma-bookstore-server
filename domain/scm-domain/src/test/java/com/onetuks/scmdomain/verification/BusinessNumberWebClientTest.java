@@ -1,11 +1,10 @@
 package com.onetuks.scmdomain.verification;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.filestorage.CommonIntegrationTest;
-import com.onetuks.filestorage.verification.webclient.dto.response.BusinessNumberResponse;
 import com.onetuks.filestorage.verification.webclient.BusinessNumberWebClient;
+import com.onetuks.filestorage.verification.webclient.dto.response.BusinessNumberResponse;
 import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class BusinessNumberWebClientTest extends CommonIntegrationTest {
 
-  @Autowired private BusinessNumberWebClient service;
+  @Autowired
+  private BusinessNumberWebClient service;
 
   @Test
   @DisplayName("유효한 사업자번호를 이용해서 정상 상태를 조회한다.")

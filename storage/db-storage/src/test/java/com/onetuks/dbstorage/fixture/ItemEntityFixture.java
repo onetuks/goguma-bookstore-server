@@ -7,7 +7,8 @@ import com.onetuks.dbstorage.order.entity.OrderEntity;
 
 public class ItemEntityFixture {
 
-  public static ItemEntity create(OrderEntity orderEntity, MemberEntity memberEntity, BookEntity bookEntity) {
+  public static ItemEntity create(OrderEntity orderEntity, MemberEntity memberEntity,
+      BookEntity bookEntity) {
     return new ItemEntity(
         orderEntity,
         memberEntity,

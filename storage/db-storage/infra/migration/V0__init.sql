@@ -76,10 +76,10 @@ CREATE TABLE IF NOT EXISTS registrations
     sales_rate      INT                 NOT NULL DEFAULT 0 COMMENT '판매가',
     stock_count     BIGINT              NOT NULL DEFAULT 0 COMMENT '재고수량',
     is_promotion    BOOLEAN             NOT NULL DEFAULT FALSE COMMENT '프로모션 선택 여부',
-    cover_img_uri   VARCHAR(255)        COMMENT '도서 표지 URI',
-    detail_img_uris JSON                COMMENT '도서 상세 이미지 URI',
-    preview_uris    JSON                COMMENT '미리보기 페이지 URI',
-    sample_uri      VARCHAR(255)        COMMENT '샘플 PDF 파일 URI',
+    cover_img_uri   VARCHAR(255) COMMENT '도서 표지 URI',
+    detail_img_uris JSON COMMENT '도서 상세 이미지 URI',
+    preview_uris    JSON COMMENT '미리보기 페이지 URI',
+    sample_uri      VARCHAR(255) COMMENT '샘플 PDF 파일 URI',
     PRIMARY KEY (registration_id),
     FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
@@ -104,9 +104,9 @@ CREATE TABLE IF NOT EXISTS books
     sales_rate      INT                 NOT NULL DEFAULT 0 COMMENT '판매가',
     stock_count     BIGINT              NOT NULL DEFAULT 0 COMMENT '재고수량',
     is_promotion    BOOLEAN             NOT NULL DEFAULT FALSE COMMENT '프로모션 선택 여부',
-    cover_img_uri   VARCHAR(255)        COMMENT '도서 표지 URI',
-    detail_img_uris JSON                COMMENT '도서 상세 이미지 URI',
-    preview_uris    JSON                COMMENT '미리보기 페이지 URI',
+    cover_img_uri   VARCHAR(255) COMMENT '도서 표지 URI',
+    detail_img_uris JSON COMMENT '도서 상세 이미지 URI',
+    preview_uris    JSON COMMENT '미리보기 페이지 URI',
     PRIMARY KEY (book_id),
     FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE
 ) ENGINE = InnoDB

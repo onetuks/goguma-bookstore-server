@@ -12,8 +12,7 @@ public enum PageOrder {
   private final String property;
   private final String order;
 
-  PageOrder(
-      String property, String order) {
+  PageOrder(String property, String order) {
     this.property = property;
     this.order = order;
   }

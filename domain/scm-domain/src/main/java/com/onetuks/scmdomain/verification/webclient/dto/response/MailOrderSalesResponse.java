@@ -28,5 +28,7 @@ public record MailOrderSalesResponse(
       String prcsDeptNm,
       String chrgDeptTelno,
       String rprsvNm,
-      String rprsvEmladr) {}
+      String rprsvEmladr) {
+
+  }
 }

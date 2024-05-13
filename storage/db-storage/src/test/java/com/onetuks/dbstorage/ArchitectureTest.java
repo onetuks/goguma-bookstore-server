@@ -24,6 +24,7 @@ class ArchitectureTest extends DbStorageIntegrationTest {
 
   @Nested
   class ClassNameTest {
+
     @Test
     @DisplayName("repository 패키지 안에 있는 클래스는 Repository 로 끝난다.")
     void repository_ClassNamePostfix_Test() {

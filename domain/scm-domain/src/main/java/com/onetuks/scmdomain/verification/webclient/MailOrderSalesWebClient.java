@@ -1,6 +1,5 @@
 package com.onetuks.scmdomain.verification.webclient;
 
-import com.onetuks.filestorage.repository.URIBuilder;
 import com.onetuks.scmdomain.verification.webclient.dto.response.MailOrderSalesResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;

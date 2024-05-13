@@ -4,7 +4,6 @@ import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.repository.AuthorRepository;
 import com.onetuks.coredomain.author.repository.AuthorScmRepository;
 import com.onetuks.dbstorage.author.converter.AuthorConverter;
-import com.onetuks.dbstorage.member.repository.MemberJpaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Repository;

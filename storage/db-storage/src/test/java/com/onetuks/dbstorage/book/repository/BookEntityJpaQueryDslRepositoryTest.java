@@ -22,11 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
 
-  @Autowired private BookJpaQueryDslRepository bookJpaQueryDslRepository;
+  @Autowired
+  private BookJpaQueryDslRepository bookJpaQueryDslRepository;
 
-  @Autowired private MemberJpaRepository memberJpaRepository;
-  @Autowired private AuthorJpaRepository authorJpaRepository;
-  @Autowired private BookJpaRepository bookJpaRepository;
+  @Autowired
+  private MemberJpaRepository memberJpaRepository;
+  @Autowired
+  private AuthorJpaRepository authorJpaRepository;
+  @Autowired
+  private BookJpaRepository bookJpaRepository;
 
   @BeforeEach
   void setUp() {
@@ -42,7 +46,8 @@ class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
                 .toList());
 
     bookJpaRepository.saveAll(
-        IntStream.range(0, 20).mapToObj(i -> BookEntityFixture.create(authorEntities.get(i % 2))).toList());
+        IntStream.range(0, 20).mapToObj(i -> BookEntityFixture.create(authorEntities.get(i % 2)))
+            .toList());
   }
 
   @Test

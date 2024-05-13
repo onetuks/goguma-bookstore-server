@@ -12,7 +12,6 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,7 +39,8 @@ public class AuthorStaticsEntity {
   @Column(name = "restock_count", nullable = false)
   private Long restockCount;
 
-  public AuthorStaticsEntity(AuthorEntity authorEntity, Long subscribeCount, Long bookCount, Long restockCount) {
+  public AuthorStaticsEntity(AuthorEntity authorEntity, Long subscribeCount, Long bookCount,
+      Long restockCount) {
     this.authorEntity = authorEntity;
     this.subscribeCount = Objects.requireNonNullElse(subscribeCount, 0L);
     this.bookCount = Objects.requireNonNullElse(bookCount, 0L);

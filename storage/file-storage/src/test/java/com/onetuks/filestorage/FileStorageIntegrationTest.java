@@ -30,7 +30,9 @@ public class FileStorageIntegrationTest {
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.filestorage")
-  public static class FileStorageConfig {}
+  public static class FileStorageConfig {
+
+  }
 
   static final LocalStackContainer localStack;
 

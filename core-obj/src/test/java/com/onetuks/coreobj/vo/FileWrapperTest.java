@@ -3,11 +3,11 @@ package com.onetuks.coreobj.vo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.onetuks.coreobj.CoreObjIntegrationTest;
 import com.onetuks.coreobj.FileWrapperFixture;
 import com.onetuks.coreobj.MultipartFileFixture;
 import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
-import com.onetuks.coreobj.CoreObjIntegrationTest;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

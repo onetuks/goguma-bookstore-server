@@ -14,7 +14,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,8 +27,8 @@ public class CommentEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "review_id", nullable = false)
-  private Long reviewId;
+  @Column(name = "comment_id", nullable = false)
+  private Long commentId;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   @JoinColumn(name = "book_id", nullable = false)
@@ -65,11 +64,11 @@ public class CommentEntity {
       return false;
     }
     CommentEntity commentEntity = (CommentEntity) o;
-    return Objects.equals(reviewId, commentEntity.reviewId);
+    return Objects.equals(commentId, commentEntity.commentId);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(reviewId);
+    return Objects.hashCode(commentId);
   }
 }

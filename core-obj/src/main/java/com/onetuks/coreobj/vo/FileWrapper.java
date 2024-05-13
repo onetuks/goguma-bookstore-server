@@ -49,9 +49,7 @@ public class FileWrapper {
   public record FileWrapperCollection(List<FileWrapper> fileWrappers) {
 
     public static FileWrapperCollection of(
-        FileType fileType,
-        String uuid,
-        MultipartFile[] multipartFiles) {
+        FileType fileType, String uuid, MultipartFile[] multipartFiles) {
       if (multipartFiles == null) {
         return new FileWrapperCollection(Collections.emptyList());
       }

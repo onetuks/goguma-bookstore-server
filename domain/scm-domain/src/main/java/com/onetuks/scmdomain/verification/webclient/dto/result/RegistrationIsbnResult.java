@@ -41,5 +41,7 @@ public record RegistrationIsbnResult(
       String TITLE,
       String PUBLISH_PREDATE,
       String RELATED_ISBN,
-      String SET_ADD_CODE) {}
+      String SET_ADD_CODE) {
+
+  }
 }

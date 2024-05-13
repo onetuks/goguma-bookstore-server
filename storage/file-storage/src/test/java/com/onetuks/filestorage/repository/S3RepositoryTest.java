@@ -16,7 +16,8 @@ import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 class S3RepositoryTest extends FileStorageIntegrationTest {
 
-  @Autowired private S3Repository s3Repository;
+  @Autowired
+  private S3Repository s3Repository;
 
   @Test
   @DisplayName("파일이 성공적으로 S3에 업로드된다.")

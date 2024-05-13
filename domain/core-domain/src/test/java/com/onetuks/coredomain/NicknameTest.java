@@ -1,4 +1,4 @@
-package com.onetuks.dbstorage.global.vo.profile;
+package com.onetuks.coredomain;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

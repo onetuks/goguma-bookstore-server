@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.BindingResult;
 
-/** Global Exception Rest Handler 에서 발생한 에러에 대한 응답 처리를 관리 */
+/**
+ * Global Exception Rest Handler 에서 발생한 에러에 대한 응답 처리를 관리
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ErrorResponse {

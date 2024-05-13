@@ -4,15 +4,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.filestorage.CommonIntegrationTest;
-import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult;
 import com.onetuks.filestorage.verification.webclient.IsbnWebClient;
+import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class IsbnWebClientTest extends CommonIntegrationTest {
 
-  @Autowired private IsbnWebClient service;
+  @Autowired
+  private IsbnWebClient service;
 
   @Test
   @DisplayName("존재하는 ISBN로 요청 시 책 정보를 응답 받는다.")

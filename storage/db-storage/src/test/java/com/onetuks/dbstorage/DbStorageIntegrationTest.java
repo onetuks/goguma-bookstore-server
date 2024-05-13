@@ -26,7 +26,9 @@ public class DbStorageIntegrationTest {
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.dbstorage")
-  public static class DbStorageConfig {}
+  public static class DbStorageConfig {
+
+  }
 
   static final ComposeContainer containers;
 
