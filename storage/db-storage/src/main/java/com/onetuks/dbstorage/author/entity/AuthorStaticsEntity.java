@@ -40,7 +40,6 @@ public class AuthorStaticsEntity {
   @Column(name = "restock_count", nullable = false)
   private Long restockCount;
 
-  @Builder
   public AuthorStaticsEntity(AuthorEntity authorEntity, Long subscribeCount, Long bookCount, Long restockCount) {
     this.authorEntity = authorEntity;
     this.subscribeCount = Objects.requireNonNullElse(subscribeCount, 0L);
@@ -48,11 +47,7 @@ public class AuthorStaticsEntity {
     this.restockCount = Objects.requireNonNullElse(restockCount, 0L);
   }
 
-  public void increaseSubscribeCount() {
-    this.subscribeCount++;
-  }
-
-  public void decreaseSubscribeCount() {
-    this.subscribeCount--;
+  public static AuthorStaticsEntity init(AuthorEntity authorEntity) {
+    return new AuthorStaticsEntity(authorEntity, 0L, 0L, 0L);
   }
 }

@@ -30,22 +30,24 @@ public class ItemEntity {
   private Long itemId;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  @JoinColumn(name = "book_id", nullable = false)
-  private BookEntity bookEntity;
+  @JoinColumn(name = "order_id", nullable = false)
+  private OrderEntity orderEntity;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  @JoinColumn(name = "order_id", nullable = false)
-  private OrderEntity orderEntity;
+  @JoinColumn(name = "book_id", nullable = false)
+  private BookEntity bookEntity;
 
-  @Builder
-  public ItemEntity(BookEntity bookEntity, MemberEntity memberEntity, OrderEntity orderEntity) {
-    this.bookEntity = bookEntity;
-    this.memberEntity = memberEntity;
+  public ItemEntity(
+      OrderEntity orderEntity,
+      MemberEntity memberEntity,
+      BookEntity bookEntity) {
     this.orderEntity = orderEntity;
+    this.memberEntity = memberEntity;
+    this.bookEntity = bookEntity;
   }
 
   @Override

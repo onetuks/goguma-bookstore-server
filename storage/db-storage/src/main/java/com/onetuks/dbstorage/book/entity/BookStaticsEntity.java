@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +43,11 @@ public class BookStaticsEntity {
   private Long commentCount;
 
   public BookStaticsEntity(
-      BookEntity bookEntity, Long favoriteCount, Long viewCount, Long salesCount, Long commentCount) {
+      BookEntity bookEntity,
+      Long favoriteCount,
+      Long viewCount,
+      Long salesCount,
+      Long commentCount) {
     this.bookEntity = bookEntity;
     this.favoriteCount = favoriteCount;
     this.viewCount = viewCount;
@@ -54,15 +59,20 @@ public class BookStaticsEntity {
     return new BookStaticsEntity(bookEntity, 0L, 0L, 0L, 0L);
   }
 
-  public void increaseViewCount() {
-    this.viewCount++;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    BookStaticsEntity that = (BookStaticsEntity) o;
+    return Objects.equals(bookStaticsId, that.bookStaticsId);
   }
 
-  public void increaseFavoriteCount() {
-    this.favoriteCount++;
-  }
-
-  public void decreaseFavoriteCount() {
-    this.favoriteCount--;
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(bookStaticsId);
   }
 }

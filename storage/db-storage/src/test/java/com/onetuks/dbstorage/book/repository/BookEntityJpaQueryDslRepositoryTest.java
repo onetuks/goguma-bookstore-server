@@ -2,16 +2,16 @@ package com.onetuks.dbstorage.book.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.onetuks.dbstorage.PersistenceIntegrationTest;
+import com.onetuks.coreobj.enums.book.Category;
+import com.onetuks.coreobj.enums.member.RoleType;
+import com.onetuks.dbstorage.DbStorageIntegrationTest;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.author.repository.AuthorJpaRepository;
 import com.onetuks.dbstorage.book.entity.BookEntity;
-import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.dbstorage.book.vo.SortOrder;
-import com.onetuks.dbstorage.fixture.AuthorFixture;
-import com.onetuks.dbstorage.fixture.BookFixture;
-import com.onetuks.dbstorage.fixture.MemberFixture;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.dbstorage.fixture.AuthorEntityFixture;
+import com.onetuks.dbstorage.fixture.BookEntityFixture;
+import com.onetuks.dbstorage.fixture.MemberEntityFixture;
 import com.onetuks.dbstorage.member.repository.MemberJpaRepository;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -19,10 +19,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
-class BookEntityJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
+class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
 
   @Autowired private BookJpaQueryDslRepository bookJpaQueryDslRepository;
 
@@ -37,14 +35,14 @@ class BookEntityJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
             memberJpaRepository
                 .saveAll(
                     IntStream.range(0, 3)
-                        .mapToObj(i -> MemberFixture.create(RoleType.AUTHOR))
+                        .mapToObj(i -> MemberEntityFixture.create(RoleType.AUTHOR))
                         .toList())
                 .stream()
-                .map(AuthorFixture::create)
+                .map(AuthorEntityFixture::create)
                 .toList());
 
     bookJpaRepository.saveAll(
-        IntStream.range(0, 20).mapToObj(i -> BookFixture.create(authorEntities.get(i % 2))).toList());
+        IntStream.range(0, 20).mapToObj(i -> BookEntityFixture.create(authorEntities.get(i % 2))).toList());
   }
 
   @Test
@@ -57,12 +55,11 @@ class BookEntityJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
     boolean onlyPromotion = true;
     boolean exceptSoldOut = true;
     SortOrder sortOrder = SortOrder.PRICE_DESC;
-    PageRequest pageable = PageRequest.of(0, 10);
 
     // When
-    Page<BookEntity> results =
+    List<BookEntity> results =
         bookJpaQueryDslRepository.findByConditionsAndOrderByCriterias(
-            title, authorNickname, category, onlyPromotion, exceptSoldOut, sortOrder, pageable);
+            title, authorNickname, category, onlyPromotion, exceptSoldOut, sortOrder);
 
     // Then
     assertThat(results)
@@ -72,7 +69,7 @@ class BookEntityJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
               assertThat(result.getTitle()).isEqualTo(title);
               assertThat(result.getAuthorNickname()).isEqualTo(authorNickname);
               assertThat(result.getCategories()).contains(category);
-              assertThat(result.isPromotion()).isTrue();
+              assertThat(result.getIsPromotion()).isTrue();
               assertThat(result.getStockCount()).isPositive();
             });
   }
@@ -81,9 +78,10 @@ class BookEntityJpaQueryDslRepositoryTest extends PersistenceIntegrationTest {
   @DisplayName("검색 조건 없이 모든 도서 목록을 조회한다.")
   void findByConditionsAndOrderByCriterias_Test() {
     // Given & When
-    Page<BookEntity> results =
+    List<BookEntity> results =
         bookJpaQueryDslRepository.findByConditionsAndOrderByCriterias(
-            null, null, null, false, false, SortOrder.DATE, PageRequest.of(0, 10));
+            null, null, null,
+            false, false, SortOrder.DATE);
 
     // Then
     assertThat(results).isNotEmpty().hasSize(10);

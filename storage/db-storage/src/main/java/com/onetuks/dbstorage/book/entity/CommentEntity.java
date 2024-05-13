@@ -45,8 +45,11 @@ public class CommentEntity {
   @Column(name = "content", nullable = false)
   private String content;
 
-  @Builder
-  public CommentEntity(BookEntity bookEntity, MemberEntity memberEntity, String title, String content) {
+  public CommentEntity(
+      BookEntity bookEntity,
+      MemberEntity memberEntity,
+      String title,
+      String content) {
     this.bookEntity = bookEntity;
     this.memberEntity = memberEntity;
     this.title = title;

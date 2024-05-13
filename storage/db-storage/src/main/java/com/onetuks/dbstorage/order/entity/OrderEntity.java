@@ -1,8 +1,8 @@
 package com.onetuks.dbstorage.order.entity;
 
+import com.onetuks.coreobj.enums.payment.CashReceiptType;
+import com.onetuks.coreobj.enums.payment.PaymentClient;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import com.onetuks.dbstorage.order.vo.CashReceiptType;
-import com.onetuks.dbstorage.order.vo.PaymentClient;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -65,7 +65,6 @@ public class OrderEntity {
   @Column(name = "payment_date", nullable = false)
   private LocalDateTime paymentDate;
 
-  @Builder
   public OrderEntity(
       MemberEntity memberEntity,
       String address,

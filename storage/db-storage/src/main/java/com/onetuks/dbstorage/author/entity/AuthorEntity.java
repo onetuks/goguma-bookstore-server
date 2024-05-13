@@ -2,13 +2,9 @@ package com.onetuks.dbstorage.author.entity;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
-import com.onetuks.dbstorage.author.entity.embedded.EnrollmentInfo;
-import com.onetuks.dbstorage.order.vo.ProfileImgFilePath;
-import com.onetuks.dbstorage.order.vo.Nickname;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +16,6 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -39,11 +34,11 @@ public class AuthorEntity {
   @JoinColumn(name = "member_id", unique = true)
   private MemberEntity memberEntity;
 
-  @Embedded private ProfileImgFilePath profileImgFilePath;
+  @Column(name = "profile_img_uri", nullable = false)
+  private String profileImgUri;
 
-  @Column(nullable = false)
-  @Embedded
-  private Nickname nickname;
+  @Column(name = "nickname", nullable = false, unique = true)
+  private String nickname;
 
   @Column(name = "introduction", nullable = false)
   private String introduction;
@@ -51,7 +46,17 @@ public class AuthorEntity {
   @Column(name = "instagram_url", nullable = false, unique = true)
   private String instagramUrl;
 
-  @Embedded private EnrollmentInfo enrollmentInfo;
+  @Column(name = "business_number", nullable = false, unique = true)
+  private String businessNumber;
+
+  @Column(name = "mail_order_sales_number", nullable = false, unique = true)
+  private String mailOrderSalesNumber;
+
+  @Column(name = "is_enrollment_passed", nullable = false)
+  private Boolean isEnrollmentPassed;
+
+  @Column(name = "enrollment_at", nullable = false)
+  private LocalDateTime enrollmentAt;
 
   @OneToOne(
       mappedBy = "author",
@@ -59,74 +64,32 @@ public class AuthorEntity {
       cascade = {CascadeType.PERSIST, REMOVE})
   private AuthorStaticsEntity authorStaticsEntity;
 
-  @Builder
   public AuthorEntity(
+      Long authorId,
       MemberEntity memberEntity,
-      String profileImgFilePath,
+      String profileImgUri,
       String nickname,
       String introduction,
       String instagramUrl,
-      EnrollmentInfo enrollmentInfo) {
+      String businessNumber,
+      String mailOrderSalesNumber,
+      Boolean isEnrollmentPassed,
+      LocalDateTime enrollmentAt,
+      AuthorStaticsEntity authorStaticsEntity) {
+    this.authorId = authorId;
     this.memberEntity = memberEntity;
-    this.profileImgFilePath = new ProfileImgFilePath(profileImgFilePath);
-    this.nickname = new Nickname(nickname);
+    this.profileImgUri = profileImgUri;
+    this.nickname = nickname;
     this.introduction = introduction;
     this.instagramUrl = instagramUrl;
-    this.enrollmentInfo = Objects.requireNonNullElse(enrollmentInfo, EnrollmentInfo.init());
-    this.authorStaticsEntity = AuthorStaticsEntity.builder().author(this).build();
-  }
-
-  public String getNickname() {
-    return this.nickname.getNicknameValue();
-  }
-
-  public String getProfileImgUrl() {
-    return this.profileImgFilePath.getUrl();
-  }
-
-  public String getBusinessNumber() {
-    return this.enrollmentInfo.getBusinessNumber();
-  }
-
-  public String getMailOrderSalesNumber() {
-    return this.enrollmentInfo.getMailOrderSalesNumber();
-  }
-
-  public boolean getEnrollmentPassed() {
-    return this.enrollmentInfo.getEnrollmentPassed();
-  }
-
-  public LocalDateTime getEnrollmentAt() {
-    return this.enrollmentInfo.getEnrollmentAt();
-  }
-
-  public long getSubscribeCount() {
-    return this.authorStaticsEntity.getSubscribeCount();
-  }
-
-  public long getBookCount() {
-    return this.authorStaticsEntity.getBookCount();
-  }
-
-  public long getRestockCount() {
-    return this.authorStaticsEntity.getRestockCount();
-  }
-
-  public AuthorEntity changeProfileImgPath(String profileImgFilePath) {
-    this.profileImgFilePath = new ProfileImgFilePath(profileImgFilePath);
-    return this;
-  }
-
-  public AuthorEntity changeAuthorProfile(String nickname, String introduction, String instagramUrl) {
-    this.nickname = new Nickname(nickname);
-    this.introduction = introduction;
-    this.instagramUrl = instagramUrl;
-    return this;
-  }
-
-  public boolean convertEnrollmentJudgeStatus() {
-    this.enrollmentInfo = enrollmentInfo.convertEnrollmentPassedStatus();
-    return this.getEnrollmentInfo().getEnrollmentPassed();
+    this.businessNumber = businessNumber;
+    this.mailOrderSalesNumber = mailOrderSalesNumber;
+    this.isEnrollmentPassed = isEnrollmentPassed;
+    this.enrollmentAt = enrollmentAt;
+    this.authorStaticsEntity =
+        authorStaticsEntity != null
+            ? authorStaticsEntity
+            : AuthorStaticsEntity.init(this);
   }
 
   @Override

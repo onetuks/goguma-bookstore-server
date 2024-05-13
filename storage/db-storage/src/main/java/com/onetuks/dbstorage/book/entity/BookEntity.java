@@ -2,17 +2,11 @@ package com.onetuks.dbstorage.book.entity;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
+import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
-import com.onetuks.dbstorage.book.entity.embedded.BookConceptualEmbedded;
-import com.onetuks.dbstorage.book.entity.embedded.BookPhysicalInfoEmbedded;
-import com.onetuks.dbstorage.book.entity.embedded.BookPriceInfoEmbedded;
-import com.onetuks.dbstorage.book.vo.Category;
-import com.onetuks.dbstorage.order.vo.CoverImgFilePath;
-import com.onetuks.dbstorage.order.vo.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.dbstorage.order.vo.PreviewFilePath.PreviewFilePaths;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,9 +19,9 @@ import jakarta.persistence.Table;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,24 +36,66 @@ public class BookEntity {
   @Column(name = "book_id", nullable = false)
   private Long bookId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author_id", nullable = false)
   private AuthorEntity authorEntity;
 
   @Column(name = "author_nickname", nullable = false)
   private String authorNickname;
 
-  @Embedded private BookConceptualEmbedded bookConceptualEmbedded;
+  @Column(name = "title", nullable = false)
+  private String title;
 
-  @Embedded private BookPhysicalInfoEmbedded bookPhysicalInfoEmbedded;
+  @Column(name = "one_liner", nullable = false)
+  private String oneLiner;
 
-  @Embedded private BookPriceInfoEmbedded bookPriceInfoEmbedded;
+  @Column(name = "summary", nullable = false)
+  private String summary;
 
-  @Embedded private CoverImgFilePath coverImgFilePath;
+  @Type(JsonType.class)
+  @Column(name = "categories", nullable = false)
+  private List<Category> categories;
 
-  @Embedded private DetailImgFilePaths detailImgFilePaths;
+  @Column(name = "publisher", nullable = false)
+  private String publisher;
 
-  @Embedded private PreviewFilePaths previewFilePaths;
+  @Column(name = "isbn", nullable = false, unique = true)
+  private String isbn;
+
+  @Column(name = "height", nullable = false)
+  private Integer height;
+
+  @Column(name = "width", nullable = false)
+  private Integer width;
+
+  @Column(name = "cover_type", nullable = false)
+  private String coverType;
+
+  @Column(name = "page_count", nullable = false)
+  private Long pageCount;
+
+  @Column(name = "price", nullable = false)
+  private Long price;
+
+  @Column(name = "sales_rate", nullable = false)
+  private Integer salesRate;
+
+  @Column(name = "is_promotion", nullable = false)
+  private Boolean isPromotion;
+
+  @Column(name = "stock_count", nullable = false)
+  private Long stockCount;
+
+  @Column(name = "cover_img_uri")
+  private String coverImgUri;
+
+  @Type(JsonType.class)
+  @Column(name = "detail_img_uris")
+  private List<String> detailImgUris;
+
+  @Type(JsonType.class)
+  @Column(name = "preview_uris")
+  private List<String> previewUris;
 
   @OneToOne(
       mappedBy = "book",
@@ -67,115 +103,52 @@ public class BookEntity {
       cascade = {CascadeType.PERSIST, REMOVE})
   private BookStaticsEntity bookStaticsEntity;
 
-  @Builder
   public BookEntity(
+      Long bookId,
       AuthorEntity authorEntity,
       String authorNickname,
-      BookConceptualEmbedded bookConceptualEmbedded,
-      BookPhysicalInfoEmbedded bookPhysicalInfoEmbedded,
-      BookPriceInfoEmbedded bookPriceInfoEmbedded,
-      String coverImgFilePath,
-      List<String> detailImgFilePaths,
-      List<String> previewFilePaths) {
+      String title,
+      String oneLiner,
+      String summary,
+      List<Category> categories,
+      String publisher,
+      String isbn,
+      Integer height,
+      Integer width,
+      String coverType,
+      Long pageCount,
+      Long price,
+      Integer salesRate,
+      Boolean isPromotion,
+      Long stockCount,
+      String coverImgUri,
+      List<String> detailImgUris,
+      List<String> previewUris,
+      BookStaticsEntity bookStaticsEntity) {
+    this.bookId = bookId;
     this.authorEntity = authorEntity;
     this.authorNickname = authorNickname;
-    this.bookConceptualEmbedded = bookConceptualEmbedded;
-    this.bookPhysicalInfoEmbedded = bookPhysicalInfoEmbedded;
-    this.bookPriceInfoEmbedded = bookPriceInfoEmbedded;
-    this.coverImgFilePath = CoverImgFilePath.of(coverImgFilePath);
-    this.detailImgFilePaths = DetailImgFilePaths.of(detailImgFilePaths);
-    this.previewFilePaths = PreviewFilePaths.of(previewFilePaths);
-    this.bookStaticsEntity = BookStaticsEntity.init(this);
-  }
-
-  public String getTitle() {
-    return this.bookConceptualEmbedded.getTitle();
-  }
-
-  public String getOneLiner() {
-    return this.bookConceptualEmbedded.getOneLiner();
-  }
-
-  public String getSummary() {
-    return this.bookConceptualEmbedded.getSummary();
-  }
-
-  public List<Category> getCategories() {
-    return this.bookConceptualEmbedded.getCategories();
-  }
-
-  public String getPublisher() {
-    return this.bookConceptualEmbedded.getPublisher();
-  }
-
-  public String getIsbn() {
-    return this.bookConceptualEmbedded.getIsbn();
-  }
-
-  public int getHeight() {
-    return this.bookPhysicalInfoEmbedded.getHeight();
-  }
-
-  public int getWidth() {
-    return this.bookPhysicalInfoEmbedded.getWidth();
-  }
-
-  public String getCoverType() {
-    return this.bookPhysicalInfoEmbedded.getCoverType();
-  }
-
-  public long getPageCount() {
-    return this.bookPhysicalInfoEmbedded.getPageCount();
-  }
-
-  public long getRegularPrice() {
-    return this.bookPriceInfoEmbedded.getRegularPrice();
-  }
-
-  public long getPurchasePrice() {
-    return this.bookPriceInfoEmbedded.getPurchasePrice();
-  }
-
-  public boolean isPromotion() {
-    return this.bookPriceInfoEmbedded.getPromotion();
-  }
-
-  public long getStockCount() {
-    return this.bookPriceInfoEmbedded.getStockCount();
-  }
-
-  public String getCoverImgUrl() {
-    return this.coverImgFilePath.getUrl();
-  }
-
-  public List<String> getDetailImgUrls() {
-    return detailImgFilePaths.getUrls();
-  }
-
-  public List<String> getPreviewUrls() {
-    return previewFilePaths.getUrls();
-  }
-
-  public long getFavoriteCount() {
-    return this.bookStaticsEntity.getFavoriteCount();
-  }
-
-  public long getViewCount() {
-    return this.bookStaticsEntity.getViewCount();
-  }
-
-  public long getSalesCount() {
-    return this.bookStaticsEntity.getSalesCount();
-  }
-
-  public long getCommentCount() {
-    return this.bookStaticsEntity.getCommentCount();
-  }
-
-  public BookEntity changeStockCount(long newStockCount) {
-    this.bookPriceInfoEmbedded =
-        this.bookPriceInfoEmbedded.changeStockCount(getStockCount() > NO_STOCK ? NO_STOCK : newStockCount);
-    return this;
+    this.title = title;
+    this.oneLiner = oneLiner;
+    this.summary = summary;
+    this.categories = categories;
+    this.publisher = publisher;
+    this.isbn = isbn;
+    this.height = height;
+    this.width = width;
+    this.coverType = coverType;
+    this.pageCount = pageCount;
+    this.price = price;
+    this.salesRate = salesRate;
+    this.isPromotion = isPromotion;
+    this.stockCount = stockCount;
+    this.coverImgUri = coverImgUri;
+    this.detailImgUris = detailImgUris;
+    this.previewUris = previewUris;
+    this.bookStaticsEntity =
+        bookStaticsEntity != null
+            ? bookStaticsEntity
+            : BookStaticsEntity.init(this);
   }
 
   @Override

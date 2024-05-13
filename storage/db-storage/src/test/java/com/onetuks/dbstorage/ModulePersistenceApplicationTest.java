@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class ModulePersistenceApplicationTest extends PersistenceIntegrationTest {
+public class ModulePersistenceApplicationTest extends DbStorageIntegrationTest {
 
   @Test
   void contextLoads() {

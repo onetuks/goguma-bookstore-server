@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -40,8 +39,9 @@ public class SubscribeEntity {
   @JoinColumn(name = "author_id")
   private AuthorEntity authorEntity;
 
-  @Builder
-  public SubscribeEntity(MemberEntity memberEntity, AuthorEntity authorEntity) {
+  public SubscribeEntity(
+      MemberEntity memberEntity,
+      AuthorEntity authorEntity) {
     this.memberEntity = memberEntity;
     this.authorEntity = authorEntity;
   }

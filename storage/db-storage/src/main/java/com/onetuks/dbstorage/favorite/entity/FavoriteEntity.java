@@ -40,7 +40,6 @@ public class FavoriteEntity {
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
-  @Builder
   public FavoriteEntity(MemberEntity memberEntity, BookEntity bookEntity) {
     this.memberEntity = memberEntity;
     this.bookEntity = bookEntity;
