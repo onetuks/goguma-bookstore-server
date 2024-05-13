@@ -1,41 +1,23 @@
 package com.onetuks.coredomain;
 
-import com.onetuks.filestorage.util.UUIDProvider;
-import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
-import com.onetuks.dbstorage.member.embedded.AuthInfo;
-import com.onetuks.dbstorage.member.entity.MemberEntity;
-import com.onetuks.dbstorage.order.vo.CashReceiptType;
-import com.onetuks.dbstorage.order.vo.DefaultAddressInfo;
-import com.onetuks.dbstorage.order.vo.DefaultCashReceiptInfo;
-import java.util.List;
+import static com.onetuks.coredomain.util.TestValueProvider.createAddressInfo;
+import static com.onetuks.coredomain.util.TestValueProvider.createAuthInfo;
+import static com.onetuks.coredomain.util.TestValueProvider.createAuthorNickname;
+
+import com.onetuks.coredomain.member.model.Member;
+import com.onetuks.coreobj.enums.member.RoleType;
+import com.onetuks.coreobj.vo.UUIDProvider;
 
 public class MemberFixture {
 
-  public static MemberEntity create(RoleType roleType) {
-    return MemberEntity.builder()
-        .authInfo(createAuthInfo(roleType))
-        .nickname("빡친감자" + UUIDProvider.getUUID())
-        .alarmPermission(true)
-        .defaultAddressInfo(
-            DefaultAddressInfo.builder()
-                .defaultAddress("강원도 춘천시")
-                .defaultAddressDetail("어딘가")
-                .build())
-        .defaultCashReceiptInfo(
-            DefaultCashReceiptInfo.builder()
-                .defaultCashReceiptType(CashReceiptType.PERSON)
-                .defaultCashReceiptNumber("1234-1234")
-                .build())
-        .build();
-  }
-
-  private static AuthInfo createAuthInfo(RoleType roleType) {
-    return AuthInfo.builder()
-        .name("빠니보틀")
-        .socialId(UUIDProvider.getUUID())
-        .clientProvider(ClientProvider.NAVER)
-        .roleTypes(List.of(roleType))
-        .build();
+  public static Member create(RoleType roleType) {
+    return new Member(
+        null,
+        createAuthInfo(roleType),
+        createAuthorNickname(),
+        true,
+        CustomFilePathFixture.createProfileImgFilePath(UUIDProvider.provideUUID()),
+        createAddressInfo()
+    );
   }
 }

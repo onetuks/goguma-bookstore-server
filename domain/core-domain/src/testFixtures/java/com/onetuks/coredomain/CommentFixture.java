@@ -1,17 +1,18 @@
 package com.onetuks.coredomain;
 
-import com.onetuks.dbstorage.book.entity.BookEntity;
-import com.onetuks.dbstorage.book.entity.CommentEntity;
-import com.onetuks.dbstorage.member.entity.MemberEntity;
+import com.onetuks.coredomain.book.model.Book;
+import com.onetuks.coredomain.book.model.Comment;
+import com.onetuks.coredomain.member.model.Member;
 
 public class CommentFixture {
 
-  public static CommentEntity create(BookEntity bookEntity, MemberEntity memberEntity) {
-    return CommentEntity.builder()
-        .book(bookEntity)
-        .member(memberEntity)
-        .title("최고의 저녁 반찬")
-        .content("암튼 저녁먹을때 보면 밥도둑임")
-        .build();
+  public static Comment create(Book book, Member member) {
+    return new Comment(
+        null,
+        book,
+        member,
+        "최고의 저녁반찬",
+        "이거면 저녁식사 뚝딱!"
+    );
   }
 }

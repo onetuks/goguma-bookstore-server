@@ -1,12 +1,16 @@
 package com.onetuks.coredomain;
 
-import com.onetuks.dbstorage.author.entity.AuthorEntity;
-import com.onetuks.dbstorage.member.entity.MemberEntity;
-import com.onetuks.dbstorage.subscribe.entity.SubscribeEntity;
+import com.onetuks.coredomain.author.model.Author;
+import com.onetuks.coredomain.member.model.Member;
+import com.onetuks.coredomain.subscribe.model.Subscribe;
 
 public class SubscribeFixture {
 
-  public static SubscribeEntity create(MemberEntity memberEntity, AuthorEntity authorEntity) {
-    return SubscribeEntity.builder().member(memberEntity).author(authorEntity).build();
+  public static Subscribe create(Member member, Author author) {
+    return new Subscribe(
+        null,
+        member,
+        author
+    );
   }
 }

@@ -1,15 +1,18 @@
 package com.onetuks.coredomain.util;
 
+import com.onetuks.coredomain.book.model.vo.BookConceptualInfo;
+import com.onetuks.coredomain.book.model.vo.BookPhysicalInfo;
+import com.onetuks.coredomain.book.model.vo.BookPriceInfo;
 import com.onetuks.coredomain.member.model.vo.AddressInfo;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;
+import com.onetuks.coredomain.member.model.vo.Nickname;
+import com.onetuks.coredomain.registration.model.vo.ApprovalInfo;
+import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.vo.UUIDProvider;
-import com.onetuks.coredomain.member.model.vo.Nickname;
-import com.onetuks.coreobj.enums.book.Category;
 import java.util.List;
 import java.util.Random;
-import javax.management.relation.Role;
 
 public class TestValueProvider {
 
@@ -106,6 +109,17 @@ public class TestValueProvider {
     return String.valueOf(random.nextLong(1_000_000_000_000L, 9_999_999_999_999L));
   }
 
+  public static BookConceptualInfo createBookConceptualInfo() {
+    return new BookConceptualInfo(
+        createTitle(),
+        createOneLiner(),
+        createSummary(),
+        createCategories(),
+        createPublisher(),
+        createIsbn()
+    );
+  }
+
   public static int createHeight() {
     return random.nextInt(100, 300);
   }
@@ -120,6 +134,15 @@ public class TestValueProvider {
 
   public static long createPageCount() {
     return random.nextLong(100L, 500L);
+  }
+
+  public static BookPhysicalInfo createBookPhysicalInfo() {
+    return new BookPhysicalInfo(
+        createHeight(),
+        createWidth(),
+        createCoverType(),
+        createPageCount()
+    );
   }
 
   public static long createPrice() {
@@ -138,6 +161,15 @@ public class TestValueProvider {
     return random.nextLong(1L, 100L);
   }
 
+  public static BookPriceInfo createBookPriceInfo() {
+    return new BookPriceInfo(
+        createPrice(),
+        createSalesRate(),
+        createPromotion(),
+        createStockCount()
+    );
+  }
+
   public static String createBusinessNumber() {
     return String.valueOf(random.nextLong(1_000_000_000L, 9_999_999_999L));
   }
@@ -147,7 +179,8 @@ public class TestValueProvider {
   }
 
   public static Nickname createAuthorNickname() {
-    return new Nickname(authorNicknames.get(random.nextInt(authorNicknames.size())) + UUIDProvider.provideUUID());
+    return new Nickname(
+        authorNicknames.get(random.nextInt(authorNicknames.size())) + UUIDProvider.provideUUID());
   }
 
   public static String createInstagramUrl() {
@@ -197,5 +230,12 @@ public class TestValueProvider {
 
   public static String createApprovalMemo(boolean isApproved) {
     return isApproved ? "승인되었습니다." : "신간 등록 검수 중입니다.";
+  }
+
+  public static ApprovalInfo createApprovalInfo(boolean isApproved) {
+    return new ApprovalInfo(
+        isApproved,
+        createApprovalMemo(isApproved)
+    )
   }
 }
