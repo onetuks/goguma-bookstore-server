@@ -2,7 +2,9 @@ package com.onetuks.dbstorage.subscribe.repository;
 
 import com.onetuks.coredomain.subscribe.model.Subscribe;
 import com.onetuks.coredomain.subscribe.repository.SubscribeRepository;
+import com.onetuks.dbstorage.author.repository.AuthorStaticsJpaRepository;
 import com.onetuks.dbstorage.subscribe.converter.SubscribeConverter;
+import com.onetuks.dbstorage.subscribe.entity.SubscribeEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -11,19 +13,29 @@ import org.springframework.stereotype.Repository;
 public class SubscribeEntityRepository implements SubscribeRepository {
 
   private final SubscribeJpaRepository subscribeJpaRepository;
+  private final AuthorStaticsJpaRepository authorStaticsJpaRepository;
   private final SubscribeConverter converter;
 
   public SubscribeEntityRepository(
       SubscribeJpaRepository subscribeJpaRepository,
+      AuthorStaticsJpaRepository authorStaticsJpaRepository,
       SubscribeConverter converter) {
     this.subscribeJpaRepository = subscribeJpaRepository;
+    this.authorStaticsJpaRepository = authorStaticsJpaRepository;
     this.converter = converter;
   }
 
   @Override
   public Subscribe create(Subscribe subscribe) {
+    SubscribeEntity subscriveEntity = converter.toEntity(subscribe);
+
+    authorStaticsJpaRepository.save(
+        subscriveEntity.getAuthorEntity().getAuthorStaticsEntity()
+            .increaseSubscriberCount()
+    );
+
     return converter.toDomain(
-        subscribeJpaRepository.save(converter.toEntity(subscribe)));
+        subscribeJpaRepository.save(subscriveEntity));
   }
 
   @Override
@@ -49,6 +61,14 @@ public class SubscribeEntityRepository implements SubscribeRepository {
 
   @Override
   public void delete(long subscribeId) {
-    subscribeJpaRepository.deleteById(subscribeId);
+    subscribeJpaRepository.findById(subscribeId)
+        .ifPresent(subscribeEntity -> {
+          authorStaticsJpaRepository.save(
+              subscribeEntity.getAuthorEntity().getAuthorStaticsEntity()
+                  .decreaseSubscriberCount()
+          );
+
+          subscribeJpaRepository.delete(subscribeEntity);
+        });
   }
 }

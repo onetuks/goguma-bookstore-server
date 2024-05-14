@@ -2,7 +2,9 @@ package com.onetuks.dbstorage.favorite.repository;
 
 import com.onetuks.coredomain.favorite.model.Favorite;
 import com.onetuks.coredomain.favorite.repository.FavoriteRepository;
+import com.onetuks.dbstorage.book.repository.BookStaticsJpaRepository;
 import com.onetuks.dbstorage.favorite.converter.FavoriteConverter;
+import com.onetuks.dbstorage.favorite.entity.FavoriteEntity;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -11,17 +13,28 @@ import org.springframework.stereotype.Repository;
 public class FavoriteEntityRepository implements FavoriteRepository {
 
   private final FavoriteJpaRepository repository;
+  private final BookStaticsJpaRepository bookStaticsJpaRepository;
   private final FavoriteConverter converter;
 
-  public FavoriteEntityRepository(FavoriteJpaRepository repository, FavoriteConverter converter) {
+  public FavoriteEntityRepository(
+      FavoriteJpaRepository repository,
+      BookStaticsJpaRepository bookStaticsJpaRepository,
+      FavoriteConverter converter) {
     this.repository = repository;
+    this.bookStaticsJpaRepository = bookStaticsJpaRepository;
     this.converter = converter;
   }
 
   @Override
   public Favorite create(Favorite favorite) {
+    FavoriteEntity favoriteEntity = converter.toEntity(favorite);
+
+    bookStaticsJpaRepository.save(
+        favoriteEntity.getBookEntity().getBookStaticsEntity()
+            .increaseFavoriteCount());
+
     return converter.toDomain(
-        repository.save(converter.toEntity(favorite)));
+        repository.save(favoriteEntity));
   }
 
   @Override
@@ -46,6 +59,13 @@ public class FavoriteEntityRepository implements FavoriteRepository {
 
   @Override
   public void delete(long favoriteId) {
-    repository.deleteById(favoriteId);
+    repository.findById(favoriteId)
+        .ifPresent(favoriteEntity -> {
+          bookStaticsJpaRepository.save(
+              favoriteEntity.getBookEntity().getBookStaticsEntity()
+                  .decreaseFavoriteCount());
+
+          repository.delete(favoriteEntity);
+        });
   }
 }

@@ -6,7 +6,9 @@ import com.onetuks.coredomain.book.repository.BookScmRepository;
 import com.onetuks.coredomain.registration.model.Registration;
 import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.coreobj.enums.book.PageOrder;
+import com.onetuks.dbstorage.author.repository.AuthorStaticsJpaRepository;
 import com.onetuks.dbstorage.book.converter.BookConverter;
+import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.book.vo.SortOrder;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -17,28 +19,39 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
 
   private final BookJpaRepository jpaRepository;
   private final BookJpaQueryDslRepository queryDslRepository;
+  private final AuthorStaticsJpaRepository authorStaticsJpaRepository;
   private final BookConverter converter;
 
   public BookEntityRepository(
       BookJpaRepository jpaRepository,
       BookJpaQueryDslRepository queryDslRepository,
+      AuthorStaticsJpaRepository authorStaticsJpaRepository,
       BookConverter converter) {
     this.jpaRepository = jpaRepository;
     this.queryDslRepository = queryDslRepository;
+    this.authorStaticsJpaRepository = authorStaticsJpaRepository;
     this.converter = converter;
   }
 
   @Override
   public Book create(Registration registration) {
+    BookEntity bookEntity = converter.toEntity(registration);
+
+    authorStaticsJpaRepository.save(
+        bookEntity.getAuthorEntity().getAuthorStaticsEntity()
+            .increaseBookCount()
+    );
+
     return converter.toDomain(
-        jpaRepository.save(converter.toEntity(registration)));
+        jpaRepository.save(bookEntity));
   }
 
   @Override
   public Book read(long bookId) {
     return converter.toDomain(
         jpaRepository.findById(bookId)
-            .orElseThrow(EntityNotFoundException::new));
+            .orElseThrow(EntityNotFoundException::new)
+            .increaseViewCount());
   }
 
   @Override
@@ -72,6 +85,14 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
 
   @Override
   public void delete(long bookId) {
-    jpaRepository.deleteById(bookId);
+    jpaRepository.findById(bookId)
+        .ifPresent(bookEntity -> {
+          authorStaticsJpaRepository.save(
+              bookEntity.getAuthorEntity().getAuthorStaticsEntity()
+                  .decreaseBookCount()
+          );
+
+          jpaRepository.delete(bookEntity);
+        });
   }
 }

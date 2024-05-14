@@ -59,6 +59,21 @@ public class BookStaticsEntity {
     return new BookStaticsEntity(bookEntity, 0L, 0L, 0L, 0L);
   }
 
+  public BookStaticsEntity increaseFavoriteCount() {
+    this.favoriteCount ++;
+    return this;
+  }
+
+  public BookStaticsEntity decreaseFavoriteCount() {
+    this.favoriteCount --;
+    return this;
+  }
+
+  public BookStaticsEntity increaseViewCount() {
+    this.viewCount ++;
+    return this;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

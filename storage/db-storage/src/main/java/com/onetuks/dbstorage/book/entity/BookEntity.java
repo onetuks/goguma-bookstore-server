@@ -151,6 +151,11 @@ public class BookEntity {
             : BookStaticsEntity.init(this);
   }
 
+  public BookEntity increaseViewCount() {
+    this.bookStaticsEntity = bookStaticsEntity.increaseViewCount();
+    return this;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

@@ -50,4 +50,24 @@ public class AuthorStaticsEntity {
   public static AuthorStaticsEntity init(AuthorEntity authorEntity) {
     return new AuthorStaticsEntity(authorEntity, 0L, 0L, 0L);
   }
+
+  public AuthorStaticsEntity increaseSubscriberCount() {
+    this.subscribeCount ++;
+    return this;
+  }
+
+  public AuthorStaticsEntity decreaseSubscriberCount() {
+    this.subscribeCount --;
+    return this;
+  }
+
+  public AuthorStaticsEntity increaseBookCount() {
+    this.bookCount ++;
+    return this;
+  }
+
+  public AuthorStaticsEntity decreaseBookCount() {
+    this.bookCount --;
+    return this;
+  }
 }
