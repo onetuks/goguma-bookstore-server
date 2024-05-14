@@ -30,10 +30,10 @@ public record Author(
     );
   }
 
-  public Author convertEnrollmentPassed() {
+  public Author convertEnrollmentPassed(Member member) {
     return new Author(
         authorId(),
-        member(),
+        member,
         profileImgFilePath(),
         nickname(),
         introduction(),

@@ -1,6 +1,10 @@
 package com.onetuks.coredomain;
 
 import static com.onetuks.coredomain.CustomFilePathFixture.createProfileImgFilePath;
+import static com.onetuks.coredomain.util.TestValueProvider.createAuthorNickname;
+import static com.onetuks.coredomain.util.TestValueProvider.createBusinessNumber;
+import static com.onetuks.coredomain.util.TestValueProvider.createInstagramUrl;
+import static com.onetuks.coredomain.util.TestValueProvider.createMailOrderSalesNumber;
 
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
@@ -12,34 +16,34 @@ import java.time.LocalDateTime;
 
 public class AuthorFixture {
 
-  public static Author create(Member member) {
+  public static Author create(long authorId, Member member) {
     return new Author(
-        null,
+        authorId,
         member,
         createProfileImgFilePath(UUIDProvider.provideUUID()),
-        TestValueProvider.createAuthorNickname(),
+        createAuthorNickname(),
         "유튜브 대통령",
-        TestValueProvider.createInstagramUrl(),
+        createInstagramUrl(),
         new EnrollmentInfo(
-            TestValueProvider.createBusinessNumber(),
-            TestValueProvider.createMailOrderSalesNumber(),
+            createBusinessNumber(),
+            createMailOrderSalesNumber(),
             member.authInfo().roles().contains(RoleType.AUTHOR),
             LocalDateTime.now()),
         null
     );
   }
 
-  public static Author createWithEnrollmentAt(Member member, LocalDateTime enrollmentAt) {
+  public static Author createWithEnrollmentAt(long authoId, Member member, LocalDateTime enrollmentAt) {
     return new Author(
         null,
         member,
         createProfileImgFilePath(UUIDProvider.provideUUID()),
-        TestValueProvider.createAuthorNickname(),
+        createAuthorNickname(),
         "유튜브 대통령",
-        TestValueProvider.createInstagramUrl(),
+        createInstagramUrl(),
         new EnrollmentInfo(
-            TestValueProvider.createBusinessNumber(),
-            TestValueProvider.createMailOrderSalesNumber(),
+            createBusinessNumber(),
+            createMailOrderSalesNumber(),
             member.authInfo().roles().contains(RoleType.AUTHOR),
             enrollmentAt),
         null

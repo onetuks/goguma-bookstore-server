@@ -9,6 +9,9 @@ subprojects {
         // Module
         implementation(project(':core-obj'))
 
+        // Test
+        testImplementation(testFixtures(project(':core-obj')))
+
         // Spring Transaction
         implementation('org.springframework:spring-tx')
     }

@@ -1,5 +1,6 @@
 package com.onetuks.coredomain;
 
+import static com.onetuks.coredomain.CustomFilePathFixture.createProfileImgFilePath;
 import static com.onetuks.coredomain.util.TestValueProvider.createAddressInfo;
 import static com.onetuks.coredomain.util.TestValueProvider.createAuthInfo;
 import static com.onetuks.coredomain.util.TestValueProvider.createAuthorNickname;
@@ -10,13 +11,13 @@ import com.onetuks.coreobj.vo.UUIDProvider;
 
 public class MemberFixture {
 
-  public static Member create(RoleType roleType) {
+  public static Member create(long id, RoleType roleType) {
     return new Member(
-        null,
+        id,
         createAuthInfo(roleType),
         createAuthorNickname(),
         true,
-        CustomFilePathFixture.createProfileImgFilePath(UUIDProvider.provideUUID()),
+        createProfileImgFilePath(UUIDProvider.provideUUID()),
         createAddressInfo()
     );
   }

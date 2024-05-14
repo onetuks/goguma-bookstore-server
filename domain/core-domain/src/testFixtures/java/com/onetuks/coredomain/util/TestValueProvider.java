@@ -77,6 +77,10 @@ public class TestValueProvider {
   private static final List<String> authorNicknames =
       List.of("빠니보틀", "곽튜브", "임용한", "침착맨", "진수", "나관중", "조지오엘");
 
+  public static long createId() {
+    return random.nextLong(1, Long.MAX_VALUE / 2);
+  }
+
   public static String createTitle() {
     return titles.get(random.nextInt(titles.size()));
   }
@@ -236,6 +240,6 @@ public class TestValueProvider {
     return new ApprovalInfo(
         isApproved,
         createApprovalMemo(isApproved)
-    )
+    );
   }
 }

@@ -29,7 +29,7 @@ public record Registration(
     return new Registration(
         registrationId(),
         author(),
-        new ApprovalInfo(isApproved, approvalMemo),
+        ApprovalInfo.changeApprovalInfo(isApproved, approvalMemo),
         bookConceptualInfo(),
         bookPhysicalInfo(),
         bookPriceInfo(),
@@ -48,7 +48,7 @@ public record Registration(
     return new Registration(
         registrationId(),
         author(),
-        approvalInfo(),
+        ApprovalInfo.init(),
         new BookConceptualInfo(
             bookConceptualInfo().title(),
             oneLiner,
@@ -79,7 +79,7 @@ public record Registration(
     return new Registration(
         registrationId(),
         author(),
-        approvalInfo(),
+        ApprovalInfo.init(),
         new BookConceptualInfo(
             bookConceptualInfo().title(),
             oneLiner,

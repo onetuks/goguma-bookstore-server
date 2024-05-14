@@ -15,10 +15,10 @@ import com.onetuks.coreobj.vo.UUIDProvider;
 
 public class RegistrationFixture {
 
-  public static Registration create(Author author, boolean isApproved) {
+  public static Registration create(long registrationId, Author author, boolean isApproved) {
     String uuid = UUIDProvider.provideUUID();
     return new Registration(
-        null,
+        registrationId,
         author,
         createApprovalInfo(isApproved),
         createBookConceptualInfo(),

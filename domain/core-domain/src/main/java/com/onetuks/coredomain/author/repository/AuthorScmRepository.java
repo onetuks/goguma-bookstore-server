@@ -9,7 +9,11 @@ public interface AuthorScmRepository {
 
   Author read(long authorId);
 
+  Author readByMember(long memberId);
+
   List<Author> readAll();
+
+  Author update(Author author);
 
   void delete(long authorId);
 }

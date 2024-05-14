@@ -14,10 +14,10 @@ import com.onetuks.coreobj.vo.UUIDProvider;
 
 public class BookFixture {
 
-  public static Book create(Author author) {
+  public static Book create(long bookId, Author author) {
     String uuid = UUIDProvider.provideUUID();
     return new Book(
-        null,
+        bookId,
         author,
         createBookConceptualInfo(),
         createBookPhysicalInfo(),

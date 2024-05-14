@@ -1,0 +1,14 @@
+dependencies {
+
+    implementation(project(':domain:core-domain'))
+
+    // Test
+    testImplementation(project(':domain:core-domain'))
+    testImplementation(testFixtures(project(':domain:core-domain')))
+
+//    // Spring Web
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+}
