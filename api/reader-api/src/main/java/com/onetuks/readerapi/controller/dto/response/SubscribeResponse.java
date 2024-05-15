@@ -10,6 +10,7 @@ public record SubscribeResponse(long subscribeId, long memberId, long authorId) 
   }
 
   public record SubscribeResponses(Page<SubscribeResponse> responses) {
+
     public static SubscribeResponses from(Page<SubscribeResult> results) {
       return new SubscribeResponses(results.map(SubscribeResponse::from));
     }

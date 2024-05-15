@@ -4,7 +4,7 @@ import static com.onetuks.dbstorage.global.vo.auth.RoleType.ADMIN;
 import static com.onetuks.dbstorage.global.vo.auth.RoleType.AUTHOR;
 import static com.onetuks.dbstorage.global.vo.auth.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.coreauth.AuthIntegrationTest;
 import com.onetuks.coreauth.jwt.AuthToken;

@@ -25,6 +25,7 @@ public class NaverUser {
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   @JsonNaming(SnakeCaseStrategy.class)
   public static class Response {
+
     private String id;
     private String email;
     private String name;

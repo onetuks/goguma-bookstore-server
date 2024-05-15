@@ -1,13 +1,13 @@
 package com.onetuks.readerapi.controller;
 
 import com.onetuks.coreauth.util.login.LoginId;
-import com.onetuks.readerapi.controller.dto.response.FavoriteGetResponse.FavoriteGetResponses;
-import com.onetuks.readerapi.controller.dto.response.FavoritePostResponse;
-import com.onetuks.readerapi.controller.dto.response.FavoriteWhetherGetResponse;
 import com.onetuks.modulereader.favorite.service.FavoriteService;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoritePostResult;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoriteWhetherGetResult;
+import com.onetuks.readerapi.controller.dto.response.FavoriteGetResponse.FavoriteGetResponses;
+import com.onetuks.readerapi.controller.dto.response.FavoritePostResponse;
+import com.onetuks.readerapi.controller.dto.response.FavoriteWhetherGetResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

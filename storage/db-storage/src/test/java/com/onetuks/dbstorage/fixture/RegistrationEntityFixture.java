@@ -50,7 +50,6 @@ public class RegistrationEntityFixture {
         createCoverImgFilePath(uuid).getUri(),
         createDetailImgFilePaths(uuid).getUris(),
         createPreviewFilePaths(uuid).getUris(),
-        createSampleFilePath(uuid).getUri()
-    );
+        createSampleFilePath(uuid).getUri());
   }
 }

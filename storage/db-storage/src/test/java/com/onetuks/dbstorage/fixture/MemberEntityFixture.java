@@ -3,8 +3,8 @@ package com.onetuks.dbstorage.fixture;
 import static com.onetuks.coredomain.CustomFilePathFixture.createProfileImgFilePath;
 import static com.onetuks.coredomain.util.TestValueProvider.createAddress;
 import static com.onetuks.coredomain.util.TestValueProvider.createAddressDetail;
-import static com.onetuks.coredomain.util.TestValueProvider.createAuthorNickname;
 import static com.onetuks.coredomain.util.TestValueProvider.createClientProvider;
+import static com.onetuks.coredomain.util.TestValueProvider.createNickname;
 import static com.onetuks.coredomain.util.TestValueProvider.createRoles;
 import static com.onetuks.coredomain.util.TestValueProvider.createSocialId;
 
@@ -20,11 +20,10 @@ public class MemberEntityFixture {
         createSocialId(),
         createClientProvider(),
         createRoles(roleType),
-        createAuthorNickname().nicknameValue(),
+        createNickname().nicknameValue(),
         createProfileImgFilePath(UUIDProvider.provideUUID()).getUri(),
         true,
         createAddress(),
-        createAddressDetail()
-    );
+        createAddressDetail());
   }
 }

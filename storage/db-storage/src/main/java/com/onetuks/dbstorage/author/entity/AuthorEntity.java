@@ -87,9 +87,7 @@ public class AuthorEntity {
     this.isEnrollmentPassed = isEnrollmentPassed;
     this.enrollmentAt = enrollmentAt;
     this.authorStaticsEntity =
-        authorStaticsEntity != null
-            ? authorStaticsEntity
-            : AuthorStaticsEntity.init(this);
+        authorStaticsEntity != null ? authorStaticsEntity : AuthorStaticsEntity.init(this);
   }
 
   @Override

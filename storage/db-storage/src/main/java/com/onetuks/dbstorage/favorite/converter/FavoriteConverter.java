@@ -19,17 +19,13 @@ public class FavoriteConverter {
 
   public FavoriteEntity toEntity(Favorite favorite) {
     return new FavoriteEntity(
-        memberConverter.toEntity(favorite.member()),
-        bookConverter.toEntity(favorite.book())
-    );
+        memberConverter.toEntity(favorite.member()), bookConverter.toEntity(favorite.book()));
   }
 
   public Favorite toDomain(FavoriteEntity favoriteEntity) {
     return new Favorite(
         favoriteEntity.getFavoriteId(),
         memberConverter.toDomain(favoriteEntity.getMemberEntity()),
-        bookConverter.toDomain(favoriteEntity.getBookEntity())
-    );
+        bookConverter.toDomain(favoriteEntity.getBookEntity()));
   }
-
 }

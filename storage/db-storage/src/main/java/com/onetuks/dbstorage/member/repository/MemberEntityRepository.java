@@ -14,37 +14,34 @@ public class MemberEntityRepository implements MemberRepository {
   private final MemberConverter converter;
 
   public MemberEntityRepository(
-      MemberJpaRepository memberJpaRepository,
-      MemberConverter converter) {
+      MemberJpaRepository memberJpaRepository, MemberConverter converter) {
     this.memberJpaRepository = memberJpaRepository;
     this.converter = converter;
   }
 
   @Override
   public Member create(Member member) {
-    return converter.toDomain(
-        memberJpaRepository.save(
-            converter.toEntity(member)));
+    return converter.toDomain(memberJpaRepository.save(converter.toEntity(member)));
   }
 
   @Override
   public Member read(long memberId) {
     return converter.toDomain(
-        memberJpaRepository.findById(memberId)
+        memberJpaRepository
+            .findById(memberId)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다.")));
   }
 
   @Override
   public Optional<Member> read(String socialId, ClientProvider clientProvider) {
-    return memberJpaRepository.findBySocialIdAndClientProvider(socialId, clientProvider)
+    return memberJpaRepository
+        .findBySocialIdAndClientProvider(socialId, clientProvider)
         .map(converter::toDomain);
   }
 
   @Override
   public Member update(Member member) {
-    return converter.toDomain(
-        memberJpaRepository.save(
-            converter.toEntity(member)));
+    return converter.toDomain(memberJpaRepository.save(converter.toEntity(member)));
   }
 
   @Override

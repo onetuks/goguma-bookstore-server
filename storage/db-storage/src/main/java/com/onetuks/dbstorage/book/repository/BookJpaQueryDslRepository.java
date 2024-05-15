@@ -40,13 +40,13 @@ public class BookJpaQueryDslRepository {
                 eqOnlyPermission(onlyPromotion),
                 eqExceptSoldOut(exceptSoldOut))
             .orderBy(new OrderSpecifier<>(sortOrder.getOrder(), sortOrder.getCriteria()))
-//            .offset(pageable.getOffset())
-//            .limit(pageable.getPageSize())
+            //            .offset(pageable.getOffset())
+            //            .limit(pageable.getPageSize())
             .fetch();
 
     return bookEntities;
 
-//    return new PageImpl<>(bookEntities, pageable, bookEntities.size());
+    //    return new PageImpl<>(bookEntities, pageable, bookEntities.size());
   }
 
   private BooleanExpression containsTitle(String title) {
@@ -60,8 +60,8 @@ public class BookJpaQueryDslRepository {
   private BooleanExpression containsCategory(Category category) {
     return category != null
         ? Expressions.booleanTemplate(
-        "CAST(JSON_CONTAINS({0}, {1}) AS INTEGER) = 1",
-        bookEntity.categories, "\"" + category + "\"")
+            "CAST(JSON_CONTAINS({0}, {1}) AS INTEGER) = 1",
+            bookEntity.categories, "\"" + category + "\"")
         : null;
   }
 

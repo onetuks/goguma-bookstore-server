@@ -2,9 +2,9 @@ package com.onetuks.coreauth.service;
 
 import com.onetuks.coreauth.service.dto.MemberCreateResult;
 import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.dbstorage.member.embedded.AuthInfo;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.repository.MemberJpaRepository;
-import com.onetuks.dbstorage.member.embedded.AuthInfo;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

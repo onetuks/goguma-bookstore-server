@@ -45,10 +45,7 @@ public class CommentEntity {
   private String content;
 
   public CommentEntity(
-      BookEntity bookEntity,
-      MemberEntity memberEntity,
-      String title,
-      String content) {
+      BookEntity bookEntity, MemberEntity memberEntity, String title, String content) {
     this.bookEntity = bookEntity;
     this.memberEntity = memberEntity;
     this.title = title;

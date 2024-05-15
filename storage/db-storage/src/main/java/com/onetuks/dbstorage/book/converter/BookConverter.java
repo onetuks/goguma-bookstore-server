@@ -45,8 +45,7 @@ public class BookConverter {
         book.coverImgFilePath().getUri(),
         book.detailImgFilePaths().getUris(),
         book.previewFilePaths().getUris(),
-        null
-    );
+        null);
   }
 
   public BookEntity toEntity(Registration registration) {
@@ -71,8 +70,7 @@ public class BookConverter {
         registration.coverImgFilePath().getUri(),
         registration.detailImgFilePaths().getUris(),
         registration.previewFilePaths().getUris(),
-        null
-    );
+        null);
   }
 
   public Book toDomain(BookEntity bookEntity) {
@@ -99,8 +97,7 @@ public class BookConverter {
         CoverImgFilePath.of(bookEntity.getCoverImgUri()),
         DetailImgFilePaths.of(bookEntity.getDetailImgUris()),
         PreviewFilePaths.of(bookEntity.getPreviewUris()),
-        statics(bookEntity.getBookStaticsEntity())
-    );
+        statics(bookEntity.getBookStaticsEntity()));
   }
 
   public BookStatics statics(BookStaticsEntity bookStaticsEntity) {
@@ -109,7 +106,6 @@ public class BookConverter {
         bookStaticsEntity.getFavoriteCount(),
         bookStaticsEntity.getViewCount(),
         bookStaticsEntity.getSalesCount(),
-        bookStaticsEntity.getCommentCount()
-    );
+        bookStaticsEntity.getCommentCount());
   }
 }

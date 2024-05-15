@@ -22,8 +22,7 @@ public class MemberConverter {
         member.profileImgFilePath().getUri(),
         member.isAlarmPermitted(),
         member.defaultAddressInfo().address(),
-        member.defaultAddressInfo().addressDetail()
-    );
+        member.defaultAddressInfo().addressDetail());
   }
 
   public Member toDomain(MemberEntity memberEntity) {
@@ -37,9 +36,6 @@ public class MemberConverter {
         new Nickname(memberEntity.getNickname()),
         memberEntity.getIsAlarmPermitted(),
         new ProfileImgFilePath(memberEntity.getProfileImgUri()),
-        new AddressInfo(
-            memberEntity.getDefaultAddress(),
-            memberEntity.getDefaultAddressDetail())
-    );
+        new AddressInfo(memberEntity.getDefaultAddress(), memberEntity.getDefaultAddressDetail()));
   }
 }

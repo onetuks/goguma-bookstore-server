@@ -16,6 +16,7 @@ public record FavoriteGetResponse(
     List<Category> categories) {
 
   public record FavoriteGetResponses(Page<FavoriteGetResponse> favoriteGetResponsePage) {
+
     public static FavoriteGetResponses from(Page<FavoriteGetResult> results) {
       return new FavoriteGetResponses(results.map(FavoriteGetResponse::from));
     }

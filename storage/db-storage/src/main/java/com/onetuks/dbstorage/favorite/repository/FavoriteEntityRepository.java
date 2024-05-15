@@ -30,18 +30,15 @@ public class FavoriteEntityRepository implements FavoriteRepository {
     FavoriteEntity favoriteEntity = converter.toEntity(favorite);
 
     bookStaticsJpaRepository.save(
-        favoriteEntity.getBookEntity().getBookStaticsEntity()
-            .increaseFavoriteCount());
+        favoriteEntity.getBookEntity().getBookStaticsEntity().increaseFavoriteCount());
 
-    return converter.toDomain(
-        repository.save(favoriteEntity));
+    return converter.toDomain(repository.save(favoriteEntity));
   }
 
   @Override
   public Favorite read(long favoriteId) {
     return converter.toDomain(
-        repository.findById(favoriteId)
-            .orElseThrow(EntityNotFoundException::new));
+        repository.findById(favoriteId).orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
@@ -51,21 +48,21 @@ public class FavoriteEntityRepository implements FavoriteRepository {
 
   @Override
   public List<Favorite> readAll(long memberId) {
-    return repository.findAllByMemberEntityMemberId(memberId)
-        .stream()
+    return repository.findAllByMemberEntityMemberId(memberId).stream()
         .map(converter::toDomain)
         .toList();
   }
 
   @Override
   public void delete(long favoriteId) {
-    repository.findById(favoriteId)
-        .ifPresent(favoriteEntity -> {
-          bookStaticsJpaRepository.save(
-              favoriteEntity.getBookEntity().getBookStaticsEntity()
-                  .decreaseFavoriteCount());
+    repository
+        .findById(favoriteId)
+        .ifPresent(
+            favoriteEntity -> {
+              bookStaticsJpaRepository.save(
+                  favoriteEntity.getBookEntity().getBookStaticsEntity().decreaseFavoriteCount());
 
-          repository.delete(favoriteEntity);
-        });
+              repository.delete(favoriteEntity);
+            });
   }
 }

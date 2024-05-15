@@ -39,9 +39,7 @@ public class SubscribeEntity {
   @JoinColumn(name = "author_id")
   private AuthorEntity authorEntity;
 
-  public SubscribeEntity(
-      MemberEntity memberEntity,
-      AuthorEntity authorEntity) {
+  public SubscribeEntity(MemberEntity memberEntity, AuthorEntity authorEntity) {
     this.memberEntity = memberEntity;
     this.authorEntity = authorEntity;
   }

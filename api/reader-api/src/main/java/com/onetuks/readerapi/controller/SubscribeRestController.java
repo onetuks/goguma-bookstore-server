@@ -1,11 +1,11 @@
 package com.onetuks.readerapi.controller;
 
 import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.modulereader.subscribe.service.SubscribeService;
+import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
 import com.onetuks.readerapi.controller.dto.request.SubscribePostRequest;
 import com.onetuks.readerapi.controller.dto.response.SubscribeResponse;
 import com.onetuks.readerapi.controller.dto.response.SubscribeResponse.SubscribeResponses;
-import com.onetuks.modulereader.subscribe.service.SubscribeService;
-import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -38,28 +38,23 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
     BookEntity bookEntity = converter.toEntity(registration);
 
     authorStaticsJpaRepository.save(
-        bookEntity.getAuthorEntity().getAuthorStaticsEntity()
-            .increaseBookCount()
-    );
+        bookEntity.getAuthorEntity().getAuthorStaticsEntity().increaseBookCount());
 
-    return converter.toDomain(
-        jpaRepository.save(bookEntity));
+    return converter.toDomain(jpaRepository.save(bookEntity));
   }
 
   @Override
   public Book read(long bookId) {
     return converter.toDomain(
-        jpaRepository.findById(bookId)
+        jpaRepository
+            .findById(bookId)
             .orElseThrow(EntityNotFoundException::new)
             .increaseViewCount());
   }
 
   @Override
   public List<Book> readAll(long authorId) {
-    return jpaRepository.findAll()
-        .stream()
-        .map(converter::toDomain)
-        .toList();
+    return jpaRepository.findAll().stream().map(converter::toDomain).toList();
   }
 
   @Override
@@ -70,7 +65,8 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
       boolean onlyPromotion,
       boolean exceptSoldOut,
       PageOrder pageOrder) {
-    return queryDslRepository.findByConditionsAndOrderByCriterias(
+    return queryDslRepository
+        .findByConditionsAndOrderByCriterias(
             title, authorNickname, category, onlyPromotion, exceptSoldOut, SortOrder.of(pageOrder))
         .stream()
         .map(converter::toDomain)
@@ -79,20 +75,19 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
 
   @Override
   public Book update(Book book) {
-    return converter.toDomain(
-        jpaRepository.save(converter.toEntity(book)));
+    return converter.toDomain(jpaRepository.save(converter.toEntity(book)));
   }
 
   @Override
   public void delete(long bookId) {
-    jpaRepository.findById(bookId)
-        .ifPresent(bookEntity -> {
-          authorStaticsJpaRepository.save(
-              bookEntity.getAuthorEntity().getAuthorStaticsEntity()
-                  .decreaseBookCount()
-          );
+    jpaRepository
+        .findById(bookId)
+        .ifPresent(
+            bookEntity -> {
+              authorStaticsJpaRepository.save(
+                  bookEntity.getAuthorEntity().getAuthorStaticsEntity().decreaseBookCount());
 
-          jpaRepository.delete(bookEntity);
-        });
+              jpaRepository.delete(bookEntity);
+            });
   }
 }

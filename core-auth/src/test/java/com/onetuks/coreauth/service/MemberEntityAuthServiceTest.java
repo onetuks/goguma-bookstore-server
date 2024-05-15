@@ -1,16 +1,16 @@
 package com.onetuks.coreauth.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.coreauth.AuthIntegrationTest;
 import com.onetuks.coreauth.service.dto.MemberCreateResult;
-import com.onetuks.filestorage.util.UUIDProvider;
 import com.onetuks.dbstorage.fixture.MemberFixture;
 import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
 import com.onetuks.dbstorage.global.vo.auth.RoleType;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.repository.MemberJpaRepository;
+import com.onetuks.filestorage.util.UUIDProvider;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

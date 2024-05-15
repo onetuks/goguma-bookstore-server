@@ -31,8 +31,7 @@ public class AuthorConverter {
         author.enrollmentInfo().mailOrderSalesNumber(),
         author.enrollmentInfo().isEnrollmentPassed(),
         author.enrollmentInfo().enrollmentAt(),
-        null
-    );
+        null);
   }
 
   public Author toDomain(AuthorEntity authorEntity) {
@@ -48,8 +47,7 @@ public class AuthorConverter {
             authorEntity.getMailOrderSalesNumber(),
             authorEntity.getIsEnrollmentPassed(),
             authorEntity.getEnrollmentAt()),
-        toDomain(authorEntity.getAuthorStaticsEntity())
-    );
+        toDomain(authorEntity.getAuthorStaticsEntity()));
   }
 
   private AuthorStatics toDomain(AuthorStaticsEntity authorStaticsEntity) {
@@ -57,7 +55,6 @@ public class AuthorConverter {
         authorStaticsEntity.getAuthorStaticsId(),
         authorStaticsEntity.getSubscribeCount(),
         authorStaticsEntity.getBookCount(),
-        authorStaticsEntity.getRestockCount()
-    );
+        authorStaticsEntity.getRestockCount());
   }
 }

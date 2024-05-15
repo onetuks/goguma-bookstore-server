@@ -15,11 +15,14 @@ public enum SortOrder {
   PRICE_ASC("book.purchasePrce", Direction.ASC, bookEntity.price, Order.ASC),
   PRICE_DESC("book.purchasePrce", Direction.DESC, bookEntity.price, Order.DESC),
   SALES("book.salesRate", Direction.DESC, bookStaticsEntity.salesCount, Order.DESC),
-  FAVORITE("book.bookStatics.favoriteCount", Direction.DESC, bookStaticsEntity.favoriteCount,
+  FAVORITE(
+      "book.bookStatics.favoriteCount",
+      Direction.DESC,
+      bookStaticsEntity.favoriteCount,
       Order.DESC),
   VIEW("book.bookStatics.viewCount", Direction.DESC, bookStaticsEntity.viewCount, Order.DESC),
-  COMMENT("book.bookStatics.commentCount", Direction.DESC, bookStaticsEntity.commentCount,
-      Order.DESC);
+  COMMENT(
+      "book.bookStatics.commentCount", Direction.DESC, bookStaticsEntity.commentCount, Order.DESC);
 
   private final String property;
   private final Direction direction;

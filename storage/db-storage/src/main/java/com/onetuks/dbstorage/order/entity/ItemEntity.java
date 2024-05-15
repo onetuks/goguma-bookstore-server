@@ -40,10 +40,7 @@ public class ItemEntity {
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
-  public ItemEntity(
-      OrderEntity orderEntity,
-      MemberEntity memberEntity,
-      BookEntity bookEntity) {
+  public ItemEntity(OrderEntity orderEntity, MemberEntity memberEntity, BookEntity bookEntity) {
     this.orderEntity = orderEntity;
     this.memberEntity = memberEntity;
     this.bookEntity = bookEntity;

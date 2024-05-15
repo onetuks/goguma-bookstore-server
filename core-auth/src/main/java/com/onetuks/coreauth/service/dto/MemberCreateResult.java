@@ -2,8 +2,8 @@ package com.onetuks.coreauth.service.dto;
 
 import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
 import com.onetuks.dbstorage.global.vo.auth.RoleType;
-import com.onetuks.dbstorage.member.entity.MemberEntity;
 import com.onetuks.dbstorage.member.embedded.AuthInfo;
+import com.onetuks.dbstorage.member.entity.MemberEntity;
 import java.util.List;
 
 public record MemberCreateResult(

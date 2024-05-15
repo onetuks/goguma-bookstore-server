@@ -60,17 +60,17 @@ public class BookStaticsEntity {
   }
 
   public BookStaticsEntity increaseFavoriteCount() {
-    this.favoriteCount ++;
+    this.favoriteCount++;
     return this;
   }
 
   public BookStaticsEntity decreaseFavoriteCount() {
-    this.favoriteCount --;
+    this.favoriteCount--;
     return this;
   }
 
   public BookStaticsEntity increaseViewCount() {
-    this.viewCount ++;
+    this.viewCount++;
     return this;
   }
 

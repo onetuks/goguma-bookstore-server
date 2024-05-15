@@ -45,17 +45,14 @@ public class RegistrationConverter {
         registration.coverImgFilePath().getUri(),
         registration.detailImgFilePaths().getUris(),
         registration.previewFilePaths().getUris(),
-        registration.sampleFilePath().getUri()
-    );
+        registration.sampleFilePath().getUri());
   }
 
   public Registration toDomain(RegistrationEntity registrationEntity) {
     return new Registration(
         registrationEntity.getRegistrationId(),
         authorConverter.toDomain(registrationEntity.getAuthorEntity()),
-        new ApprovalInfo(
-            registrationEntity.getIsApproved(),
-            registrationEntity.getApprovalMemo()),
+        new ApprovalInfo(registrationEntity.getIsApproved(), registrationEntity.getApprovalMemo()),
         new BookConceptualInfo(
             registrationEntity.getTitle(),
             registrationEntity.getOneLiner(),
@@ -76,7 +73,6 @@ public class RegistrationConverter {
         CoverImgFilePath.of(registrationEntity.getCoverImgUri()),
         DetailImgFilePaths.of(registrationEntity.getDetailImgUris()),
         PreviewFilePaths.of(registrationEntity.getPreviewUris()),
-        SampleFilePath.of(registrationEntity.getSampleUri())
-    );
+        SampleFilePath.of(registrationEntity.getSampleUri()));
   }
 }

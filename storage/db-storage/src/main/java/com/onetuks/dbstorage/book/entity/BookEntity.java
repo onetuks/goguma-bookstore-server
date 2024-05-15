@@ -146,9 +146,7 @@ public class BookEntity {
     this.detailImgUris = detailImgUris;
     this.previewUris = previewUris;
     this.bookStaticsEntity =
-        bookStaticsEntity != null
-            ? bookStaticsEntity
-            : BookStaticsEntity.init(this);
+        bookStaticsEntity != null ? bookStaticsEntity : BookStaticsEntity.init(this);
   }
 
   public BookEntity increaseViewCount() {

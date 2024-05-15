@@ -30,45 +30,43 @@ public class SubscribeEntityRepository implements SubscribeRepository {
     SubscribeEntity subscriveEntity = converter.toEntity(subscribe);
 
     authorStaticsJpaRepository.save(
-        subscriveEntity.getAuthorEntity().getAuthorStaticsEntity()
-            .increaseSubscriberCount()
-    );
+        subscriveEntity.getAuthorEntity().getAuthorStaticsEntity().increaseSubscriberCount());
 
-    return converter.toDomain(
-        subscribeJpaRepository.save(subscriveEntity));
+    return converter.toDomain(subscribeJpaRepository.save(subscriveEntity));
   }
 
   @Override
   public Subscribe read(long subscribeId) {
     return converter.toDomain(
-        subscribeJpaRepository.findById(subscribeId)
-            .orElseThrow(EntityNotFoundException::new));
+        subscribeJpaRepository.findById(subscribeId).orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
   public boolean readExistence(long memberId, long authorId) {
-    return subscribeJpaRepository
-        .existsByMemberEntityMemberIdAndAuthorEntityAuthorId(memberId, authorId);
+    return subscribeJpaRepository.existsByMemberEntityMemberIdAndAuthorEntityAuthorId(
+        memberId, authorId);
   }
 
   @Override
   public List<Subscribe> readAll(long memberId) {
-    return subscribeJpaRepository.findAllByMemberEntityMemberId(memberId)
-        .stream()
+    return subscribeJpaRepository.findAllByMemberEntityMemberId(memberId).stream()
         .map(converter::toDomain)
         .toList();
   }
 
   @Override
   public void delete(long subscribeId) {
-    subscribeJpaRepository.findById(subscribeId)
-        .ifPresent(subscribeEntity -> {
-          authorStaticsJpaRepository.save(
-              subscribeEntity.getAuthorEntity().getAuthorStaticsEntity()
-                  .decreaseSubscriberCount()
-          );
+    subscribeJpaRepository
+        .findById(subscribeId)
+        .ifPresent(
+            subscribeEntity -> {
+              authorStaticsJpaRepository.save(
+                  subscribeEntity
+                      .getAuthorEntity()
+                      .getAuthorStaticsEntity()
+                      .decreaseSubscriberCount());
 
-          subscribeJpaRepository.delete(subscribeEntity);
-        });
+              subscribeJpaRepository.delete(subscribeEntity);
+            });
   }
 }

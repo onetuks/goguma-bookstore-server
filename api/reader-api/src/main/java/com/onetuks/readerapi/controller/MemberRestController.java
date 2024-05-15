@@ -3,8 +3,14 @@ package com.onetuks.readerapi.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.coreauth.util.login.LoginId;
-import com.onetuks.filestorage.vo.FileType;
 import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.filestorage.vo.FileType;
+import com.onetuks.modulereader.member.service.MemberService;
+import com.onetuks.modulereader.member.service.dto.result.MemberDefaultAddressEditResult;
+import com.onetuks.modulereader.member.service.dto.result.MemberDefaultCashReceiptEditResult;
+import com.onetuks.modulereader.member.service.dto.result.MemberEntryInfoResult;
+import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
+import com.onetuks.modulereader.member.service.dto.result.MemberProfileEditResult;
 import com.onetuks.readerapi.controller.dto.request.MemberDefaultAddressEditRequest;
 import com.onetuks.readerapi.controller.dto.request.MemberDefaultCashReceiptEditRequest;
 import com.onetuks.readerapi.controller.dto.request.MemberEntryInfoRequest;
@@ -14,12 +20,6 @@ import com.onetuks.readerapi.controller.dto.response.MemberDefaultCashReceiptEdi
 import com.onetuks.readerapi.controller.dto.response.MemberEntryInfoResponse;
 import com.onetuks.readerapi.controller.dto.response.MemberInfoResponse;
 import com.onetuks.readerapi.controller.dto.response.MemberProfileEditResponse;
-import com.onetuks.modulereader.member.service.MemberService;
-import com.onetuks.modulereader.member.service.dto.result.MemberDefaultAddressEditResult;
-import com.onetuks.modulereader.member.service.dto.result.MemberDefaultCashReceiptEditResult;
-import com.onetuks.modulereader.member.service.dto.result.MemberEntryInfoResult;
-import com.onetuks.modulereader.member.service.dto.result.MemberInfoResult;
-import com.onetuks.modulereader.member.service.dto.result.MemberProfileEditResult;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

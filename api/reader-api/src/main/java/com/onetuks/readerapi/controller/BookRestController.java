@@ -2,10 +2,10 @@ package com.onetuks.readerapi.controller;
 
 import com.onetuks.dbstorage.book.vo.Category;
 import com.onetuks.dbstorage.book.vo.SortOrder;
-import com.onetuks.readerapi.controller.dto.response.BookGetResponse;
-import com.onetuks.readerapi.controller.dto.response.BookGetResponse.BookGetResponses;
 import com.onetuks.modulereader.book.service.BookService;
 import com.onetuks.modulereader.book.service.dto.result.BookGetResult;
+import com.onetuks.readerapi.controller.dto.response.BookGetResponse;
+import com.onetuks.readerapi.controller.dto.response.BookGetResponse.BookGetResponses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;

@@ -7,9 +7,6 @@ import com.onetuks.dbstorage.member.entity.MemberEntity;
 public class FavoriteEntityFixture {
 
   public static FavoriteEntity create(MemberEntity memberEntity, BookEntity bookEntity) {
-    return new FavoriteEntity(
-        memberEntity,
-        bookEntity
-    );
+    return new FavoriteEntity(memberEntity, bookEntity);
   }
 }

@@ -47,7 +47,6 @@ public class BookEntityFixture {
         createCoverImgFilePath(uuid).getUri(),
         createDetailImgFilePaths(uuid).getUris(),
         createPreviewFilePaths(uuid).getUris(),
-        null
-    );
+        null);
   }
 }
