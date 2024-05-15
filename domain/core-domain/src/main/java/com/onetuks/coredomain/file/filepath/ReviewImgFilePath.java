@@ -2,9 +2,7 @@ package com.onetuks.coredomain.file.filepath;
 
 import java.util.List;
 
-public record ReviewImgFilePath(
-    String reviewImgUri
-) implements CustomFilePath {
+public record ReviewImgFilePath(String reviewImgUri) implements CustomFilePath {
 
   @Override
   public String getUri() {
@@ -16,9 +14,7 @@ public record ReviewImgFilePath(
     return BUCKET_URL + getUri();
   }
 
-  public record ReviewImgFilePaths(
-      List<ReviewImgFilePath> paths
-  ) {
+  public record ReviewImgFilePaths(List<ReviewImgFilePath> paths) {
 
     public static ReviewImgFilePaths of(List<String> reviewImgUris) {
       return new ReviewImgFilePaths(reviewImgUris.stream().map(ReviewImgFilePath::new).toList());

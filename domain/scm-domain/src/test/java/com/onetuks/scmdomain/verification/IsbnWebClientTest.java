@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class IsbnWebClientTest extends CommonIntegrationTest {
 
-  @Autowired
-  private IsbnWebClient service;
+  @Autowired private IsbnWebClient service;
 
   @Test
   @DisplayName("존재하는 ISBN로 요청 시 책 정보를 응답 받는다.")

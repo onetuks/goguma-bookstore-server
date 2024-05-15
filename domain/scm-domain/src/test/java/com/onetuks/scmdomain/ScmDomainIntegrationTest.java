@@ -13,12 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScmDomainIntegrationTest {
 
   @Configuration
-  @ComponentScan(
-      basePackages = {
-          "com.onetuks.scmdomain",
-          "com.onetuks.coredomain"
-      })
-  public static class ScmDomainConfig {
-
-  }
+  @ComponentScan(basePackages = {"com.onetuks.scmdomain", "com.onetuks.coredomain"})
+  public static class ScmDomainConfig {}
 }

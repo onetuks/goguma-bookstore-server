@@ -1,8 +1,6 @@
 package com.onetuks.coredomain.file.filepath;
 
-public record ProfileImgFilePath(
-    String profileImgUri
-) implements CustomFilePath {
+public record ProfileImgFilePath(String profileImgUri) implements CustomFilePath {
 
   public static ProfileImgFilePath of(String profileImgUri) {
     return new ProfileImgFilePath(profileImgUri);

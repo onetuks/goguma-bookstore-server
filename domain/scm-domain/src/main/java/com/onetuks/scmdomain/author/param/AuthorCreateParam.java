@@ -5,6 +5,4 @@ public record AuthorCreateParam(
     String introduction,
     String instagramUrl,
     String businessNumber,
-    String mailOrderSalesNumber) {
-
-}
+    String mailOrderSalesNumber) {}

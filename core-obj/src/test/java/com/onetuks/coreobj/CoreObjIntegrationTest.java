@@ -12,7 +12,5 @@ public class CoreObjIntegrationTest {
 
   @Configuration
   @ComponentScan(basePackages = "com.onetuks.coreobj")
-  public static class CoreObjConfig {
-
-  }
+  public static class CoreObjConfig {}
 }

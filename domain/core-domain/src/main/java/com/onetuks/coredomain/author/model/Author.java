@@ -13,8 +13,7 @@ public record Author(
     String introduction,
     String instagramUrl,
     EnrollmentInfo enrollmentInfo,
-    AuthorStatics authorStatics
-) {
+    AuthorStatics authorStatics) {
 
   public Author changeAuthorProfile(
       String profileImgFileUri, String nickname, String introduction, String instagramUrl) {
@@ -26,8 +25,7 @@ public record Author(
         introduction,
         instagramUrl,
         enrollmentInfo(),
-        authorStatics()
-    );
+        authorStatics());
   }
 
   public Author convertEnrollmentPassed(Member member) {
@@ -39,7 +37,6 @@ public record Author(
         introduction(),
         instagramUrl(),
         enrollmentInfo().convertEnrollmentPassed(),
-        authorStatics()
-    );
+        authorStatics());
   }
 }

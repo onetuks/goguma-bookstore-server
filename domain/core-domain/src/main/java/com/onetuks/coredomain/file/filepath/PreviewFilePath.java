@@ -2,9 +2,7 @@ package com.onetuks.coredomain.file.filepath;
 
 import java.util.List;
 
-public record PreviewFilePath(
-    String previewFileUri
-) implements CustomFilePath {
+public record PreviewFilePath(String previewFileUri) implements CustomFilePath {
 
   @Override
   public String getUri() {
@@ -16,9 +14,7 @@ public record PreviewFilePath(
     return BUCKET_URL + getUri();
   }
 
-  public record PreviewFilePaths(
-      List<PreviewFilePath> paths
-  ) {
+  public record PreviewFilePaths(List<PreviewFilePath> paths) {
 
     public static PreviewFilePaths of(List<String> previewFileUris) {
       return new PreviewFilePaths(previewFileUris.stream().map(PreviewFilePath::new).toList());

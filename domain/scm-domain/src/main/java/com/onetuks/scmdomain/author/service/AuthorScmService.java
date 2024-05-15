@@ -11,7 +11,9 @@ import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.coreobj.vo.FilePathProvider;
+import com.onetuks.coreobj.vo.FileWrapper;
 import com.onetuks.scmdomain.author.param.AuthorCreateParam;
+import com.onetuks.scmdomain.author.param.AuthorEditParam;
 import com.onetuks.scmdomain.verification.EnrollmentInfoVerifier;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,22 +34,20 @@ public class AuthorScmService {
       AuthorScmRepository authorScmRepository,
       MemberRepository memberRepository,
       FileRepository fileRepository,
-      EnrollmentInfoVerifier enrollmentInfoVerifier
-  ) {
+      EnrollmentInfoVerifier enrollmentInfoVerifier) {
     this.authorScmRepository = authorScmRepository;
     this.memberRepository = memberRepository;
     this.fileRepository = fileRepository;
     this.enrollmentInfoVerifier = enrollmentInfoVerifier;
   }
 
-  /**
-   * 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제
-   */
+  /** 매일 오전 4시에 2주간 작가 입점 심사를 통과하지 못한 작가들 삭제 */
   @Scheduled(cron = "0 0 4 * * ?")
   @Transactional
   public void deleteAbandonedAuthorEnrollment() {
     LocalDateTime twoWeeksAgo = LocalDateTime.now().minusWeeks(2);
-    authorScmRepository.readAll()
+    authorScmRepository
+        .readAll()
         .forEach(
             author -> {
               LocalDateTime enrollmentAt = author.enrollmentInfo().enrollmentAt();
@@ -60,10 +60,7 @@ public class AuthorScmService {
   }
 
   @Transactional
-  public Author createAuthor(
-      long memberId,
-      AuthorCreateParam param
-  ) {
+  public Author createAuthor(long memberId, AuthorCreateParam param) {
     Member member = memberRepository.read(memberId);
 
     if (member.authInfo().roles().contains(RoleType.AUTHOR)) {
@@ -82,12 +79,8 @@ public class AuthorScmService {
             param.introduction(),
             param.instagramUrl(),
             new EnrollmentInfo(
-                param.businessNumber(),
-                param.mailOrderSalesNumber(),
-                false,
-                LocalDateTime.now()),
-            null)
-    );
+                param.businessNumber(), param.mailOrderSalesNumber(), false, LocalDateTime.now()),
+            null));
   }
 
   @Transactional(readOnly = true)
@@ -112,14 +105,35 @@ public class AuthorScmService {
   @Transactional
   public Author updateAuthorEnrollmentPassed(long authorId) {
     Author author = authorScmRepository.read(authorId);
-    Member member = memberRepository.update(
-        author.enrollmentInfo().isEnrollmentPassed()
-            ? author.member().revokeAuthorRole()
-            : author.member().grantAuthorRole()
-    );
+    Member member =
+        memberRepository.update(
+            author.enrollmentInfo().isEnrollmentPassed()
+                ? author.member().revokeAuthorRole()
+                : author.member().grantAuthorRole());
+
+    return authorScmRepository.update(author.convertEnrollmentPassed(member));
+  }
+
+  @Transactional
+  public Author updateAuthorProfile(
+      long memberId, long authorId, AuthorEditParam param, FileWrapper profileImgFile) {
+    Author author = authorScmRepository.read(authorId);
+
+    if (author.member().memberId() != memberId) {
+      throw new ApiAccessDeniedException("해당 작가에 대한 권한이 없는 멤버입니다.");
+    }
+
+    fileRepository.deleteFile(author.profileImgFilePath().getUrl());
+    fileRepository.putFile(profileImgFile);
 
     return authorScmRepository.update(
-        author.convertEnrollmentPassed(member));
+        authorScmRepository
+            .read(memberId)
+            .changeAuthorProfile(
+                profileImgFile.getUri(),
+                param.nickname(),
+                param.introduction(),
+                param.instagramUrl()));
   }
 
   @Transactional

@@ -17,6 +17,4 @@ public record RegistrationCreateParam(
     long price,
     int salesRate,
     boolean isPromotion,
-    long stockCount) {
-
-}
+    long stockCount) {}

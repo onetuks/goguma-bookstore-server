@@ -22,8 +22,7 @@ public record Registration(
     CoverImgFilePath coverImgFilePath,
     DetailImgFilePaths detailImgFilePaths,
     PreviewFilePaths previewFilePaths,
-    SampleFilePath sampleFilePath
-) {
+    SampleFilePath sampleFilePath) {
 
   public Registration changeApprovalInfo(boolean isApproved, String approvalMemo) {
     return new Registration(
@@ -36,15 +35,21 @@ public record Registration(
         coverImgFilePath(),
         detailImgFilePaths(),
         previewFilePaths(),
-        sampleFilePath()
-    );
+        sampleFilePath());
   }
 
   public Registration changeRegistration(
-      String oneLiner, String summary, List<Category> categories,
-      long price, int salesRate, boolean isPromotion, long stockCount,
-      CoverImgFilePath coverImgFilePath, DetailImgFilePaths detailImgFilePaths,
-      PreviewFilePaths previewFilePaths, SampleFilePath sampleFilePath) {
+      String oneLiner,
+      String summary,
+      List<Category> categories,
+      long price,
+      int salesRate,
+      boolean isPromotion,
+      long stockCount,
+      CoverImgFilePath coverImgFilePath,
+      DetailImgFilePaths detailImgFilePaths,
+      PreviewFilePaths previewFilePaths,
+      SampleFilePath sampleFilePath) {
     return new Registration(
         registrationId(),
         author(),
@@ -55,15 +60,9 @@ public record Registration(
             summary,
             categories,
             bookConceptualInfo().publisher(),
-            bookConceptualInfo().isbn()
-        ),
+            bookConceptualInfo().isbn()),
         bookPhysicalInfo(),
-        new BookPriceInfo(
-            price,
-            salesRate,
-            isPromotion,
-            stockCount
-        ),
+        new BookPriceInfo(price, salesRate, isPromotion, stockCount),
         coverImgFilePath,
         detailImgFilePaths,
         previewFilePaths,
@@ -71,8 +70,13 @@ public record Registration(
   }
 
   public Registration changeRegistration(
-      String oneLiner, String summary, List<Category> categories,
-      long price, int salesRate, boolean isPromotion, long stockCount,
+      String oneLiner,
+      String summary,
+      List<Category> categories,
+      long price,
+      int salesRate,
+      boolean isPromotion,
+      long stockCount,
       CoverImgFilePath coverImgFilePath,
       DetailImgFilePaths detailImgFilePaths,
       PreviewFilePaths previewFilePaths) {
@@ -86,15 +90,9 @@ public record Registration(
             summary,
             categories,
             bookConceptualInfo().publisher(),
-            bookConceptualInfo().isbn()
-        ),
+            bookConceptualInfo().isbn()),
         bookPhysicalInfo(),
-        new BookPriceInfo(
-            price,
-            salesRate,
-            isPromotion,
-            stockCount
-        ),
+        new BookPriceInfo(price, salesRate, isPromotion, stockCount),
         coverImgFilePath,
         detailImgFilePaths,
         previewFilePaths,

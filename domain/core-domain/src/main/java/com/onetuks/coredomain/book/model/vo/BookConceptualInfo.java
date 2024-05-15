@@ -9,7 +9,4 @@ public record BookConceptualInfo(
     String summary,
     List<Category> categories,
     String publisher,
-    String isbn
-) {
-
-}
+    String isbn) {}

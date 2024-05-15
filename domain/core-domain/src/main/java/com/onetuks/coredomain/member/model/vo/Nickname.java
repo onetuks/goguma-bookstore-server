@@ -2,9 +2,7 @@ package com.onetuks.coredomain.member.model.vo;
 
 import java.util.List;
 
-public record Nickname(
-    String nicknameValue
-) {
+public record Nickname(String nicknameValue) {
 
   private static final List<String> INVALID_NICKNAMES = List.of("admin", "administrator", "root");
   private static final List<String> SPECIAL_CHARACTERS =

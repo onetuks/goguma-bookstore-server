@@ -17,8 +17,7 @@ public record Book(
     CoverImgFilePath coverImgFilePath,
     DetailImgFilePaths detailImgFilePaths,
     PreviewFilePaths previewFilePaths,
-    BookStatics bookStatics
-) {
+    BookStatics bookStatics) {
 
   public Book changeStockCount(long newStockCount) {
     return new Book(
@@ -34,7 +33,6 @@ public record Book(
         coverImgFilePath(),
         detailImgFilePaths(),
         previewFilePaths(),
-        bookStatics()
-    );
+        bookStatics());
   }
 }

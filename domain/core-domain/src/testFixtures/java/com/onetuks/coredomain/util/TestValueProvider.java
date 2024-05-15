@@ -120,8 +120,7 @@ public class TestValueProvider {
         createSummary(),
         createCategories(),
         createPublisher(),
-        createIsbn()
-    );
+        createIsbn());
   }
 
   public static int createHeight() {
@@ -142,11 +141,7 @@ public class TestValueProvider {
 
   public static BookPhysicalInfo createBookPhysicalInfo() {
     return new BookPhysicalInfo(
-        createHeight(),
-        createWidth(),
-        createCoverType(),
-        createPageCount()
-    );
+        createHeight(), createWidth(), createCoverType(), createPageCount());
   }
 
   public static long createPrice() {
@@ -167,11 +162,7 @@ public class TestValueProvider {
 
   public static BookPriceInfo createBookPriceInfo() {
     return new BookPriceInfo(
-        createPrice(),
-        createSalesRate(),
-        createPromotion(),
-        createStockCount()
-    );
+        createPrice(), createSalesRate(), createPromotion(), createStockCount());
   }
 
   public static String createBusinessNumber() {
@@ -182,7 +173,7 @@ public class TestValueProvider {
     return String.valueOf(random.nextLong(100_000_000_000_000_000L, 999_999_999_999_999_999L));
   }
 
-  public static Nickname createAuthorNickname() {
+  public static Nickname createNickname() {
     return new Nickname(
         authorNicknames.get(random.nextInt(authorNicknames.size())) + UUIDProvider.provideUUID());
   }
@@ -210,11 +201,10 @@ public class TestValueProvider {
 
   public static AuthInfo createAuthInfo(RoleType roleType) {
     return new AuthInfo(
-        createAuthorNickname().nicknameValue(),
+        createNickname().nicknameValue(),
         createSocialId(),
         createClientProvider(),
-        createRoles(roleType)
-    );
+        createRoles(roleType));
   }
 
   public static String createAddress() {
@@ -226,10 +216,7 @@ public class TestValueProvider {
   }
 
   public static AddressInfo createAddressInfo() {
-    return new AddressInfo(
-        createAddress(),
-        createAddressDetail()
-    );
+    return new AddressInfo(createAddress(), createAddressDetail());
   }
 
   public static String createApprovalMemo(boolean isApproved) {
@@ -237,9 +224,6 @@ public class TestValueProvider {
   }
 
   public static ApprovalInfo createApprovalInfo(boolean isApproved) {
-    return new ApprovalInfo(
-        isApproved,
-        createApprovalMemo(isApproved)
-    );
+    return new ApprovalInfo(isApproved, createApprovalMemo(isApproved));
   }
 }

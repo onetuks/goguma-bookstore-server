@@ -1,0 +1,8 @@
+dependencies {
+    // Module
+    implementation(project(':domain:core-domain'))
+
+    // Test
+    testImplementation(project(':domain:core-domain'))
+    testImplementation(testFixtures(project(':domain:core-domain')))
+}

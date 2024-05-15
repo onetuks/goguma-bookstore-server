@@ -47,19 +47,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
+class BookScmServiceTest extends ScmDomainIntegrationTest {
 
-  @Autowired
-  private BookScmService bookScmService;
+  @Autowired private BookScmService bookScmService;
 
-  @MockBean
-  private BookScmRepository bookScmRepository;
-  @MockBean
-  private AuthorScmRepository authorScmRepository;
-  @MockBean
-  private RegistrationScmRepository registrationScmRepository;
-  @MockBean
-  private FileRepository fileRepository;
+  @MockBean private BookScmRepository bookScmRepository;
+  @MockBean private AuthorScmRepository authorScmRepository;
+  @MockBean private RegistrationScmRepository registrationScmRepository;
+  @MockBean private FileRepository fileRepository;
 
   private Member authorMember;
   private Author author;
@@ -75,16 +70,15 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
   void readAllBooksByAuthorTest() {
     // Given
     int count = 5;
-    List<Book> books = IntStream.range(0, count)
-        .mapToObj(i -> BookFixture.create(createId(), author))
-        .toList();
+    List<Book> books =
+        IntStream.range(0, count).mapToObj(i -> BookFixture.create(createId(), author)).toList();
 
     given(authorScmRepository.read(author.authorId())).willReturn(author);
     given(bookScmRepository.readAll(author.authorId())).willReturn(books);
 
     // When
-    List<Book> results = bookScmService
-        .readAllBooksByAuthor(authorMember.memberId(), author.authorId());
+    List<Book> results =
+        bookScmService.readAllBooksByAuthor(authorMember.memberId(), author.authorId());
 
     // Then
     assertThat(results).hasSize(count);
@@ -110,16 +104,15 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
     // Given
     int count = 5;
     Member adminMember = MemberFixture.create(createId(), RoleType.ADMIN);
-    List<Book> books = IntStream.range(0, count)
-        .mapToObj(i -> BookFixture.create(createId(), author))
-        .toList();
+    List<Book> books =
+        IntStream.range(0, count).mapToObj(i -> BookFixture.create(createId(), author)).toList();
 
     given(authorScmRepository.read(author.authorId())).willReturn(author);
     given(bookScmRepository.readAll(author.authorId())).willReturn(books);
 
     // When
-    List<Book> results = bookScmService
-        .readAllBooksByAuthor(adminMember.memberId(), author.authorId());
+    List<Book> results =
+        bookScmService.readAllBooksByAuthor(adminMember.memberId(), author.authorId());
 
     // Then
     assertThat(results).hasSize(count);
@@ -130,12 +123,17 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
   void updateBookTest() {
     // Given
     Book before = BookFixture.create(createId(), author);
-    Book after = BookFixture.create(before.bookId(), author)
-        .changeStockCount(0);
+    Book after = BookFixture.create(before.bookId(), author).changeStockCount(0);
     Registration registration = RegistrationFixture.create(createId(), author, true);
-    BookEditParam param = new BookEditParam(
-        createOneLiner(), createSummary(), createCategories(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    BookEditParam param =
+        new BookEditParam(
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
     FileWrapperCollection detailImgFiles = FileWrapperFixture.createFiles(FileType.DETAILS, uuid);
@@ -149,22 +147,30 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
     given(bookScmRepository.update(any())).willReturn(after);
 
     // When
-    Book result = bookScmService.updateBook(authorMember.memberId(), before.bookId(),
-        param, coverImgFile, detailImgFiles, previewFiles);
+    Book result =
+        bookScmService.updateBook(
+            authorMember.memberId(),
+            before.bookId(),
+            param,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles);
 
     // Then
     assertAll(
         () -> assertThat(result).isEqualTo(after),
         () -> assertThat(result.bookPriceInfo().stockCount()).isZero(),
-        () -> assertThat(result.bookConceptualInfo().title()).isEqualTo(
-            before.bookConceptualInfo().title()),
+        () ->
+            assertThat(result.bookConceptualInfo().title())
+                .isEqualTo(before.bookConceptualInfo().title()),
         () -> assertThat(result.bookPriceInfo().price()).isEqualTo(before.bookPriceInfo().price()),
         () -> assertThat(result.coverImgFilePath().getUri()).isEqualTo(coverImgFile.getUri()),
-        () -> assertThat(result.detailImgFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(detailImgFiles.getUris()),
-        () -> assertThat(result.previewFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(previewFiles.getUris())
-    );
+        () ->
+            assertThat(result.detailImgFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(detailImgFiles.getUris()),
+        () ->
+            assertThat(result.previewFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(previewFiles.getUris()));
 
     verify(fileRepository, times(1)).deleteFile(registration.coverImgFilePath().getUrl());
     verify(fileRepository, times(registration.detailImgFilePaths().getUris().size()))
@@ -181,12 +187,17 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
   void updateBook_NoFiles_Test() {
     // Given
     Book before = BookFixture.create(createId(), author);
-    Book after = BookFixture.create(before.bookId(), author)
-        .changeStockCount(0);
+    Book after = BookFixture.create(before.bookId(), author).changeStockCount(0);
     Registration registration = RegistrationFixture.create(createId(), author, true);
-    BookEditParam param = new BookEditParam(
-        createOneLiner(), createSummary(), createCategories(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    BookEditParam param =
+        new BookEditParam(
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
     FileWrapper coverImgFile = FileWrapperFixture.createNullFile();
     FileWrapperCollection detailImgFiles = new FileWrapperCollection(Collections.emptyList());
     FileWrapperCollection previewFiles = new FileWrapperCollection(Collections.emptyList());
@@ -199,21 +210,27 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
     given(bookScmRepository.update(any())).willReturn(after);
 
     // When
-    Book result = bookScmService.updateBook(authorMember.memberId(), before.bookId(),
-        param, coverImgFile, detailImgFiles, previewFiles);
+    Book result =
+        bookScmService.updateBook(
+            authorMember.memberId(),
+            before.bookId(),
+            param,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles);
 
     // Then
 
     assertAll(
         () -> assertThat(result).isEqualTo(after),
         () -> assertThat(result.bookPriceInfo().stockCount()).isZero(),
-        () -> assertThat(result.bookConceptualInfo().title()).isEqualTo(
-            before.bookConceptualInfo().title()),
+        () ->
+            assertThat(result.bookConceptualInfo().title())
+                .isEqualTo(before.bookConceptualInfo().title()),
         () -> assertThat(result.bookPriceInfo().price()).isEqualTo(before.bookPriceInfo().price()),
         () -> assertThat(result.coverImgFilePath()).isEqualTo(before.coverImgFilePath()),
         () -> assertThat(result.detailImgFilePaths()).isEqualTo(before.detailImgFilePaths()),
-        () -> assertThat(result.previewFilePaths()).isEqualTo(before.previewFilePaths())
-    );
+        () -> assertThat(result.previewFilePaths()).isEqualTo(before.previewFilePaths()));
 
     verify(fileRepository, times(0)).deleteFile(registration.coverImgFilePath().getUrl());
     verify(fileRepository, times(0)).deleteFile(any());
@@ -228,12 +245,19 @@ class BookEntityScmServiceTest extends ScmDomainIntegrationTest {
     Member otherAuthorMember = MemberFixture.create(createId(), RoleType.AUTHOR);
     Author notAuthorityAuthor = AuthorFixture.create(createId(), otherAuthorMember);
     Book book = BookFixture.create(createId(), author);
-    BookEditParam param = new BookEditParam(
-        createOneLiner(), createSummary(), createCategories(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    BookEditParam param =
+        new BookEditParam(
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
     String uuid = UUIDProvider.provideUUID();
 
-    given(authorScmRepository.readByMember(otherAuthorMember.memberId())).willReturn(notAuthorityAuthor);
+    given(authorScmRepository.readByMember(otherAuthorMember.memberId()))
+        .willReturn(notAuthorityAuthor);
     given(bookScmRepository.read(book.bookId())).willReturn(book);
 
     // When & Then

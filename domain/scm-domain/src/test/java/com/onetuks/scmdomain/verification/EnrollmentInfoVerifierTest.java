@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class EnrollmentInfoVerifierTest extends CommonIntegrationTest {
 
-  @Autowired
-  private EnrollmentInfoVerifier service;
+  @Autowired private EnrollmentInfoVerifier service;
 
   @Test
   @DisplayName("정상적인 사업자등록번호와 통신판매신고번호를 입력했을 때, 정상적으로 검증이 완료된다.")

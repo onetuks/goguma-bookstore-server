@@ -19,16 +19,16 @@ public class CustomFilePathFixture {
   public static DetailImgFilePaths createDetailImgFilePaths(String uuid) {
     return DetailImgFilePaths.of(
         IntStream.range(0, 5)
-            .mapToObj(index ->
-                FilePathProvider.provideFileIndexedURI(FileType.DETAILS, uuid, index))
+            .mapToObj(
+                index -> FilePathProvider.provideFileIndexedURI(FileType.DETAILS, uuid, index))
             .toList());
   }
 
   public static PreviewFilePaths createPreviewFilePaths(String uuid) {
     return PreviewFilePaths.of(
         IntStream.range(0, 25)
-            .mapToObj(index ->
-                FilePathProvider.provideFileIndexedURI(FileType.PREVIEWS, uuid, index))
+            .mapToObj(
+                index -> FilePathProvider.provideFileIndexedURI(FileType.PREVIEWS, uuid, index))
             .toList());
   }
 
@@ -39,8 +39,8 @@ public class CustomFilePathFixture {
   public static ReviewImgFilePaths createReviewImgFilePaths(String uuid) {
     return ReviewImgFilePaths.of(
         IntStream.range(0, 5)
-            .mapToObj(index ->
-                FilePathProvider.provideFileIndexedURI(FileType.REVIEWS, uuid, index))
+            .mapToObj(
+                index -> FilePathProvider.provideFileIndexedURI(FileType.REVIEWS, uuid, index))
             .toList());
   }
 

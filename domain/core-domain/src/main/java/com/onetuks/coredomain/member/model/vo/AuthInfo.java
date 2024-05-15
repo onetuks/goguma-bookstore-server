@@ -6,16 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record AuthInfo(
-    String name,
-    String socialId,
-    ClientProvider clientProvider,
-    List<RoleType> roles
-) {
+    String name, String socialId, ClientProvider clientProvider, List<RoleType> roles) {
 
   public AuthInfo removeAuthorRole() {
-    List<RoleType> notContainsAuthorRoles = roles.stream()
-        .filter(roleType -> !roleType.equals(RoleType.AUTHOR))
-        .toList();
+    List<RoleType> notContainsAuthorRoles =
+        roles.stream().filter(roleType -> !roleType.equals(RoleType.AUTHOR)).toList();
 
     return new AuthInfo(name, socialId, clientProvider, notContainsAuthorRoles);
   }

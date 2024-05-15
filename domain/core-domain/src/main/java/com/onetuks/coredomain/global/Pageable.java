@@ -1,6 +1,3 @@
 package com.onetuks.coredomain.global;
 
-public interface Pageable {
-
-
-}
+public interface Pageable {}

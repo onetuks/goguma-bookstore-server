@@ -25,7 +25,6 @@ public class BookFixture {
         createCoverImgFilePath(uuid),
         createDetailImgFilePaths(uuid),
         createPreviewFilePaths(uuid),
-        BookStatics.init()
-    );
+        BookStatics.init());
   }
 }

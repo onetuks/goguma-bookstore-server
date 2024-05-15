@@ -10,6 +10,4 @@ public record RegistrationEditParam(
     long price,
     int salesRate,
     boolean isPromotion,
-    long stockCount) {
-
-}
+    long stockCount) {}

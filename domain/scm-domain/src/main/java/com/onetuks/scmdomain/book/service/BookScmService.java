@@ -61,8 +61,7 @@ public class BookScmService {
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles) {
     Author author = authorScmRepository.readByMember(memberId);
-    Book book = bookScmRepository.read(bookId)
-        .changeStockCount(0);
+    Book book = bookScmRepository.read(bookId).changeStockCount(0);
 
     if (!Objects.equals(book.author().authorId(), author.authorId())) {
       throw new ApiAccessDeniedException("해당 도서에 대한 권한이 없는 멤버입니다.");
@@ -74,26 +73,26 @@ public class BookScmService {
     replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, registration);
 
     registrationScmRepository.update(
-        registration
-            .changeRegistration(
-                param.oneLiner(),
-                param.summary(),
-                param.categories(),
-                param.price(),
-                param.salesRate(),
-                param.isPromotion(),
-                param.stockCount(),
-                CoverImgFilePath.of(coverImgFile.getUri()),
-                DetailImgFilePaths.of(detailImgFiles.getUris()),
-                PreviewFilePaths.of(previewFiles.getUris()))
-    );
+        registration.changeRegistration(
+            param.oneLiner(),
+            param.summary(),
+            param.categories(),
+            param.price(),
+            param.salesRate(),
+            param.isPromotion(),
+            param.stockCount(),
+            CoverImgFilePath.of(coverImgFile.getUri()),
+            DetailImgFilePaths.of(detailImgFiles.getUris()),
+            PreviewFilePaths.of(previewFiles.getUris())));
 
     return bookScmRepository.update(book);
   }
 
   private void replaceIfValidFile(
-      FileWrapper coverImgFile, FileWrapperCollection detailImgFiles,
-      FileWrapperCollection previewFiles, Registration registration) {
+      FileWrapper coverImgFile,
+      FileWrapperCollection detailImgFiles,
+      FileWrapperCollection previewFiles,
+      Registration registration) {
     if (!coverImgFile.isNullFile()) {
       fileRepository.deleteFile(registration.coverImgFilePath().getUrl());
       fileRepository.putFile(coverImgFile);

@@ -10,6 +10,10 @@ public interface BookRepository {
   Book read(long bookId);
 
   List<Book> read(
-      String title, String authorNickname, Category category,
-      boolean onlyPromotion, boolean exceptSoldOut, PageOrder pageOrder);
+      String title,
+      String authorNickname,
+      Category category,
+      boolean onlyPromotion,
+      boolean exceptSoldOut,
+      PageOrder pageOrder);
 }

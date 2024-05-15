@@ -1,8 +1,6 @@
 package com.onetuks.coredomain.file.filepath;
 
-public record SampleFilePath(
-    String sampleFileUri
-) implements CustomFilePath {
+public record SampleFilePath(String sampleFileUri) implements CustomFilePath {
 
   public static SampleFilePath of(String sampleFileUri) {
     return new SampleFilePath(sampleFileUri);

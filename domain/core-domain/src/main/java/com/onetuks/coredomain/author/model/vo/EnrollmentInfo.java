@@ -6,15 +6,10 @@ public record EnrollmentInfo(
     String businessNumber,
     String mailOrderSalesNumber,
     Boolean isEnrollmentPassed,
-    LocalDateTime enrollmentAt
-) {
+    LocalDateTime enrollmentAt) {
 
   public EnrollmentInfo convertEnrollmentPassed() {
     return new EnrollmentInfo(
-        businessNumber(),
-        mailOrderSalesNumber(),
-        !isEnrollmentPassed(),
-        enrollmentAt()
-    );
+        businessNumber(), mailOrderSalesNumber(), !isEnrollmentPassed(), enrollmentAt());
   }
 }

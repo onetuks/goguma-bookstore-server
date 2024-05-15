@@ -10,7 +10,4 @@ public record MemberAuthResult(
     String socialId,
     ClientProvider clientProvider,
     List<RoleType> roleTypes,
-    boolean isNewMember
-) {
-
-}
+    boolean isNewMember) {}

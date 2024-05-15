@@ -19,7 +19,5 @@ public record BusinessNumberResponse(
       String tax_type_change_dt,
       String invoice_apply_dt,
       String rbf_tax_type,
-      String rbf_tax_type_cd) {
-
-  }
+      String rbf_tax_type_cd) {}
 }

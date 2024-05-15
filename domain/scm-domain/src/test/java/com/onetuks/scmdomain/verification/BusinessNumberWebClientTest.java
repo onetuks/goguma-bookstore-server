@@ -12,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class BusinessNumberWebClientTest extends CommonIntegrationTest {
 
-  @Autowired
-  private BusinessNumberWebClient service;
+  @Autowired private BusinessNumberWebClient service;
 
   @Test
   @DisplayName("유효한 사업자번호를 이용해서 정상 상태를 조회한다.")

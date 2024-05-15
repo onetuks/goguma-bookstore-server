@@ -59,17 +59,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
 
-  @Autowired
-  private RegistrationScmService registrationScmService;
+  @Autowired private RegistrationScmService registrationScmService;
 
-  @MockBean
-  private RegistrationScmRepository registrationScmRepository;
-  @MockBean
-  private AuthorScmRepository authorScmRepository;
-  @MockBean
-  private BookScmRepository bookScmRepository;
-  @MockBean
-  private FileRepository fileRepository;
+  @MockBean private RegistrationScmRepository registrationScmRepository;
+  @MockBean private AuthorScmRepository authorScmRepository;
+  @MockBean private BookScmRepository bookScmRepository;
+  @MockBean private FileRepository fileRepository;
 
   private Member authorMember;
   private Author author;
@@ -84,10 +79,22 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   @DisplayName("신간 등록을 요청하면 신간이 등록되고, 커버 이미지, 목업 이미지, 미리보기 파일, 샘플 파일이 S3에 저장된다.")
   void createRegistrationTest() {
     // Given
-    RegistrationCreateParam param = new RegistrationCreateParam(
-        createTitle(), createOneLiner(), createSummary(), createCategories(), createPublisher(),
-        createIsbn(), createHeight(), createWidth(), createCoverType(), createPageCount(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationCreateParam param =
+        new RegistrationCreateParam(
+            createTitle(),
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPublisher(),
+            createIsbn(),
+            createHeight(),
+            createWidth(),
+            createCoverType(),
+            createPageCount(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
 
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
@@ -101,14 +108,9 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     given(registrationScmRepository.create(any())).willReturn(registration);
 
     // When
-    Registration result = registrationScmService.createRegistration(
-        authorMember.memberId(),
-        param,
-        coverImgFile,
-        detailImgFiles,
-        previewFiles,
-        sampleFile
-    );
+    Registration result =
+        registrationScmService.createRegistration(
+            authorMember.memberId(), param, coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     // Then
     assertAll(
@@ -130,12 +132,13 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         () -> assertThat(result.bookPriceInfo().isPromotion()).isEqualTo(param.isPromotion()),
         () -> assertThat(result.bookPriceInfo().stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.coverImgFilePath().getUri()).isEqualTo(coverImgFile.getUri()),
-        () -> assertThat(result.detailImgFilePaths().getUris()).containsExactlyInAnyOrderElementsOf(
-            detailImgFiles.getUris()),
-        () -> assertThat(result.previewFilePaths().getUris()).containsExactlyInAnyOrderElementsOf(
-            previewFiles.getUris()),
-        () -> assertThat(result.sampleFilePath().getUri()).isEqualTo(sampleFile.getUri())
-    );
+        () ->
+            assertThat(result.detailImgFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(detailImgFiles.getUris()),
+        () ->
+            assertThat(result.previewFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(previewFiles.getUris()),
+        () -> assertThat(result.sampleFilePath().getUri()).isEqualTo(sampleFile.getUri()));
 
     verify(fileRepository).putFile(any());
   }
@@ -144,10 +147,22 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   @DisplayName("신간 등록을 요청할 때 커버 이미지 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoCoverImgFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param = new RegistrationCreateParam(
-        createTitle(), createOneLiner(), createSummary(), createCategories(), createPublisher(),
-        createIsbn(), createHeight(), createWidth(), createCoverType(), createPageCount(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationCreateParam param =
+        new RegistrationCreateParam(
+            createTitle(),
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPublisher(),
+            createIsbn(),
+            createHeight(),
+            createWidth(),
+            createCoverType(),
+            createPageCount(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
 
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createNullFile();
@@ -160,18 +175,34 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationScmService.createRegistration(
-                authorMember.memberId(), param,
-                coverImgFile, detailImgFiles, previewFiles, sampleFile));
+                authorMember.memberId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
 
   @Test
   @DisplayName("신간 등록 요청할 때 상세 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoDetailImgFiles_ExceptionTest() {
     // Given
-    RegistrationCreateParam param = new RegistrationCreateParam(
-        createTitle(), createOneLiner(), createSummary(), createCategories(), createPublisher(),
-        createIsbn(), createHeight(), createWidth(), createCoverType(), createPageCount(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationCreateParam param =
+        new RegistrationCreateParam(
+            createTitle(),
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPublisher(),
+            createIsbn(),
+            createHeight(),
+            createWidth(),
+            createCoverType(),
+            createPageCount(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
 
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
@@ -184,18 +215,34 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationScmService.createRegistration(
-                authorMember.memberId(), param,
-                coverImgFile, detailImgFiles, previewFiles, sampleFile));
+                authorMember.memberId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
 
   @Test
   @DisplayName("신간 등록 요청할 때 미리보기 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoPreviewFiles_ExceptionTest() {
     // Given
-    RegistrationCreateParam param = new RegistrationCreateParam(
-        createTitle(), createOneLiner(), createSummary(), createCategories(), createPublisher(),
-        createIsbn(), createHeight(), createWidth(), createCoverType(), createPageCount(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationCreateParam param =
+        new RegistrationCreateParam(
+            createTitle(),
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPublisher(),
+            createIsbn(),
+            createHeight(),
+            createWidth(),
+            createCoverType(),
+            createPageCount(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
 
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
@@ -208,19 +255,34 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationScmService.createRegistration(
-                authorMember.memberId(), param,
-                coverImgFile, detailImgFiles, previewFiles, sampleFile));
+                authorMember.memberId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
-
 
   @Test
   @DisplayName("신간 등록을 요청할 때 샘플 파일이 없으면 예외가 발생한다.")
   void createRegistration_NoSampleFile_ExceptionTest() {
     // Given
-    RegistrationCreateParam param = new RegistrationCreateParam(
-        createTitle(), createOneLiner(), createSummary(), createCategories(), createPublisher(),
-        createIsbn(), createHeight(), createWidth(), createCoverType(), createPageCount(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationCreateParam param =
+        new RegistrationCreateParam(
+            createTitle(),
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPublisher(),
+            createIsbn(),
+            createHeight(),
+            createWidth(),
+            createCoverType(),
+            createPageCount(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
 
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
@@ -233,62 +295,77 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         IllegalArgumentException.class,
         () ->
             registrationScmService.createRegistration(
-                authorMember.memberId(), param,
-                coverImgFile, detailImgFiles, previewFiles, sampleFile));
+                authorMember.memberId(),
+                param,
+                coverImgFile,
+                detailImgFiles,
+                previewFiles,
+                sampleFile));
   }
 
   @Test
   @DisplayName("신간등록 단건 조회한다.")
   void readRegistrationTest() {
     // Given
-    Registration registration = RegistrationFixture
-        .create(createId(), author, false);
+    Registration registration = RegistrationFixture.create(createId(), author, false);
 
-    given(registrationScmRepository.read(registration.registrationId()))
-        .willReturn(registration);
+    given(registrationScmRepository.read(registration.registrationId())).willReturn(registration);
 
     // When
-    Registration result = registrationScmService
-        .readRegistration(author.authorId(), registration.registrationId());
+    Registration result =
+        registrationScmService.readRegistration(author.authorId(), registration.registrationId());
 
     // Then
     assertAll(
         () -> assertThat(result).isEqualTo(registration),
         () -> assertThat(result.approvalInfo().isApproved()).isFalse(),
         () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo("신간 등록 검수 중입니다."),
-        () -> assertThat(result.bookConceptualInfo().title()).isEqualTo(
-            registration.bookConceptualInfo().title()),
-        () -> assertThat(result.bookConceptualInfo().oneLiner()).isEqualTo(
-            registration.bookConceptualInfo().oneLiner()),
-        () -> assertThat(result.bookConceptualInfo().summary()).isEqualTo(
-            registration.bookConceptualInfo().summary()),
-        () -> assertThat(result.bookConceptualInfo().categories()).isEqualTo(
-            registration.bookConceptualInfo().categories()),
-        () -> assertThat(result.bookConceptualInfo().publisher()).isEqualTo(
-            registration.bookConceptualInfo().publisher()),
-        () -> assertThat(result.bookConceptualInfo().isbn()).isEqualTo(
-            registration.bookConceptualInfo().isbn()),
-        () -> assertThat(result.bookPhysicalInfo().height()).isEqualTo(
-            registration.bookPhysicalInfo().height()),
-        () -> assertThat(result.bookPhysicalInfo().width()).isEqualTo(
-            registration.bookPhysicalInfo().width()),
-        () -> assertThat(result.bookPhysicalInfo().coverType()).isEqualTo(
-            registration.bookPhysicalInfo().coverType()),
-        () -> assertThat(result.bookPhysicalInfo().pageCount()).isEqualTo(
-            registration.bookPhysicalInfo().pageCount()),
-        () -> assertThat(result.bookPriceInfo().price()).isEqualTo(
-            registration.bookPriceInfo().price()),
-        () -> assertThat(result.bookPriceInfo().salesRate()).isEqualTo(
-            registration.bookPriceInfo().salesRate()),
-        () -> assertThat(result.bookPriceInfo().isPromotion()).isEqualTo(
-            registration.bookPriceInfo().isPromotion()),
-        () -> assertThat(result.bookPriceInfo().stockCount()).isEqualTo(
-            registration.bookPriceInfo().stockCount()),
+        () ->
+            assertThat(result.bookConceptualInfo().title())
+                .isEqualTo(registration.bookConceptualInfo().title()),
+        () ->
+            assertThat(result.bookConceptualInfo().oneLiner())
+                .isEqualTo(registration.bookConceptualInfo().oneLiner()),
+        () ->
+            assertThat(result.bookConceptualInfo().summary())
+                .isEqualTo(registration.bookConceptualInfo().summary()),
+        () ->
+            assertThat(result.bookConceptualInfo().categories())
+                .isEqualTo(registration.bookConceptualInfo().categories()),
+        () ->
+            assertThat(result.bookConceptualInfo().publisher())
+                .isEqualTo(registration.bookConceptualInfo().publisher()),
+        () ->
+            assertThat(result.bookConceptualInfo().isbn())
+                .isEqualTo(registration.bookConceptualInfo().isbn()),
+        () ->
+            assertThat(result.bookPhysicalInfo().height())
+                .isEqualTo(registration.bookPhysicalInfo().height()),
+        () ->
+            assertThat(result.bookPhysicalInfo().width())
+                .isEqualTo(registration.bookPhysicalInfo().width()),
+        () ->
+            assertThat(result.bookPhysicalInfo().coverType())
+                .isEqualTo(registration.bookPhysicalInfo().coverType()),
+        () ->
+            assertThat(result.bookPhysicalInfo().pageCount())
+                .isEqualTo(registration.bookPhysicalInfo().pageCount()),
+        () ->
+            assertThat(result.bookPriceInfo().price())
+                .isEqualTo(registration.bookPriceInfo().price()),
+        () ->
+            assertThat(result.bookPriceInfo().salesRate())
+                .isEqualTo(registration.bookPriceInfo().salesRate()),
+        () ->
+            assertThat(result.bookPriceInfo().isPromotion())
+                .isEqualTo(registration.bookPriceInfo().isPromotion()),
+        () ->
+            assertThat(result.bookPriceInfo().stockCount())
+                .isEqualTo(registration.bookPriceInfo().stockCount()),
         () -> assertThat(result.coverImgFilePath()).isNotNull(),
         () -> assertThat(result.detailImgFilePaths().getUris()).isNotEmpty(),
         () -> assertThat(result.previewFilePaths().getUris()).isNotEmpty(),
-        () -> assertThat(result.sampleFilePath()).isNotNull()
-    );
+        () -> assertThat(result.sampleFilePath()).isNotNull());
   }
 
   @Test
@@ -296,17 +373,16 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   void readRegistration_NotAuthor_ExceptionTest() {
     // Given
     long notExistsAuthorId = 123_303_212L;
-    Registration registration = RegistrationFixture
-        .create(createId(), author, false);
+    Registration registration = RegistrationFixture.create(createId(), author, false);
 
-    given(registrationScmRepository.read(registration.registrationId()))
-        .willReturn(registration);
+    given(registrationScmRepository.read(registration.registrationId())).willReturn(registration);
 
     // When & Then
     assertThrows(
         ApiAccessDeniedException.class,
-        () -> registrationScmService
-            .readRegistration(notExistsAuthorId, registration.registrationId()));
+        () ->
+            registrationScmService.readRegistration(
+                notExistsAuthorId, registration.registrationId()));
   }
 
   @Test
@@ -314,13 +390,17 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   void readAllRegistrationsTest() {
     // Given
     int count = 10;
-    List<Author> authors = IntStream.range(0, 2)
-        .mapToObj(i ->
-            AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR)))
-        .toList();
-    List<Registration> registrations = IntStream.range(0, count)
-        .mapToObj(i -> RegistrationFixture.create(createId(), authors.get(i % 2), false))
-        .toList();
+    List<Author> authors =
+        IntStream.range(0, 2)
+            .mapToObj(
+                i ->
+                    AuthorFixture.create(
+                        createId(), MemberFixture.create(createId(), RoleType.AUTHOR)))
+            .toList();
+    List<Registration> registrations =
+        IntStream.range(0, count)
+            .mapToObj(i -> RegistrationFixture.create(createId(), authors.get(i % 2), false))
+            .toList();
 
     given(registrationScmRepository.readAll()).willReturn(registrations);
 
@@ -336,21 +416,21 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   void readAllRegistrationsByAuthorTest() {
     // Given
     int count = 10;
-    List<Registration> registrations = IntStream.range(0, count)
-        .mapToObj(i -> RegistrationFixture.create(createId(), author, false))
-        .toList();
+    List<Registration> registrations =
+        IntStream.range(0, count)
+            .mapToObj(i -> RegistrationFixture.create(createId(), author, false))
+            .toList();
 
     given(authorScmRepository.read(author.authorId())).willReturn(author);
     given(registrationScmRepository.readAll()).willReturn(registrations);
 
     // When
-    List<Registration> results = registrationScmService
-        .readAllRegistrationsByAuthor(authorMember.memberId(), author.authorId());
+    List<Registration> results =
+        registrationScmService.readAllRegistrationsByAuthor(
+            authorMember.memberId(), author.authorId());
 
     // Then
-    assertThat(results)
-        .hasSize(count)
-        .containsExactlyInAnyOrderElementsOf(registrations);
+    assertThat(results).hasSize(count).containsExactlyInAnyOrderElementsOf(registrations);
   }
 
   @Test
@@ -364,9 +444,7 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     // When & Then
     assertThrows(
         ApiAccessDeniedException.class,
-        () ->
-            registrationScmService.readAllRegistrationsByAuthor(
-                userMemberId, author.authorId()));
+        () -> registrationScmService.readAllRegistrationsByAuthor(userMemberId, author.authorId()));
   }
 
   @Test
@@ -391,13 +469,12 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
         () -> assertThat(result).isEqualTo(after),
         () -> assertThat(result.approvalInfo().isApproved()).isTrue(),
         () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.APPROVED),
-        () -> assertThat(result.bookConceptualInfo().title()).isEqualTo(
-            book.bookConceptualInfo().title())
-    );
+        () ->
+            assertThat(result.bookConceptualInfo().title())
+                .isEqualTo(book.bookConceptualInfo().title()));
 
     verify(bookScmRepository, times(1)).create(after);
   }
-
 
   @Test
   @DisplayName("신간등록을 검수 승인하면 검수 결과가 변경되고, 도서 등록이 완료된다.")
@@ -417,8 +494,7 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     assertAll(
         () -> assertThat(result).isEqualTo(before),
         () -> assertThat(result.approvalInfo().isApproved()).isFalse(),
-        () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.REJECTED)
-    );
+        () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.REJECTED));
 
     verify(bookScmRepository, times(0)).create(any());
   }
@@ -428,9 +504,15 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   void updateRegistrationTest() {
     // Given
     Registration registration = RegistrationFixture.create(createId(), author, false);
-    RegistrationEditParam param = new RegistrationEditParam(
-        createOneLiner(), createSummary(), createCategories(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationEditParam param =
+        new RegistrationEditParam(
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
     String uuid = UUIDProvider.provideUUID();
     FileWrapper coverImgFile = FileWrapperFixture.createFile(FileType.COVERS, uuid);
     FileWrapperCollection detailImgFiles = FileWrapperFixture.createFiles(FileType.DETAILS, uuid);
@@ -438,31 +520,38 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     FileWrapper sampleFile = FileWrapperFixture.createFile(FileType.SAMPLES, uuid);
 
     // When
-    Registration result = registrationScmService
-        .updateRegistration(
-            registration.registrationId(), param, coverImgFile, detailImgFiles, previewFiles,
+    Registration result =
+        registrationScmService.updateRegistration(
+            registration.registrationId(),
+            param,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
             sampleFile);
 
     // Then
     assertAll(
         () -> assertThat(result).isEqualTo(registration),
         () -> assertThat(result.approvalInfo().isApproved()).isFalse(),
-        () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.WAIT_APPROVAL),
+        () ->
+            assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.WAIT_APPROVAL),
         () -> assertThat(result.bookConceptualInfo().oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.bookConceptualInfo().summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.bookConceptualInfo().categories())
-            .containsExactlyInAnyOrderElementsOf(param.categories()),
+        () ->
+            assertThat(result.bookConceptualInfo().categories())
+                .containsExactlyInAnyOrderElementsOf(param.categories()),
         () -> assertThat(result.bookPriceInfo().price()).isEqualTo(param.price()),
         () -> assertThat(result.bookPriceInfo().salesRate()).isEqualTo(param.salesRate()),
         () -> assertThat(result.bookPriceInfo().isPromotion()).isEqualTo(param.isPromotion()),
         () -> assertThat(result.bookPriceInfo().stockCount()).isEqualTo(param.stockCount()),
         () -> assertThat(result.coverImgFilePath().getUri()).isEqualTo(coverImgFile.getUri()),
-        () -> assertThat(result.detailImgFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(detailImgFiles.getUris()),
-        () -> assertThat(result.previewFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(previewFiles.getUris()),
-        () -> assertThat(result.sampleFilePath().getUri()).isEqualTo(sampleFile.getUri())
-    );
+        () ->
+            assertThat(result.detailImgFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(detailImgFiles.getUris()),
+        () ->
+            assertThat(result.previewFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(previewFiles.getUris()),
+        () -> assertThat(result.sampleFilePath().getUri()).isEqualTo(sampleFile.getUri()));
 
     verify(fileRepository).putFile(any());
   }
@@ -472,42 +561,57 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
   void updateRegistration_NoFiles_Test() {
     // Given
     Registration registration = RegistrationFixture.create(createId(), author, false);
-    RegistrationEditParam param = new RegistrationEditParam(
-        createOneLiner(), createSummary(), createCategories(),
-        createPrice(), createSalesRate(), createPromotion(), createStockCount());
+    RegistrationEditParam param =
+        new RegistrationEditParam(
+            createOneLiner(),
+            createSummary(),
+            createCategories(),
+            createPrice(),
+            createSalesRate(),
+            createPromotion(),
+            createStockCount());
     FileWrapper coverImgFile = FileWrapperFixture.createNullFile();
     FileWrapperCollection detailImgFiles = new FileWrapperCollection(Collections.emptyList());
     FileWrapperCollection previewFiles = new FileWrapperCollection(Collections.emptyList());
     FileWrapper sampleFile = FileWrapperFixture.createNullFile();
 
     // When
-    Registration result = registrationScmService
-        .updateRegistration(
-            registration.registrationId(), param, coverImgFile, detailImgFiles, previewFiles,
+    Registration result =
+        registrationScmService.updateRegistration(
+            registration.registrationId(),
+            param,
+            coverImgFile,
+            detailImgFiles,
+            previewFiles,
             sampleFile);
 
     // Then
     assertAll(
         () -> assertThat(result).isEqualTo(registration),
         () -> assertThat(result.approvalInfo().isApproved()).isFalse(),
-        () -> assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.WAIT_APPROVAL),
+        () ->
+            assertThat(result.approvalInfo().approvalMemo()).isEqualTo(ApprovalInfo.WAIT_APPROVAL),
         () -> assertThat(result.bookConceptualInfo().oneLiner()).isEqualTo(param.oneLiner()),
         () -> assertThat(result.bookConceptualInfo().summary()).isEqualTo(param.summary()),
-        () -> assertThat(result.bookConceptualInfo().categories())
-            .containsExactlyInAnyOrderElementsOf(param.categories()),
+        () ->
+            assertThat(result.bookConceptualInfo().categories())
+                .containsExactlyInAnyOrderElementsOf(param.categories()),
         () -> assertThat(result.bookPriceInfo().price()).isEqualTo(param.price()),
         () -> assertThat(result.bookPriceInfo().salesRate()).isEqualTo(param.salesRate()),
         () -> assertThat(result.bookPriceInfo().isPromotion()).isEqualTo(param.isPromotion()),
         () -> assertThat(result.bookPriceInfo().stockCount()).isEqualTo(param.stockCount()),
-        () -> assertThat(result.coverImgFilePath().getUri())
-            .isEqualTo(registration.coverImgFilePath().getUri()),
-        () -> assertThat(result.detailImgFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(registration.detailImgFilePaths().getUris()),
-        () -> assertThat(result.previewFilePaths().getUris())
-            .containsExactlyInAnyOrderElementsOf(registration.previewFilePaths().getUris()),
-        () -> assertThat(result.sampleFilePath().getUri())
-            .isEqualTo(registration.sampleFilePath().getUri())
-    );
+        () ->
+            assertThat(result.coverImgFilePath().getUri())
+                .isEqualTo(registration.coverImgFilePath().getUri()),
+        () ->
+            assertThat(result.detailImgFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(registration.detailImgFilePaths().getUris()),
+        () ->
+            assertThat(result.previewFilePaths().getUris())
+                .containsExactlyInAnyOrderElementsOf(registration.previewFilePaths().getUris()),
+        () ->
+            assertThat(result.sampleFilePath().getUri())
+                .isEqualTo(registration.sampleFilePath().getUri()));
 
     verify(fileRepository, times(0)).putFile(any());
   }
@@ -521,13 +625,12 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     given(registrationScmRepository.read(registration.registrationId())).willReturn(registration);
 
     // When
-    registrationScmService.deleteRegistration(authorMember.memberId(),
-        registration.registrationId());
+    registrationScmService.deleteRegistration(
+        authorMember.memberId(), registration.registrationId());
 
     // Then
     verify(fileRepository).deleteFile(any());
-    verify(registrationScmRepository, times(1))
-        .delete(registration.registrationId());
+    verify(registrationScmRepository, times(1)).delete(registration.registrationId());
   }
 
   @Test
@@ -540,8 +643,10 @@ class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
     given(registrationScmRepository.read(registration.registrationId())).willReturn(registration);
 
     // When & Then
-    assertThatThrownBy(() -> registrationScmService
-        .deleteRegistration(notAuthorizedMemberId, registration.registrationId()))
+    assertThatThrownBy(
+            () ->
+                registrationScmService.deleteRegistration(
+                    notAuthorizedMemberId, registration.registrationId()))
         .isInstanceOf(ApiAccessDeniedException.class);
   }
 }

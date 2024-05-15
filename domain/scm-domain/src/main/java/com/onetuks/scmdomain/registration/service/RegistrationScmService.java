@@ -14,7 +14,6 @@ import com.onetuks.coredomain.file.repository.FileRepository;
 import com.onetuks.coredomain.registration.model.Registration;
 import com.onetuks.coredomain.registration.model.vo.ApprovalInfo;
 import com.onetuks.coredomain.registration.repository.RegistrationScmRepository;
-import com.onetuks.coreobj.error.ErrorCode;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.coreobj.vo.FileWrapper;
 import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
@@ -36,8 +35,7 @@ public class RegistrationScmService {
       RegistrationScmRepository registrationScmRepository,
       AuthorScmRepository authorScmRepository,
       BookScmRepository bookScmRepository,
-      FileRepository fileRepository
-  ) {
+      FileRepository fileRepository) {
     this.registrationScmRepository = registrationScmRepository;
     this.authorScmRepository = authorScmRepository;
     this.bookScmRepository = bookScmRepository;
@@ -51,8 +49,7 @@ public class RegistrationScmService {
       FileWrapper coverImgFile,
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles,
-      FileWrapper sampleFile
-  ) {
+      FileWrapper sampleFile) {
     checkFileValidity(coverImgFile, detailImgFiles, previewFiles, sampleFile);
 
     fileRepository.putFile(coverImgFile);
@@ -73,21 +70,13 @@ public class RegistrationScmService {
                 param.publisher(),
                 param.isbn()),
             new BookPhysicalInfo(
-                param.height(),
-                param.width(),
-                param.coverType(),
-                param.pageCount()),
+                param.height(), param.width(), param.coverType(), param.pageCount()),
             new BookPriceInfo(
-                param.price(),
-                param.salesRate(),
-                param.isPromotion(),
-                param.stockCount()),
+                param.price(), param.salesRate(), param.isPromotion(), param.stockCount()),
             CoverImgFilePath.of(coverImgFile.getUri()),
             DetailImgFilePaths.of(detailImgFiles.getUris()),
             PreviewFilePaths.of(previewFiles.getUris()),
-            SampleFilePath.of(sampleFile.getUri())
-        )
-    );
+            SampleFilePath.of(sampleFile.getUri())));
   }
 
   @Transactional(readOnly = true)
@@ -107,8 +96,7 @@ public class RegistrationScmService {
   }
 
   @Transactional(readOnly = true)
-  public List<Registration> readAllRegistrationsByAuthor(
-      long memberId, long authorId) {
+  public List<Registration> readAllRegistrationsByAuthor(long memberId, long authorId) {
     Author author = authorScmRepository.read(authorId);
     if (author.member().memberId() != memberId) {
       throw new ApiAccessDeniedException("해당 신간등록에 대한 권한이 없는 작가입니다.");
@@ -120,10 +108,11 @@ public class RegistrationScmService {
   @Transactional
   public Registration updateRegistrationApprovalInfo(
       long registrationId, boolean isApproved, String approvalMemo) {
-    Registration registration = registrationScmRepository.update(
-        registrationScmRepository.read(registrationId)
-            .changeApprovalInfo(isApproved, approvalMemo)
-    );
+    Registration registration =
+        registrationScmRepository.update(
+            registrationScmRepository
+                .read(registrationId)
+                .changeApprovalInfo(isApproved, approvalMemo));
 
     if (isApproved) {
       bookScmRepository.create(registration);
@@ -179,8 +168,7 @@ public class RegistrationScmService {
       FileWrapper coverImgFile,
       FileWrapperCollection detailImgFiles,
       FileWrapperCollection previewFiles,
-      FileWrapper sampleFile
-  ) {
+      FileWrapper sampleFile) {
     if (coverImgFile.isNullFile()
         || sampleFile.isNullFile()
         || detailImgFiles.isEmpty()

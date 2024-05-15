@@ -27,7 +27,6 @@ public class RegistrationFixture {
         createCoverImgFilePath(uuid),
         createDetailImgFilePaths(uuid),
         createPreviewFilePaths(uuid),
-        createSampleFilePath(uuid)
-    );
+        createSampleFilePath(uuid));
   }
 }

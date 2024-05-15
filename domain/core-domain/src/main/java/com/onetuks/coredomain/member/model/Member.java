@@ -13,20 +13,21 @@ public record Member(
     Nickname nickname,
     boolean isAlarmPermitted,
     ProfileImgFilePath profileImgFilePath,
-    AddressInfo defaultAddressInfo
-) {
+    AddressInfo defaultAddressInfo) {
 
   public Member changeMemberProfile(
-      String nickname, boolean isAlarmPermitted,
-      String profileImgFilePath, String address, String addressDetail) {
+      String nickname,
+      boolean isAlarmPermitted,
+      String profileImgFilePath,
+      String address,
+      String addressDetail) {
     return new Member(
         memberId(),
         authInfo(),
         new Nickname(nickname),
         isAlarmPermitted,
         new ProfileImgFilePath(profileImgFilePath),
-        new AddressInfo(address, addressDetail)
-    );
+        new AddressInfo(address, addressDetail));
   }
 
   public Member revokeAuthorRole() {
@@ -36,8 +37,7 @@ public record Member(
         nickname(),
         isAlarmPermitted(),
         profileImgFilePath(),
-        defaultAddressInfo()
-    );
+        defaultAddressInfo());
   }
 
   public Member grantAuthorRole() {
@@ -47,7 +47,6 @@ public record Member(
         nickname(),
         isAlarmPermitted(),
         profileImgFilePath(),
-        defaultAddressInfo()
-    );
+        defaultAddressInfo());
   }
 }

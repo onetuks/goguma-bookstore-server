@@ -2,10 +2,7 @@ package com.onetuks.coredomain.registration.model.vo;
 
 import java.util.Objects;
 
-public record ApprovalInfo(
-    boolean isApproved,
-    String approvalMemo
-) {
+public record ApprovalInfo(boolean isApproved, String approvalMemo) {
 
   public static final String WAIT_APPROVAL = "신간 등록 검수 중입니다.";
   public static final String APPROVED = "신간 등록이 승인되었습니다.";
