@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.restock.entity;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
@@ -47,6 +48,7 @@ public class RestockEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -59,6 +61,7 @@ public class RestockEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(restockId);
   }

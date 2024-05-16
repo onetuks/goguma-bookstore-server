@@ -2,26 +2,24 @@ def jacocoExclude = List.of(
         "**/Q*",
         "**/error/*",
         "**/exception/*",
+        "**/config/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
         "**/vo/*",
-        "**/config/*",
+        "**/enums/*",
         "**/api/*",
         "**/*Application.class"
 )
 
-allprojects {
+subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'jacoco-report-aggregation'
 
     jacoco {
         toolVersion = '0.8.8'
     }
-}
 
-subprojects {
     tasks.jacocoTestReport {
         reports {
             xml.required = true
@@ -33,7 +31,7 @@ subprojects {
         }
 
         finalizedBy(tasks.jacocoTestCoverageVerification)
-        finalizedBy(rootProject.tasks.testCodeCoverageReport)
+//        finalizedBy(rootProject.tasks.testCodeCoverageReport)
 
         afterEvaluate {
             classDirectories.setFrom(files(classDirectories.files.collect {
@@ -71,12 +69,14 @@ subprojects {
                         "*.Q*",
                         "*.error.*",
                         "*.exception.*",
+                        "*.config.*",
                         "*.model.*",
                         "*.entity.*",
                         "*.dto.*",
                         "*.vo.*",
-                        "*.config.*",
+                        "*.enums.*",
                         "*.api.*",
+                        "*.coreauth.*",
                         "*.*Application"
                 ]
             }

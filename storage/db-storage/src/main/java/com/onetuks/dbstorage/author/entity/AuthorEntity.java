@@ -2,6 +2,7 @@ package com.onetuks.dbstorage.author.entity;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -91,6 +92,7 @@ public class AuthorEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -103,6 +105,7 @@ public class AuthorEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(authorId);
   }

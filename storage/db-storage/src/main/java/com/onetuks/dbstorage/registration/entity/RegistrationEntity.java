@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.registration.entity;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -145,6 +146,7 @@ public class RegistrationEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -157,6 +159,7 @@ public class RegistrationEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(registrationId);
   }

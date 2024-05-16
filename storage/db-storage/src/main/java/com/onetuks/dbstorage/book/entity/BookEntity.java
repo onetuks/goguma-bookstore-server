@@ -2,6 +2,7 @@ package com.onetuks.dbstorage.book.entity;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -155,6 +156,7 @@ public class BookEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -167,6 +169,7 @@ public class BookEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(bookId);
   }

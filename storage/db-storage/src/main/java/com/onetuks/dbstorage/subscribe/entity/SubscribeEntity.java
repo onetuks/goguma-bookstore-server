@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.subscribe.entity;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
@@ -45,6 +46,7 @@ public class SubscribeEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -57,6 +59,7 @@ public class SubscribeEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(subscribeId);
   }

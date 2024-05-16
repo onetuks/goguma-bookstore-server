@@ -1,7 +1,10 @@
-allprojects {
+subprojects {
     dependencies {
         // Test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        // Arch-Unit
+        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
 
         // TestContainers
         testImplementation 'org.springframework.boot:spring-boot-testcontainers'
@@ -13,12 +16,5 @@ allprojects {
         useJUnitPlatform()
 
         finalizedBy(tasks.jacocoTestReport)
-    }
-}
-
-subprojects {
-    dependencies {
-        // Arch-Unit
-        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
     }
 }

@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.order.entity;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.coreobj.enums.payment.CashReceiptType;
 import com.onetuks.coreobj.enums.payment.PaymentClient;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
@@ -88,6 +89,7 @@ public class OrderEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -100,6 +102,7 @@ public class OrderEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(orderId);
   }

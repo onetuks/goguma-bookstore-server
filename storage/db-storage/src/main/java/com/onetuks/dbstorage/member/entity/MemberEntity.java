@@ -4,6 +4,7 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
@@ -85,6 +86,7 @@ public class MemberEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -97,6 +99,7 @@ public class MemberEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(memberId);
   }

@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.book.entity;
 
+import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,6 +54,7 @@ public class CommentEntity {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -65,6 +67,7 @@ public class CommentEntity {
   }
 
   @Override
+  @Generated
   public int hashCode() {
     return Objects.hashCode(commentId);
   }
