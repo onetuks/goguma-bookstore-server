@@ -1,9 +1,9 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.coreauth.util.admin.AdminLoginId;
-import com.onetuks.coreauth.util.author.AuthorLoginId;
-import com.onetuks.coreobj.vo.FileWrapper;
-import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
+import com.onetuks.coreauth.util.admin.AdminId;
+import com.onetuks.coreauth.util.author.AuthorId;
+import com.onetuks.coreobj.file.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.filestorage.verification.webclient.IsbnWebClient;
 import com.onetuks.filestorage.verification.webclient.dto.result.RegistrationIsbnResult;
 import com.onetuks.filestorage.vo.FileType;
@@ -65,7 +65,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> addRegistration(
-      @AuthorLoginId Long authorId,
+      @AuthorId Long authorId,
       @RequestBody @Valid RegistrationCreateRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
       @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
@@ -97,7 +97,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationInspectionResponse> inspectRegistration(
-      @AdminLoginId Long adminId,
+      @AdminId Long adminId,
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationInspectionRequest request) {
     RegistrationInspectionResult result =
@@ -123,7 +123,7 @@ public class RegistrationScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> editRegistration(
-      @AuthorLoginId Long authorId,
+      @AuthorId Long authorId,
       @PathVariable(name = "registrationId") Long registrationId,
       @RequestBody @Valid RegistrationEditRequest request,
       @RequestPart(name = "cover-img-file", required = false) MultipartFile coverImgFile,
@@ -152,7 +152,7 @@ public class RegistrationScmRestController {
    */
   @DeleteMapping(path = "/{registrationId}")
   public ResponseEntity<Void> removeRegistration(
-      @AuthorLoginId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
     registrationScmService.deleteRegistration(authorId, registrationId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -167,7 +167,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(path = "/{registrationId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponse> getRegistration(
-      @AuthorLoginId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
+      @AuthorId Long authorId, @PathVariable(name = "registrationId") Long registrationId) {
     RegistrationResult result = registrationScmService.readRegistration(authorId, registrationId);
     RegistrationResponse response = RegistrationResponse.from(result);
 
@@ -182,7 +182,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponses> getAllRegistrations(
-      @AdminLoginId Long adminId,
+      @AdminId Long adminId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationResult> result = registrationScmService.readAllRegistrations(pageable);
     RegistrationResponses response = RegistrationResponses.from(result);
@@ -199,7 +199,7 @@ public class RegistrationScmRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RegistrationResponses> getAllRegistrationsByAuthor(
-      @AuthorLoginId Long loginAuthorId,
+      @AuthorId Long loginAuthorId,
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "registrationId", direction = Direction.DESC) Pageable pageable) {
     Page<RegistrationResult> result =

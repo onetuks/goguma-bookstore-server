@@ -7,7 +7,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createMailOrderSales
 import static com.onetuks.coredomain.util.TestValueProvider.createNickname;
 
 import com.onetuks.coreobj.enums.member.RoleType;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import java.time.LocalDateTime;

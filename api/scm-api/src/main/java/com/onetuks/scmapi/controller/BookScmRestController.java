@@ -1,8 +1,8 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.coreauth.util.author.AuthorLoginId;
-import com.onetuks.coreobj.vo.FileWrapper;
-import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
+import com.onetuks.coreauth.util.author.AuthorId;
+import com.onetuks.coreobj.file.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.filestorage.vo.FileType;
 import com.onetuks.modulescm.book.service.BookScmService;
 import com.onetuks.modulescm.book.service.dto.result.BookEditResult;
@@ -53,7 +53,7 @@ public class BookScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<BookEditResponse> editBook(
-      @AuthorLoginId Long authorLoginId,
+      @AuthorId Long authorLoginId,
       @PathVariable(name = "bookId") Long bookId,
       @RequestBody BookEditRequest request,
       @RequestPart(name = "coverImgFile", required = false) MultipartFile coverImgFile,
@@ -82,7 +82,7 @@ public class BookScmRestController {
    */
   @GetMapping(path = "/scm/books?authorId=xx")
   public ResponseEntity<BookResponses> getAllBooksByAuthor(
-      @AuthorLoginId Long authorLoginId,
+      @AuthorId Long authorLoginId,
       @RequestParam(name = "authorId") Long authorId,
       @PageableDefault(sort = "bookId", direction = Direction.DESC) Pageable pageable) {
     Page<BookResult> result = bookScmService.getAllBooksByAuthor(authorLoginId, authorId, pageable);

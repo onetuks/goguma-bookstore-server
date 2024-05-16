@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.filestorage.FileStorageIntegrationTest;
 import com.onetuks.filestorage.fixture.FileWrapperFixture;
 import java.io.File;

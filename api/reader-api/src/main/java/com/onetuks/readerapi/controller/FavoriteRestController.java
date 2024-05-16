@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller;
 
-import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.modulereader.favorite.service.FavoriteService;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoriteGetResult;
 import com.onetuks.modulereader.favorite.service.dto.result.FavoritePostResult;
@@ -42,7 +42,7 @@ public class FavoriteRestController {
    */
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoritePostResponse> addFavorite(
-      @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
+      @MemberId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     FavoritePostResult result = favoriteService.createFavorite(memberId, bookId);
     FavoritePostResponse response = FavoritePostResponse.from(result);
 
@@ -58,7 +58,7 @@ public class FavoriteRestController {
    */
   @DeleteMapping(path = "/{favoriteId}")
   public ResponseEntity<Void> removeFavorite(
-      @LoginId Long memberId, @PathVariable(name = "favoriteId") Long favoriteId) {
+      @MemberId Long memberId, @PathVariable(name = "favoriteId") Long favoriteId) {
     favoriteService.deleteFavorite(memberId, favoriteId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -73,7 +73,7 @@ public class FavoriteRestController {
    */
   @GetMapping(path = "/whether", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoriteWhetherGetResponse> getIsFavorited(
-      @LoginId Long memberId, @RequestParam(name = "bookId") Long bookId) {
+      @MemberId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     FavoriteWhetherGetResult result = favoriteService.readFavoriteExistence(memberId, bookId);
     FavoriteWhetherGetResponse response = FavoriteWhetherGetResponse.from(result);
 
@@ -89,7 +89,7 @@ public class FavoriteRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoriteGetResponses> getResponsesOfMember(
-      @LoginId Long memberId,
+      @MemberId Long memberId,
       @PageableDefault(sort = "favoriteId", direction = Direction.DESC) Pageable pageable) {
     Page<FavoriteGetResult> results = favoriteService.readFavoritesOfMember(memberId, pageable);
     FavoriteGetResponses responses = FavoriteGetResponses.from(results);

@@ -9,7 +9,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createRoles;
 import static com.onetuks.coredomain.util.TestValueProvider.createSocialId;
 
 import com.onetuks.coreobj.enums.member.RoleType;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 
 public class MemberEntityFixture {

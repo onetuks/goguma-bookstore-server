@@ -20,7 +20,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createSummary;
 import static com.onetuks.coredomain.util.TestValueProvider.createTitle;
 import static com.onetuks.coredomain.util.TestValueProvider.createWidth;
 
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.registration.entity.RegistrationEntity;
 

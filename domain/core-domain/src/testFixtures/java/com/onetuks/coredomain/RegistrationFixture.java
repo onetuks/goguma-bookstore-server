@@ -11,7 +11,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createBookPriceInfo;
 
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.registration.model.Registration;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 
 public class RegistrationFixture {
 

@@ -1,6 +1,6 @@
 package com.onetuks.readerapi.controller;
 
-import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.modulereader.subscribe.service.SubscribeService;
 import com.onetuks.modulereader.subscribe.service.dto.result.SubscribeResult;
 import com.onetuks.readerapi.controller.dto.request.SubscribePostRequest;
@@ -44,7 +44,7 @@ public class SubscribeRestController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SubscribeResponse> postSubscribe(
-      @LoginId Long loginId, @RequestBody @Valid SubscribePostRequest request) {
+      @MemberId Long loginId, @RequestBody @Valid SubscribePostRequest request) {
     SubscribeResult result = subscribeService.createSubscribe(loginId, request.to());
     SubscribeResponse response = SubscribeResponse.from(result);
 
@@ -60,7 +60,7 @@ public class SubscribeRestController {
    */
   @DeleteMapping(path = "/{subscribeId}")
   public ResponseEntity<Void> cancelSubscribe(
-      @LoginId Long loginId, @PathVariable(name = "subscribeId") Long subscribeId) {
+      @MemberId Long loginId, @PathVariable(name = "subscribeId") Long subscribeId) {
     subscribeService.deleteSubcribe(loginId, subscribeId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -75,7 +75,7 @@ public class SubscribeRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getIsSubscribedAuthor(
-      @LoginId Long loginId, @RequestParam(name = "authorId") Long authorId) {
+      @MemberId Long loginId, @RequestParam(name = "authorId") Long authorId) {
     boolean response = subscribeService.readIsSubscribedAuthor(loginId, authorId);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -83,7 +83,7 @@ public class SubscribeRestController {
 
   @GetMapping(path = "/my", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SubscribeResponses> getAllMySubscribes(
-      @LoginId Long loginId,
+      @MemberId Long loginId,
       @PageableDefault(sort = "subscribeId", direction = Direction.DESC) Pageable pageable) {
     Page<SubscribeResult> result = subscribeService.readAllSubscribes(loginId, pageable);
     SubscribeResponses responses = SubscribeResponses.from(result);

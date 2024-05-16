@@ -1,6 +1,6 @@
 package com.onetuks.coredomain.file.repository;
 
-import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper;
 import org.springframework.stereotype.Repository;
 
 @Repository

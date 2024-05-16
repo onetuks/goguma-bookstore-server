@@ -1,8 +1,8 @@
 package com.onetuks.scmapi.controller;
 
-import com.onetuks.coreauth.util.admin.AdminLoginId;
-import com.onetuks.coreauth.util.author.AuthorLoginId;
-import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.coreauth.util.admin.AdminId;
+import com.onetuks.coreauth.util.author.AuthorId;
+import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.modulescm.author.service.AuthorScmService;
 import com.onetuks.modulescm.author.service.dto.result.AuthorCreateEnrollmentResult;
 import com.onetuks.modulescm.author.service.dto.result.AuthorEnrollmentDetailsResult;
@@ -50,7 +50,7 @@ public class AuthorScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorCreateEnrollmentResponse> requestEnrollment(
-      @LoginId Long loginId, @RequestBody @Valid AuthorCreateEnrollmentRequest request) {
+      @MemberId Long loginId, @RequestBody @Valid AuthorCreateEnrollmentRequest request) {
     AuthorCreateEnrollmentResult result =
         authorScmService.createAuthorEnrollment(loginId, request.to());
     AuthorCreateEnrollmentResponse response = AuthorCreateEnrollmentResponse.from(result);
@@ -70,7 +70,7 @@ public class AuthorScmRestController {
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentJudgeResponse> judgeEnrollment(
-      @AdminLoginId Long adminId, @PathVariable(name = "authorId") Long authorId) {
+      @AdminId Long adminId, @PathVariable(name = "authorId") Long authorId) {
     AuthorEnrollmentJudgeResult result = authorScmService.updateAuthorEnrollmentJudge(authorId);
     AuthorEnrollmentJudgeResponse response = AuthorEnrollmentJudgeResponse.from(result);
 
@@ -84,7 +84,7 @@ public class AuthorScmRestController {
    * @return 204 No Content
    */
   @DeleteMapping
-  public ResponseEntity<Void> cancelAuthorEnrollment(@AuthorLoginId Long authorLoginId) {
+  public ResponseEntity<Void> cancelAuthorEnrollment(@AuthorId Long authorLoginId) {
     authorScmService.deleteAuthorEnrollment(authorLoginId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -100,7 +100,7 @@ public class AuthorScmRestController {
    */
   @GetMapping(path = "/{authorId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponse> getAuthorEnrollmentDetails(
-      @AuthorLoginId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
+      @AuthorId Long loginAuthorId, @PathVariable(name = "authorId") Long authorId) {
     AuthorEnrollmentDetailsResult result =
         authorScmService.readAuthorEnrollmentDetails(loginAuthorId, authorId);
     AuthorEnrollmentDetailsResponse response = AuthorEnrollmentDetailsResponse.from(result);
@@ -117,7 +117,7 @@ public class AuthorScmRestController {
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEnrollmentDetailsResponses> getAllAuthorEnrollmentDetails(
-      @AdminLoginId Long adminId,
+      @AdminId Long adminId,
       @PageableDefault(sort = "enrollmentAt", direction = Direction.DESC) Pageable pageable) {
     Page<AuthorEnrollmentDetailsResult> results =
         authorScmService.readAllAuthorEnrollmentDetails(pageable);

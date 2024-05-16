@@ -1,9 +1,9 @@
 package com.onetuks.filestorage.fixture;
 
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FilePathProvider;
-import com.onetuks.coreobj.vo.FileWrapper;
-import com.onetuks.coreobj.vo.FileWrapper.FileWrapperCollection;
+import com.onetuks.coreobj.file.FilePathProvider;
+import com.onetuks.coreobj.file.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import java.util.stream.IntStream;
 
 public class FileWrapperFixture {

@@ -2,8 +2,8 @@ package com.onetuks.readerapi.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.onetuks.coreauth.util.login.LoginId;
-import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreauth.util.login.MemberId;
+import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.filestorage.vo.FileType;
 import com.onetuks.modulereader.member.service.MemberService;
 import com.onetuks.modulereader.member.service.dto.result.MemberDefaultAddressEditResult;
@@ -54,7 +54,7 @@ public class MemberRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberEntryInfoResponse> entryMemberInfo(
-      @LoginId Long memberId, @RequestBody @Valid MemberEntryInfoRequest request) {
+      @MemberId Long memberId, @RequestBody @Valid MemberEntryInfoRequest request) {
     MemberEntryInfoResult result = memberService.updateMemberInfo(memberId, request.to());
     MemberEntryInfoResponse response = MemberEntryInfoResponse.from(result);
 
@@ -72,7 +72,7 @@ public class MemberRestController {
    */
   @PatchMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberProfileEditResponse> editMemberProfile(
-      @LoginId Long memberId,
+      @MemberId Long memberId,
       @RequestBody @Valid MemberProfileEditRequest request,
       @RequestPart(value = "profile-img-file", required = false) MultipartFile profileImgFile) {
     MemberProfileEditResult result =
@@ -95,7 +95,7 @@ public class MemberRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberDefaultAddressEditResponse> editDefaultAddress(
-      @LoginId Long memberId, @RequestBody @Valid MemberDefaultAddressEditRequest request) {
+      @MemberId Long memberId, @RequestBody @Valid MemberDefaultAddressEditRequest request) {
     MemberDefaultAddressEditResult result =
         memberService.updateDetaultAddress(memberId, request.to());
     MemberDefaultAddressEditResponse response = MemberDefaultAddressEditResponse.from(result);
@@ -115,7 +115,7 @@ public class MemberRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberDefaultCashReceiptEditResponse> editDefaultCashReceipt(
-      @LoginId Long memberId, @RequestBody @Valid MemberDefaultCashReceiptEditRequest request) {
+      @MemberId Long memberId, @RequestBody @Valid MemberDefaultCashReceiptEditRequest request) {
     MemberDefaultCashReceiptEditResult result =
         memberService.updateDefaultCashReceipt(memberId, request.to());
     MemberDefaultCashReceiptEditResponse response =

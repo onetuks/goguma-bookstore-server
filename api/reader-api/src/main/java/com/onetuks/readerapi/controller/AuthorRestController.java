@@ -2,8 +2,8 @@ package com.onetuks.readerapi.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import com.onetuks.coreauth.util.author.AuthorLoginId;
-import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreauth.util.author.AuthorId;
+import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.filestorage.vo.FileType;
 import com.onetuks.modulereader.author.service.AuthorService;
 import com.onetuks.modulereader.author.service.dto.result.AuthorDetailsResult;
@@ -52,7 +52,7 @@ public class AuthorRestController {
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorEditResponse> editAuthorProfile(
-      @AuthorLoginId Long loginAuthorId,
+      @AuthorId Long loginAuthorId,
       @PathVariable(name = "authorId") Long authorId,
       @RequestBody @Valid AuthorEditRequest request,
       @RequestPart(name = "profile-img-file", required = false) MultipartFile profileImgFile) {

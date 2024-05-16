@@ -10,7 +10,7 @@ import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coreobj.enums.member.RoleType;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 import java.time.LocalDateTime;
 
 public class AuthorFixture {

@@ -3,9 +3,6 @@ subprojects {
         compileOnly(project(':core-auth'))
         implementation(project(':core-obj'))
 
-        // Netty/Resolver/DNS/Native/MacOS
-        implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
-
         // Validation
         implementation 'org.springframework.boot:spring-boot-starter-validation'
 

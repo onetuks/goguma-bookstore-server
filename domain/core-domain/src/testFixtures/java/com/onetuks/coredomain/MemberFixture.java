@@ -7,7 +7,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createNickname;
 
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coreobj.enums.member.RoleType;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 
 public class MemberFixture {
 

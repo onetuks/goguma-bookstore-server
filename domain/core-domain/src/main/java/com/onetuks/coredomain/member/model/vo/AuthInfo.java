@@ -4,7 +4,9 @@ import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 
+@Builder
 public record AuthInfo(
     String name, String socialId, ClientProvider clientProvider, List<RoleType> roles) {
 

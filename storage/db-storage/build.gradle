@@ -1,3 +1,7 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
 dependencies {
     // Test Fixtures
     testImplementation(testFixtures(project(':domain:core-domain')))

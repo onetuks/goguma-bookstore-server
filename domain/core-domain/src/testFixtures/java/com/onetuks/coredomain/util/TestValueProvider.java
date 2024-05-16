@@ -10,7 +10,7 @@ import com.onetuks.coredomain.registration.model.vo.ApprovalInfo;
 import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
-import com.onetuks.coreobj.vo.UUIDProvider;
+import com.onetuks.coreobj.file.UUIDProvider;
 import java.util.List;
 import java.util.Random;
 

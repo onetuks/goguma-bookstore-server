@@ -7,7 +7,7 @@ import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
 import com.onetuks.coredomain.file.filepath.ReviewImgFilePath.ReviewImgFilePaths;
 import com.onetuks.coredomain.file.filepath.SampleFilePath;
 import com.onetuks.coreobj.enums.file.FileType;
-import com.onetuks.coreobj.vo.FilePathProvider;
+import com.onetuks.coreobj.file.FilePathProvider;
 import java.util.stream.IntStream;
 
 public class CustomFilePathFixture {

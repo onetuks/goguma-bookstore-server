@@ -1,7 +1,7 @@
 package com.onetuks.filestorage.repository;
 
 import com.onetuks.coredomain.file.repository.FileRepository;
-import com.onetuks.coreobj.vo.FileWrapper;
+import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.filestorage.config.S3Config;
 import java.io.File;
 import java.io.IOException;
