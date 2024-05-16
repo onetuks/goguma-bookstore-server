@@ -1,4 +1,4 @@
-package com.onetuks.coreauth.util.admin;
+package com.onetuks.coreauth.util.login;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,4 +7,4 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AdminLoginId {}
+public @interface MemberId {}

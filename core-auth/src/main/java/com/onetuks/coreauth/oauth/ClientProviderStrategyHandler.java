@@ -4,7 +4,7 @@ import com.onetuks.coreauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.coreauth.oauth.strategy.GoogleClientProviderStrategy;
 import com.onetuks.coreauth.oauth.strategy.KakaoClientProviderStrategy;
 import com.onetuks.coreauth.oauth.strategy.NaverClientProviderStrategy;
-import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
+import com.onetuks.coreobj.enums.member.ClientProvider;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;

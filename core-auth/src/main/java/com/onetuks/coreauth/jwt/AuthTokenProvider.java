@@ -3,7 +3,7 @@ package com.onetuks.coreauth.jwt;
 import static com.onetuks.coreauth.jwt.AuthToken.AUTHORITIES_KEY;
 import static com.onetuks.coreauth.jwt.AuthToken.LOGIN_ID_KEY;
 
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.coreobj.enums.member.RoleType;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import io.jsonwebtoken.io.Decoders;

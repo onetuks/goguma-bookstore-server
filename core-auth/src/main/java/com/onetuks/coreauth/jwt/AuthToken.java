@@ -1,6 +1,6 @@
 package com.onetuks.coreauth.jwt;
 
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.coreobj.enums.member.RoleType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

@@ -1,5 +1,6 @@
 package com.onetuks.coreauth.jwt;
 
+import com.onetuks.coreobj.annotation.Generated;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +26,7 @@ public class CustomUserDetails implements UserDetails {
   }
 
   @Override
+  @Generated
   public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -38,6 +40,7 @@ public class CustomUserDetails implements UserDetails {
         && Objects.equals(authorities, that.authorities);
   }
 
+  @Generated
   @Override
   public int hashCode() {
     return Objects.hash(socialId, loginId, authorities);

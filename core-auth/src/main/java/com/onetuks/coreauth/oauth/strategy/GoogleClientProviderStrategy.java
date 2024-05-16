@@ -2,9 +2,10 @@ package com.onetuks.coreauth.oauth.strategy;
 
 import com.onetuks.coreauth.exception.TokenValidFailedException;
 import com.onetuks.coreauth.oauth.dto.GoogleUser;
+import com.onetuks.coredomain.member.model.vo.AuthInfo;
+import com.onetuks.coreobj.enums.member.ClientProvider;
+import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.error.ErrorCode;
-import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.http.HttpStatusCode;
@@ -22,7 +23,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public AuthInfo getUserData(String accessToken) {
+  public AuthInfo getAuthInfo(String accessToken) {
     GoogleUser googleUser =
         webClient
             .get()
@@ -46,7 +47,7 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
         .name(googleUser.getName())
         .socialId(googleUser.getSub())
         .clientProvider(ClientProvider.GOOGLE)
-        .roleTypes(List.of(RoleType.USER))
+        .roles(List.of(RoleType.USER))
         .build();
   }
 }

@@ -1,9 +1,8 @@
-package com.onetuks.coreauth.util.admin;
+package com.onetuks.coreauth.util.author;
 
 import com.onetuks.coreauth.jwt.CustomUserDetails;
-import com.onetuks.coreobj.error.ErrorCode;
+import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
 import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Objects;
@@ -17,12 +16,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class AdminLoginIdResolver implements HandlerMethodArgumentResolver {
+public class AuthorIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return Arrays.stream(parameter.getParameterAnnotations())
-        .anyMatch(annotation -> annotation.annotationType().equals(AdminLoginId.class));
+        .anyMatch(annotation -> annotation.annotationType().equals(AuthorId.class));
   }
 
   @Override
@@ -33,15 +32,16 @@ public class AdminLoginIdResolver implements HandlerMethodArgumentResolver {
       WebDataBinderFactory binderFactory) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    boolean isNotAdmin =
+    boolean isNotAuthor =
         authentication.getAuthorities().stream()
             .anyMatch(
                 grantedAuthority ->
-                    Objects.equals(grantedAuthority.getAuthority(), RoleType.ADMIN.name()));
+                    Objects.equals(grantedAuthority.getAuthority(), RoleType.AUTHOR.name()));
 
-    if (isNotAdmin) {
-      throw new ApiAccessDeniedException(ErrorCode.UNAUTHORITY_ACCESS_DENIED);
+    if (isNotAuthor) {
+      throw new ApiAccessDeniedException("작가만 접근 가능한 요청입니다.");
     }
+
     return ((CustomUserDetails) authentication.getPrincipal()).getLoginId();
   }
 }

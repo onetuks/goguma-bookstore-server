@@ -13,12 +13,12 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class LoginIdResolver implements HandlerMethodArgumentResolver {
+public class MemberIdResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
     return Arrays.stream(parameter.getParameterAnnotations())
-        .anyMatch(annotation -> annotation.annotationType().equals(LoginId.class));
+        .anyMatch(annotation -> annotation.annotationType().equals(MemberId.class));
   }
 
   @Override

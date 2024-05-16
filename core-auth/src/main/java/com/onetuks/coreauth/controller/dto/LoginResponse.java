@@ -1,7 +1,7 @@
 package com.onetuks.coreauth.controller.dto;
 
 import com.onetuks.coreauth.service.dto.LoginResult;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.coreobj.enums.member.RoleType;
 import java.util.List;
 
 public record LoginResponse(

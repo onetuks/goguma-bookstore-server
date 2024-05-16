@@ -4,8 +4,10 @@ import com.onetuks.coreauth.jwt.AuthToken;
 import com.onetuks.coreauth.oauth.ClientProviderStrategyHandler;
 import com.onetuks.coreauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.coreauth.service.dto.LoginResult;
-import com.onetuks.coreauth.service.dto.MemberCreateResult;
-import com.onetuks.dbstorage.global.vo.auth.ClientProvider;
+import com.onetuks.coredomain.member.dto.MemberAuthResult;
+import com.onetuks.coredomain.member.model.vo.AuthInfo;
+import com.onetuks.coreobj.enums.member.ClientProvider;
+import com.onetuks.readerdomain.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,15 +16,15 @@ public class OAuth2ClientService {
 
   private final ClientProviderStrategyHandler clientProviderStrategyHandler;
   private final AuthService authService;
-  private final MemberAuthService memberAuthService;
+  private final MemberService memberService;
 
   public OAuth2ClientService(
       ClientProviderStrategyHandler clientProviderStrategyHandler,
       AuthService authService,
-      MemberAuthService memberAuthService) {
+      MemberService memberService) {
     this.clientProviderStrategyHandler = clientProviderStrategyHandler;
     this.authService = authService;
-    this.memberAuthService = memberAuthService;
+    this.memberService = memberService;
   }
 
   @Transactional
@@ -30,9 +32,9 @@ public class OAuth2ClientService {
     ClientProviderStrategy clientProviderStrategy =
         clientProviderStrategyHandler.getClientStrategy(clientProvider);
 
-    AuthInfo clientMember = clientProviderStrategy.getUserData(accessToken);
+    AuthInfo clientMember = clientProviderStrategy.getAuthInfo(accessToken);
 
-    MemberCreateResult savedMember = memberAuthService.saveMemberIfNotExists(clientMember);
+    MemberAuthResult savedMember = memberService.createMemberIfNotExists(clientMember);
 
     AuthToken newAuthToken =
         authService.saveAccessToken(

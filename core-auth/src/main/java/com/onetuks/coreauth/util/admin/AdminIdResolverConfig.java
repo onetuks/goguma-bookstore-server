@@ -1,16 +1,18 @@
-package com.onetuks.coreauth.util.author;
+package com.onetuks.coreauth.util.admin;
 
 import java.util.List;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class AuthorLoginIdResolverConfig implements WebMvcConfigurer {
+@ComponentScan(basePackageClasses = AdminIdResolver.class)
+public class AdminIdResolverConfig implements WebMvcConfigurer {
 
-  private final AuthorLoginIdResolver resolver;
+  private final AdminIdResolver resolver;
 
-  public AuthorLoginIdResolverConfig(AuthorLoginIdResolver resolver) {
+  public AdminIdResolverConfig(AdminIdResolver resolver) {
     this.resolver = resolver;
   }
 

@@ -1,6 +1,6 @@
 package com.onetuks.coreauth.service.dto;
 
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.coreobj.enums.member.RoleType;
 import java.util.List;
 
 public record LoginResult(

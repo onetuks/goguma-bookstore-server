@@ -1,6 +1,8 @@
 package com.onetuks.coreauth.oauth.strategy;
 
+import com.onetuks.coredomain.member.model.vo.AuthInfo;
+
 public interface ClientProviderStrategy {
 
-  AuthInfo getUserData(String accessToken);
+  AuthInfo getAuthInfo(String accessToken);
 }

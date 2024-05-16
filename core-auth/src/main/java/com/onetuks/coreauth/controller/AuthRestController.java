@@ -1,9 +1,9 @@
 package com.onetuks.coreauth.controller;
 
 import static com.onetuks.coreauth.jwt.AuthHeaderUtil.HEADER_AUTHORIZATION;
-import static com.onetuks.dbstorage.global.vo.auth.ClientProvider.GOOGLE;
-import static com.onetuks.dbstorage.global.vo.auth.ClientProvider.KAKAO;
-import static com.onetuks.dbstorage.global.vo.auth.ClientProvider.NAVER;
+import static com.onetuks.coreobj.enums.member.ClientProvider.GOOGLE;
+import static com.onetuks.coreobj.enums.member.ClientProvider.KAKAO;
+import static com.onetuks.coreobj.enums.member.ClientProvider.NAVER;
 
 import com.onetuks.coreauth.controller.dto.LoginResponse;
 import com.onetuks.coreauth.controller.dto.LogoutResponse;
@@ -12,12 +12,12 @@ import com.onetuks.coreauth.jwt.AuthHeaderUtil;
 import com.onetuks.coreauth.jwt.AuthToken;
 import com.onetuks.coreauth.jwt.AuthTokenProvider;
 import com.onetuks.coreauth.service.AuthService;
-import com.onetuks.coreauth.service.MemberAuthService;
 import com.onetuks.coreauth.service.OAuth2ClientService;
 import com.onetuks.coreauth.service.dto.LoginResult;
 import com.onetuks.coreauth.service.dto.LogoutResult;
 import com.onetuks.coreauth.service.dto.RefreshResult;
-import com.onetuks.coreauth.util.login.LoginId;
+import com.onetuks.coreauth.util.login.MemberId;
+import com.onetuks.readerdomain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,17 +36,17 @@ public class AuthRestController {
   private final AuthTokenProvider authTokenProvider;
   private final OAuth2ClientService oAuth2ClientService;
   private final AuthService authService;
-  private final MemberAuthService memberAuthService;
+  private final MemberService memberService;
 
   public AuthRestController(
       AuthTokenProvider authTokenProvider,
       OAuth2ClientService oAuth2ClientService,
       AuthService authService,
-      MemberAuthService memberAuthService) {
+      MemberService memberService) {
     this.authTokenProvider = authTokenProvider;
     this.oAuth2ClientService = oAuth2ClientService;
     this.authService = authService;
-    this.memberAuthService = memberAuthService;
+    this.memberService = memberService;
   }
 
   @PostMapping(path = "/kakao")
@@ -75,7 +75,7 @@ public class AuthRestController {
 
   @PutMapping(path = "/refresh")
   public ResponseEntity<RefreshResponse> refreshToken(
-      HttpServletRequest request, @LoginId Long loginId) {
+      HttpServletRequest request, @MemberId Long loginId) {
     AuthToken authToken = getAuthToken(request);
 
     RefreshResult authRefreshResult =
@@ -94,11 +94,11 @@ public class AuthRestController {
   }
 
   @DeleteMapping("/withdraw")
-  public ResponseEntity<Void> withdrawMember(HttpServletRequest request, @LoginId Long memberId) {
+  public ResponseEntity<Void> withdrawMember(HttpServletRequest request, @MemberId Long memberId) {
     AuthToken authToken = getAuthToken(request);
 
     authService.logout(authToken);
-    memberAuthService.deleteMember(memberId);
+    memberService.deleteMember(memberId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }

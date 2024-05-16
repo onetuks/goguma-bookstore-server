@@ -1,24 +1,28 @@
 package com.onetuks.coreauth.service;
 
-import static com.onetuks.dbstorage.global.vo.auth.RoleType.ADMIN;
-import static com.onetuks.dbstorage.global.vo.auth.RoleType.AUTHOR;
-import static com.onetuks.dbstorage.global.vo.auth.RoleType.USER;
+import static com.onetuks.coreobj.enums.member.RoleType.ADMIN;
+import static com.onetuks.coreobj.enums.member.RoleType.AUTHOR;
+import static com.onetuks.coreobj.enums.member.RoleType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.onetuks.coreauth.AuthIntegrationTest;
+import com.onetuks.coreauth.CoreAuthIntegrationTest;
 import com.onetuks.coreauth.jwt.AuthToken;
 import com.onetuks.coreauth.service.dto.LogoutResult;
 import com.onetuks.coreauth.service.dto.RefreshResult;
-import com.onetuks.dbstorage.global.vo.auth.RoleType;
+import com.onetuks.coreobj.enums.member.RoleType;
+import com.onetuks.readerdomain.member.service.MemberService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-class AuthServiceTest extends AuthIntegrationTest {
+class AuthServiceTest extends CoreAuthIntegrationTest {
 
   @Autowired private AuthService authService;
+
+  @MockBean private MemberService memberService;
 
   @Test
   @DisplayName("JWT 토큰을 저장한다.")

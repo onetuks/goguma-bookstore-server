@@ -1,16 +1,18 @@
 package com.onetuks.coreauth.util.login;
 
 import java.util.List;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class LoginIdResolverConfig implements WebMvcConfigurer {
+@ComponentScan(basePackageClasses = MemberIdResolver.class)
+public class MemberIdResolverConfig implements WebMvcConfigurer {
 
-  private final LoginIdResolver resolver;
+  private final MemberIdResolver resolver;
 
-  public LoginIdResolverConfig(LoginIdResolver resolver) {
+  public MemberIdResolverConfig(MemberIdResolver resolver) {
     this.resolver = resolver;
   }
 
