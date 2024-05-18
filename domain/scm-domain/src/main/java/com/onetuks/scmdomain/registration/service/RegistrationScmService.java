@@ -19,6 +19,8 @@ import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.scmdomain.registration.param.RegistrationCreateParam;
 import com.onetuks.scmdomain.registration.param.RegistrationEditParam;
+import com.onetuks.scmdomain.verification.webclient.IsbnWebClient;
+import com.onetuks.scmdomain.verification.webclient.dto.result.RegistrationIsbnResult;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,16 +32,19 @@ public class RegistrationScmService {
   private final AuthorScmRepository authorScmRepository;
   private final BookScmRepository bookScmRepository;
   private final FileRepository fileRepository;
+  private final IsbnWebClient isbnWebClient;
 
   public RegistrationScmService(
       RegistrationScmRepository registrationScmRepository,
       AuthorScmRepository authorScmRepository,
       BookScmRepository bookScmRepository,
-      FileRepository fileRepository) {
+      FileRepository fileRepository,
+      IsbnWebClient isbnWebClient) {
     this.registrationScmRepository = registrationScmRepository;
     this.authorScmRepository = authorScmRepository;
     this.bookScmRepository = bookScmRepository;
     this.fileRepository = fileRepository;
+    this.isbnWebClient = isbnWebClient;
   }
 
   @Transactional
@@ -162,6 +167,11 @@ public class RegistrationScmService {
     registration.previewFilePaths().getUrls().forEach(fileRepository::deleteFile);
 
     registrationScmRepository.delete(registrationId);
+  }
+
+  @Transactional
+  public RegistrationIsbnResult verifyIsbn(String isbn) {
+    return isbnWebClient.requestData(isbn);
   }
 
   private void checkFileValidity(

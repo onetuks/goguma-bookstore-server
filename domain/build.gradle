@@ -14,5 +14,8 @@ subprojects {
 
         // Spring Transaction
         implementation('org.springframework:spring-tx')
+
+        // Spring Data Core
+        implementation 'org.springframework.data:spring-data-commons'
     }
 }

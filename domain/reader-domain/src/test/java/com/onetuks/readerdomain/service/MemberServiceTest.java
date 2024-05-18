@@ -24,7 +24,7 @@ import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
-import com.onetuks.readerdomain.member.param.MemberEditParam;
+import com.onetuks.readerdomain.member.param.MemberPatchParam;
 import com.onetuks.readerdomain.member.service.MemberService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -105,8 +105,8 @@ class MemberServiceTest extends ReaderDomainIntegrationTest {
   @DisplayName("멤버 프로필 정보를 수정하며, 프로필 이미지가 저장된다.")
   void updateMemberProfileTest() {
     // Given
-    MemberEditParam param =
-        new MemberEditParam(
+    MemberPatchParam param =
+        new MemberPatchParam(
             createNickname().nicknameValue(), true, createAddress(), createAddressDetail());
     FileWrapper profileImgFile =
         FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());

@@ -9,6 +9,7 @@ def jacocoExclude = List.of(
         "**/vo/*",
         "**/enums/*",
         "**/api/*",
+        "**/coreauth/*",
         "**/*Application.class"
 )
 

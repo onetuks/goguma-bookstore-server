@@ -8,7 +8,7 @@ import com.onetuks.coredomain.member.model.vo.AuthInfo;
 import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coreobj.file.FilePathProvider;
 import com.onetuks.coreobj.file.FileWrapper;
-import com.onetuks.readerdomain.member.param.MemberEditParam;
+import com.onetuks.readerdomain.member.param.MemberPatchParam;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class MemberService {
 
   @Transactional
   public Member updateMemberProfile(
-      long memberId, MemberEditParam param, FileWrapper profileImgFile) {
+      long memberId, MemberPatchParam param, FileWrapper profileImgFile) {
     Member member = memberRepository.read(memberId);
 
     fileRepository.deleteFile(member.profileImgFilePath().getUrl());
