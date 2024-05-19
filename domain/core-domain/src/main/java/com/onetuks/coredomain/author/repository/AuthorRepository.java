@@ -1,7 +1,8 @@
 package com.onetuks.coredomain.author.repository;
 
 import com.onetuks.coredomain.author.model.Author;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,7 +12,7 @@ public interface AuthorRepository {
 
   Author read(long authorId);
 
-  List<Author> readAllEnrollmentPassed();
+  Page<Author> readAllEnrollmentPassed(Pageable pageable);
 
   Author update(Author author);
 }

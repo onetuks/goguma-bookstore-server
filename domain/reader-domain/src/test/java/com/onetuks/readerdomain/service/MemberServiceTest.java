@@ -12,11 +12,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.onetuks.coredomain.MemberFixture;
-import com.onetuks.coredomain.file.repository.FileRepository;
 import com.onetuks.coredomain.member.dto.MemberAuthResult;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;
-import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.util.TestValueProvider;
 import com.onetuks.coreobj.FileWrapperFixture;
 import com.onetuks.coreobj.enums.file.FileType;
@@ -25,19 +23,11 @@ import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
 import com.onetuks.readerdomain.member.param.MemberPatchParam;
-import com.onetuks.readerdomain.member.service.MemberService;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 class MemberServiceTest extends ReaderDomainIntegrationTest {
-
-  @Autowired private MemberService memberService;
-
-  @MockBean private MemberRepository memberRepository;
-  @MockBean private FileRepository fileRepository;
 
   @Test
   @DisplayName("새로운 멤버를 생성한다.")
@@ -120,6 +110,7 @@ class MemberServiceTest extends ReaderDomainIntegrationTest {
             param.defaultAddress(),
             param.defaultAddressDetail());
 
+    given(memberRepository.read(before.memberId())).willReturn(before);
     given(memberRepository.update(any())).willReturn(after);
 
     // When

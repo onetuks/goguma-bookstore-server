@@ -29,13 +29,13 @@ public class AuthorRestController {
 
   /**
    * 작가 프로필 상세 조회
+   *
    * @param authorId : 작가 ID
    * @return 200 OK
    */
   @GetMapping(path = "/{authorId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorGetResponse> getAuthorDetails(
-      @PathVariable(name = "authorId") Long authorId
-  ) {
+      @PathVariable(name = "authorId") Long authorId) {
     Author result = authorService.readAuthorDetails(authorId);
     AuthorGetResponse response = AuthorGetResponse.from(result);
 
@@ -44,13 +44,13 @@ public class AuthorRestController {
 
   /**
    * 작가 프로필 상세 조회
+   *
    * @param pageable : 페이지 정보
    * @return 200 OK
    */
   @GetMapping(produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<AuthorGetReponses> getAllAuthorDetails(
-      @PageableDefault(sort = "authorId", direction = Direction.DESC) Pageable pageable
-  ) {
+      @PageableDefault(sort = "authorId", direction = Direction.DESC) Pageable pageable) {
     Page<Author> results = authorService.readAllAuthorDetails(pageable);
     AuthorGetReponses responses = AuthorGetReponses.from(results);
 

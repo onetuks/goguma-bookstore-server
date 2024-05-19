@@ -7,11 +7,11 @@ import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.coreobj.file.UUIDProvider;
-import com.onetuks.scmapi.registration.dto.request.RegistrationCreateRequest;
-import com.onetuks.scmapi.registration.dto.request.RegistrationEditRequest;
-import com.onetuks.scmapi.registration.dto.request.RegistrationEditJudgeRequest;
-import com.onetuks.scmapi.registration.dto.response.RegistrationEditJudgeResponse;
-import com.onetuks.scmapi.registration.dto.response.RegistrationIsbnResponse;
+import com.onetuks.scmapi.registration.dto.request.RegistrationPatchJudgeRequest;
+import com.onetuks.scmapi.registration.dto.request.RegistrationPatchRequest;
+import com.onetuks.scmapi.registration.dto.request.RegistrationPostRequest;
+import com.onetuks.scmapi.registration.dto.response.RegistrationIsbnGetResponse;
+import com.onetuks.scmapi.registration.dto.response.RegistrationPatchJudgeResponse;
 import com.onetuks.scmapi.registration.dto.response.RegistrationResponse;
 import com.onetuks.scmapi.registration.dto.response.RegistrationResponse.RegistrationResponses;
 import com.onetuks.scmdomain.registration.service.RegistrationScmService;
@@ -48,6 +48,7 @@ public class RegistrationScmRestController {
 
   /**
    * 신간 등록
+   *
    * @param authorMemberId : 로그인한 작가 아이디
    * @param request : 신간 등록 요청 정보
    * @param coverImgFile : 신간 표지 이미지 파일
@@ -59,9 +60,9 @@ public class RegistrationScmRestController {
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationResponse> addRegistration(
+  public ResponseEntity<RegistrationResponse> postNewRegistration(
       @AuthorId Long authorMemberId,
-      @RequestBody @Valid RegistrationCreateRequest request,
+      @RequestBody @Valid RegistrationPostRequest request,
       @RequestPart(name = "cover-img-file") MultipartFile coverImgFile,
       @RequestPart(name = "detail-img-files") MultipartFile[] detailImgFiles,
       @RequestPart(name = "preview-files") MultipartFile[] previewFiles,
@@ -82,6 +83,7 @@ public class RegistrationScmRestController {
 
   /**
    * 신간 등록 승인 - 관리자용
+   *
    * @param adminId : 로그인한 관리자 아이디
    * @param registrationId : 신간 등록 아이디
    * @param request : 신간 등록 승인 요청 정보
@@ -91,21 +93,21 @@ public class RegistrationScmRestController {
       path = "/{registrationId}/judge",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationEditJudgeResponse> judgeRegistration(
+  public ResponseEntity<RegistrationPatchJudgeResponse> patchRegistrationJudgement(
       @AdminId Long adminId,
       @PathVariable(name = "registrationId") Long registrationId,
-      @RequestBody @Valid RegistrationEditJudgeRequest request) {
+      @RequestBody @Valid RegistrationPatchJudgeRequest request) {
     Registration result =
         registrationScmService.updateRegistrationApprovalInfo(
             registrationId, request.approvalResult(), request.approvalMemo());
-    RegistrationEditJudgeResponse response = RegistrationEditJudgeResponse.from(result);
+    RegistrationPatchJudgeResponse response = RegistrationPatchJudgeResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-
   /**
    * 신간 등록 수정 - 작가용
+   *
    * @param authorMemberId : 로그인한 작가 아이디
    * @param registrationId : 신간 등록 아이디
    * @param request : 신간 등록 수정 요청 정보
@@ -119,10 +121,10 @@ public class RegistrationScmRestController {
       path = "/{registrationId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationResponse> editRegistration(
+  public ResponseEntity<RegistrationResponse> patchRegistration(
       @AuthorId Long authorMemberId,
       @PathVariable(name = "registrationId") Long registrationId,
-      @RequestBody @Valid RegistrationEditRequest request,
+      @RequestBody @Valid RegistrationPatchRequest request,
       @RequestPart(name = "cover-img-file", required = false) MultipartFile coverImgFile,
       @RequestPart(name = "detail-img-files", required = false) MultipartFile[] detailImgFiles,
       @RequestPart(name = "preview-files", required = false) MultipartFile[] previewFiles,
@@ -144,6 +146,7 @@ public class RegistrationScmRestController {
 
   /**
    * 신간 등록 삭제 - 작가용
+   *
    * @param authorMemberId : 로그인한 작가 아이디
    * @param registrationId : 신간 등록 아이디
    * @return 204 NO_CONTENT
@@ -158,6 +161,7 @@ public class RegistrationScmRestController {
 
   /**
    * 신간 등록 조회 - 작가용
+   *
    * @param authorMemberId : 로그인한 작가 아이디
    * @param registrationId : 신간 등록 아이디
    * @return 200 OK
@@ -173,6 +177,7 @@ public class RegistrationScmRestController {
 
   /**
    * 신간 등록 전체 조회 - 관리자용
+   *
    * @param adminId : 로그인한 관리자 아이디
    * @param pageable : 페이지 정보
    * @return 200 OK
@@ -189,6 +194,7 @@ public class RegistrationScmRestController {
 
   /**
    * 작가별 신간 등록 조회 - 작가용
+   *
    * @param authorMemberId : 로그인한 작가 아이디
    * @param authorId : 작가 아이디
    * @param pageable : 페이지 정보
@@ -208,14 +214,15 @@ public class RegistrationScmRestController {
 
   /**
    * ISBN 검증
+   *
    * @param isbn : ISBN
    * @return 200 OK
    */
   @GetMapping(path = "/isbn/{isbn}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegistrationIsbnResponse> getBookInfoByIsbn(
+  public ResponseEntity<RegistrationIsbnGetResponse> getBookInfoByIsbn(
       @PathVariable(name = "isbn") String isbn) {
     RegistrationIsbnResult result = registrationScmService.verifyIsbn(isbn);
-    RegistrationIsbnResponse response = RegistrationIsbnResponse.from(result);
+    RegistrationIsbnGetResponse response = RegistrationIsbnGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

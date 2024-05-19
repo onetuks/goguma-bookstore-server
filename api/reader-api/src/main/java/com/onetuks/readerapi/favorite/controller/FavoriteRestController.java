@@ -32,15 +32,14 @@ public class FavoriteRestController {
 
   /**
    * 즐겨찾기 추가
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param bookId : 도서 ID
    * @return 200 OK
    */
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<FavoritePostResponse> postNewFavorite(
-      @MemberId Long memberId,
-      @RequestParam(name = "bookId") Long bookId
-  ) {
+      @MemberId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     Favorite result = favoriteService.createFavorite(memberId, bookId);
     FavoritePostResponse response = FavoritePostResponse.from(result);
 
@@ -49,14 +48,14 @@ public class FavoriteRestController {
 
   /**
    * 즐겨찾기 취소
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param favoriteId : 즐겨찾기 ID
    * @return 204 NO_CONTENT
    */
   @DeleteMapping(path = "/{favoriteId}")
   public ResponseEntity<Void> cancelFavorite(
-      @MemberId Long memberId,
-      @PathVariable(name = "favoriteId") Long favoriteId) {
+      @MemberId Long memberId, @PathVariable(name = "favoriteId") Long favoriteId) {
     favoriteService.deleteFavorite(memberId, favoriteId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -64,14 +63,14 @@ public class FavoriteRestController {
 
   /**
    * 즐겨찾기 여부 조회
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param bookId : 도서 ID
    * @return 200 OK
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Boolean> getIsFavoritedBook(
-      @MemberId Long memberId,
-      @RequestParam(name = "bookId") Long bookId) {
+      @MemberId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     boolean result = favoriteService.readFavoriteExistence(memberId, bookId);
 
     return ResponseEntity.status(HttpStatus.OK).body(result);
@@ -79,6 +78,7 @@ public class FavoriteRestController {
 
   /**
    * 내 즐겨찾기 목록 조회
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param pageable : 페이지 정보
    * @return 200 OK

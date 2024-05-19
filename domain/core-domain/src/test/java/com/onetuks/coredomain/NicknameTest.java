@@ -2,12 +2,11 @@ package com.onetuks.coredomain;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.onetuks.dbstorage.PersistenceIntegrationTest;
-import com.onetuks.dbstorage.order.vo.Nickname;
+import com.onetuks.coredomain.member.model.vo.Nickname;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class NicknameTest extends PersistenceIntegrationTest {
+class NicknameTest {
 
   @Test
   @DisplayName("설정할 수 없는 값으로 닉네임 객체 생성 시 예외를 던진다.")

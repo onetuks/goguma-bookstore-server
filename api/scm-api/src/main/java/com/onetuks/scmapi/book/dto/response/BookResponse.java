@@ -48,8 +48,7 @@ public record BookResponse(
         book.bookPriceInfo().stockCount(),
         book.coverImgFilePath().getUrl(),
         book.detailImgFilePaths().getUrls(),
-        book.previewFilePaths().getUrls()
-    );
+        book.previewFilePaths().getUrls());
   }
 
   public record BookResponses(Page<BookResponse> responses) {

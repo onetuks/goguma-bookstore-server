@@ -4,9 +4,9 @@ import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.book.model.vo.BookConceptualInfo;
 import com.onetuks.coredomain.book.model.vo.BookPhysicalInfo;
 import com.onetuks.coredomain.book.model.vo.BookPriceInfo;
-import com.onetuks.coredomain.file.filepath.CoverImgFilePath;
-import com.onetuks.coredomain.file.filepath.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.coredomain.file.filepath.PreviewFilePath.PreviewFilePaths;
+import com.onetuks.coredomain.global.file.filepath.CoverImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.DetailImgFilePath.DetailImgFilePaths;
+import com.onetuks.coredomain.global.file.filepath.PreviewFilePath.PreviewFilePaths;
 
 public record Book(
     Long bookId,

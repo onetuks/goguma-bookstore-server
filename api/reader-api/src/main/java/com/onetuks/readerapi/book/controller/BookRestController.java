@@ -31,13 +31,12 @@ public class BookRestController {
 
   /**
    * 도서 상세 조회
+   *
    * @param bookId : 책 ID
    * @return 200 OK
    */
   @GetMapping(path = "/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookGetResponse> getBook(
-      @PathVariable(name = "bookId") Long bookId
-  ) {
+  public ResponseEntity<BookGetResponse> getBook(@PathVariable(name = "bookId") Long bookId) {
     Book result = bookService.readBook(bookId);
     BookGetResponse response = BookGetResponse.from(result);
 
@@ -46,6 +45,7 @@ public class BookRestController {
 
   /**
    * 도서 목록 조회
+   *
    * @param title : 책 제목
    * @param authorNickname : 작가 닉네임
    * @param category : 카테고리
@@ -61,11 +61,11 @@ public class BookRestController {
       @RequestParam(name = "authorNickname", required = false) String authorNickname,
       @RequestParam(name = "category", required = false) Category category,
       @RequestParam(name = "only-promotion", required = false, defaultValue = "false")
-      Boolean onlyPromotion,
+          Boolean onlyPromotion,
       @RequestParam(name = "except-sold-out", required = false, defaultValue = "false")
-      Boolean exceptSoldOut,
+          Boolean exceptSoldOut,
       @RequestParam(name = "pageOrder", required = false, defaultValue = "DATE")
-      PageOrder pageOrder,
+          PageOrder pageOrder,
       @PageableDefault(sort = "bookId", direction = Direction.DESC) Pageable pageable) {
     Page<Book> results =
         bookService.readBooks(

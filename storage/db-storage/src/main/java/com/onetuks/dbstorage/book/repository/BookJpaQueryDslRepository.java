@@ -10,6 +10,9 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +26,14 @@ public class BookJpaQueryDslRepository {
   }
 
   @Transactional(readOnly = true)
-  public List<BookEntity> findByConditionsAndOrderByCriterias(
+  public Page<BookEntity> findByConditionsAndOrderByCriterias(
       String title,
       String authorNickname,
       Category category,
       boolean onlyPromotion,
       boolean exceptSoldOut,
-      SortOrder sortOrder) {
+      SortOrder sortOrder,
+      Pageable pageable) {
     List<BookEntity> bookEntities =
         queryFactory
             .selectFrom(bookEntity)
@@ -40,13 +44,11 @@ public class BookJpaQueryDslRepository {
                 eqOnlyPermission(onlyPromotion),
                 eqExceptSoldOut(exceptSoldOut))
             .orderBy(new OrderSpecifier<>(sortOrder.getOrder(), sortOrder.getCriteria()))
-            //            .offset(pageable.getOffset())
-            //            .limit(pageable.getPageSize())
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetch();
 
-    return bookEntities;
-
-    //    return new PageImpl<>(bookEntities, pageable, bookEntities.size());
+    return new PageImpl<>(bookEntities, pageable, bookEntities.size());
   }
 
   private BooleanExpression containsTitle(String title) {

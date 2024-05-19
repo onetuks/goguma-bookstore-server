@@ -7,7 +7,8 @@ import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.subscribe.model.Subscribe;
 import com.onetuks.coredomain.subscribe.repository.SubscribeRepository;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +42,8 @@ public class SubscribeService {
   }
 
   @Transactional(readOnly = true)
-  public List<Subscribe> readAllSubscribes(long memberId) {
-    return subscribeRepository.readAll(memberId);
+  public Page<Subscribe> readAllSubscribes(long memberId, Pageable pageable) {
+    return subscribeRepository.readAll(memberId, pageable);
   }
 
   @Transactional

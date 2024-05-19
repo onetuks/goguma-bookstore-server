@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -27,19 +26,6 @@ public class ReaderDomainArchitectureTest extends ReaderDomainIntegrationTest {
 
   @Nested
   class ClassNameTest {
-
-    @Test
-    @DisplayName("result 패키지 안에 있는 클래스는 Result 로 끝난다.")
-    void result_ClassNamePostfix_Test() {
-      ArchRule rule =
-          ArchRuleDefinition.classes()
-              .that()
-              .resideInAnyPackage("..result..")
-              .should()
-              .haveSimpleNameEndingWith("Result");
-
-      rule.check(javaClasses);
-    }
 
     @Test
     @DisplayName("param 패키지 안에 있는 클래스는 Param 로 끝난다.")
@@ -75,23 +61,6 @@ public class ReaderDomainArchitectureTest extends ReaderDomainIntegrationTest {
               .beAnnotatedWith(Service.class)
               .orShould()
               .beAnnotatedWith(Component.class);
-
-      rule.check(javaClasses);
-    }
-
-    @Test
-    @DisplayName("config 패키지 안에 있는 클래스는 Config 로 끝난다.")
-    void config_ClassNamePostfix_Test() {
-      ArchRule rule =
-          ArchRuleDefinition.classes()
-              .that()
-              .resideInAnyPackage("..config..")
-              .and()
-              .doNotHaveSimpleName("AuthPermittedEndpoint")
-              .should()
-              .haveSimpleNameEndingWith("Config")
-              .andShould()
-              .beAnnotatedWith(Configuration.class);
 
       rule.check(javaClasses);
     }

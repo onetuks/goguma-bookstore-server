@@ -1,7 +1,7 @@
 package com.onetuks.readerdomain.member.service;
 
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
-import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.repository.FileRepository;
 import com.onetuks.coredomain.member.dto.MemberAuthResult;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;

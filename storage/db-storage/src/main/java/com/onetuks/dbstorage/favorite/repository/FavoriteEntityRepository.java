@@ -6,7 +6,6 @@ import com.onetuks.dbstorage.book.repository.BookStaticsJpaRepository;
 import com.onetuks.dbstorage.favorite.converter.FavoriteConverter;
 import com.onetuks.dbstorage.favorite.entity.FavoriteEntity;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -49,10 +48,8 @@ public class FavoriteEntityRepository implements FavoriteRepository {
   }
 
   @Override
-  public List<Favorite> readAll(long memberId) {
-    return repository.findAllByMemberEntityMemberId(memberId).stream()
-        .map(converter::toDomain)
-        .toList();
+  public Page<Favorite> readAll(long memberId, Pageable pageable) {
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
   }
 
   @Override

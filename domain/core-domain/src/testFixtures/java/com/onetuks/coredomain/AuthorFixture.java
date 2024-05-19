@@ -32,9 +32,9 @@ public class AuthorFixture {
   }
 
   public static Author createWithEnrollmentAt(
-      long authoId, Member member, LocalDateTime enrollmentAt) {
+      long authorId, Member member, LocalDateTime enrollmentAt) {
     return new Author(
-        null,
+        authorId,
         member,
         createProfileImgFilePath(UUIDProvider.provideUUID()),
         createNickname(),

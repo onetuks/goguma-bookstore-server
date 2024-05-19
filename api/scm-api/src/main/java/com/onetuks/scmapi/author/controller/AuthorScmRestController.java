@@ -9,13 +9,13 @@ import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.UUIDProvider;
-import com.onetuks.scmapi.author.dto.request.AuthorCreateRequest;
-import com.onetuks.scmapi.author.dto.response.AuthorCreateResponse;
-import com.onetuks.scmapi.author.dto.response.AuthorEditJudgeResponse;
-import com.onetuks.scmapi.author.dto.request.AuthorEditRequest;
-import com.onetuks.scmapi.author.dto.response.AuthorEditResponse;
-import com.onetuks.scmapi.author.dto.response.AuthorScmDetailsResponse;
-import com.onetuks.scmapi.author.dto.response.AuthorScmDetailsResponse.AuthorScmDetailsResponses;
+import com.onetuks.scmapi.author.dto.request.AuthorPatchRequest;
+import com.onetuks.scmapi.author.dto.request.AuthorPostRequest;
+import com.onetuks.scmapi.author.dto.response.AuthorPatchJudgeResponse;
+import com.onetuks.scmapi.author.dto.response.AuthorPatchResponse;
+import com.onetuks.scmapi.author.dto.response.AuthorPostResponse;
+import com.onetuks.scmapi.author.dto.response.AuthorScmGetResponse;
+import com.onetuks.scmapi.author.dto.response.AuthorScmGetResponse.AuthorScmDetailsResponses;
 import com.onetuks.scmdomain.author.service.AuthorScmService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -48,6 +48,7 @@ public class AuthorScmRestController {
 
   /**
    * 작가 등록 요청
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param request : 작가 등록 요청 내용
    * @return 200 OK
@@ -55,34 +56,33 @@ public class AuthorScmRestController {
   @PostMapping(
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorCreateResponse> requestEnrollment(
-      @MemberId Long memberId, @RequestBody @Valid AuthorCreateRequest request) {
+  public ResponseEntity<AuthorPostResponse> requestEnrollment(
+      @MemberId Long memberId, @RequestBody @Valid AuthorPostRequest request) {
     Author result = authorScmService.createAuthor(memberId, request.to());
-    AuthorCreateResponse response = AuthorCreateResponse.from(result);
+    AuthorPostResponse response = AuthorPostResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   /**
    * 작가 등록 상세 조회
+   *
    * @param authorMemberId : 로그인한 작가 ID
    * @param authorId : 작가 등록 식별자
    * @return 200 OK
    */
-  @GetMapping(
-      path = "/{authorId}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorScmDetailsResponse> getAuthorEnrollmentDetails(
-      @AuthorId Long authorMemberId,
-      @PathVariable(name = "authorId") Long authorId) {
+  @GetMapping(path = "/{authorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AuthorScmGetResponse> getAuthorEnrollmentDetails(
+      @AuthorId Long authorMemberId, @PathVariable(name = "authorId") Long authorId) {
     Author result = authorScmService.readAuthorDetails(authorMemberId, authorId);
-    AuthorScmDetailsResponse response = AuthorScmDetailsResponse.from(result);
+    AuthorScmGetResponse response = AuthorScmGetResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**
    * 작가 등록 전체 조회
+   *
    * @param adminId : 관리자 확인용
    * @param pageable : 페이지 정보
    * @return 200 OK
@@ -91,8 +91,7 @@ public class AuthorScmRestController {
   public ResponseEntity<AuthorScmDetailsResponses> getAllAuthorEnrollmentDetails(
       @AdminId Long adminId,
       @PageableDefault(sort = "enrollmentAt", direction = Direction.DESC) Pageable pageable) {
-    Page<Author> results =
-        authorScmService.readAllAuthorDetails(pageable);
+    Page<Author> results = authorScmService.readAllAuthorDetails(pageable);
     AuthorScmDetailsResponses responses = AuthorScmDetailsResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
@@ -100,6 +99,7 @@ public class AuthorScmRestController {
 
   /**
    * 작가 등록 심사
+   *
    * @param adminId : 관리자 확인용
    * @param authorId : 심사할 작가 ID
    * @return 200 OK
@@ -108,16 +108,17 @@ public class AuthorScmRestController {
       path = "/{authorId}/judge",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorEditJudgeResponse> judgeEnrollment(
+  public ResponseEntity<AuthorPatchJudgeResponse> judgeEnrollment(
       @AdminId Long adminId, @PathVariable(name = "authorId") Long authorId) {
     Author result = authorScmService.updateAuthorEnrollmentPassed(authorId);
-    AuthorEditJudgeResponse response = AuthorEditJudgeResponse.from(result);
+    AuthorPatchJudgeResponse response = AuthorPatchJudgeResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**
    * 작가 프로필 수정
+   *
    * @param authorMemberId : 로그인한 작가 ID
    * @param authorId : 수정할 작가 ID
    * @param request : 수정할 내용
@@ -128,23 +129,25 @@ public class AuthorScmRestController {
       path = "/{authorId}",
       produces = APPLICATION_JSON_VALUE,
       consumes = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorEditResponse> editAuthorProfile(
+  public ResponseEntity<AuthorPatchResponse> editAuthorProfile(
       @AuthorId Long authorMemberId,
       @PathVariable(name = "authorId") Long authorId,
-      @RequestBody @Valid AuthorEditRequest request,
+      @RequestBody @Valid AuthorPatchRequest request,
       @RequestPart(name = "profile-img-file", required = false) MultipartFile profileImgFile) {
     Author result =
         authorScmService.updateAuthorProfile(
-            authorMemberId, authorId, request.to(),
+            authorMemberId,
+            authorId,
+            request.to(),
             FileWrapper.of(FileType.PROFILES, UUIDProvider.provideUUID(), profileImgFile));
-    AuthorEditResponse response = AuthorEditResponse.from(result);
+    AuthorPatchResponse response = AuthorPatchResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-
   /**
    * 작가 등록 취소
+   *
    * @param authorMemberId : 본인 확인용
    * @return 204 No Content
    */

@@ -8,6 +8,8 @@ import com.redis.testcontainers.RedisContainer;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
@@ -30,9 +32,18 @@ public class CoreAuthIntegrationTest {
 
   static final RedisContainer redis;
 
-  static {
-    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
+  @BeforeAll
+  static void beforeAll() {
     redis.start();
+  }
+
+  @AfterAll
+  static void afterAll() {
+    redis.stop();
+  }
+
+  static {
+    redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("7"));
   }
 
   static class CoreAuthIntegrationTestInitializer

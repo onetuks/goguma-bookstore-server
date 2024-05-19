@@ -9,15 +9,10 @@ public record MemberPatchRequest(
     @NotBlank @Length(min = 1, max = 20) String nickname,
     @NotNull Boolean alarmPermission,
     @NotBlank @Length(min = 1, max = 20) String defaultAddress,
-    @NotNull String defaultAddressDetail
-) {
+    @NotNull String defaultAddressDetail) {
 
   public MemberPatchParam to() {
     return new MemberPatchParam(
-        nickname(),
-        alarmPermission(),
-        defaultAddress(),
-        defaultAddressDetail()
-    );
+        nickname(), alarmPermission(), defaultAddress(), defaultAddressDetail());
   }
 }

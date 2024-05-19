@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 
 public class AuthorEntityFixture {
 
-  public static AuthorEntity create(MemberEntity memberEntity) {
+  public static AuthorEntity create(long authorId, MemberEntity memberEntity) {
     return new AuthorEntity(
+        authorId,
         memberEntity,
         createProfileImgFilePath(UUIDProvider.provideUUID()).getUri(),
         createNickname().nicknameValue(),
@@ -29,8 +30,9 @@ public class AuthorEntityFixture {
   }
 
   public static AuthorEntity createWithEnrollmentAt(
-      MemberEntity memberEntity, LocalDateTime enrollmentAt) {
+      long authorId, MemberEntity memberEntity, LocalDateTime enrollmentAt) {
     return new AuthorEntity(
+        authorId,
         memberEntity,
         createProfileImgFilePath(UUIDProvider.provideUUID()).getUri(),
         createNickname().nicknameValue(),

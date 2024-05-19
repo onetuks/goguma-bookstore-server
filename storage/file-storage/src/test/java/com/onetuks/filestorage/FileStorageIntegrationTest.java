@@ -7,7 +7,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +43,21 @@ public class FileStorageIntegrationTest {
     testFileCleaner.deleteAllTestStatic();
   }
 
+  @BeforeAll
+  static void beforeAll() {
+    localStack.start();
+  }
+
+  @AfterAll
+  static void afterAll() {
+    localStack.stop();
+  }
+
   static {
     localStack =
         new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(Service.S3)
             .withStartupTimeout(Duration.ofSeconds(600));
-    localStack.start();
   }
 
   static class FileStorageIntegrationTestInitializer

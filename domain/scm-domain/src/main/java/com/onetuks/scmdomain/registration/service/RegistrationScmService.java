@@ -6,14 +6,17 @@ import com.onetuks.coredomain.book.model.vo.BookConceptualInfo;
 import com.onetuks.coredomain.book.model.vo.BookPhysicalInfo;
 import com.onetuks.coredomain.book.model.vo.BookPriceInfo;
 import com.onetuks.coredomain.book.repository.BookScmRepository;
-import com.onetuks.coredomain.file.filepath.CoverImgFilePath;
-import com.onetuks.coredomain.file.filepath.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.coredomain.file.filepath.PreviewFilePath.PreviewFilePaths;
-import com.onetuks.coredomain.file.filepath.SampleFilePath;
-import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.coredomain.global.file.filepath.CoverImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.DetailImgFilePath.DetailImgFilePaths;
+import com.onetuks.coredomain.global.file.filepath.PreviewFilePath.PreviewFilePaths;
+import com.onetuks.coredomain.global.file.filepath.SampleFilePath;
+import com.onetuks.coredomain.global.file.repository.FileRepository;
+import com.onetuks.coredomain.member.model.Member;
+import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.registration.model.Registration;
 import com.onetuks.coredomain.registration.model.vo.ApprovalInfo;
 import com.onetuks.coredomain.registration.repository.RegistrationScmRepository;
+import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
@@ -21,7 +24,8 @@ import com.onetuks.scmdomain.registration.param.RegistrationCreateParam;
 import com.onetuks.scmdomain.registration.param.RegistrationEditParam;
 import com.onetuks.scmdomain.verification.webclient.IsbnWebClient;
 import com.onetuks.scmdomain.verification.webclient.dto.result.RegistrationIsbnResult;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationScmService {
 
   private final RegistrationScmRepository registrationScmRepository;
+  private final MemberRepository memberRepository;
   private final AuthorScmRepository authorScmRepository;
   private final BookScmRepository bookScmRepository;
   private final FileRepository fileRepository;
@@ -36,11 +41,13 @@ public class RegistrationScmService {
 
   public RegistrationScmService(
       RegistrationScmRepository registrationScmRepository,
+      MemberRepository memberRepository,
       AuthorScmRepository authorScmRepository,
       BookScmRepository bookScmRepository,
       FileRepository fileRepository,
       IsbnWebClient isbnWebClient) {
     this.registrationScmRepository = registrationScmRepository;
+    this.memberRepository = memberRepository;
     this.authorScmRepository = authorScmRepository;
     this.bookScmRepository = bookScmRepository;
     this.fileRepository = fileRepository;
@@ -96,18 +103,23 @@ public class RegistrationScmService {
   }
 
   @Transactional(readOnly = true)
-  public List<Registration> readAllRegistrations() {
-    return registrationScmRepository.readAll();
+  public Page<Registration> readAllRegistrations(Pageable pageable) {
+    return registrationScmRepository.readAll(pageable);
   }
 
   @Transactional(readOnly = true)
-  public List<Registration> readAllRegistrationsByAuthor(long memberId, long authorId) {
+  public Page<Registration> readAllRegistrationsByAuthor(
+      long memberId, long authorId, Pageable pageable) {
+    Member member = memberRepository.read(memberId);
     Author author = authorScmRepository.read(authorId);
-    if (author.member().memberId() != memberId) {
+
+    boolean isAdmin = member.authInfo().roles().contains(RoleType.ADMIN);
+    boolean notAuth = author.member().memberId() != memberId;
+    if (!isAdmin && notAuth) {
       throw new ApiAccessDeniedException("해당 신간등록에 대한 권한이 없는 작가입니다.");
     }
 
-    return registrationScmRepository.readAll(authorId);
+    return registrationScmRepository.readAll(authorId, pageable);
   }
 
   @Transactional
@@ -128,6 +140,7 @@ public class RegistrationScmService {
 
   @Transactional
   public Registration updateRegistration(
+      long memberId,
       long registrationId,
       RegistrationEditParam param,
       FileWrapper coverImgFile,
@@ -135,6 +148,10 @@ public class RegistrationScmService {
       FileWrapperCollection previewFiles,
       FileWrapper sampleFile) {
     Registration registration = registrationScmRepository.read(registrationId);
+
+    if (registration.author().member().memberId() != memberId) {
+      throw new ApiAccessDeniedException("해당 신간등록을 수정할 권한이 없는 멤버입니다.");
+    }
 
     replaceIfValidFile(coverImgFile, detailImgFiles, previewFiles, sampleFile, registration);
 

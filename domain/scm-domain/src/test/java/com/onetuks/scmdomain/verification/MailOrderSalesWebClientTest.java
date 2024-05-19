@@ -1,13 +1,15 @@
 package com.onetuks.scmdomain.verification;
 
-import com.onetuks.filestorage.CommonIntegrationTest;
-import com.onetuks.filestorage.verification.webclient.MailOrderSalesWebClient;
-import com.onetuks.filestorage.verification.webclient.dto.response.MailOrderSalesResponse;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.onetuks.scmdomain.ScmDomainIntegrationTest;
+import com.onetuks.scmdomain.verification.webclient.MailOrderSalesWebClient;
+import com.onetuks.scmdomain.verification.webclient.dto.response.MailOrderSalesResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-class MailOrderSalesWebClientTest extends CommonIntegrationTest {
+class MailOrderSalesWebClientTest extends ScmDomainIntegrationTest {
 
   @Autowired private MailOrderSalesWebClient service;
 

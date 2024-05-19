@@ -6,7 +6,8 @@ import com.onetuks.dbstorage.author.repository.AuthorStaticsJpaRepository;
 import com.onetuks.dbstorage.subscribe.converter.SubscribeConverter;
 import com.onetuks.dbstorage.subscribe.entity.SubscribeEntity;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -48,10 +49,10 @@ public class SubscribeEntityRepository implements SubscribeRepository {
   }
 
   @Override
-  public List<Subscribe> readAll(long memberId) {
-    return subscribeJpaRepository.findAllByMemberEntityMemberId(memberId).stream()
-        .map(converter::toDomain)
-        .toList();
+  public Page<Subscribe> readAll(long memberId, Pageable pageable) {
+    return subscribeJpaRepository
+        .findAllByMemberEntityMemberId(memberId, pageable)
+        .map(converter::toDomain);
   }
 
   @Override

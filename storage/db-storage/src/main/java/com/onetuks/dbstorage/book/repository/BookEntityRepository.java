@@ -11,7 +11,8 @@ import com.onetuks.dbstorage.book.converter.BookConverter;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.book.vo.SortOrder;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -53,24 +54,29 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
   }
 
   @Override
-  public List<Book> readAll(long authorId) {
-    return jpaRepository.findAll().stream().map(converter::toDomain).toList();
+  public Page<Book> readAll(long authorId, Pageable pageable) {
+    return jpaRepository.findAll(pageable).map(converter::toDomain);
   }
 
   @Override
-  public List<Book> read(
+  public Page<Book> read(
       String title,
       String authorNickname,
       Category category,
       boolean onlyPromotion,
       boolean exceptSoldOut,
-      PageOrder pageOrder) {
+      PageOrder pageOrder,
+      Pageable pageable) {
     return queryDslRepository
         .findByConditionsAndOrderByCriterias(
-            title, authorNickname, category, onlyPromotion, exceptSoldOut, SortOrder.of(pageOrder))
-        .stream()
-        .map(converter::toDomain)
-        .toList();
+            title,
+            authorNickname,
+            category,
+            onlyPromotion,
+            exceptSoldOut,
+            SortOrder.of(pageOrder),
+            pageable)
+        .map(converter::toDomain);
   }
 
   @Override

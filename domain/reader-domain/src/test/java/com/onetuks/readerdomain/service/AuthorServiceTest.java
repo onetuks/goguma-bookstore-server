@@ -8,22 +8,17 @@ import static org.mockito.BDDMockito.given;
 import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.author.model.Author;
-import com.onetuks.coredomain.author.repository.AuthorRepository;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
-import com.onetuks.readerdomain.author.service.AuthorService;
-import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class AuthorServiceTest extends ReaderDomainIntegrationTest {
-
-  @Autowired private AuthorService authorService;
-
-  @MockBean private AuthorRepository authorRepository;
 
   @Test
   @DisplayName("작가 프로필 정보 조회한다.")
@@ -50,18 +45,21 @@ class AuthorServiceTest extends ReaderDomainIntegrationTest {
   void readAllAuthorDetailsTest() {
     // Given
     int count = 5;
-    List<Author> authors =
-        IntStream.range(0, count)
-            .mapToObj(
-                i ->
-                    AuthorFixture.create(
-                        createId(), MemberFixture.create(createId(), RoleType.USER)))
-            .toList();
+    Page<Author> authors =
+        new PageImpl<>(
+            IntStream.range(0, count)
+                .mapToObj(
+                    i ->
+                        AuthorFixture.create(
+                            createId(), MemberFixture.create(createId(), RoleType.USER)))
+                .toList());
 
-    given(authorRepository.readAllEnrollmentPassed()).willReturn(authors);
+    Pageable pageable = PageRequest.of(0, 10);
+
+    given(authorRepository.readAllEnrollmentPassed(pageable)).willReturn(authors);
 
     // When
-    List<Author> results = authorService.readAllAuthorDetails();
+    Page<Author> results = authorService.readAllAuthorDetails(pageable);
 
     // Then
     assertThat(results).hasSize(count);

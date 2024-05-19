@@ -6,8 +6,8 @@ import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.coreobj.file.UUIDProvider;
-import com.onetuks.scmapi.book.dto.request.BookEditRequest;
-import com.onetuks.scmapi.book.dto.response.BookEditResponse;
+import com.onetuks.scmapi.book.dto.request.BookPatchRequest;
+import com.onetuks.scmapi.book.dto.response.BookPatchResponse;
 import com.onetuks.scmapi.book.dto.response.BookResponse.BookResponses;
 import com.onetuks.scmdomain.book.service.BookScmService;
 import org.springframework.data.domain.Page;
@@ -39,6 +39,7 @@ public class BookScmRestController {
 
   /**
    * 도서 정보 수정
+   *
    * @param authorLoginId : 로그인한 작가 ID
    * @param bookId : 책 ID
    * @param request : 책 수정 요청 내용
@@ -51,10 +52,10 @@ public class BookScmRestController {
       path = "/{bookId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<BookEditResponse> editBook(
+  public ResponseEntity<BookPatchResponse> editBook(
       @AuthorId Long authorLoginId,
       @PathVariable(name = "bookId") Long bookId,
-      @RequestBody BookEditRequest request,
+      @RequestBody BookPatchRequest request,
       @RequestPart(name = "coverImgFile", required = false) MultipartFile coverImgFile,
       @RequestPart(name = "detailImgFiles", required = false) MultipartFile[] detailImgFiles,
       @RequestPart(name = "previewFiles", required = false) MultipartFile[] previewFiles) {
@@ -67,13 +68,14 @@ public class BookScmRestController {
             FileWrapper.of(FileType.COVERS, uuid, coverImgFile),
             FileWrapperCollection.of(FileType.DETAILS, uuid, detailImgFiles),
             FileWrapperCollection.of(FileType.PREVIEWS, uuid, previewFiles));
-    BookEditResponse response = BookEditResponse.from(result);
+    BookPatchResponse response = BookPatchResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   /**
    * 작가별 도서 목록 조회
+   *
    * @param authorLoginId : 로그인한 작가 ID
    * @param authorId : 작가 ID
    * @param pageable : 페이지 정보

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeRestController {
 
   /**
-   * 홈
-   * - 로그인 가능한 url 반환
+   * 홈 - 로그인 가능한 url 반환
+   *
    * @return 200 OK
    */
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)

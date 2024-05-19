@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage.book.repository;
 
+import static com.onetuks.coredomain.util.TestValueProvider.createId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.coreobj.enums.book.Category;
@@ -19,6 +20,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
 
@@ -35,10 +39,10 @@ class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
             memberJpaRepository
                 .saveAll(
                     IntStream.range(0, 3)
-                        .mapToObj(i -> MemberEntityFixture.create(RoleType.AUTHOR))
+                        .mapToObj(i -> MemberEntityFixture.create(createId(), RoleType.AUTHOR))
                         .toList())
                 .stream()
-                .map(AuthorEntityFixture::create)
+                .map(memberEntity -> AuthorEntityFixture.create(createId(), memberEntity))
                 .toList());
 
     bookJpaRepository.saveAll(
@@ -57,11 +61,12 @@ class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
     boolean onlyPromotion = true;
     boolean exceptSoldOut = true;
     SortOrder sortOrder = SortOrder.PRICE_DESC;
+    Pageable pageable = PageRequest.of(0, 10);
 
     // When
-    List<BookEntity> results =
+    Page<BookEntity> results =
         bookJpaQueryDslRepository.findByConditionsAndOrderByCriterias(
-            title, authorNickname, category, onlyPromotion, exceptSoldOut, sortOrder);
+            title, authorNickname, category, onlyPromotion, exceptSoldOut, sortOrder, pageable);
 
     // Then
     assertThat(results)
@@ -80,9 +85,9 @@ class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
   @DisplayName("검색 조건 없이 모든 도서 목록을 조회한다.")
   void findByConditionsAndOrderByCriterias_Test() {
     // Given & When
-    List<BookEntity> results =
+    Page<BookEntity> results =
         bookJpaQueryDslRepository.findByConditionsAndOrderByCriterias(
-            null, null, null, false, false, SortOrder.DATE);
+            null, null, null, false, false, SortOrder.DATE, PageRequest.of(0, 10));
 
     // Then
     assertThat(results).isNotEmpty().hasSize(10);

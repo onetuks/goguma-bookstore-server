@@ -1,6 +1,6 @@
 package com.onetuks.coredomain.member.model;
 
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
 import com.onetuks.coredomain.member.model.vo.AddressInfo;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;
 import com.onetuks.coredomain.member.model.vo.Nickname;

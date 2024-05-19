@@ -50,8 +50,7 @@ public record RegistrationResponse(
         registration.coverImgFilePath().getUrl(),
         registration.detailImgFilePaths().getUrls(),
         registration.previewFilePaths().getUrls(),
-        registration.sampleFilePath().getUrl()
-    );
+        registration.sampleFilePath().getUrl());
   }
 
   public record RegistrationResponses(Page<RegistrationResponse> responses) {

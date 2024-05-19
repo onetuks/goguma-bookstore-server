@@ -17,37 +17,31 @@ import static org.mockito.Mockito.verify;
 import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.author.model.Author;
-import com.onetuks.coredomain.author.repository.AuthorScmRepository;
-import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
 import com.onetuks.coredomain.member.model.Member;
-import com.onetuks.coredomain.member.repository.MemberRepository;
+import com.onetuks.coredomain.member.model.vo.Nickname;
 import com.onetuks.coreobj.FileWrapperFixture;
 import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
+import com.onetuks.coreobj.file.FilePathProvider;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.scmdomain.ScmDomainIntegrationTest;
 import com.onetuks.scmdomain.author.param.AuthorCreateParam;
 import com.onetuks.scmdomain.author.param.AuthorEditParam;
-import com.onetuks.scmdomain.author.service.AuthorScmService;
-import com.onetuks.scmdomain.verification.EnrollmentInfoVerifier;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class AuthorScmServiceTest extends ScmDomainIntegrationTest {
-
-  @Autowired private AuthorScmService authorScmService;
-
-  @MockBean private MemberRepository memberRepository;
-  @MockBean private AuthorScmRepository authorScmRepository;
-  @MockBean private FileRepository fileRepository;
-  @MockBean private EnrollmentInfoVerifier enrollmentInfoVerifier;
 
   @Test
   @DisplayName("2주간 입점 심사 마치지 못한 작가 엔티티 제거에 성공한다.")
@@ -74,17 +68,27 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
   @Test
   @DisplayName("작가 등록 신청을 수행한다.")
-  void createAuthorEnrollmentTest() {
+  void createAuthorTest() {
     // Given
     AuthorCreateParam param =
         new AuthorCreateParam(
             createNickname().nicknameValue(),
             "유튜브 대통령",
             createInstagramUrl(),
-            createBusinessNumber(),
-            createMailOrderSalesNumber());
+            "2062753344",
+            "876593954069799775");
     Member userMember = MemberFixture.create(createId(), RoleType.USER);
-    Author author = AuthorFixture.create(createId(), userMember);
+    Author author =
+        new Author(
+            createId(),
+            userMember,
+            new ProfileImgFilePath(FilePathProvider.provideDefaultProfileURI()),
+            new Nickname(param.nickname()),
+            param.introduction(),
+            param.instagramUrl(),
+            new EnrollmentInfo(
+                param.businessNumber(), param.mailOrderSalesNumber(), false, LocalDateTime.now()),
+            null);
 
     given(memberRepository.read(userMember.memberId())).willReturn(userMember);
     given(authorScmRepository.create(any())).willReturn(author);
@@ -98,8 +102,6 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
         () -> assertThat(result.member().authInfo().roles()).doesNotContain(RoleType.AUTHOR),
         () -> Assertions.assertThat(result.nickname().nicknameValue()).isEqualTo(param.nickname()),
         () -> Assertions.assertThat(result.introduction()).isEqualTo(param.introduction()));
-
-    verify(enrollmentInfoVerifier, times(1)).verifyEnrollmentInfo(any(), any());
   }
 
   @Test
@@ -119,7 +121,7 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
     // When & Then
     assertThrows(
-        IllegalStateException.class,
+        IllegalArgumentException.class,
         () -> authorScmService.createAuthor(authorMember.memberId(), param));
   }
 
@@ -156,7 +158,8 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
     // When
     Author result =
-        authorScmService.readAuthorDetails(notYetAuthor.authorId(), notYetAuthor.authorId());
+        authorScmService.readAuthorDetails(
+            notYetAuthor.member().memberId(), notYetAuthor.authorId());
 
     // Then
     assertAll(
@@ -211,15 +214,17 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
     Member authorMember = MemberFixture.create(createId(), RoleType.AUTHOR);
     Author notYetAuthor = AuthorFixture.create(createId(), notYetAuthorMember);
     Author author = AuthorFixture.create(createId(), authorMember);
-    List<Author> allAuthors = List.of(notYetAuthor, author);
+    Page<Author> allAuthors = new PageImpl<>(List.of(notYetAuthor, author));
 
-    given(authorScmRepository.readAll()).willReturn(allAuthors);
+    Pageable pageable = PageRequest.of(0, 10);
+
+    given(authorScmRepository.readAll(pageable)).willReturn(allAuthors);
 
     // When
-    List<Author> results = authorScmService.readAllAuthorDetails();
+    Page<Author> results = authorScmService.readAllAuthorDetails(pageable);
 
     // Then
-    assertThat(results).hasSize(allAuthors.size());
+    assertThat(results).hasSize(allAuthors.getSize());
   }
 
   @Test
@@ -229,9 +234,11 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
     Member notYetAuthorMember = MemberFixture.create(createId(), RoleType.USER);
     Member authorMember = MemberFixture.create(notYetAuthorMember.memberId(), RoleType.AUTHOR);
     Author notYetAuthor = AuthorFixture.create(createId(), notYetAuthorMember);
+    Author expected = notYetAuthor.convertEnrollmentPassed(authorMember);
 
     given(authorScmRepository.read(notYetAuthor.authorId())).willReturn(notYetAuthor);
     given(memberRepository.update(any())).willReturn(authorMember);
+    given(authorScmRepository.update(any())).willReturn(expected);
 
     // When
     Author result = authorScmService.updateAuthorEnrollmentPassed(notYetAuthor.authorId());
@@ -249,9 +256,11 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
     Member authorMember = MemberFixture.create(createId(), RoleType.AUTHOR);
     Member authorRevokedMember = MemberFixture.create(authorMember.memberId(), RoleType.USER);
     Author author = AuthorFixture.create(createId(), authorMember);
+    Author expected = author.convertEnrollmentPassed(authorRevokedMember);
 
     given(authorScmRepository.read(author.authorId())).willReturn(author);
     given(memberRepository.update(any())).willReturn(authorRevokedMember);
+    given(authorScmRepository.update(any())).willReturn(expected);
 
     // When
     Author result = authorScmService.updateAuthorEnrollmentPassed(author.authorId());
@@ -264,7 +273,7 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
   @Test
   @DisplayName("작가 프로필 정보를 수정하고, 프로필 이미지는 저장된다.")
-  void changeAuthorProfileTest() {
+  void updateAuthorProfile_WithStoreProfileImg_Test() {
     // Given
     Member member = MemberFixture.create(createId(), RoleType.USER);
     Author author = AuthorFixture.create(createId(), member);
@@ -272,8 +281,12 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
         new AuthorEditParam(createNickname().nicknameValue(), "유튜브 대통령", createInstagramUrl());
     FileWrapper profileImgFile =
         FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
+    Author expected =
+        author.changeAuthorProfile(
+            profileImgFile.getUri(), param.nickname(), param.introduction(), param.instagramUrl());
 
-    given(authorScmRepository.update(any())).willReturn(author);
+    given(authorScmRepository.read(author.authorId())).willReturn(author);
+    given(authorScmRepository.update(any())).willReturn(expected);
 
     // When
     Author result =
@@ -293,7 +306,7 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
   @Test
   @DisplayName("권한 없는 멤버가 작가 프로필을 수정하려고 하면 예외를 던진다.")
-  void changeAuthorProfile_NotSameAuthorId_ExceptionTest() {
+  void updateAuthorProfile_NotAuthAuthorId_ExceptionTest() {
     // Given
     Member member = MemberFixture.create(createId(), RoleType.USER);
     Author author =
@@ -302,6 +315,8 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
         new AuthorEditParam(createNickname().nicknameValue(), "유튜브 대통령", createInstagramUrl());
     FileWrapper profileImgFile =
         FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
+
+    given(authorScmRepository.read(author.authorId())).willReturn(author);
 
     // When & Then
     assertThatThrownBy(
@@ -316,7 +331,7 @@ class AuthorScmServiceTest extends ScmDomainIntegrationTest {
 
   @Test
   @DisplayName("입점 심사를 취소하면 해당 작가 정보가 모두 말소된다. 프로필 이미지 파일도 제거된다.")
-  void deleteAuthorEnrollmentTest() {
+  void deletAuthor_WithRemoveProfileImg_Test() {
     // Given
     Member authorMember = MemberFixture.create(createId(), RoleType.AUTHOR);
     Author author = AuthorFixture.create(createId(), authorMember);

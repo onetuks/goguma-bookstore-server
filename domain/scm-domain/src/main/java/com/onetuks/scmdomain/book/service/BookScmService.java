@@ -4,10 +4,12 @@ import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.repository.AuthorScmRepository;
 import com.onetuks.coredomain.book.model.Book;
 import com.onetuks.coredomain.book.repository.BookScmRepository;
-import com.onetuks.coredomain.file.filepath.CoverImgFilePath;
-import com.onetuks.coredomain.file.filepath.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.coredomain.file.filepath.PreviewFilePath.PreviewFilePaths;
-import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.coredomain.global.file.filepath.CoverImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.DetailImgFilePath.DetailImgFilePaths;
+import com.onetuks.coredomain.global.file.filepath.PreviewFilePath.PreviewFilePaths;
+import com.onetuks.coredomain.global.file.repository.FileRepository;
+import com.onetuks.coredomain.member.model.Member;
+import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.registration.model.Registration;
 import com.onetuks.coredomain.registration.repository.RegistrationScmRepository;
 import com.onetuks.coreobj.enums.member.RoleType;
@@ -15,8 +17,9 @@ import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.FileWrapper.FileWrapperCollection;
 import com.onetuks.scmdomain.book.param.BookEditParam;
-import java.util.List;
 import java.util.Objects;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,32 +27,36 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookScmService {
 
   private final BookScmRepository bookScmRepository;
+  private final MemberRepository memberRepository;
   private final AuthorScmRepository authorScmRepository;
   private final RegistrationScmRepository registrationScmRepository;
   private final FileRepository fileRepository;
 
   public BookScmService(
       BookScmRepository bookScmRepository,
+      MemberRepository memberRepository,
       AuthorScmRepository authorScmRepository,
       RegistrationScmRepository registrationScmRepository,
       FileRepository fileRepository) {
     this.bookScmRepository = bookScmRepository;
+    this.memberRepository = memberRepository;
     this.authorScmRepository = authorScmRepository;
     this.registrationScmRepository = registrationScmRepository;
     this.fileRepository = fileRepository;
   }
 
   @Transactional(readOnly = true)
-  public List<Book> readAllBooksByAuthor(long memberId, long authorId) {
+  public Page<Book> readAllBooksByAuthor(long memberId, long authorId, Pageable pageable) {
     Author author = authorScmRepository.read(authorId);
+    Member member = memberRepository.read(memberId);
 
-    boolean isAdmin = author.member().authInfo().roles().contains(RoleType.ADMIN);
+    boolean isAdmin = member.authInfo().roles().contains(RoleType.ADMIN);
     boolean notAuth = author.member().memberId() != memberId;
     if (!isAdmin && notAuth) {
       throw new ApiAccessDeniedException("해당 도서에 대한 권한이 없는 작가입니다.");
     }
 
-    return bookScmRepository.readAll(authorId);
+    return bookScmRepository.readAll(authorId, pageable);
   }
 
   @Transactional

@@ -7,10 +7,7 @@ public record SubscribeResponse(long subscribeId, long memberId, long authorId) 
 
   public static SubscribeResponse from(Subscribe subscribe) {
     return new SubscribeResponse(
-        subscribe.subscribeId(),
-        subscribe.member().memberId(),
-        subscribe.author().authorId()
-    );
+        subscribe.subscribeId(), subscribe.member().memberId(), subscribe.author().authorId());
   }
 
   public record SubscribeResponses(Page<SubscribeResponse> responses) {

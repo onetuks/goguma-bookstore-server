@@ -3,8 +3,8 @@ package com.onetuks.scmdomain.author.service;
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
 import com.onetuks.coredomain.author.repository.AuthorScmRepository;
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
-import com.onetuks.coredomain.file.repository.FileRepository;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.repository.FileRepository;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.member.model.vo.Nickname;
 import com.onetuks.coredomain.member.repository.MemberRepository;
@@ -16,7 +16,8 @@ import com.onetuks.scmdomain.author.param.AuthorCreateParam;
 import com.onetuks.scmdomain.author.param.AuthorEditParam;
 import com.onetuks.scmdomain.verification.EnrollmentInfoVerifier;
 import java.time.LocalDateTime;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,8 +99,8 @@ public class AuthorScmService {
   }
 
   @Transactional(readOnly = true)
-  public List<Author> readAllAuthorDetails() {
-    return authorScmRepository.readAll();
+  public Page<Author> readAllAuthorDetails(Pageable pageable) {
+    return authorScmRepository.readAll(pageable);
   }
 
   @Transactional
@@ -127,13 +128,8 @@ public class AuthorScmService {
     fileRepository.putFile(profileImgFile);
 
     return authorScmRepository.update(
-        authorScmRepository
-            .read(memberId)
-            .changeAuthorProfile(
-                profileImgFile.getUri(),
-                param.nickname(),
-                param.introduction(),
-                param.instagramUrl()));
+        author.changeAuthorProfile(
+            profileImgFile.getUri(), param.nickname(), param.introduction(), param.instagramUrl()));
   }
 
   @Transactional

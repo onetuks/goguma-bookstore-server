@@ -63,7 +63,6 @@ public record BookGetResponse(
         book.bookStatics().favoriteCount(),
         book.bookStatics().viewCount(),
         book.bookStatics().salesCount(),
-        book.bookStatics().commentCount()
-    );
+        book.bookStatics().commentCount());
   }
 }

@@ -3,7 +3,7 @@ package com.onetuks.dbstorage.author.converter;
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.author.model.AuthorStatics;
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
 import com.onetuks.coredomain.member.model.vo.Nickname;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.author.entity.AuthorStaticsEntity;

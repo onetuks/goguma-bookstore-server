@@ -4,7 +4,8 @@ import com.onetuks.coredomain.registration.model.Registration;
 import com.onetuks.coredomain.registration.repository.RegistrationScmRepository;
 import com.onetuks.dbstorage.registration.converter.RegistrationConverter;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -37,15 +38,13 @@ public class RegistrationEntityRepository implements RegistrationScmRepository {
   }
 
   @Override
-  public List<Registration> readAll() {
-    return repository.findAll().stream().map(converter::toDomain).toList();
+  public Page<Registration> readAll(Pageable pageable) {
+    return repository.findAll(pageable).map(converter::toDomain);
   }
 
   @Override
-  public List<Registration> readAll(long authorId) {
-    return repository.findByAuthorEntityAuthorId(authorId).stream()
-        .map(converter::toDomain)
-        .toList();
+  public Page<Registration> readAll(long authorId, Pageable pageable) {
+    return repository.findByAuthorEntityAuthorId(authorId, pageable).map(converter::toDomain);
   }
 
   @Override

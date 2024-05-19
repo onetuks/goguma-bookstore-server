@@ -1,7 +1,7 @@
 package com.onetuks.coredomain.author.model;
 
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.member.model.vo.Nickname;
 

@@ -3,17 +3,21 @@ package com.onetuks.coredomain.book.repository;
 import com.onetuks.coredomain.book.model.Book;
 import com.onetuks.coreobj.enums.book.Category;
 import com.onetuks.coreobj.enums.book.PageOrder;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface BookRepository {
 
   Book read(long bookId);
 
-  List<Book> read(
+  Page<Book> read(
       String title,
       String authorNickname,
       Category category,
       boolean onlyPromotion,
       boolean exceptSoldOut,
-      PageOrder pageOrder);
+      PageOrder pageOrder,
+      Pageable pageable);
 }

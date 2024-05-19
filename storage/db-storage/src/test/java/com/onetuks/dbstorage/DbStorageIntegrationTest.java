@@ -1,5 +1,6 @@
 package com.onetuks.dbstorage;
 
+import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageConfig;
 import com.onetuks.dbstorage.DbStorageIntegrationTest.DbStorageInitializer;
 import java.io.File;
 import java.time.Duration;
@@ -19,7 +20,7 @@ import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 @ActiveProfiles(value = "test")
-@SpringBootTest
+@SpringBootTest(classes = DbStorageConfig.class)
 @Transactional
 @ContextConfiguration(initializers = DbStorageInitializer.class)
 public class DbStorageIntegrationTest {
@@ -33,8 +34,7 @@ public class DbStorageIntegrationTest {
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;
   private static final int DURATION = 300;
-  private static final String DOCKER_COMPOSE_PATH =
-      "storage/db-storage/infra/test/docker-compose.yaml";
+  private static final String DOCKER_COMPOSE_PATH = "./infra/test/docker-compose.yaml";
 
   static {
     containers =

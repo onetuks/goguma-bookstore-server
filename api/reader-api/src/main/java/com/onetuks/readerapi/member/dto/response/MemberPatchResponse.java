@@ -8,8 +8,7 @@ public record MemberPatchResponse(
     String profileImgUrl,
     boolean alarmPermission,
     String defaultAddress,
-    String defaultAddressDetail
-) {
+    String defaultAddressDetail) {
 
   public static MemberPatchResponse from(Member member) {
     return new MemberPatchResponse(
@@ -18,7 +17,6 @@ public record MemberPatchResponse(
         member.profileImgFilePath().getUrl(),
         member.isAlarmPermitted(),
         member.defaultAddressInfo().address(),
-        member.defaultAddressInfo().addressDetail()
-    );
+        member.defaultAddressInfo().addressDetail());
   }
 }

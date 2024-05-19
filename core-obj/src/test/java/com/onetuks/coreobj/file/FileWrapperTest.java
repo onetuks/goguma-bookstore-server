@@ -20,7 +20,8 @@ class FileWrapperTest extends CoreObjIntegrationTest {
   void of_Test() {
     // Given & When
     FileWrapper fileWrapper = FileWrapper.of();
-    FileWrapper fileWrapper1 = FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
+    FileWrapper fileWrapper1 =
+        FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
 
     // Then
     assertThat(fileWrapper.isNullFile()).isTrue();
@@ -54,7 +55,7 @@ class FileWrapperTest extends CoreObjIntegrationTest {
     String uuid = UUIDProvider.provideUUID();
     FileType fileType = FileType.PREVIEWS;
     MultipartFile[] multipartFiles =
-        IntStream.range(0, 5)
+        IntStream.range(0, 25)
             .mapToObj(
                 index ->
                     MultipartFileFixture.create(
@@ -62,8 +63,7 @@ class FileWrapperTest extends CoreObjIntegrationTest {
             .toArray(MultipartFile[]::new);
 
     // When
-    FileWrapperCollection results =
-        FileWrapperCollection.of(fileType, uuid, multipartFiles);
+    FileWrapperCollection results = FileWrapperCollection.of(fileType, uuid, multipartFiles);
 
     // Then
     assertThat(results.isEmpty()).isFalse();

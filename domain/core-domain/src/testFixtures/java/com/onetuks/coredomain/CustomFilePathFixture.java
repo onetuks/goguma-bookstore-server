@@ -1,11 +1,11 @@
 package com.onetuks.coredomain;
 
-import com.onetuks.coredomain.file.filepath.CoverImgFilePath;
-import com.onetuks.coredomain.file.filepath.DetailImgFilePath.DetailImgFilePaths;
-import com.onetuks.coredomain.file.filepath.PreviewFilePath.PreviewFilePaths;
-import com.onetuks.coredomain.file.filepath.ProfileImgFilePath;
-import com.onetuks.coredomain.file.filepath.ReviewImgFilePath.ReviewImgFilePaths;
-import com.onetuks.coredomain.file.filepath.SampleFilePath;
+import com.onetuks.coredomain.global.file.filepath.CoverImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.DetailImgFilePath.DetailImgFilePaths;
+import com.onetuks.coredomain.global.file.filepath.PreviewFilePath.PreviewFilePaths;
+import com.onetuks.coredomain.global.file.filepath.ProfileImgFilePath;
+import com.onetuks.coredomain.global.file.filepath.ReviewImgFilePath.ReviewImgFilePaths;
+import com.onetuks.coredomain.global.file.filepath.SampleFilePath;
 import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FilePathProvider;
 import java.util.stream.IntStream;

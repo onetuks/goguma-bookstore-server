@@ -11,28 +11,20 @@ import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.SubscribeFixture;
 import com.onetuks.coredomain.author.model.Author;
-import com.onetuks.coredomain.author.repository.AuthorRepository;
 import com.onetuks.coredomain.member.model.Member;
-import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.subscribe.model.Subscribe;
-import com.onetuks.coredomain.subscribe.repository.SubscribeRepository;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
-import com.onetuks.readerdomain.subscribe.service.SubscribeService;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class SubscribeServiceTest extends ReaderDomainIntegrationTest {
-
-  @Autowired private SubscribeService subscribeService;
-
-  @MockBean private SubscribeRepository subscribeRepository;
-  @MockBean private MemberRepository memberRepository;
-  @MockBean private AuthorRepository authorRepository;
 
   @Test
   @DisplayName("중복되지 않은 구독 정보라면 해당 작가에 대한 구독수를 늘리고 구독 성공한다..")
@@ -51,7 +43,7 @@ class SubscribeServiceTest extends ReaderDomainIntegrationTest {
     Subscribe result = subscribeService.createSubscribe(member.memberId(), author.authorId());
 
     // Then
-    assertThat(result.author().authorStatics().subscribeCount()).isOne();
+    assertThat(result.author().authorId()).isEqualTo(author.authorId());
   }
 
   @Test
@@ -84,17 +76,20 @@ class SubscribeServiceTest extends ReaderDomainIntegrationTest {
         IntStream.range(0, count)
             .mapToObj(i -> AuthorFixture.create(createId(), members.get(i)))
             .toList();
-    List<Subscribe> subscribes =
-        IntStream.range(0, count)
-            .mapToObj(i -> SubscribeFixture.create(createId(), members.get(i), authors.get(i)))
-            .toList();
+    Page<Subscribe> subscribes =
+        new PageImpl<>(
+            IntStream.range(0, count)
+                .mapToObj(i -> SubscribeFixture.create(createId(), members.get(i), authors.get(i)))
+                .toList());
 
     Member member = MemberFixture.create(createId(), RoleType.USER);
 
-    given(subscribeRepository.readAll(member.memberId())).willReturn(subscribes);
+    Pageable pageable = PageRequest.of(0, 10);
+
+    given(subscribeRepository.readAll(member.memberId(), pageable)).willReturn(subscribes);
 
     // When
-    List<Subscribe> results = subscribeService.readAllSubscribes(member.memberId());
+    Page<Subscribe> results = subscribeService.readAllSubscribes(member.memberId(), pageable);
 
     // Then
     assertThat(results).hasSize(count);

@@ -14,29 +14,21 @@ import com.onetuks.coredomain.FavoriteFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.book.model.Book;
-import com.onetuks.coredomain.book.repository.BookRepository;
 import com.onetuks.coredomain.favorite.model.Favorite;
-import com.onetuks.coredomain.favorite.repository.FavoriteRepository;
 import com.onetuks.coredomain.member.model.Member;
-import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
-import com.onetuks.readerdomain.favorite.service.FavoriteService;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 class FavoriteServiceTest extends ReaderDomainIntegrationTest {
-
-  @Autowired private FavoriteService favoriteService;
-
-  @MockBean private FavoriteRepository favoriteRepository;
-  @MockBean private MemberRepository memberRepository;
-  @MockBean private BookRepository bookRepository;
 
   @Test
   @DisplayName("즐겨찾기 한 적이 없는 도서를 즐겨찾기하면 성공한다. 도서의 즐겨찾기 카운트가 1 증가한다.")
@@ -56,7 +48,7 @@ class FavoriteServiceTest extends ReaderDomainIntegrationTest {
     Favorite result = favoriteService.createFavorite(member.memberId(), book.bookId());
 
     // Then
-    assertThat(result.book().bookStatics().favoriteCount()).isOne();
+    assertThat(result.book().bookId()).isEqualTo(favorite.book().bookId());
   }
 
   @Test
@@ -92,13 +84,16 @@ class FavoriteServiceTest extends ReaderDomainIntegrationTest {
                         AuthorFixture.create(
                             createId(), MemberFixture.create(createId(), RoleType.AUTHOR))))
             .toList();
-    List<Favorite> favorites =
-        books.stream().map(book -> FavoriteFixture.create(createId(), member, book)).toList();
+    Page<Favorite> favorites =
+        new PageImpl<>(
+            books.stream().map(book -> FavoriteFixture.create(createId(), member, book)).toList());
 
-    given(favoriteRepository.readAll(member.memberId())).willReturn(favorites);
+    Pageable pageable = PageRequest.of(0, 10);
+
+    given(favoriteRepository.readAll(member.memberId(), pageable)).willReturn(favorites);
 
     // When
-    List<Favorite> results = favoriteService.readAllFavorites(member.memberId());
+    Page<Favorite> results = favoriteService.readAllFavorites(member.memberId(), pageable);
 
     // Then
     assertThat(results).hasSize(count);

@@ -8,8 +8,8 @@ import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FileWrapper;
 import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.readerapi.member.dto.request.MemberPatchRequest;
-import com.onetuks.readerapi.member.dto.response.MemberPatchResponse;
 import com.onetuks.readerapi.member.dto.response.MemberGetResponse;
+import com.onetuks.readerapi.member.dto.response.MemberPatchResponse;
 import com.onetuks.readerdomain.member.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,6 +35,7 @@ public class MemberRestController {
 
   /**
    * 멤버 프로필 정보 수정
+   *
    * @param memberId : 멤버 ID
    * @param request : 멤버 수정 요청 내용
    * @param profileImgFile : 프로필 이미지 파일
@@ -44,8 +45,7 @@ public class MemberRestController {
   public ResponseEntity<MemberPatchResponse> editMemberProfile(
       @MemberId Long memberId,
       @RequestBody @Valid MemberPatchRequest request,
-      @RequestPart(value = "profile-img-file", required = false) MultipartFile profileImgFile
-  ) {
+      @RequestPart(value = "profile-img-file", required = false) MultipartFile profileImgFile) {
     Member result =
         memberService.updateMemberProfile(
             memberId,
@@ -58,13 +58,13 @@ public class MemberRestController {
 
   /**
    * 멤버 프로필 정보 단건 조회
+   *
    * @param memberId : 멤버 ID
    * @return 200 OK
    */
   @GetMapping(path = "/{memberId}", produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<MemberGetResponse> getMemberInfo(
-      @PathVariable(name = "memberId") Long memberId
-  ) {
+      @PathVariable(name = "memberId") Long memberId) {
     Member result = memberService.readMemberDetails(memberId);
     MemberGetResponse response = MemberGetResponse.from(result);
 

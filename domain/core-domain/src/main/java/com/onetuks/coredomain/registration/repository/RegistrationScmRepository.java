@@ -1,8 +1,11 @@
 package com.onetuks.coredomain.registration.repository;
 
 import com.onetuks.coredomain.registration.model.Registration;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RegistrationScmRepository {
 
   Registration create(Registration registration);
@@ -11,9 +14,9 @@ public interface RegistrationScmRepository {
 
   Registration readByIsbn(String isbn);
 
-  List<Registration> readAll();
+  Page<Registration> readAll(Pageable pageable);
 
-  List<Registration> readAll(long authorId);
+  Page<Registration> readAll(long authorId, Pageable pageable);
 
   Registration update(Registration registration);
 

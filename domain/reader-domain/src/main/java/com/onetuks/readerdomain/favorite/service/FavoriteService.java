@@ -7,7 +7,8 @@ import com.onetuks.coredomain.favorite.repository.FavoriteRepository;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coreobj.exception.ApiAccessDeniedException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,8 +42,8 @@ public class FavoriteService {
   }
 
   @Transactional(readOnly = true)
-  public List<Favorite> readAllFavorites(long memberId) {
-    return favoriteRepository.readAll(memberId);
+  public Page<Favorite> readAllFavorites(long memberId, Pageable pageable) {
+    return favoriteRepository.readAll(memberId, pageable);
   }
 
   @Transactional

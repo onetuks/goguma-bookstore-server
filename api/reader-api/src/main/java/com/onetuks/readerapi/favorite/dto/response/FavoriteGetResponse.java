@@ -13,8 +13,7 @@ public record FavoriteGetResponse(
     String authorNickname,
     long regularPrice,
     long purchasePrice,
-    String coverImgUrl
-) {
+    String coverImgUrl) {
 
   public record FavoriteGetResponses(Page<FavoriteGetResponse> favoriteGetResponsePage) {
 
@@ -32,7 +31,6 @@ public record FavoriteGetResponse(
         favorite.book().author().nickname().nicknameValue(),
         favorite.book().bookPriceInfo().price(),
         favorite.book().bookPriceInfo().salesRate(),
-        favorite.book().coverImgFilePath().getUrl()
-    );
+        favorite.book().coverImgFilePath().getUrl());
   }
 }
