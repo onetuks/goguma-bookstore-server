@@ -32,7 +32,7 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
         Files.deleteIfExists(file);
       }
     } catch (DirectoryNotEmptyException e) {
-      log.info("Failed to delete file: {}", file, e);
+      log.info("Failed to delete file: {}", file);
     }
     return FileVisitResult.CONTINUE;
   }
@@ -44,7 +44,7 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
         Files.deleteIfExists(dir);
       }
     } catch (DirectoryNotEmptyException e) {
-      log.info("Failed to delete directory: {}", dir, e);
+      log.info("Failed to delete directory: {}", dir);
     }
     return FileVisitResult.CONTINUE;
   }
@@ -57,7 +57,7 @@ public class TestFileCleaner extends SimpleFileVisitor<Path> {
     try {
       Files.walkFileTree(startPath, this);
     } catch (IOException e) {
-      log.info("Failed to find static test files and directories.", e);
+      log.info("Failed to find static test files and directories.");
     }
   }
 
