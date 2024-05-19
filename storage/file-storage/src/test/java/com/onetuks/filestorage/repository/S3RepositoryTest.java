@@ -4,10 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.onetuks.coreobj.FileWrapperFixture;
 import com.onetuks.coreobj.enums.file.FileType;
 import com.onetuks.coreobj.file.FileWrapper;
+import com.onetuks.coreobj.file.UUIDProvider;
 import com.onetuks.filestorage.FileStorageIntegrationTest;
-import com.onetuks.filestorage.fixture.FileWrapperFixture;
 import java.io.File;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +23,8 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   @DisplayName("파일이 성공적으로 S3에 업로드된다.")
   void s3PutFileSuccessTest() {
     // Given
-    long memberId = 1_0000L;
-    FileWrapper fileWrapper = FileWrapperFixture.createFile(memberId, FileType.PROFILES);
+    FileWrapper fileWrapper =
+        FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
 
     // When
     s3Repository.putFile(fileWrapper);
@@ -53,8 +54,8 @@ class S3RepositoryTest extends FileStorageIntegrationTest {
   @DisplayName("S3에 있는 파일을 성공적으로 제거한다.")
   void s3DeleteFileSuccessTest() {
     // Given
-    long memberId = 1L;
-    FileWrapper fileWrapper = FileWrapperFixture.createFile(memberId, FileType.PROFILES);
+    FileWrapper fileWrapper =
+        FileWrapperFixture.createFile(FileType.PROFILES, UUIDProvider.provideUUID());
     s3Repository.putFile(fileWrapper);
 
     // When

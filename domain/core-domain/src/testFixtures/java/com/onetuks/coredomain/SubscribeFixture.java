@@ -6,7 +6,7 @@ import com.onetuks.coredomain.subscribe.model.Subscribe;
 
 public class SubscribeFixture {
 
-  public static Subscribe create(long subscribeId, Member member, Author author) {
+  public static Subscribe create(Long subscribeId, Member member, Author author) {
     return new Subscribe(subscribeId, member, author);
   }
 }

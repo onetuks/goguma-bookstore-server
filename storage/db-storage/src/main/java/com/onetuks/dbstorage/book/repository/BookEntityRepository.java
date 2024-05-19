@@ -59,7 +59,7 @@ public class BookEntityRepository implements BookRepository, BookScmRepository {
   }
 
   @Override
-  public Page<Book> read(
+  public Page<Book> readAll(
       String title,
       String authorNickname,
       Category category,

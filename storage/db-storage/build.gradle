@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     // Test Fixtures
-    testImplementation(testFixtures(project(':domain:core-domain')))
     testFixturesImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     // Hypersistence Utils

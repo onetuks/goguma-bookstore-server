@@ -87,7 +87,7 @@ class BookServiceTest extends ReaderDomainIntegrationTest {
     Pageable pageable = PageRequest.of(0, 10);
 
     given(
-            bookRepository.read(
+            bookRepository.readAll(
                 title, authorNickname, category, onlyPromotion, exceptSoldOut, pageOrder, pageable))
         .willReturn(books);
 

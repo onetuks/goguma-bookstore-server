@@ -1,15 +1,11 @@
 package com.onetuks.dbstorage.book.entity;
 
 import com.onetuks.coreobj.annotation.Generated;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -27,10 +23,6 @@ public class BookStaticsEntity {
   @Column(name = "book_statics_id", nullable = false)
   private Long bookStaticsId;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  @JoinColumn(name = "book_id", nullable = false, unique = true)
-  private BookEntity bookEntity;
-
   @Column(name = "favorite_count", nullable = false)
   private Long favoriteCount;
 
@@ -44,20 +36,16 @@ public class BookStaticsEntity {
   private Long commentCount;
 
   public BookStaticsEntity(
-      BookEntity bookEntity,
-      Long favoriteCount,
-      Long viewCount,
-      Long salesCount,
-      Long commentCount) {
-    this.bookEntity = bookEntity;
+      Long bookStaticsId, Long favoriteCount, Long viewCount, Long salesCount, Long commentCount) {
+    this.bookStaticsId = bookStaticsId;
     this.favoriteCount = favoriteCount;
     this.viewCount = viewCount;
     this.salesCount = salesCount;
     this.commentCount = commentCount;
   }
 
-  public static BookStaticsEntity init(BookEntity bookEntity) {
-    return new BookStaticsEntity(bookEntity, 0L, 0L, 0L, 0L);
+  public static BookStaticsEntity init() {
+    return new BookStaticsEntity(null, 0L, 0L, 0L, 0L);
   }
 
   public BookStaticsEntity increaseFavoriteCount() {

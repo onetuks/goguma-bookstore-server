@@ -11,9 +11,9 @@ import com.onetuks.coreobj.file.UUIDProvider;
 
 public class MemberFixture {
 
-  public static Member create(long id, RoleType roleType) {
+  public static Member create(Long memberId, RoleType roleType) {
     return new Member(
-        id,
+        memberId,
         createAuthInfo(roleType),
         createNickname(),
         true,

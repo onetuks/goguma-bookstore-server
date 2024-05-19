@@ -15,7 +15,7 @@ import com.onetuks.coreobj.file.UUIDProvider;
 
 public class RegistrationFixture {
 
-  public static Registration create(long registrationId, Author author, boolean isApproved) {
+  public static Registration create(Long registrationId, Author author, boolean isApproved) {
     String uuid = UUIDProvider.provideUUID();
     return new Registration(
         registrationId,

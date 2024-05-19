@@ -32,7 +32,7 @@ public class BookService {
       boolean exceptSoldOut,
       PageOrder pageOrder,
       Pageable pageable) {
-    return bookRepository.read(
+    return bookRepository.readAll(
         title, authorNickname, category, onlyPromotion, exceptSoldOut, pageOrder, pageable);
   }
 }

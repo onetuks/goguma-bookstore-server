@@ -20,8 +20,8 @@ import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 @ActiveProfiles(value = "test")
-@SpringBootTest(classes = DbStorageConfig.class)
 @Transactional
+@SpringBootTest(classes = DbStorageConfig.class)
 @ContextConfiguration(initializers = DbStorageInitializer.class)
 public class DbStorageIntegrationTest {
 
@@ -29,7 +29,7 @@ public class DbStorageIntegrationTest {
   @ComponentScan(basePackages = "com.onetuks.dbstorage")
   public static class DbStorageConfig {}
 
-  static final ComposeContainer containers;
+  private static final ComposeContainer containers;
 
   private static final int LOCAL_DB_PORT = 3306;
   private static final int LOCAL_DB_MIGRATION_PORT = 0;

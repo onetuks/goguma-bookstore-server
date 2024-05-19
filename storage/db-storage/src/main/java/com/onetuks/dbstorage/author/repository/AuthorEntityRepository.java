@@ -13,29 +13,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class AuthorEntityRepository implements AuthorRepository, AuthorScmRepository {
 
-  private final AuthorJpaRepository authorJpaRepository;
+  private final AuthorJpaRepository repository;
   private final AuthorConverter converter;
 
-  public AuthorEntityRepository(
-      AuthorJpaRepository authorJpaRepository, AuthorConverter converter) {
-    this.authorJpaRepository = authorJpaRepository;
+  public AuthorEntityRepository(AuthorJpaRepository repository, AuthorConverter converter) {
+    this.repository = repository;
     this.converter = converter;
   }
 
   @Override
   public Author create(Author author) {
-    return converter.toDomain(authorJpaRepository.save(converter.toEntity(author)));
+    return converter.toDomain(repository.save(converter.toEntity(author)));
   }
 
   @Override
   public Author read(long authorId) {
     return converter.toDomain(
-        authorJpaRepository.findById(authorId).orElseThrow(EntityNotFoundException::new));
+        repository.findById(authorId).orElseThrow(EntityNotFoundException::new));
   }
 
   @Override
   public Author readByMember(long memberId) {
-    return authorJpaRepository
+    return repository
         .findByMemberEntityMemberId(memberId)
         .map(converter::toDomain)
         .orElseThrow(EntityNotFoundException::new);
@@ -43,26 +42,26 @@ public class AuthorEntityRepository implements AuthorRepository, AuthorScmReposi
 
   @Override
   public List<Author> readAll() {
-    return authorJpaRepository.findAll().stream().map(converter::toDomain).toList();
+    return repository.findAll().stream().map(converter::toDomain).toList();
   }
 
   @Override
   public Page<Author> readAll(Pageable pageable) {
-    return authorJpaRepository.findAll(pageable).map(converter::toDomain);
+    return repository.findAll(pageable).map(converter::toDomain);
   }
 
   @Override
   public Page<Author> readAllEnrollmentPassed(Pageable pageable) {
-    return authorJpaRepository.findByIsEnrollmentPassedTrue(pageable).map(converter::toDomain);
+    return repository.findByIsEnrollmentPassedTrue(pageable).map(converter::toDomain);
   }
 
   @Override
   public Author update(Author author) {
-    return converter.toDomain(authorJpaRepository.save(converter.toEntity(author)));
+    return converter.toDomain(repository.save(converter.toEntity(author)));
   }
 
   @Override
   public void delete(long authorId) {
-    authorJpaRepository.deleteById(authorId);
+    repository.deleteById(authorId);
   }
 }

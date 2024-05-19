@@ -99,9 +99,9 @@ public class BookEntity {
   private List<String> previewUris;
 
   @OneToOne(
-      mappedBy = "book",
       fetch = FetchType.LAZY,
       cascade = {CascadeType.PERSIST, REMOVE})
+  @JoinColumn(name = "book_statics_id", nullable = false, unique = true)
   private BookStaticsEntity bookStaticsEntity;
 
   public BookEntity(
@@ -147,7 +147,7 @@ public class BookEntity {
     this.detailImgUris = detailImgUris;
     this.previewUris = previewUris;
     this.bookStaticsEntity =
-        bookStaticsEntity != null ? bookStaticsEntity : BookStaticsEntity.init(this);
+        bookStaticsEntity != null ? bookStaticsEntity : BookStaticsEntity.init();
   }
 
   public BookEntity increaseViewCount() {

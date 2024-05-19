@@ -14,7 +14,7 @@ import com.onetuks.coreobj.file.UUIDProvider;
 
 public class BookFixture {
 
-  public static Book create(long bookId, Author author) {
+  public static Book create(Long bookId, Author author) {
     String uuid = UUIDProvider.provideUUID();
     return new Book(
         bookId,

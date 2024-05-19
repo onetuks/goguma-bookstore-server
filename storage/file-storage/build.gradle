@@ -1,4 +1,7 @@
 dependencies {
+    // TestFixtures
+    testImplementation(testFixtures(project(':core-obj')))
+
     // Spring Web
     implementation('org.springframework.boot:spring-boot-starter-web')
 

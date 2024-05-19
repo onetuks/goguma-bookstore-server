@@ -7,6 +7,7 @@ import static com.onetuks.coredomain.util.TestValueProvider.createMailOrderSales
 import static com.onetuks.coredomain.util.TestValueProvider.createNickname;
 
 import com.onetuks.coredomain.author.model.Author;
+import com.onetuks.coredomain.author.model.AuthorStatics;
 import com.onetuks.coredomain.author.model.vo.EnrollmentInfo;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coreobj.enums.member.RoleType;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 
 public class AuthorFixture {
 
-  public static Author create(long authorId, Member member) {
+  public static Author create(Long authorId, Member member) {
     return new Author(
         authorId,
         member,
@@ -28,7 +29,7 @@ public class AuthorFixture {
             createMailOrderSalesNumber(),
             member.authInfo().roles().contains(RoleType.AUTHOR),
             LocalDateTime.now()),
-        null);
+        AuthorStatics.init());
   }
 
   public static Author createWithEnrollmentAt(
@@ -45,6 +46,6 @@ public class AuthorFixture {
             createMailOrderSalesNumber(),
             member.authInfo().roles().contains(RoleType.AUTHOR),
             enrollmentAt),
-        null);
+        AuthorStatics.init());
   }
 }

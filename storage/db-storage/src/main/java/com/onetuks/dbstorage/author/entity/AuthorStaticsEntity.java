@@ -1,14 +1,10 @@
 package com.onetuks.dbstorage.author.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -26,10 +22,6 @@ public class AuthorStaticsEntity {
   @Column(name = "author_statics_id", nullable = false)
   private Long authorStaticsId;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  @JoinColumn(name = "author_id", unique = true, nullable = false)
-  private AuthorEntity authorEntity;
-
   @Column(name = "subscribe_count", nullable = false)
   private Long subscribeCount;
 
@@ -40,15 +32,15 @@ public class AuthorStaticsEntity {
   private Long restockCount;
 
   public AuthorStaticsEntity(
-      AuthorEntity authorEntity, Long subscribeCount, Long bookCount, Long restockCount) {
-    this.authorEntity = authorEntity;
+      Long authorStaticsId, Long subscribeCount, Long bookCount, Long restockCount) {
+    this.authorStaticsId = authorStaticsId;
     this.subscribeCount = Objects.requireNonNullElse(subscribeCount, 0L);
     this.bookCount = Objects.requireNonNullElse(bookCount, 0L);
     this.restockCount = Objects.requireNonNullElse(restockCount, 0L);
   }
 
-  public static AuthorStaticsEntity init(AuthorEntity authorEntity) {
-    return new AuthorStaticsEntity(authorEntity, 0L, 0L, 0L);
+  public static AuthorStaticsEntity init() {
+    return new AuthorStaticsEntity(null, 0L, 0L, 0L);
   }
 
   public AuthorStaticsEntity increaseSubscriberCount() {

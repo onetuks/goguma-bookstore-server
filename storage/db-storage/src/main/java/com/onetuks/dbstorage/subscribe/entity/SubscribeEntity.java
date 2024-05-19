@@ -3,7 +3,6 @@ package com.onetuks.dbstorage.subscribe.entity;
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.author.entity.AuthorEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,11 +31,11 @@ public class SubscribeEntity {
   @Column(name = "subscribe_id", nullable = false)
   private Long subscribeId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id")
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "author_id")
   private AuthorEntity authorEntity;
 

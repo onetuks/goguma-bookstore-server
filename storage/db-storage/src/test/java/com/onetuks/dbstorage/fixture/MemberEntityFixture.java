@@ -14,9 +14,9 @@ import com.onetuks.dbstorage.member.entity.MemberEntity;
 
 public class MemberEntityFixture {
 
-  public static MemberEntity create(long memberId, RoleType roleType) {
+  public static MemberEntity create(RoleType roleType) {
     return new MemberEntity(
-        memberId,
+        null,
         "실명",
         createSocialId(),
         createClientProvider(),

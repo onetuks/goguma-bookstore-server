@@ -1,10 +1,10 @@
 package com.onetuks.dbstorage.author.entity;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +31,7 @@ public class AuthorEntity {
   @Column(name = "author_id", nullable = false)
   private Long authorId;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = REMOVE)
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", unique = true)
   private MemberEntity memberEntity;
 
@@ -60,9 +60,9 @@ public class AuthorEntity {
   private LocalDateTime enrollmentAt;
 
   @OneToOne(
-      mappedBy = "author",
       fetch = FetchType.LAZY,
-      cascade = {CascadeType.PERSIST, REMOVE})
+      cascade = {PERSIST, REMOVE})
+  @JoinColumn(name = "author_statics_id", unique = true, nullable = false)
   private AuthorStaticsEntity authorStaticsEntity;
 
   public AuthorEntity(
@@ -88,7 +88,7 @@ public class AuthorEntity {
     this.isEnrollmentPassed = isEnrollmentPassed;
     this.enrollmentAt = enrollmentAt;
     this.authorStaticsEntity =
-        authorStaticsEntity != null ? authorStaticsEntity : AuthorStaticsEntity.init(this);
+        authorStaticsEntity != null ? authorStaticsEntity : AuthorStaticsEntity.init();
   }
 
   @Override

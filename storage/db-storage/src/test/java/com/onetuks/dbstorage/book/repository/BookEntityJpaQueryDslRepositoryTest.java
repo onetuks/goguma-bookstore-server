@@ -1,6 +1,5 @@
 package com.onetuks.dbstorage.book.repository;
 
-import static com.onetuks.coredomain.util.TestValueProvider.createId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.onetuks.coreobj.enums.book.Category;
@@ -39,10 +38,10 @@ class BookEntityJpaQueryDslRepositoryTest extends DbStorageIntegrationTest {
             memberJpaRepository
                 .saveAll(
                     IntStream.range(0, 3)
-                        .mapToObj(i -> MemberEntityFixture.create(createId(), RoleType.AUTHOR))
+                        .mapToObj(i -> MemberEntityFixture.create(RoleType.AUTHOR))
                         .toList())
                 .stream()
-                .map(memberEntity -> AuthorEntityFixture.create(createId(), memberEntity))
+                .map(AuthorEntityFixture::create)
                 .toList());
 
     bookJpaRepository.saveAll(

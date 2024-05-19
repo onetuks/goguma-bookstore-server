@@ -12,7 +12,7 @@ public interface BookRepository {
 
   Book read(long bookId);
 
-  Page<Book> read(
+  Page<Book> readAll(
       String title,
       String authorNickname,
       Category category,

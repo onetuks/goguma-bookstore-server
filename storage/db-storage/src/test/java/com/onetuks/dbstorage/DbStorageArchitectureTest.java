@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-class ArchitectureTest extends DbStorageIntegrationTest {
+class DbStorageArchitectureTest extends DbStorageIntegrationTest {
 
   JavaClasses javaClasses;
 
@@ -43,32 +43,40 @@ class ArchitectureTest extends DbStorageIntegrationTest {
   class DependancyTest {
 
     @Test
-    @DisplayName("Model은 오직 Service와 Repository, Component에 의해서만 의존한다")
+    @DisplayName("Entity는 오직 Repository와 Converter에 의해서만 의존한다")
     void model_HaveDependancy_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..model")
+              .resideInAnyPackage("..entity")
               .should()
               .onlyHaveDependentClassesThat()
               .resideInAnyPackage(
-                  "..service..", "..repository..", "..model..", "..vo..", "..fixture..");
+                  "..repository..", "..converter..", "..entity..", "..vo..", "..fixture..");
 
       rule.check(javaClasses);
     }
 
     @Test
-    @DisplayName("Model은 아무것도 의존하지 않는다.")
+    @DisplayName("Entity 는 entity, vo, enum 이외에 아무것도 의존하지 않는다.")
     void model_NoDependOn_Test() {
       ArchRule rule =
           ArchRuleDefinition.classes()
               .that()
-              .resideInAnyPackage("..model")
+              .resideInAnyPackage("..entity")
               .and()
               .haveSimpleNameNotStartingWith("Q")
               .should()
               .onlyDependOnClassesThat()
-              .resideInAnyPackage("..model..", "java..", "jakarta..", "lombok..", "..vo..");
+              .resideInAnyPackage(
+                  "java..",
+                  "jakarta..",
+                  "lombok..",
+                  "..hibernate..",
+                  "..entity..",
+                  "..vo..",
+                  "..enums..",
+                  "..annotation..");
 
       rule.check(javaClasses);
     }

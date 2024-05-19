@@ -15,6 +15,16 @@ CREATE TABLE IF NOT EXISTS members
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS author_statics
+(
+    author_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '작가 통계 식별자',
+    subscribe_count   BIGINT NOT NULL DEFAULT 0 COMMENT '구독자 수',
+    book_count        BIGINT NOT NULL DEFAULT 0 COMMENT '등록 도서 수',
+    restock_count     BIGINT NOT NULL DEFAULT 0 COMMENT '재입고 수',
+    PRIMARY KEY (author_statics_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS authors
 (
     author_id               BIGINT              NOT NULL AUTO_INCREMENT COMMENT '작가 식별자',
@@ -27,20 +37,10 @@ CREATE TABLE IF NOT EXISTS authors
     mail_order_sales_number VARCHAR(255) UNIQUE NOT NULL COMMENT '통신판매 신고번호',
     is_enrollment_passed    BOOLEAN             NOT NULL DEFAULT FALSE COMMENT '입점 승인 여부',
     enrollment_at           DATETIME            NOT NULL DEFAULT NOW() COMMENT '입점 신청일',
+    author_statics_id       BIGINT              NOT NULL COMMENT '작가 통계 식별자',
     PRIMARY KEY (author_id),
-    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE IF NOT EXISTS author_statics
-(
-    author_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '작가 통계 식별자',
-    author_id         BIGINT NOT NULL UNIQUE COMMENT '작가 식별자',
-    subscribe_count   BIGINT NOT NULL DEFAULT 0 COMMENT '구독자 수',
-    book_count        BIGINT NOT NULL DEFAULT 0 COMMENT '등록 도서 수',
-    restock_count     BIGINT NOT NULL DEFAULT 0 COMMENT '재입고 수',
-    PRIMARY KEY (author_statics_id),
-    FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE
+    FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
+    FOREIGN KEY (author_statics_id) REFERENCES author_statics (author_statics_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
@@ -85,6 +85,17 @@ CREATE TABLE IF NOT EXISTS registrations
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
+CREATE TABLE IF NOT EXISTS book_statics
+(
+    book_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '도서 통계 식별자',
+    favorite_count  BIGINT NOT NULL DEFAULT 0 COMMENT '좋아요 수',
+    view_count      BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
+    sales_count     BIGINT NOT NULL DEFAULT 0 COMMENT '판매량',
+    comment_count   BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
+    PRIMARY KEY (book_statics_id)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
 CREATE TABLE IF NOT EXISTS books
 (
     book_id         BIGINT              NOT NULL AUTO_INCREMENT COMMENT '도서 식별자',
@@ -107,21 +118,10 @@ CREATE TABLE IF NOT EXISTS books
     cover_img_uri   VARCHAR(255) COMMENT '도서 표지 URI',
     detail_img_uris JSON COMMENT '도서 상세 이미지 URI',
     preview_uris    JSON COMMENT '미리보기 페이지 URI',
+    book_statics_id BIGINT              NOT NULL COMMENT '도서 통계 식별자',
     PRIMARY KEY (book_id),
-    FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE IF NOT EXISTS book_statics
-(
-    book_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '도서 통계 식별자',
-    book_id         BIGINT NOT NULL UNIQUE COMMENT '도서 식별자',
-    favorite_count  BIGINT NOT NULL DEFAULT 0 COMMENT '좋아요 수',
-    view_count      BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
-    sales_count     BIGINT NOT NULL DEFAULT 0 COMMENT '판매량',
-    comment_count   BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
-    PRIMARY KEY (book_statics_id),
-    FOREIGN KEY (book_id) REFERENCES books (book_id) ON DELETE CASCADE
+    FOREIGN KEY (author_id) REFERENCES authors (author_id) ON DELETE CASCADE,
+    FOREIGN KEY (book_statics_id) REFERENCES book_statics (book_statics_id) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
 
