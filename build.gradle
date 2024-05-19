@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'java-test-fixtures'
     id 'jacoco'
     id 'jacoco-report-aggregation'
     id 'org.sonarqube' version '5.0.0.4638'
@@ -44,6 +43,10 @@ allprojects {
         sourceCompatibility = '17'
     }
 
+    bootJar {
+        enabled = true
+    }
+
     jar {
         enabled = false
     }
@@ -52,38 +55,23 @@ allprojects {
         // Netty/Resolver/DNS/Native/MacOS
         implementation 'io.netty:netty-resolver-dns-native-macos:4.1.108.Final:osx-aarch_64'
 
-        // Lombok
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-
-        // JPA
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
         // Spring Boot Actuator
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
     }
 }
 
 subprojects {
+    bootJar {
+        enabled = false
+    }
+
     jar {
         enabled = true
     }
 
     dependencies {
-        // MySQL
-        runtimeOnly 'com.mysql:mysql-connector-j'
+        // Lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
     }
-}
-
-test {
-    systemProperty('rootDir', project.rootDir)
-}
-
-dependencies {
-
-    implementation project(':module-common')
-    implementation project(':module-auth')
-    implementation project(':module-persistence')
-    implementation project(':module-reader')
-    implementation project(':module-scm')
 }

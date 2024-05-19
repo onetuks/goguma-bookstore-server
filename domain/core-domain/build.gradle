@@ -1,0 +1,4 @@
+dependencies {
+    testFixturesImplementation(testFixtures(project(':core-obj')))
+    testFixturesImplementation(project(':domain:core-domain'))
+}

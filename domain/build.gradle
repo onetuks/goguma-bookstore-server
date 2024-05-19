@@ -1,0 +1,21 @@
+plugins {
+    id 'java-test-fixtures'
+}
+
+subprojects {
+    apply plugin: 'java-test-fixtures'
+
+    dependencies {
+        // Module
+        implementation(project(':core-obj'))
+
+        // Test
+        testImplementation(testFixtures(project(':core-obj')))
+
+        // Spring Transaction
+        implementation('org.springframework:spring-tx')
+
+        // Spring Data Core
+        implementation 'org.springframework.data:spring-data-commons'
+    }
+}

@@ -1,7 +1,18 @@
 rootProject.name = 'goguma-bookstore-server'
 
-include 'module-common'
-include 'module-auth'
-include 'module-persistence'
-include 'module-reader'
-include 'module-scm'
+include('api')
+include('api:reader-api')
+include('api:scm-api')
+
+include('core-auth')
+
+include('core-obj')
+
+include('domain')
+include('domain:core-domain')
+include('domain:reader-domain')
+include('domain:scm-domain')
+
+include('storage')
+include('storage:db-storage')
+include('storage:file-storage')

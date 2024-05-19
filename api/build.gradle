@@ -1,0 +1,16 @@
+subprojects {
+    dependencies {
+        compileOnly(project(':core-auth'))
+        implementation(project(':core-obj'))
+        implementation(project(':domain:core-domain'))
+
+        // Validation
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+        // Spring Web
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // Spring Data Core
+        implementation 'org.springframework.data:spring-data-commons'
+    }
+}

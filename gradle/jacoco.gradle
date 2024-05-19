@@ -2,26 +2,26 @@ def jacocoExclude = List.of(
         "**/Q*",
         "**/error/*",
         "**/exception/*",
+        "**/config/*",
+        "**/global/*",
         "**/model/*",
+        "**/entity/*",
         "**/dto/*",
         "**/vo/*",
-        "**/config/*",
-        "**/controller/*",
-        "**/moduleauth/*",
+        "**/enums/*",
+        "**/api/*",
+        "**/coreauth/*",
         "**/*Application.class"
 )
 
-allprojects {
+subprojects {
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'jacoco-report-aggregation'
 
     jacoco {
         toolVersion = '0.8.8'
     }
-}
 
-subprojects {
     tasks.jacocoTestReport {
         reports {
             xml.required = true
@@ -70,12 +70,15 @@ subprojects {
                         "*.Q*",
                         "*.error.*",
                         "*.exception.*",
+                        "*.config.*",
+                        "*.global.*",
                         "*.model.*",
+                        "*.entity.*",
                         "*.dto.*",
                         "*.vo.*",
-                        "*.config.*",
-                        "*.controller.*",
-                        "*.moduleauth.*",
+                        "*.enums.*",
+                        "*.api.*",
+                        "*.coreauth.*",
                         "*.*Application"
                 ]
             }
@@ -84,15 +87,6 @@ subprojects {
 }
 
 tasks.named('check') {
-    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
-}
-
-tasks.testCodeCoverageReport {
     dependsOn(subprojects.tasks.jacocoTestReport)
-
-    afterEvaluate {
-        classDirectories.setFrom(classDirectories.files.collect {
-            fileTree(dir: it, exclude: jacocoExclude)
-        })
-    }
+    dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
 }

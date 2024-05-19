@@ -1,20 +1,14 @@
-allprojects {
+subprojects {
     dependencies {
         // Test
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+        // Arch-Unit
+        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
+
         // TestContainers
         testImplementation 'org.springframework.boot:spring-boot-testcontainers'
         testImplementation 'org.testcontainers:junit-jupiter'
-    }
-}
-
-subprojects {
-    apply plugin: 'java-test-fixtures'
-
-    dependencies {
-        // Arch-Unit
-        testImplementation 'com.tngtech.archunit:archunit:1.2.2'
     }
 
     tasks.named('test') {
