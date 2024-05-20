@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +54,28 @@ public class CommentRestController {
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-  /** 멤버 별 서평 조회 */
+  /**
+   * 서평 조회
+   *
+   * @param commentId : 서평 ID
+   * @return 200 OK
+   */
+  @GetMapping(path = "/{commentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<CommentResponse> getComment(
+      @PathVariable(name = "commentId") Long commentId) {
+    Comment result = commentService.readComment(commentId);
+    CommentResponse response = CommentResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  /**
+   * 멤버 별 서평 조회
+   *
+   * @param memberId : 멤버 ID
+   * @param pageable : 페이지 정보
+   * @return 200 OK
+   */
   @GetMapping(path = "/members/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<CommentResponses> getAllCommentsOfMember(
       @MemberId Long memberId,

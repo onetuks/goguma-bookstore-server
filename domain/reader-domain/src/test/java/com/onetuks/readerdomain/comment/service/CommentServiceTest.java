@@ -62,6 +62,25 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
   }
 
   @Test
+  @DisplayName("서평을 조회한다.")
+  void readCommentTest() {
+    // Given
+    Comment comment = CommentFixture.create(null, book, member);
+
+    given(commentRepository.read(comment.commentId())).willReturn(comment);
+
+    // When
+    Comment result = commentService.readComment(comment.commentId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
+        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
+        () -> assertThat(result.title()).isEqualTo(comment.title()),
+        () -> assertThat(result.content()).isEqualTo(comment.content()));
+  }
+
+  @Test
   @DisplayName("멤버의 모든 서평을 조회한다.")
   void readAllCommentsOfMemberTest() {
     // Given

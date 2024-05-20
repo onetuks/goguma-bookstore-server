@@ -33,6 +33,11 @@ public class CommentService {
   }
 
   @Transactional(readOnly = true)
+  public Comment readComment(long commentId) {
+    return commentRepository.read(commentId);
+  }
+
+  @Transactional(readOnly = true)
   public Page<Comment> readAllCommentsOfMember(long memberId, Pageable pageable) {
     return commentRepository.readAllByMember(memberRepository.read(memberId).memberId(), pageable);
   }

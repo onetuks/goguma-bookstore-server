@@ -3,6 +3,7 @@ package com.onetuks.dbstorage.comment.repository;
 import com.onetuks.coredomain.comment.model.Comment;
 import com.onetuks.coredomain.comment.repository.CommentRepository;
 import com.onetuks.dbstorage.comment.converter.CommentConverter;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,8 @@ public class CommentEntityRepository implements CommentRepository {
 
   @Override
   public Comment read(long commentId) {
-    return null;
+    return converter.toDomain(
+        repository.findById(commentId).orElseThrow(EntityNotFoundException::new));
   }
 
   @Override

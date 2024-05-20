@@ -68,7 +68,20 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
-  void read() {}
+  void read() {
+    // Given
+    Comment comment = commentEntityRepository.create(CommentFixture.create(null, book, member));
+
+    // When
+    Comment result = commentEntityRepository.read(comment.commentId());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
+        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
+        () -> assertThat(result.title()).isEqualTo(comment.title()),
+        () -> assertThat(result.content()).isEqualTo(comment.content()));
+  }
 
   @Test
   void readAllByMember() {
