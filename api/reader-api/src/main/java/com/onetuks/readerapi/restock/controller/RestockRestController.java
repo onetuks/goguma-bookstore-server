@@ -1,4 +1,4 @@
-package com.onetuks.readerapi.restock;
+package com.onetuks.readerapi.restock.controller;
 
 import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.coredomain.restock.model.Restock;

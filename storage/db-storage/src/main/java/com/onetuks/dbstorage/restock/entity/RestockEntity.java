@@ -3,7 +3,6 @@ package com.onetuks.dbstorage.restock.entity;
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

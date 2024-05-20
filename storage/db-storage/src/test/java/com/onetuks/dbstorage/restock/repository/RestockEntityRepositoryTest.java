@@ -18,8 +18,6 @@ import com.onetuks.dbstorage.author.repository.AuthorEntityRepository;
 import com.onetuks.dbstorage.book.repository.BookEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.dbstorage.registration.repository.RegistrationEntityRepository;
-import java.util.List;
-import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
