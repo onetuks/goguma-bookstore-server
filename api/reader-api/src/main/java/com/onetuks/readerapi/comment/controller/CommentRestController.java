@@ -1,4 +1,4 @@
-package com.onetuks.readerapi.comment;
+package com.onetuks.readerapi.comment.controller;
 
 import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.coredomain.comment.model.Comment;
@@ -87,6 +87,15 @@ public class CommentRestController {
   }
 
   /** 도서 별 서평 조회 */
+  @GetMapping(path = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<CommentResponses> getAllCommentsOfBook(
+      @PathVariable(name = "bookId") Long bookId,
+      @PageableDefault(sort = "commentId", direction = Direction.DESC) Pageable pageable) {
+    Page<Comment> results = commentService.readAllCommentsOfBook(bookId, pageable);
+    CommentResponses responses = CommentResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
 
   /** 서평 수정 */
 

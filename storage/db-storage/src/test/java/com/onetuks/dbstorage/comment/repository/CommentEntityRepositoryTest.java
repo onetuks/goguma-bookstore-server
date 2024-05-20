@@ -26,11 +26,16 @@ import org.springframework.data.domain.PageImpl;
 
 class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
 
-  @Autowired private CommentEntityRepository commentEntityRepository;
-  @Autowired private MemberEntityRepository memberEntityRepository;
-  @Autowired private AuthorEntityRepository authorEntityRepository;
-  @Autowired private RegistrationEntityRepository registrationEntityRepository;
-  @Autowired private BookEntityRepository bookEntityRepository;
+  @Autowired
+  private CommentEntityRepository commentEntityRepository;
+  @Autowired
+  private MemberEntityRepository memberEntityRepository;
+  @Autowired
+  private AuthorEntityRepository authorEntityRepository;
+  @Autowired
+  private RegistrationEntityRepository registrationEntityRepository;
+  @Autowired
+  private BookEntityRepository bookEntityRepository;
 
   private Member member;
   private Book book;
@@ -118,11 +123,34 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
   }
 
   @Test
-  void readAllByBook() {}
+  void readAllByBook() {
+    // Given
+    List<Member> members =
+        IntStream.range(0, 5)
+            .mapToObj(i -> memberEntityRepository.create(
+                MemberFixture.create(null, RoleType.AUTHOR)))
+            .toList();
+    Page<Comment> comments =
+        new PageImpl<>(
+            members.stream()
+                .map(member ->
+                    commentEntityRepository.create(
+                        CommentFixture.create(null, book, member)))
+                .toList());
+
+    // When
+    Page<Comment> results =
+        commentEntityRepository.readAllByBook(book.bookId(), comments.getPageable());
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(members.size());
+  }
 
   @Test
-  void update() {}
+  void update() {
+  }
 
   @Test
-  void delete() {}
+  void delete() {
+  }
 }

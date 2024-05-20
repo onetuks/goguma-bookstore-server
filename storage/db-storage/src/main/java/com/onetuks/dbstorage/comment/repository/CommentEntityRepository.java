@@ -37,7 +37,7 @@ public class CommentEntityRepository implements CommentRepository {
 
   @Override
   public Page<Comment> readAllByBook(long bookId, Pageable pageable) {
-    return null;
+    return repository.findAllByBookEntityBookId(bookId, pageable).map(converter::toDomain);
   }
 
   @Override

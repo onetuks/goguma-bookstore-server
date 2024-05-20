@@ -1,9 +1,10 @@
 package com.onetuks.readerdomain.comment.service;
 
 import static com.onetuks.coredomain.util.TestValueProvider.createId;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
 
 import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.BookFixture;
@@ -65,7 +66,7 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
   @DisplayName("서평을 조회한다.")
   void readCommentTest() {
     // Given
-    Comment comment = CommentFixture.create(null, book, member);
+    Comment comment = CommentFixture.create(createId(), book, member);
 
     given(commentRepository.read(comment.commentId())).willReturn(comment);
 
@@ -98,7 +99,6 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
         new PageImpl<>(
             books.stream().map(book -> CommentFixture.create(null, book, member)).toList());
 
-    given(memberRepository.read(member.memberId())).willReturn(member);
     given(commentRepository.readAllByMember(member.memberId(), pageable)).willReturn(comments);
 
     // When
@@ -106,5 +106,26 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
 
     // Then
     assertThat(results.getTotalElements()).isEqualTo(books.size());
+  }
+
+  @Test
+  @DisplayName("도서의 모든 서평을 조회한다.")
+  void readAllCommentsOfBookTest() {
+    // Given
+    Pageable pageable = PageRequest.of(0, 10);
+    List<Member> members = IntStream.range(0, 5)
+        .mapToObj(i -> MemberFixture.create(createId(), RoleType.USER))
+        .toList();
+    Page<Comment> comments =
+        new PageImpl<>(
+            members.stream().map(member -> CommentFixture.create(null, book, member)).toList());
+
+    given(commentRepository.readAllByBook(book.bookId(), pageable)).willReturn(comments);
+
+    // When
+    Page<Comment> results = commentService.readAllCommentsOfBook(book.bookId(), pageable);
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(members.size());
   }
 }
