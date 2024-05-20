@@ -1,6 +1,7 @@
 package com.onetuks.dbstorage.comment.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.coredomain.AuthorFixture;
@@ -23,19 +24,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 
 class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
 
-  @Autowired
-  private CommentEntityRepository commentEntityRepository;
-  @Autowired
-  private MemberEntityRepository memberEntityRepository;
-  @Autowired
-  private AuthorEntityRepository authorEntityRepository;
-  @Autowired
-  private RegistrationEntityRepository registrationEntityRepository;
-  @Autowired
-  private BookEntityRepository bookEntityRepository;
+  @Autowired private CommentEntityRepository commentEntityRepository;
+  @Autowired private MemberEntityRepository memberEntityRepository;
+  @Autowired private AuthorEntityRepository authorEntityRepository;
+  @Autowired private RegistrationEntityRepository registrationEntityRepository;
+  @Autowired private BookEntityRepository bookEntityRepository;
 
   private Member member;
   private Book book;
@@ -127,15 +124,15 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
     // Given
     List<Member> members =
         IntStream.range(0, 5)
-            .mapToObj(i -> memberEntityRepository.create(
-                MemberFixture.create(null, RoleType.AUTHOR)))
+            .mapToObj(
+                i -> memberEntityRepository.create(MemberFixture.create(null, RoleType.AUTHOR)))
             .toList();
     Page<Comment> comments =
         new PageImpl<>(
             members.stream()
-                .map(member ->
-                    commentEntityRepository.create(
-                        CommentFixture.create(null, book, member)))
+                .map(
+                    member ->
+                        commentEntityRepository.create(CommentFixture.create(null, book, member)))
                 .toList());
 
     // When
@@ -149,11 +146,14 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
   @Test
   void update() {
     // Given
-    Comment comment = commentEntityRepository.create(
-        CommentFixture.create(null, book, member));
-    Comment updateComment = new Comment(
-        comment.commentId(), comment.book(), comment.member(),
-        "updated title", "updated content");
+    Comment comment = commentEntityRepository.create(CommentFixture.create(null, book, member));
+    Comment updateComment =
+        new Comment(
+            comment.commentId(),
+            comment.book(),
+            comment.member(),
+            "updated title",
+            "updated content");
 
     // When
     Comment result = commentEntityRepository.update(updateComment);
@@ -168,5 +168,14 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
   void delete() {
+    // Given
+    Comment comment = commentEntityRepository.create(CommentFixture.create(null, book, member));
+
+    // When
+    commentEntityRepository.delete(comment.commentId());
+
+    // Then
+    assertThatThrownBy(() -> commentEntityRepository.read(comment.commentId()))
+        .isInstanceOf(JpaObjectRetrievalFailureException.class);
   }
 }

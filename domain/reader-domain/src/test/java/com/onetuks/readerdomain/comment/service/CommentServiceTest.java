@@ -2,9 +2,12 @@ package com.onetuks.readerdomain.comment.service;
 
 import static com.onetuks.coredomain.util.TestValueProvider.createId;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.BookFixture;
@@ -14,6 +17,7 @@ import com.onetuks.coredomain.book.model.Book;
 import com.onetuks.coredomain.comment.model.Comment;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coreobj.enums.member.RoleType;
+import com.onetuks.coreobj.exception.ApiAccessDeniedException;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -24,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 class CommentServiceTest extends ReaderDomainIntegrationTest {
 
@@ -114,9 +117,10 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
   void readAllCommentsOfBookTest() {
     // Given
     Pageable pageable = PageRequest.of(0, 10);
-    List<Member> members = IntStream.range(0, 5)
-        .mapToObj(i -> MemberFixture.create(createId(), RoleType.USER))
-        .toList();
+    List<Member> members =
+        IntStream.range(0, 5)
+            .mapToObj(i -> MemberFixture.create(createId(), RoleType.USER))
+            .toList();
     Page<Comment> comments =
         new PageImpl<>(
             members.stream().map(member -> CommentFixture.create(null, book, member)).toList());
@@ -135,15 +139,21 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
   void updateCommentTest() {
     // Given
     Comment comment = CommentFixture.create(createId(), book, member);
-    Comment updatedComment = new Comment(
-        comment.commentId(), comment.book(), comment.member(), "updated title", "updated content");
+    Comment updatedComment =
+        new Comment(
+            comment.commentId(),
+            comment.book(),
+            comment.member(),
+            "updated title",
+            "updated content");
 
     given(commentRepository.read(comment.commentId())).willReturn(comment);
     given(commentRepository.update(any(Comment.class))).willReturn(updatedComment);
 
     // When
-    Comment result = commentService.updateComment(
-        member.memberId(), comment.commentId(), comment.title(), comment.content());
+    Comment result =
+        commentService.updateComment(
+            member.memberId(), comment.commentId(), comment.title(), comment.content());
 
     // Then
     assertAll(
@@ -151,5 +161,51 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
         () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
         () -> assertThat(result.title()).isEqualTo(updatedComment.title()),
         () -> assertThat(result.content()).isEqualTo(updatedComment.content()));
+  }
+
+  @Test
+  @DisplayName("서평 수정 권한이 없는 멤버가 서평을 수정하면 예외를 던진다.")
+  void updateCommentAccessDeniedTest() {
+    // Given
+    long notAuthMemberId = createId();
+    Comment comment = CommentFixture.create(createId(), book, member);
+
+    given(commentRepository.read(comment.commentId())).willReturn(comment);
+
+    // When & Then
+    assertThatThrownBy(
+            () ->
+                commentService.updateComment(
+                    notAuthMemberId, comment.commentId(), "title", "content"))
+        .isInstanceOf(ApiAccessDeniedException.class);
+  }
+
+  @Test
+  @DisplayName("서평을 삭제한다.")
+  void deleteCommentTest() {
+    // Given
+    Comment comment = CommentFixture.create(createId(), book, member);
+
+    given(commentRepository.read(comment.commentId())).willReturn(comment);
+
+    // When
+    commentService.deleteComment(member.memberId(), comment.commentId());
+
+    // Then
+    verify(commentRepository, times(1)).delete(comment.commentId());
+  }
+
+  @Test
+  @DisplayName("서평 삭제 권한이 없는 멤버가 서평을 삭제하면 예외를 던진다.")
+  void deleteCommentAccessDeniedTest() {
+    // Given
+    long notAuthMemberId = createId();
+    Comment comment = CommentFixture.create(createId(), book, member);
+
+    given(commentRepository.read(comment.commentId())).willReturn(comment);
+
+    // When & Then
+    assertThatThrownBy(() -> commentService.deleteComment(notAuthMemberId, comment.commentId()))
+        .isInstanceOf(ApiAccessDeniedException.class);
   }
 }

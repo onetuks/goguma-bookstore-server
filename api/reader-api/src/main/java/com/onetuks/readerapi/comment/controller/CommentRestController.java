@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -89,6 +90,7 @@ public class CommentRestController {
 
   /**
    * 도서 별 서평 조회
+   *
    * @param bookId : 도서 ID
    * @param pageable : 페이지 정보
    * @return 200 OK
@@ -105,23 +107,39 @@ public class CommentRestController {
 
   /**
    * 서평 수정
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param commentId : 서평 ID
    * @param request : 서평 요청
    * @return 200 OK
    */
-  @PatchMapping(path = "/{commentId}",
+  @PatchMapping(
+      path = "/{commentId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<CommentResponse> patchComment(
       @MemberId Long memberId,
       @PathVariable(name = "commentId") Long commentId,
       @RequestBody @Valid CommentRequest request) {
-    Comment result = commentService.updateComment(memberId, commentId, request.title(), request.content());
+    Comment result =
+        commentService.updateComment(memberId, commentId, request.title(), request.content());
     CommentResponse response = CommentResponse.from(result);
 
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
-  /** 서평 제거 */
+  /**
+   * 서평 삭제
+   *
+   * @param memberId : 로그인한 멤버 ID
+   * @param commentId : 서평 ID
+   * @return 204 NO_CONTENT
+   */
+  @DeleteMapping(path = "/{commentId}")
+  public ResponseEntity<Void> deleteComment(
+      @MemberId Long memberId, @PathVariable(name = "commentId") Long commentId) {
+    commentService.deleteComment(memberId, commentId);
+
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+  }
 }

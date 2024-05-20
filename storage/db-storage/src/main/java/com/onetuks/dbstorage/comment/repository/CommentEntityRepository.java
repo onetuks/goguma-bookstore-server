@@ -46,5 +46,7 @@ public class CommentEntityRepository implements CommentRepository {
   }
 
   @Override
-  public void delete(long commentId) {}
+  public void delete(long commentId) {
+    repository.deleteById(commentId);
+  }
 }
