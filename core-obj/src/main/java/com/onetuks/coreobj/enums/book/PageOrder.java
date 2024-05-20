@@ -6,8 +6,7 @@ public enum PageOrder {
   PRICE_DESC("book.purchasePrce", "DESC"),
   SALES("book.salesRate", "DESC"),
   FAVORITE("book.bookStatics.favoriteCount", "DESC"),
-  VIEW("book.bookStatics.viewCount", "DESC"),
-  COMMENT("book.bookStatics.commentCount", "DESC");
+  VIEW("book.bookStatics.viewCount", "DESC");
 
   private final String property;
   private final String order;

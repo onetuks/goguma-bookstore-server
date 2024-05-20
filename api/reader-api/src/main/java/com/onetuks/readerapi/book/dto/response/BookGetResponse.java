@@ -29,7 +29,7 @@ public record BookGetResponse(
     long favoriteCount,
     long viewCount,
     long salesCount,
-    long commentCount) {
+    long restockCount) {
 
   public record BookGetResponses(Page<BookGetResponse> responses) {
 
@@ -63,6 +63,6 @@ public record BookGetResponse(
         book.bookStatics().favoriteCount(),
         book.bookStatics().viewCount(),
         book.bookStatics().salesCount(),
-        book.bookStatics().commentCount());
+        book.bookStatics().restockCount());
   }
 }

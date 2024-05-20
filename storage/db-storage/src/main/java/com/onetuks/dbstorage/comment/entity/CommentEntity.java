@@ -1,6 +1,7 @@
-package com.onetuks.dbstorage.book.entity;
+package com.onetuks.dbstorage.comment.entity;
 
 import com.onetuks.coreobj.annotation.Generated;
+import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,7 +47,12 @@ public class CommentEntity {
   private String content;
 
   public CommentEntity(
-      BookEntity bookEntity, MemberEntity memberEntity, String title, String content) {
+      Long commentId,
+      BookEntity bookEntity,
+      MemberEntity memberEntity,
+      String title,
+      String content) {
+    this.commentId = commentId;
     this.bookEntity = bookEntity;
     this.memberEntity = memberEntity;
     this.title = title;

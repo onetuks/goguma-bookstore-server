@@ -58,7 +58,6 @@ class RestockScmServiceTest extends ScmDomainIntegrationTest {
                                 book.bookStatics().favoriteCount(),
                                 book.bookStatics().viewCount(),
                                 book.bookStatics().salesCount(),
-                                book.bookStatics().commentCount(),
                                 book.bookStatics().restockCount() + 1)))
                 .toList());
 

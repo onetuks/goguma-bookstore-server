@@ -90,7 +90,6 @@ CREATE TABLE IF NOT EXISTS book_statics
     favorite_count  BIGINT NOT NULL DEFAULT 0 COMMENT '좋아요 수',
     view_count      BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
     sales_count     BIGINT NOT NULL DEFAULT 0 COMMENT '판매량',
-    comment_count   BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
     restock_count   BIGINT NOT NULL DEFAULT 0 COMMENT '재입고 수',
     PRIMARY KEY (book_statics_id)
 ) ENGINE = InnoDB

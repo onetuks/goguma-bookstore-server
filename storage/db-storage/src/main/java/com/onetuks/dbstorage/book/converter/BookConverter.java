@@ -106,7 +106,6 @@ public class BookConverter {
         bookStatics.favoriteCount(),
         bookStatics.viewCount(),
         bookStatics.salesCount(),
-        bookStatics.commentCount(),
         bookStatics.restockCount());
   }
 
@@ -116,7 +115,6 @@ public class BookConverter {
         bookStaticsEntity.getFavoriteCount(),
         bookStaticsEntity.getViewCount(),
         bookStaticsEntity.getSalesCount(),
-        bookStaticsEntity.getCommentCount(),
         bookStaticsEntity.getRestockCount());
   }
 }
