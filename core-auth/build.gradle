@@ -1,6 +1,7 @@
 dependencies {
 
     // Module
+    implementation(project(':core-web'))
     implementation(project(':core-obj'))
     implementation(project(':domain:reader-domain'))
     implementation(project(':domain:core-domain'))
