@@ -3,7 +3,6 @@ package com.onetuks.dbstorage.comment.entity;
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,7 +31,7 @@ public class CommentEntity {
   @Column(name = "comment_id", nullable = false)
   private Long commentId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 

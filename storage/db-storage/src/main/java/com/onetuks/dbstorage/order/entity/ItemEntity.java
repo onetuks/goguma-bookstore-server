@@ -3,7 +3,6 @@ package com.onetuks.dbstorage.order.entity;
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,7 +28,7 @@ public class ItemEntity {
   @Column(name = "item_id", nullable = false)
   private Long itemId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", nullable = false)
   private OrderEntity orderEntity;
 
@@ -37,7 +36,7 @@ public class ItemEntity {
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
