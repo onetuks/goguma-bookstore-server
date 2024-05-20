@@ -6,14 +6,17 @@ import com.onetuks.coredomain.member.model.vo.AuthInfo;
 import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.coreobj.error.ErrorCode;
+import com.onetuks.coreweb.config.WebClientConfig;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
+@ComponentScan(basePackageClasses = WebClientConfig.class)
 public class GoogleClientProviderStrategy implements ClientProviderStrategy {
 
   private final WebClient webClient;

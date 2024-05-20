@@ -12,5 +12,3 @@ public class GogumaBookStoreServerApplication {
     SpringApplication.run(GogumaBookStoreServerApplication.class, args);
   }
 }
-
-

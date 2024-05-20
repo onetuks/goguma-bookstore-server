@@ -1,8 +1,10 @@
 package com.onetuks.scmdomain.verification.webclient;
 
 import com.onetuks.coreobj.error.ErrorCode;
+import com.onetuks.coreweb.config.WebClientConfig;
 import com.onetuks.scmdomain.verification.webclient.dto.response.MailOrderSalesResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import reactor.core.publisher.Mono;
 
 @Component
+@ComponentScan(basePackageClasses = WebClientConfig.class)
 public class MailOrderSalesWebClient {
 
   private static final String MAIL_ORDER_SALES_URL =
