@@ -31,7 +31,7 @@ public class SubscribeRestController {
   }
 
   /**
-   * 작가 구독하기
+   * 작가 구독
    *
    * @param memberId : 로그인한 멤버 ID
    * @param authorId : 작가 ID
