@@ -68,6 +68,11 @@ jobs:
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
+        env:
+          APP_NAME: ${{ secrets.APP_NAME }}
+          PROFILE: ${{ secrets.PROFILE }}
+          CLOUD_CONFIG_URL: ${{ secrets.CLOUD_CONFIG_URL }}
+          ACTUATOR_PORT: ${{ secrets.ACTUATOR_PORT }}
         run: |
           ./gradlew build spotlessApply --parallel
 
