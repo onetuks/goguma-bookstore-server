@@ -1,8 +1,7 @@
 package com.onetuks.dbstorage.comment.repository;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.CommentFixture;
@@ -17,9 +16,13 @@ import com.onetuks.dbstorage.author.repository.AuthorEntityRepository;
 import com.onetuks.dbstorage.book.repository.BookEntityRepository;
 import com.onetuks.dbstorage.member.repository.MemberEntityRepository;
 import com.onetuks.dbstorage.registration.repository.RegistrationEntityRepository;
+import java.util.List;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
 
@@ -68,10 +71,41 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
   void read() {}
 
   @Test
-  void readAllByBook() {}
+  void readAllByMember() {
+    // Given
+    List<Book> books =
+        IntStream.range(0, 5)
+            .mapToObj(
+                i ->
+                    bookEntityRepository.create(
+                        registrationEntityRepository.create(
+                            RegistrationFixture.create(
+                                null,
+                                authorEntityRepository.create(
+                                    AuthorFixture.create(
+                                        null,
+                                        memberEntityRepository.create(
+                                            MemberFixture.create(null, RoleType.AUTHOR)))),
+                                false))))
+            .toList();
+    Page<Comment> comments =
+        new PageImpl<>(
+            books.stream()
+                .map(
+                    book ->
+                        commentEntityRepository.create(CommentFixture.create(null, book, member)))
+                .toList());
+
+    // When
+    Page<Comment> results =
+        commentEntityRepository.readAllByMember(member.memberId(), comments.getPageable());
+
+    // Then
+    assertThat(results.getTotalElements()).isEqualTo(books.size());
+  }
 
   @Test
-  void readAllByMember() {}
+  void readAllByBook() {}
 
   @Test
   void update() {}

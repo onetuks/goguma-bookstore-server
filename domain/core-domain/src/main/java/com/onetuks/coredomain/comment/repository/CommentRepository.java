@@ -12,9 +12,9 @@ public interface CommentRepository {
 
   Comment read(long commentId);
 
-  Page<Comment> readAllByBook(long bookId, Pageable pageable);
-
   Page<Comment> readAllByMember(long memberId, Pageable pageable);
+
+  Page<Comment> readAllByBook(long bookId, Pageable pageable);
 
   Comment update(Comment comment);
 

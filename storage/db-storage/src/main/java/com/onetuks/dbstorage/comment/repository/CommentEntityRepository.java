@@ -29,12 +29,12 @@ public class CommentEntityRepository implements CommentRepository {
   }
 
   @Override
-  public Page<Comment> readAllByBook(long bookId, Pageable pageable) {
-    return null;
+  public Page<Comment> readAllByMember(long memberId, Pageable pageable) {
+    return repository.findAllByMemberEntityMemberId(memberId, pageable).map(converter::toDomain);
   }
 
   @Override
-  public Page<Comment> readAllByMember(long memberId, Pageable pageable) {
+  public Page<Comment> readAllByBook(long bookId, Pageable pageable) {
     return null;
   }
 

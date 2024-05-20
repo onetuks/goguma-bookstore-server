@@ -4,11 +4,17 @@ import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.coredomain.comment.model.Comment;
 import com.onetuks.readerapi.comment.dto.request.CommentRequest;
 import com.onetuks.readerapi.comment.dto.response.CommentResponse;
+import com.onetuks.readerapi.comment.dto.response.CommentResponse.CommentResponses;
 import com.onetuks.readerdomain.comment.service.CommentService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +54,15 @@ public class CommentRestController {
   }
 
   /** 멤버 별 서평 조회 */
+  @GetMapping(path = "/members/{memberId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<CommentResponses> getAllCommentsOfMember(
+      @MemberId Long memberId,
+      @PageableDefault(sort = "commentId", direction = Direction.DESC) Pageable pageable) {
+    Page<Comment> results = commentService.readAllCommentsOfMember(memberId, pageable);
+    CommentResponses responses = CommentResponses.from(results);
+
+    return ResponseEntity.status(HttpStatus.OK).body(responses);
+  }
 
   /** 도서 별 서평 조회 */
 
