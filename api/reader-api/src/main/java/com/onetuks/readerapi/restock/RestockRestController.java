@@ -4,6 +4,7 @@ import com.onetuks.coreauth.util.login.MemberId;
 import com.onetuks.coredomain.restock.model.Restock;
 import com.onetuks.readerapi.restock.dto.response.RestockResponse;
 import com.onetuks.readerapi.restock.dto.response.RestockResponse.RestockResponses;
+import com.onetuks.readerdomain.restock.service.RestockService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -57,7 +58,7 @@ public class RestockRestController {
   @DeleteMapping(path = "/{restockId}")
   public ResponseEntity<Void> cancelRestock(
       @MemberId Long memberId, @PathVariable(name = "restockId") Long restockId) {
-    restockService.cancelRestock(memberId, restockId);
+    restockService.deleteRestock(memberId, restockId);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
