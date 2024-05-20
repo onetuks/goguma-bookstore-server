@@ -5,12 +5,14 @@ import com.onetuks.coredomain.book.repository.BookRepository;
 import com.onetuks.coredomain.favorite.repository.FavoriteRepository;
 import com.onetuks.coredomain.global.file.repository.FileRepository;
 import com.onetuks.coredomain.member.repository.MemberRepository;
+import com.onetuks.coredomain.restock.repository.RestockRepository;
 import com.onetuks.coredomain.subscribe.repository.SubscribeRepository;
 import com.onetuks.readerdomain.ReaderDomainIntegrationTest.ReaderDomainConfig;
 import com.onetuks.readerdomain.author.service.AuthorService;
 import com.onetuks.readerdomain.book.service.BookService;
 import com.onetuks.readerdomain.favorite.service.FavoriteService;
 import com.onetuks.readerdomain.member.service.MemberService;
+import com.onetuks.readerdomain.restock.service.RestockService;
 import com.onetuks.readerdomain.subscribe.service.SubscribeService;
 import com.onetuks.readerdomain.util.TestFileCleaner;
 import org.junit.jupiter.api.AfterEach;
@@ -41,12 +43,14 @@ public class ReaderDomainIntegrationTest {
   @Autowired public BookService bookService;
   @Autowired public SubscribeService subscribeService;
   @Autowired public FavoriteService favoriteService;
+  @Autowired public RestockService restockService;
 
   @MockBean public MemberRepository memberRepository;
   @MockBean public AuthorRepository authorRepository;
   @MockBean public BookRepository bookRepository;
   @MockBean public SubscribeRepository subscribeRepository;
   @MockBean public FavoriteRepository favoriteRepository;
+  @MockBean public RestockRepository restockRepository;
 
   @MockBean public FileRepository fileRepository;
 }

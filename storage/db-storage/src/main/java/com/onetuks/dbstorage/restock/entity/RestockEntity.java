@@ -3,7 +3,6 @@ package com.onetuks.dbstorage.restock.entity;
 import com.onetuks.coreobj.annotation.Generated;
 import com.onetuks.dbstorage.book.entity.BookEntity;
 import com.onetuks.dbstorage.member.entity.MemberEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,7 +15,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,18 +31,32 @@ public class RestockEntity {
   @Column(name = "restock_id", nullable = false)
   private Long restockId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
-  @Builder
-  public RestockEntity(MemberEntity memberEntity, BookEntity bookEntity) {
+  @Column(name = "is_fulfilled", nullable = false)
+  private Boolean isFulfilled;
+
+  @Column(name = "is_alarm_permitted", nullable = false)
+  private Boolean isAlarmPermitted;
+
+  public RestockEntity(
+      Long restockId,
+      MemberEntity memberEntity,
+      BookEntity bookEntity,
+      Boolean isFulfilled,
+      Boolean isAlarmPermitted) {
+    this.restockId = restockId;
     this.memberEntity = memberEntity;
     this.bookEntity = bookEntity;
+    this.isFulfilled = Objects.requireNonNullElse(isFulfilled, false);
+    this.isAlarmPermitted =
+        Objects.requireNonNullElse(isAlarmPermitted, memberEntity.getIsAlarmPermitted());
   }
 
   @Override

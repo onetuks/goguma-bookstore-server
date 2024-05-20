@@ -6,7 +6,9 @@ import com.onetuks.dbstorage.restock.entity.RestockEntity;
 
 public class RestockEntityFixture {
 
-  public static RestockEntity create(MemberEntity memberEntity, BookEntity bookEntity) {
-    return new RestockEntity(memberEntity, bookEntity);
+  public static RestockEntity create(
+      Long restockId, MemberEntity memberEntity, BookEntity bookEntity) {
+    return new RestockEntity(
+        restockId, memberEntity, bookEntity, false, memberEntity.getIsAlarmPermitted());
   }
 }

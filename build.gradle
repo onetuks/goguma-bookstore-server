@@ -1,3 +1,5 @@
+import javax.tools.SimpleJavaFileObject
+
 plugins {
     id 'java'
     id 'jacoco'
@@ -74,4 +76,19 @@ subprojects {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
     }
+}
+
+dependencies {
+    implementation(project(':api'))
+    implementation(project(':api:reader-api'))
+    implementation(project(':api:scm-api'))
+    implementation(project(':core-auth'))
+    implementation(project(':core-obj'))
+    implementation(project(':domain'))
+    implementation(project(':domain:core-domain'))
+    implementation(project(':domain:reader-domain'))
+    implementation(project(':domain:scm-domain'))
+    implementation(project(':storage'))
+    implementation(project(':storage:db-storage'))
+    implementation(project(':storage:file-storage'))
 }

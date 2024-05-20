@@ -9,6 +9,7 @@ import com.onetuks.scmdomain.ScmDomainIntegrationTest.ScmDomainConfig;
 import com.onetuks.scmdomain.author.service.AuthorScmService;
 import com.onetuks.scmdomain.book.service.BookScmService;
 import com.onetuks.scmdomain.registration.service.RegistrationScmService;
+import com.onetuks.scmdomain.restock.service.RestockScmService;
 import com.onetuks.scmdomain.util.TestFileCleaner;
 import com.onetuks.scmdomain.verification.EnrollmentInfoVerifier;
 import org.junit.jupiter.api.AfterEach;
@@ -34,16 +35,15 @@ public class ScmDomainIntegrationTest {
     testFileCleaner.deleteAllTestStatic();
   }
 
+  @Autowired public AuthorScmService authorScmService;
+  @Autowired public BookScmService bookScmService;
+  @Autowired public RegistrationScmService registrationScmService;
+  @Autowired public EnrollmentInfoVerifier enrollmentInfoVerifier;
+  @Autowired public RestockScmService restockScmService;
+
   @MockBean public MemberRepository memberRepository;
   @MockBean public AuthorScmRepository authorScmRepository;
   @MockBean public BookScmRepository bookScmRepository;
   @MockBean public RegistrationScmRepository registrationScmRepository;
-
   @MockBean public FileRepository fileRepository;
-
-  @Autowired public EnrollmentInfoVerifier enrollmentInfoVerifier;
-
-  @Autowired public AuthorScmService authorScmService;
-  @Autowired public BookScmService bookScmService;
-  @Autowired public RegistrationScmService registrationScmService;
 }

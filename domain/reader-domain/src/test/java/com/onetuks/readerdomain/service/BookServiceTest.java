@@ -50,7 +50,8 @@ class BookServiceTest extends ReaderDomainIntegrationTest {
                 book.bookStatics().favoriteCount(),
                 book.bookStatics().viewCount() + 1,
                 book.bookStatics().salesCount(),
-                book.bookStatics().commentCount()));
+                book.bookStatics().commentCount(),
+                book.bookStatics().restockCount()));
 
     given(bookRepository.read(book.bookId())).willReturn(expected);
 

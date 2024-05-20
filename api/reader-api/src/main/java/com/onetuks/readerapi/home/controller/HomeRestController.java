@@ -1,4 +1,4 @@
-package com.onetuks.readerapi.home;
+package com.onetuks.readerapi.home.controller;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -4,6 +4,7 @@ def jacocoExclude = List.of(
         "**/exception/*",
         "**/config/*",
         "**/global/*",
+        "**/controller/*",
         "**/model/*",
         "**/entity/*",
         "**/dto/*",
@@ -72,6 +73,7 @@ subprojects {
                         "*.exception.*",
                         "*.config.*",
                         "*.global.*",
+                        "*.controller.*",
                         "*.model.*",
                         "*.entity.*",
                         "*.dto.*",
@@ -86,7 +88,14 @@ subprojects {
     }
 }
 
+tasks.testCodeCoverageReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExclude)
+        }))
+    }
+}
+
 tasks.named('check') {
-    dependsOn(subprojects.tasks.jacocoTestReport)
     dependsOn tasks.named('testCodeCoverageReport', JacocoReport)
 }
