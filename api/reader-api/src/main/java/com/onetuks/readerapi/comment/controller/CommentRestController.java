@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -86,7 +87,12 @@ public class CommentRestController {
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 
-  /** 도서 별 서평 조회 */
+  /**
+   * 도서 별 서평 조회
+   * @param bookId : 도서 ID
+   * @param pageable : 페이지 정보
+   * @return 200 OK
+   */
   @GetMapping(path = "/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<CommentResponses> getAllCommentsOfBook(
       @PathVariable(name = "bookId") Long bookId,
@@ -97,7 +103,25 @@ public class CommentRestController {
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }
 
-  /** 서평 수정 */
+  /**
+   * 서평 수정
+   * @param memberId : 로그인한 멤버 ID
+   * @param commentId : 서평 ID
+   * @param request : 서평 요청
+   * @return 200 OK
+   */
+  @PatchMapping(path = "/{commentId}",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<CommentResponse> patchComment(
+      @MemberId Long memberId,
+      @PathVariable(name = "commentId") Long commentId,
+      @RequestBody @Valid CommentRequest request) {
+    Comment result = commentService.updateComment(memberId, commentId, request.title(), request.content());
+    CommentResponse response = CommentResponse.from(result);
+
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
 
   /** 서평 제거 */
 }

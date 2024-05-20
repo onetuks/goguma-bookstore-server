@@ -42,7 +42,7 @@ public class CommentEntityRepository implements CommentRepository {
 
   @Override
   public Comment update(Comment comment) {
-    return null;
+    return converter.toDomain(repository.save(converter.toEntity(comment)));
   }
 
   @Override

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 class CommentServiceTest extends ReaderDomainIntegrationTest {
 
@@ -127,5 +128,28 @@ class CommentServiceTest extends ReaderDomainIntegrationTest {
 
     // Then
     assertThat(results.getTotalElements()).isEqualTo(members.size());
+  }
+
+  @Test
+  @DisplayName("서평을 수정한다.")
+  void updateCommentTest() {
+    // Given
+    Comment comment = CommentFixture.create(createId(), book, member);
+    Comment updatedComment = new Comment(
+        comment.commentId(), comment.book(), comment.member(), "updated title", "updated content");
+
+    given(commentRepository.read(comment.commentId())).willReturn(comment);
+    given(commentRepository.update(any(Comment.class))).willReturn(updatedComment);
+
+    // When
+    Comment result = commentService.updateComment(
+        member.memberId(), comment.commentId(), comment.title(), comment.content());
+
+    // Then
+    assertAll(
+        () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
+        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
+        () -> assertThat(result.title()).isEqualTo(updatedComment.title()),
+        () -> assertThat(result.content()).isEqualTo(updatedComment.content()));
   }
 }

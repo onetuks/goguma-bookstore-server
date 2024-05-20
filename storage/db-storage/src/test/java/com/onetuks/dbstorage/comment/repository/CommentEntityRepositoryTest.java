@@ -148,6 +148,22 @@ class CommentEntityRepositoryTest extends DbStorageIntegrationTest {
 
   @Test
   void update() {
+    // Given
+    Comment comment = commentEntityRepository.create(
+        CommentFixture.create(null, book, member));
+    Comment updateComment = new Comment(
+        comment.commentId(), comment.book(), comment.member(),
+        "updated title", "updated content");
+
+    // When
+    Comment result = commentEntityRepository.update(updateComment);
+
+    // Then
+    assertAll(
+        () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
+        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
+        () -> assertThat(result.title()).isEqualTo(updateComment.title()),
+        () -> assertThat(result.content()).isEqualTo(updateComment.content()));
   }
 
   @Test
