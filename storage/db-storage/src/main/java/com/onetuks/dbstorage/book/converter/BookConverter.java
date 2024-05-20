@@ -106,7 +106,9 @@ public class BookConverter {
         bookStatics.favoriteCount(),
         bookStatics.viewCount(),
         bookStatics.salesCount(),
-        bookStatics.commentCount());
+        bookStatics.commentCount(),
+        bookStatics.restockCount()
+    );
   }
 
   public BookStatics toDomain(BookStaticsEntity bookStaticsEntity) {
@@ -115,6 +117,8 @@ public class BookConverter {
         bookStaticsEntity.getFavoriteCount(),
         bookStaticsEntity.getViewCount(),
         bookStaticsEntity.getSalesCount(),
-        bookStaticsEntity.getCommentCount());
+        bookStaticsEntity.getCommentCount(),
+        bookStaticsEntity.getRestockCount()
+    );
   }
 }

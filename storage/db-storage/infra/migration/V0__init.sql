@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS author_statics
     author_statics_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '작가 통계 식별자',
     subscribe_count   BIGINT NOT NULL DEFAULT 0 COMMENT '구독자 수',
     book_count        BIGINT NOT NULL DEFAULT 0 COMMENT '등록 도서 수',
-    restock_count     BIGINT NOT NULL DEFAULT 0 COMMENT '재입고 수',
     PRIMARY KEY (author_statics_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -92,6 +91,7 @@ CREATE TABLE IF NOT EXISTS book_statics
     view_count      BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
     sales_count     BIGINT NOT NULL DEFAULT 0 COMMENT '판매량',
     comment_count   BIGINT NOT NULL DEFAULT 0 COMMENT '서평 수',
+    restock_count   BIGINT NOT NULL DEFAULT 0 COMMENT '재입고 수',
     PRIMARY KEY (book_statics_id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
@@ -153,9 +153,11 @@ CREATE TABLE IF NOT EXISTS favorites
 
 CREATE TABLE IF NOT EXISTS restocks
 (
-    restock_id BIGINT NOT NULL AUTO_INCREMENT COMMENT '재입고 식별자',
-    member_id  BIGINT NOT NULL COMMENT '멤버 식별자',
-    book_id    BIGINT NOT NULL COMMENT '도서 식별자',
+    restock_id         BIGINT  NOT NULL AUTO_INCREMENT COMMENT '재입고 식별자',
+    member_id          BIGINT  NOT NULL COMMENT '멤버 식별자',
+    book_id            BIGINT  NOT NULL COMMENT '도서 식별자',
+    is_fulfilled       BOOLEAN NOT NULL DEFAULT FALSE COMMENT '재입고 완료 여부',
+    is_alarm_permitted BOOLEAN NOT NULL DEFAULT TRUE COMMENT '알람 허용 여부',
     PRIMARY KEY (restock_id),
     FOREIGN KEY (member_id) REFERENCES members (member_id) ON DELETE CASCADE,
     FOREIGN KEY (book_id) REFERENCES books (book_id) ON DELETE CASCADE,

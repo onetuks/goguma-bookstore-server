@@ -16,7 +16,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,10 +40,20 @@ public class RestockEntity {
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
-  @Builder
-  public RestockEntity(MemberEntity memberEntity, BookEntity bookEntity) {
+  @Column(name = "is_fulfilled", nullable = false)
+  private Boolean isFulfilled;
+
+  @Column(name = "is_alarm_permitted", nullable = false)
+  private Boolean isAlarmPermitted;
+
+  public RestockEntity(
+      MemberEntity memberEntity, BookEntity bookEntity,
+      Boolean isFulfilled, Boolean isAlarmPermitted) {
     this.memberEntity = memberEntity;
     this.bookEntity = bookEntity;
+    this.isFulfilled = Objects.requireNonNullElse(isFulfilled, false);
+    this.isAlarmPermitted = Objects.requireNonNullElse(
+        isAlarmPermitted, memberEntity.getIsAlarmPermitted());
   }
 
   @Override
