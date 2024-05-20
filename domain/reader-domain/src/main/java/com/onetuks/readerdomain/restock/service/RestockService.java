@@ -32,14 +32,7 @@ public class RestockService {
     Member member = memberRepository.read(memberId);
 
     return restockRepository.create(
-        new Restock(
-            null,
-            member,
-            bookRepository.read(bookId),
-            false,
-            member.isAlarmPermitted()
-        )
-    );
+        new Restock(null, member, bookRepository.read(bookId), false, member.isAlarmPermitted()));
   }
 
   @Transactional(readOnly = true)

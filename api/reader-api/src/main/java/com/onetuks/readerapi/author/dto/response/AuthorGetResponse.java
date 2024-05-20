@@ -10,8 +10,7 @@ public record AuthorGetResponse(
     String introduction,
     String instagramUrl,
     long subscribeCount,
-    long bookCount,
-    long restockCount) {
+    long bookCount) {
 
   public static AuthorGetResponse from(Author author) {
     return new AuthorGetResponse(
@@ -21,14 +20,13 @@ public record AuthorGetResponse(
         author.introduction(),
         author.instagramUrl(),
         author.authorStatics().subscribeCount(),
-        author.authorStatics().bookCount(),
-        author.authorStatics().restockCount());
+        author.authorStatics().bookCount());
   }
 
-  public record AuthorGetReponses(Page<AuthorGetResponse> responses) {
+  public record AuthorGetResponses(Page<AuthorGetResponse> responses) {
 
-    public static AuthorGetReponses from(Page<Author> results) {
-      return new AuthorGetReponses(results.map(AuthorGetResponse::from));
+    public static AuthorGetResponses from(Page<Author> results) {
+      return new AuthorGetResponses(results.map(AuthorGetResponse::from));
     }
   }
 }

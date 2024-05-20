@@ -33,6 +33,7 @@ public class RestockRestController {
 
   /**
    * 도서 재입고 신청
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param bookId : 도서 ID
    * @return 200 OK
@@ -41,8 +42,7 @@ public class RestockRestController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RestockResponse> postNewRestock(
-      @MemberId Long memberId,
-      @RequestParam(name = "bookId") Long bookId) {
+      @MemberId Long memberId, @RequestParam(name = "bookId") Long bookId) {
     Restock result = restockService.createRestock(memberId, bookId);
     RestockResponse response = RestockResponse.from(result);
 
@@ -51,6 +51,7 @@ public class RestockRestController {
 
   /**
    * 재입고 취소
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param restockId : 재입고 ID
    * @return 204 NO_CONTENT
@@ -65,14 +66,14 @@ public class RestockRestController {
 
   /**
    * 멤버 모든 재입고 신청 조회
+   *
    * @param memberId : 로그인한 멤버 ID
    * @return 200 OK
    */
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<RestockResponses> getAllRestockOfMember(
       @MemberId Long memberId,
-      @PageableDefault(sort = "restockId", direction = Direction.ASC) Pageable pageable
-  ) {
+      @PageableDefault(sort = "restockId", direction = Direction.ASC) Pageable pageable) {
     Page<Restock> results = restockService.readAllRestocks(memberId, pageable);
     RestockResponses responses = RestockResponses.from(results);
 
@@ -81,6 +82,7 @@ public class RestockRestController {
 
   /**
    * 재입고 알림 설정
+   *
    * @param memberId : 로그인한 멤버 ID
    * @param restockId : 재입고 ID
    * @param isAlarmPermitted : 알림 허용 여부
@@ -90,8 +92,7 @@ public class RestockRestController {
   public ResponseEntity<RestockResponse> patchRestockAlarm(
       @MemberId Long memberId,
       @PathVariable(name = "restockId") Long restockId,
-      @RequestParam(name = "alarm") Boolean isAlarmPermitted
-  ) {
+      @RequestParam(name = "alarm") Boolean isAlarmPermitted) {
     Restock result = restockService.updateRestockAlarm(memberId, restockId, isAlarmPermitted);
     RestockResponse response = RestockResponse.from(result);
 

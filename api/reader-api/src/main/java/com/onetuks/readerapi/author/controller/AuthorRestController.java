@@ -4,7 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.readerapi.author.dto.response.AuthorGetResponse;
-import com.onetuks.readerapi.author.dto.response.AuthorGetResponse.AuthorGetReponses;
+import com.onetuks.readerapi.author.dto.response.AuthorGetResponse.AuthorGetResponses;
 import com.onetuks.readerdomain.author.service.AuthorService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,10 +49,10 @@ public class AuthorRestController {
    * @return 200 OK
    */
   @GetMapping(produces = APPLICATION_JSON_VALUE)
-  public ResponseEntity<AuthorGetReponses> getAllAuthorDetails(
+  public ResponseEntity<AuthorGetResponses> getAllAuthorDetails(
       @PageableDefault(sort = "authorId", direction = Direction.DESC) Pageable pageable) {
     Page<Author> results = authorService.readAllAuthorDetails(pageable);
-    AuthorGetReponses responses = AuthorGetReponses.from(results);
+    AuthorGetResponses responses = AuthorGetResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
   }

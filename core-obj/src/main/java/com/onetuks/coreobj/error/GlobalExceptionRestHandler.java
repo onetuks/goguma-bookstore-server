@@ -43,7 +43,7 @@ public class GlobalExceptionRestHandler {
     final ErrorResponse response =
         ErrorResponse.of(ErrorCode.UNAUTHORITY_ACCESS_DENIED, e.getMessage());
 
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
   }
 
   /** S3 버킷에 찾고자 하는 파일이 없는 경우 */

@@ -32,8 +32,10 @@ class RestockServiceTest extends ReaderDomainIntegrationTest {
   void createRestockTest() {
     // Given
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Book book = BookFixture.create(createId(),
-        AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR)));
+    Book book =
+        BookFixture.create(
+            createId(),
+            AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR)));
     Restock restock = RestockFixture.create(null, member, book);
 
     given(memberRepository.read(member.memberId())).willReturn(member);
@@ -46,8 +48,7 @@ class RestockServiceTest extends ReaderDomainIntegrationTest {
     assertAll(
         () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
         () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
-        () -> assertThat(result.isAlarmPermitted()).isEqualTo(member.isAlarmPermitted())
-    );
+        () -> assertThat(result.isAlarmPermitted()).isEqualTo(member.isAlarmPermitted()));
   }
 
   @Test
@@ -57,13 +58,20 @@ class RestockServiceTest extends ReaderDomainIntegrationTest {
     int count = 5;
     Pageable pageable = PageRequest.of(0, 10);
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Page<Restock> restocks = new PageImpl<>(
-        IntStream.range(0, count)
-            .mapToObj(i ->
-                RestockFixture.create(createId(), member, BookFixture.create(createId(),
-                    AuthorFixture.create(createId(),
-                        MemberFixture.create(createId(), RoleType.AUTHOR)))))
-            .toList());
+    Page<Restock> restocks =
+        new PageImpl<>(
+            IntStream.range(0, count)
+                .mapToObj(
+                    i ->
+                        RestockFixture.create(
+                            createId(),
+                            member,
+                            BookFixture.create(
+                                createId(),
+                                AuthorFixture.create(
+                                    createId(),
+                                    MemberFixture.create(createId(), RoleType.AUTHOR)))))
+                .toList());
 
     given(restockRepository.readAll(member.memberId(), pageable)).willReturn(restocks);
 
@@ -79,21 +87,27 @@ class RestockServiceTest extends ReaderDomainIntegrationTest {
   void updateRestockAlarmTest() {
     // Given
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Restock restock = RestockFixture.create(createId(), member, BookFixture.create(createId(),
-        AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR))));
+    Restock restock =
+        RestockFixture.create(
+            createId(),
+            member,
+            BookFixture.create(
+                createId(),
+                AuthorFixture.create(
+                    createId(), MemberFixture.create(createId(), RoleType.AUTHOR))));
 
     given(restockRepository.read(restock.restockId())).willReturn(restock);
     given(restockRepository.update(any())).willReturn(restock.changeAlarmPermitted(false));
 
     // When
-    Restock result = restockService.updateRestockAlarm(member.memberId(), restock.restockId(), false);
+    Restock result =
+        restockService.updateRestockAlarm(member.memberId(), restock.restockId(), false);
 
     // Then
     assertAll(
         () -> assertThat(result.member().memberId()).isEqualTo(member.memberId()),
         () -> assertThat(result.book().bookId()).isEqualTo(restock.book().bookId()),
-        () -> assertThat(result.isAlarmPermitted()).isFalse()
-    );
+        () -> assertThat(result.isAlarmPermitted()).isFalse());
   }
 
   @Test
@@ -101,8 +115,14 @@ class RestockServiceTest extends ReaderDomainIntegrationTest {
   void deleteRestockTest() {
     // Given
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Restock restock = RestockFixture.create(createId(), member, BookFixture.create(createId(),
-        AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR))));
+    Restock restock =
+        RestockFixture.create(
+            createId(),
+            member,
+            BookFixture.create(
+                createId(),
+                AuthorFixture.create(
+                    createId(), MemberFixture.create(createId(), RoleType.AUTHOR))));
 
     given(restockRepository.read(restock.restockId())).willReturn(restock);
 

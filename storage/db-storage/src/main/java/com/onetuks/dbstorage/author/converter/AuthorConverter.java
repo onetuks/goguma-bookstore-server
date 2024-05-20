@@ -54,15 +54,11 @@ public class AuthorConverter {
     return new AuthorStatics(
         authorStaticsEntity.getAuthorStaticsId(),
         authorStaticsEntity.getSubscribeCount(),
-        authorStaticsEntity.getBookCount()
-    );
+        authorStaticsEntity.getBookCount());
   }
 
   private AuthorStaticsEntity toEntity(AuthorStatics authorStatics) {
     return new AuthorStaticsEntity(
-        authorStatics.authorStaticsId(),
-        authorStatics.subscribeCount(),
-        authorStatics.bookCount()
-    );
+        authorStatics.authorStaticsId(), authorStatics.subscribeCount(), authorStatics.bookCount());
   }
 }

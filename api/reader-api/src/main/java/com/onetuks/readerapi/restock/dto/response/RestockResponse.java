@@ -4,12 +4,7 @@ import com.onetuks.coredomain.restock.model.Restock;
 import org.springframework.data.domain.Page;
 
 public record RestockResponse(
-    long restockId,
-    long memberId,
-    long bookId,
-    boolean isFulfilled,
-    boolean isAlarmPermitted
-) {
+    long restockId, long memberId, long bookId, boolean isFulfilled, boolean isAlarmPermitted) {
 
   public static RestockResponse from(Restock restock) {
     return new RestockResponse(
@@ -17,8 +12,7 @@ public record RestockResponse(
         restock.member().memberId(),
         restock.book().bookId(),
         restock.isFulfilled(),
-        restock.isAlarmPermitted()
-    );
+        restock.isAlarmPermitted());
   }
 
   public record RestockResponses(Page<RestockResponse> responses) {

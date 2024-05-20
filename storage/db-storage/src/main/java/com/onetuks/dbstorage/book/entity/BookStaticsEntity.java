@@ -72,6 +72,16 @@ public class BookStaticsEntity {
     return this;
   }
 
+  public BookStaticsEntity increaseRestockCount() {
+    this.restockCount++;
+    return this;
+  }
+
+  public BookStaticsEntity decreaseRestockCount() {
+    this.restockCount--;
+    return this;
+  }
+
   @Override
   @Generated
   public boolean equals(Object o) {

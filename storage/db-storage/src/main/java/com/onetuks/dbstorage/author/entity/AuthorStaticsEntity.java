@@ -28,8 +28,7 @@ public class AuthorStaticsEntity {
   @Column(name = "book_count", nullable = false)
   private Long bookCount;
 
-  public AuthorStaticsEntity(
-      Long authorStaticsId, Long subscribeCount, Long bookCount) {
+  public AuthorStaticsEntity(Long authorStaticsId, Long subscribeCount, Long bookCount) {
     this.authorStaticsId = authorStaticsId;
     this.subscribeCount = Objects.requireNonNullElse(subscribeCount, 0L);
     this.bookCount = Objects.requireNonNullElse(bookCount, 0L);

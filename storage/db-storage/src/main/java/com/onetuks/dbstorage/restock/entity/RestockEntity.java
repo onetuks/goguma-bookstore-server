@@ -32,11 +32,11 @@ public class RestockEntity {
   @Column(name = "restock_id", nullable = false)
   private Long restockId;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", nullable = false)
   private MemberEntity memberEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "book_id", nullable = false)
   private BookEntity bookEntity;
 
@@ -47,13 +47,17 @@ public class RestockEntity {
   private Boolean isAlarmPermitted;
 
   public RestockEntity(
-      MemberEntity memberEntity, BookEntity bookEntity,
-      Boolean isFulfilled, Boolean isAlarmPermitted) {
+      Long restockId,
+      MemberEntity memberEntity,
+      BookEntity bookEntity,
+      Boolean isFulfilled,
+      Boolean isAlarmPermitted) {
+    this.restockId = restockId;
     this.memberEntity = memberEntity;
     this.bookEntity = bookEntity;
     this.isFulfilled = Objects.requireNonNullElse(isFulfilled, false);
-    this.isAlarmPermitted = Objects.requireNonNullElse(
-        isAlarmPermitted, memberEntity.getIsAlarmPermitted());
+    this.isAlarmPermitted =
+        Objects.requireNonNullElse(isAlarmPermitted, memberEntity.getIsAlarmPermitted());
   }
 
   @Override

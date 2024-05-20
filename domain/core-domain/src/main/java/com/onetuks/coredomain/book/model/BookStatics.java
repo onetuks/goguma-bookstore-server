@@ -6,8 +6,7 @@ public record BookStatics(
     long viewCount,
     long salesCount,
     long commentCount,
-    long restockCount
-) {
+    long restockCount) {
 
   public static BookStatics init() {
     return new BookStatics(null, 0, 0, 0, 0, 0);
