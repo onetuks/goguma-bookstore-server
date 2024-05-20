@@ -1,5 +1,3 @@
-import javax.tools.SimpleJavaFileObject
-
 plugins {
     id 'java'
     id 'jacoco'
