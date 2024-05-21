@@ -8,6 +8,10 @@ include('core-auth')
 
 include('core-obj')
 
+include('core-monitoring')
+
+include('core-web')
+
 include('domain')
 include('domain:core-domain')
 include('domain:reader-domain')

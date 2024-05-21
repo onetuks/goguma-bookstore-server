@@ -29,17 +29,6 @@ jobs:
               - '**/build.gradle'
               - '**/src/**'
 
-      - name: Gradle Caching
-        if: steps.changes.outputs.application == 'true'
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle- 
-
       - name: Gradlew exec permission grant
         if: steps.changes.outputs.application == 'true'
         run: chmod +x ./gradlew
@@ -68,6 +57,11 @@ jobs:
 
       - name: Gradle Build
         if: steps.changes.outputs.application == 'true'
+        env:
+          APP_NAME: ${{ secrets.APP_NAME }}
+          PROFILE: ${{ secrets.PROFILE }}
+          CLOUD_CONFIG_URL: ${{ secrets.CLOUD_CONFIG_URL }}
+          ACTUATOR_PORT: ${{ secrets.ACTUATOR_PORT }}
         run: |
           ./gradlew build spotlessApply --parallel
 
@@ -89,7 +83,8 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v3
+      - name: Build Filter
+        uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |

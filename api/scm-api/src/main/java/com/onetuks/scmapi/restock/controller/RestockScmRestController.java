@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(produces = "/scm/restocks")
+@RequestMapping(path = "/scm/restocks")
 public class RestockScmRestController {
 
   private final RestockScmService restockScmService;

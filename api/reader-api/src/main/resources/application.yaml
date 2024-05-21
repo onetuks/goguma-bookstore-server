@@ -1,12 +1,14 @@
 spring:
   application:
-    name: goguma-bookstore
+    name: ${APP_NAME}
   profiles:
-    active: dev
+    active: ${PROFILE}
   config:
-    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:${CLOUD_CONFIG_URL}
 
 management:
+  server:
+    port: ${ACTUATOR_PORT}
   endpoints:
     web:
       exposure:

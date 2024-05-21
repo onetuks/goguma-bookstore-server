@@ -1,5 +1,3 @@
-import javax.tools.SimpleJavaFileObject
-
 plugins {
     id 'java'
     id 'jacoco'
@@ -79,11 +77,13 @@ subprojects {
 }
 
 dependencies {
+    implementation(project(':core-auth'))
+    implementation(project(':core-obj'))
+    implementation(project(':core-web'))
+    implementation(project(':core-monitoring'))
     implementation(project(':api'))
     implementation(project(':api:reader-api'))
     implementation(project(':api:scm-api'))
-    implementation(project(':core-auth'))
-    implementation(project(':core-obj'))
     implementation(project(':domain'))
     implementation(project(':domain:core-domain'))
     implementation(project(':domain:reader-domain'))

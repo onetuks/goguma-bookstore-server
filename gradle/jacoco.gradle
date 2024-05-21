@@ -67,22 +67,12 @@ subprojects {
                     minimum = 0.5
                 }
 
-                excludes = [
-                        "*.Q*",
-                        "*.error.*",
-                        "*.exception.*",
-                        "*.config.*",
-                        "*.global.*",
-                        "*.controller.*",
-                        "*.model.*",
-                        "*.entity.*",
-                        "*.dto.*",
-                        "*.vo.*",
-                        "*.enums.*",
-                        "*.api.*",
-                        "*.coreauth.*",
-                        "*.*Application"
-                ]
+                excludes = jacocoExclude.stream()
+                        .collect { exclude ->
+                            exclude
+                                    .replace("**", "*")
+                                    .replace('/', '.')
+                        }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.onetuks.scmdomain.config;
+package com.onetuks.coreweb.config;
 
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
