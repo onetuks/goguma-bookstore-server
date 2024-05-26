@@ -1,6 +1,7 @@
 package com.onetuks.scmdomain.verification.webclient;
 
 import com.onetuks.coreobj.error.ErrorCode;
+import com.onetuks.coreweb.config.URIBuilder;
 import com.onetuks.coreweb.config.WebClientConfig;
 import com.onetuks.scmdomain.verification.webclient.dto.request.BusinessNumberRequest;
 import com.onetuks.scmdomain.verification.webclient.dto.response.BusinessNumberResponse;

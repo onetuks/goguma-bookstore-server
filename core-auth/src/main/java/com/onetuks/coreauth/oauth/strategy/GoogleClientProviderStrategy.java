@@ -2,6 +2,7 @@ package com.onetuks.coreauth.oauth.strategy;
 
 import com.onetuks.coreauth.exception.TokenValidFailedException;
 import com.onetuks.coreauth.oauth.dto.GoogleUser;
+import com.onetuks.coreauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;
 import com.onetuks.coreobj.enums.member.ClientProvider;
 import com.onetuks.coreobj.enums.member.RoleType;
@@ -26,12 +27,12 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public AuthInfo getAuthInfo(String accessToken) {
+  public AuthInfo getAuthInfo(String authToken) {
     GoogleUser googleUser =
         webClient
             .get()
             .uri("https://www.googleapis.com/oauth2/v3/userinfo")
-            .headers(httpHeaders -> httpHeaders.set("Authorization", accessToken))
+            .headers(httpHeaders -> httpHeaders.set("Authorization", authToken))
             .retrieve()
             .onStatus(
                 HttpStatusCode::is4xxClientError,
@@ -52,5 +53,10 @@ public class GoogleClientProviderStrategy implements ClientProviderStrategy {
         .clientProvider(ClientProvider.GOOGLE)
         .roles(List.of(RoleType.USER))
         .build();
+  }
+
+  @Override
+  public KakaoAuthToken getOAuth2Token(String authCode) {
+    return null;
   }
 }

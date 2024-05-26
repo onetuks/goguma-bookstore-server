@@ -1,6 +1,7 @@
 package com.onetuks.coreauth.oauth.strategy;
 
 import com.onetuks.coreauth.exception.TokenValidFailedException;
+import com.onetuks.coreauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.coreauth.oauth.dto.NaverUser;
 import com.onetuks.coredomain.member.model.vo.AuthInfo;
 import com.onetuks.coreobj.enums.member.ClientProvider;
@@ -26,12 +27,12 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
   }
 
   @Override
-  public AuthInfo getAuthInfo(String accessToken) {
+  public AuthInfo getAuthInfo(String authToken) {
     NaverUser naverUser =
         webClient
             .get()
             .uri("https://openapi.naver.com/v1/nid/me")
-            .headers(httpHeaders -> httpHeaders.set("Authorization", accessToken))
+            .headers(httpHeaders -> httpHeaders.set("Authorization", authToken))
             .retrieve()
             .onStatus(
                 HttpStatusCode::is4xxClientError,
@@ -53,5 +54,10 @@ public class NaverClientProviderStrategy implements ClientProviderStrategy {
         .clientProvider(ClientProvider.NAVER)
         .roles(List.of(RoleType.USER))
         .build();
+  }
+
+  @Override
+  public KakaoAuthToken getOAuth2Token(String authCode) {
+    return null;
   }
 }

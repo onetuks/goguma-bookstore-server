@@ -28,7 +28,7 @@ class OAuth2ClientServiceTest extends CoreAuthIntegrationTest {
 
   @Test
   @DisplayName("구글 소셜 로그인 클라이언트를 활용해 로그인한다.")
-  void login_GoogleClient_Test() {
+  void login_WithAuthToken_GoogleClient_Test() {
     // Given
     ClientProvider clientProvider = ClientProvider.GOOGLE;
     AuthInfo authInfo =
@@ -46,7 +46,8 @@ class OAuth2ClientServiceTest extends CoreAuthIntegrationTest {
     given(memberService.createMemberIfNotExists(authInfo)).willReturn(memberAuthResult);
 
     // When
-    LoginResult result = oAuth2ClientService.login(clientProvider, "googleAccessToken");
+    LoginResult result =
+        oAuth2ClientService.loginWithAuthToken(clientProvider, "googleAccessToken");
 
     // Then
     assertAll(

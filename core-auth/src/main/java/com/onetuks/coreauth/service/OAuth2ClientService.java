@@ -1,7 +1,9 @@
 package com.onetuks.coreauth.service;
 
+import com.onetuks.coreauth.jwt.AuthHeaderUtil;
 import com.onetuks.coreauth.jwt.AuthToken;
 import com.onetuks.coreauth.oauth.ClientProviderStrategyHandler;
+import com.onetuks.coreauth.oauth.dto.KakaoAuthToken;
 import com.onetuks.coreauth.oauth.strategy.ClientProviderStrategy;
 import com.onetuks.coreauth.service.dto.LoginResult;
 import com.onetuks.coredomain.member.dto.MemberAuthResult;
@@ -28,11 +30,11 @@ public class OAuth2ClientService {
   }
 
   @Transactional
-  public LoginResult login(ClientProvider clientProvider, String accessToken) {
+  public LoginResult loginWithAuthToken(ClientProvider clientProvider, String authToken) {
     ClientProviderStrategy clientProviderStrategy =
         clientProviderStrategyHandler.getClientStrategy(clientProvider);
 
-    AuthInfo clientMember = clientProviderStrategy.getAuthInfo(accessToken);
+    AuthInfo clientMember = clientProviderStrategy.getAuthInfo(authToken);
 
     MemberAuthResult savedMember = memberService.createMemberIfNotExists(clientMember);
 
@@ -46,5 +48,17 @@ public class OAuth2ClientService {
         savedMember.memberId(),
         savedMember.name(),
         savedMember.roleTypes());
+  }
+
+  @Transactional
+  public LoginResult loginWithAuthCode(ClientProvider clientProvider, String authCode) {
+    ClientProviderStrategy clientProviderStrategy =
+        clientProviderStrategyHandler.getClientStrategy(clientProvider);
+
+    String coreCode = authCode.replace("Bearer ", "");
+    KakaoAuthToken authToken = clientProviderStrategy.getOAuth2Token(coreCode);
+
+    return loginWithAuthToken(
+        clientProvider, AuthHeaderUtil.TOKEN_PREFIX + authToken.access_token());
   }
 }
