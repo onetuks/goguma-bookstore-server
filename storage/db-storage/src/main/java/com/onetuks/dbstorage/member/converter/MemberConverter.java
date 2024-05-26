@@ -18,11 +18,11 @@ public class MemberConverter {
         member.authInfo().socialId(),
         member.authInfo().clientProvider(),
         member.authInfo().roles(),
-        member.nickname().nicknameValue(),
+        member.nickname() == null ? null : member.nickname().nicknameValue(),
         member.profileImgFilePath().getUri(),
         member.isAlarmPermitted(),
-        member.defaultAddressInfo().address(),
-        member.defaultAddressInfo().addressDetail());
+        member.defaultAddressInfo() == null ? null : member.defaultAddressInfo().address(),
+        member.defaultAddressInfo() == null ? null : member.defaultAddressInfo().addressDetail());
   }
 
   public Member toDomain(MemberEntity memberEntity) {

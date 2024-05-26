@@ -49,26 +49,34 @@ public class AuthRestController {
     this.memberService = memberService;
   }
 
+  @PostMapping(path = "/postman/kakao")
+  public ResponseEntity<LoginResponse> kakaoLoginWithAuthToken(HttpServletRequest request) {
+    LoginResult loginResult =
+        oAuth2ClientService.loginWithAuthToken(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
+
+    return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
+  }
+
   @PostMapping(path = "/kakao")
-  public ResponseEntity<LoginResponse> kakaoLogin(HttpServletRequest request) {
+  public ResponseEntity<LoginResponse> kakaoLoginWithAuthCode(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
+        oAuth2ClientService.loginWithAuthCode(KAKAO, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
 
-  @PostMapping(path = "/google")
-  public ResponseEntity<LoginResponse> googleLogin(HttpServletRequest request) {
+  @PostMapping(path = "/postman/google")
+  public ResponseEntity<LoginResponse> googleLoginWithAuthToken(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(GOOGLE, request.getHeader(HEADER_AUTHORIZATION));
+        oAuth2ClientService.loginWithAuthToken(GOOGLE, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
 
-  @PostMapping(path = "/naver")
-  public ResponseEntity<LoginResponse> naverLogin(HttpServletRequest request) {
+  @PostMapping(path = "/postman/naver")
+  public ResponseEntity<LoginResponse> naverLoginWithAuthToken(HttpServletRequest request) {
     LoginResult loginResult =
-        oAuth2ClientService.login(NAVER, request.getHeader(HEADER_AUTHORIZATION));
+        oAuth2ClientService.loginWithAuthToken(NAVER, request.getHeader(HEADER_AUTHORIZATION));
 
     return ResponseEntity.status(HttpStatus.OK).body(LoginResponse.from(loginResult));
   }
