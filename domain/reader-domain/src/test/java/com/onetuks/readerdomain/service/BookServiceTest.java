@@ -50,7 +50,9 @@ class BookServiceTest extends ReaderDomainIntegrationTest {
                 book.bookStatics().favoriteCount(),
                 book.bookStatics().viewCount() + 1,
                 book.bookStatics().salesCount(),
-                book.bookStatics().restockCount()));
+                book.bookStatics().commentCount(),
+                book.bookStatics().restockCount(),
+                book.bookStatics().reviewScore()));
 
     given(bookRepository.read(book.bookId())).willReturn(expected);
 
@@ -70,7 +72,7 @@ class BookServiceTest extends ReaderDomainIntegrationTest {
     Category category = createCategories().get(0);
     boolean onlyPromotion = new Random().nextBoolean();
     boolean exceptSoldOut = new Random().nextBoolean();
-    PageOrder pageOrder = PageOrder.VIEW;
+    PageOrder pageOrder = PageOrder.DATE;
 
     int count = 5;
     Page<Book> books =

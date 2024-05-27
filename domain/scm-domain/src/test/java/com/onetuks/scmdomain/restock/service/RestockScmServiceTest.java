@@ -8,67 +8,45 @@ import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.BookFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.RestockFixture;
-import com.onetuks.coredomain.author.model.Author;
-import com.onetuks.coredomain.book.model.Book;
-import com.onetuks.coredomain.book.model.BookStatics;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.restock.model.Restock;
 import com.onetuks.coreobj.enums.member.RoleType;
 import com.onetuks.scmdomain.ScmDomainIntegrationTest;
-import java.util.List;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 class RestockScmServiceTest extends ScmDomainIntegrationTest {
 
   @Test
   void readRestockBookCount() {
     // Given
+    int count = 5;
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Author author =
-        AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR));
-    List<Restock> restocks =
-        IntStream.range(0, 5)
-            .mapToObj(
-                i ->
-                    RestockFixture.create(
-                        createId(), member, BookFixture.create(createId(), author)))
-            .toList();
-    Page<Book> books =
+    Page<Restock> restocks =
         new PageImpl<>(
-            restocks.stream()
-                .map(Restock::book)
-                .map(
-                    book ->
-                        new Book(
-                            book.bookId(),
-                            book.author(),
-                            book.bookConceptualInfo(),
-                            book.bookPhysicalInfo(),
-                            book.bookPriceInfo(),
-                            book.coverImgFilePath(),
-                            book.detailImgFilePaths(),
-                            book.previewFilePaths(),
-                            new BookStatics(
-                                book.bookStatics().bookStaticsId(),
-                                book.bookStatics().favoriteCount(),
-                                book.bookStatics().viewCount(),
-                                book.bookStatics().salesCount(),
-                                book.bookStatics().restockCount() + 1)))
+            IntStream.range(0, count)
+                .mapToObj(
+                    i ->
+                        RestockFixture.create(
+                            createId(),
+                            member,
+                            BookFixture.create(
+                                createId(),
+                                AuthorFixture.create(
+                                    createId(),
+                                    MemberFixture.create(createId(), RoleType.AUTHOR)))))
                 .toList());
 
-    given(authorScmRepository.readByMember(author.member().memberId())).willReturn(author);
-    given(bookScmRepository.readAll(author.authorId(), Pageable.unpaged())).willReturn(books);
+    given(restockScmRepository.readCount(member.memberId())).willReturn((long) count);
 
     // When
-    long result = restockScmService.readRestockBookCount(author.member().memberId());
+    long result = restockScmService.readRestockBookCount(member.memberId());
 
     // Then
-    assertThat(result).isEqualTo(restocks.size());
+    assertThat(result).isEqualTo(restocks.getTotalElements());
   }
 
   @Test
@@ -76,23 +54,26 @@ class RestockScmServiceTest extends ScmDomainIntegrationTest {
     // Given
     int count = 5;
     Member member = MemberFixture.create(createId(), RoleType.USER);
-    Author author =
-        AuthorFixture.create(createId(), MemberFixture.create(createId(), RoleType.AUTHOR));
-    Page<Book> books =
+    Page<Restock> restocks =
         new PageImpl<>(
             IntStream.range(0, count)
                 .mapToObj(
                     i ->
                         RestockFixture.create(
-                            createId(), member, BookFixture.create(createId(), author)))
-                .map(Restock::book)
+                            createId(),
+                            member,
+                            BookFixture.create(
+                                createId(),
+                                AuthorFixture.create(
+                                    createId(),
+                                    MemberFixture.create(createId(), RoleType.AUTHOR)))))
                 .toList());
 
-    given(authorScmRepository.readByMember(member.memberId())).willReturn(author);
-    given(bookScmRepository.readAll(author.authorId(), PageRequest.of(0, 10))).willReturn(books);
+    given(restockScmRepository.readAllByAuthor(member.memberId(), PageRequest.of(0, 10)))
+        .willReturn(restocks);
 
     // When
-    Page<Book> results =
+    Page<Restock> results =
         restockScmService.readAllRestockBooks(member.memberId(), PageRequest.of(0, 10));
 
     // Then

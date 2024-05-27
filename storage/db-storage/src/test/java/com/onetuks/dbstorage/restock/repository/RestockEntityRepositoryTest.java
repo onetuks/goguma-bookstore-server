@@ -8,7 +8,6 @@ import com.onetuks.coredomain.AuthorFixture;
 import com.onetuks.coredomain.MemberFixture;
 import com.onetuks.coredomain.RegistrationFixture;
 import com.onetuks.coredomain.RestockFixture;
-import com.onetuks.coredomain.author.model.Author;
 import com.onetuks.coredomain.book.model.Book;
 import com.onetuks.coredomain.member.model.Member;
 import com.onetuks.coredomain.restock.model.Restock;
@@ -35,19 +34,22 @@ class RestockEntityRepositoryTest extends DbStorageIntegrationTest {
   @Autowired private RegistrationEntityRepository registrationEntityRepository;
 
   private Member userMember;
-  private Author author;
   private Book book;
 
   @BeforeEach
   void setUp() {
     userMember = memberEntityRepository.create(MemberFixture.create(null, RoleType.USER));
-    author =
-        authorEntityRepository.create(
-            AuthorFixture.create(
-                null, memberEntityRepository.create(MemberFixture.create(null, RoleType.AUTHOR))));
     book =
         bookEntityRepository.create(
-            registrationEntityRepository.create(RegistrationFixture.create(null, author, true)));
+            registrationEntityRepository.create(
+                RegistrationFixture.create(
+                    null,
+                    authorEntityRepository.create(
+                        AuthorFixture.create(
+                            null,
+                            memberEntityRepository.create(
+                                MemberFixture.create(null, RoleType.AUTHOR)))),
+                    true)));
   }
 
   @Test
@@ -61,8 +63,7 @@ class RestockEntityRepositoryTest extends DbStorageIntegrationTest {
     // Then
     assertAll(
         () -> assertThat(result.member().memberId()).isEqualTo(userMember.memberId()),
-        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()),
-        () -> assertThat(result.book().bookStatics().restockCount()).isOne());
+        () -> assertThat(result.book().bookId()).isEqualTo(book.bookId()));
   }
 
   @Test

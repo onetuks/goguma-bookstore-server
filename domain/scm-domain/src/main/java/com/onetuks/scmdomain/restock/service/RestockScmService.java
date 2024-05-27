@@ -1,8 +1,7 @@
 package com.onetuks.scmdomain.restock.service;
 
-import com.onetuks.coredomain.author.repository.AuthorScmRepository;
-import com.onetuks.coredomain.book.model.Book;
-import com.onetuks.coredomain.book.repository.BookScmRepository;
+import com.onetuks.coredomain.restock.model.Restock;
+import com.onetuks.coredomain.restock.repository.RestockScmRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,27 +10,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RestockScmService {
 
-  private final AuthorScmRepository authorScmRepository;
-  private final BookScmRepository bookScmRepository;
+  private final RestockScmRepository restockScmRepository;
 
-  public RestockScmService(
-      AuthorScmRepository authorScmRepository, BookScmRepository bookScmRepository) {
-    this.authorScmRepository = authorScmRepository;
-    this.bookScmRepository = bookScmRepository;
+  public RestockScmService(RestockScmRepository restockScmRepository) {
+    this.restockScmRepository = restockScmRepository;
   }
 
   @Transactional(readOnly = true)
   public long readRestockBookCount(Long memberId) {
-    return bookScmRepository
-        .readAll(authorScmRepository.readByMember(memberId).authorId(), Pageable.unpaged())
-        .stream()
-        .filter(book -> book.bookStatics().restockCount() > 0)
-        .count();
+    return restockScmRepository.readCount(memberId);
   }
 
   @Transactional(readOnly = true)
-  public Page<Book> readAllRestockBooks(long memberId, Pageable pageable) {
-    return bookScmRepository.readAll(
-        authorScmRepository.readByMember(memberId).authorId(), pageable);
+  public Page<Restock> readAllRestockBooks(long memberId, Pageable pageable) {
+    return restockScmRepository.readAllByAuthor(memberId, pageable);
   }
 }

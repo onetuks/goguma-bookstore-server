@@ -28,12 +28,12 @@ public class SubscribeEntityRepository implements SubscribeRepository {
 
   @Override
   public Subscribe create(Subscribe subscribe) {
-    SubscribeEntity subscriveEntity = converter.toEntity(subscribe);
+    SubscribeEntity subscribeEntity = converter.toEntity(subscribe);
 
     authorStaticsJpaRepository.save(
-        subscriveEntity.getAuthorEntity().getAuthorStaticsEntity().increaseSubscriberCount());
+        subscribeEntity.getAuthorEntity().getAuthorStaticsEntity().increaseSubscriberCount());
 
-    return converter.toDomain(subscribeJpaRepository.save(subscriveEntity));
+    return converter.toDomain(subscribeJpaRepository.save(subscribeEntity));
   }
 
   @Override

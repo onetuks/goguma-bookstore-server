@@ -8,4 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RestockJpaRepository extends JpaRepository<RestockEntity, Long> {
 
   Page<RestockEntity> findAllByMemberEntityMemberId(long memberId, Pageable pageable);
+
+  long countByBookEntityAuthorEntityMemberEntityMemberId(long memberId);
+
+  Page<RestockEntity> findAllByBookEntityAuthorEntityMemberEntityMemberId(
+      long memberId, Pageable pageable);
 }

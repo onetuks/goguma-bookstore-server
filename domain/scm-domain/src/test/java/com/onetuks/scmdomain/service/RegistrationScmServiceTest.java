@@ -62,13 +62,6 @@ import org.springframework.data.domain.Pageable;
 
 class RegistrationScmServiceTest extends ScmDomainIntegrationTest {
 
-  //  @Autowired private RegistrationScmService registrationScmService;
-
-  //  @MockBean private RegistrationScmRepository registrationScmRepository;
-  //  @MockBean private AuthorScmRepository authorScmRepository;
-  //  @MockBean private BookScmRepository bookScmRepository;
-  //  @MockBean private FileRepository fileRepository;
-
   private Member authorMember;
   private Author author;
 

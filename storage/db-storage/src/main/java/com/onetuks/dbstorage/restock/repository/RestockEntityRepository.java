@@ -2,6 +2,7 @@ package com.onetuks.dbstorage.restock.repository;
 
 import com.onetuks.coredomain.restock.model.Restock;
 import com.onetuks.coredomain.restock.repository.RestockRepository;
+import com.onetuks.coredomain.restock.repository.RestockScmRepository;
 import com.onetuks.dbstorage.book.repository.BookStaticsJpaRepository;
 import com.onetuks.dbstorage.restock.converter.RestockConverter;
 import com.onetuks.dbstorage.restock.entity.RestockEntity;
@@ -11,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RestockEntityRepository implements RestockRepository {
+public class RestockEntityRepository implements RestockRepository, RestockScmRepository {
 
   private final RestockJpaRepository repository;
   private final BookStaticsJpaRepository bookStaticsJpaRepository;
@@ -48,20 +49,32 @@ public class RestockEntityRepository implements RestockRepository {
   }
 
   @Override
+  public long readCount(long authorId) {
+    return repository.countByBookEntityAuthorEntityMemberEntityMemberId(authorId);
+  }
+
+  @Override
+  public Page<Restock> readAllByAuthor(long authorId, Pageable pageable) {
+    return repository
+        .findAllByBookEntityAuthorEntityMemberEntityMemberId(authorId, pageable)
+        .map(converter::toDomain);
+  }
+
+  @Override
   public Restock update(Restock restock) {
     return converter.toDomain(repository.save(converter.toEntity(restock)));
   }
 
   @Override
   public void delete(long restockId) {
-    bookStaticsJpaRepository.save(
-        repository
-            .findById(restockId)
-            .orElseThrow(EntityNotFoundException::new)
-            .getBookEntity()
-            .getBookStaticsEntity()
-            .decreaseRestockCount());
+    repository
+        .findById(restockId)
+        .ifPresent(
+            restockEntity -> {
+              bookStaticsJpaRepository.save(
+                  restockEntity.getBookEntity().getBookStaticsEntity().decreaseRestockCount());
 
-    repository.deleteById(restockId);
+              repository.delete(restockEntity);
+            });
   }
 }

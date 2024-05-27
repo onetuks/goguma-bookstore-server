@@ -1,7 +1,7 @@
 package com.onetuks.scmapi.restock.controller;
 
 import com.onetuks.coreauth.util.author.AuthorId;
-import com.onetuks.coredomain.book.model.Book;
+import com.onetuks.coredomain.restock.model.Restock;
 import com.onetuks.scmapi.restock.controller.dto.response.RestockScmResponse.RestockScmResponses;
 import com.onetuks.scmdomain.restock.service.RestockScmService;
 import org.springframework.data.domain.Page;
@@ -49,7 +49,7 @@ public class RestockScmRestController {
   public ResponseEntity<RestockScmResponses> getAllRestocks(
       @AuthorId Long authorMemberId,
       @PageableDefault(sort = "restockId", direction = Direction.ASC) Pageable pageable) {
-    Page<Book> results = restockScmService.readAllRestockBooks(authorMemberId, pageable);
+    Page<Restock> results = restockScmService.readAllRestockBooks(authorMemberId, pageable);
     RestockScmResponses responses = RestockScmResponses.from(results);
 
     return ResponseEntity.status(HttpStatus.OK).body(responses);
