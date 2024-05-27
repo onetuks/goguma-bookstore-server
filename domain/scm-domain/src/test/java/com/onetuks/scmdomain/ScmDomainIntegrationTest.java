@@ -5,6 +5,7 @@ import com.onetuks.coredomain.book.repository.BookScmRepository;
 import com.onetuks.coredomain.global.file.repository.FileRepository;
 import com.onetuks.coredomain.member.repository.MemberRepository;
 import com.onetuks.coredomain.registration.repository.RegistrationScmRepository;
+import com.onetuks.coredomain.restock.repository.RestockScmRepository;
 import com.onetuks.scmdomain.ScmDomainIntegrationTest.ScmDomainConfig;
 import com.onetuks.scmdomain.author.service.AuthorScmService;
 import com.onetuks.scmdomain.book.service.BookScmService;
@@ -46,4 +47,5 @@ public class ScmDomainIntegrationTest {
   @MockBean public BookScmRepository bookScmRepository;
   @MockBean public RegistrationScmRepository registrationScmRepository;
   @MockBean public FileRepository fileRepository;
+  @MockBean public RestockScmRepository restockScmRepository;
 }

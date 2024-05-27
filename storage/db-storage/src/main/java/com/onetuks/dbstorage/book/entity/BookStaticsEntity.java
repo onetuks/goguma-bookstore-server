@@ -32,20 +32,34 @@ public class BookStaticsEntity {
   @Column(name = "sales_count", nullable = false)
   private Long salesCount;
 
+  @Column(name = "comment_count", nullable = false)
+  private Long commentCount;
+
   @Column(name = "restock_count", nullable = false)
   private Long restockCount;
 
+  @Column(name = "review_score", nullable = false)
+  private Float reviewScore;
+
   public BookStaticsEntity(
-      Long bookStaticsId, Long favoriteCount, Long viewCount, Long salesCount, Long restockCount) {
+      Long bookStaticsId,
+      Long favoriteCount,
+      Long viewCount,
+      Long salesCount,
+      Long commentCount,
+      Long restockCount,
+      Float reviewScore) {
     this.bookStaticsId = bookStaticsId;
     this.favoriteCount = favoriteCount;
     this.viewCount = viewCount;
     this.salesCount = salesCount;
+    this.commentCount = commentCount;
     this.restockCount = restockCount;
+    this.reviewScore = reviewScore;
   }
 
   public static BookStaticsEntity init() {
-    return new BookStaticsEntity(null, 0L, 0L, 0L, 0L);
+    return new BookStaticsEntity(null, 0L, 0L, 0L, 0L, 0L, 0F);
   }
 
   public BookStaticsEntity increaseFavoriteCount() {
@@ -60,6 +74,16 @@ public class BookStaticsEntity {
 
   public BookStaticsEntity increaseViewCount() {
     this.viewCount++;
+    return this;
+  }
+
+  public BookStaticsEntity increaseCommentCount() {
+    this.commentCount++;
+    return this;
+  }
+
+  public BookStaticsEntity decreaseCommentCount() {
+    this.commentCount--;
     return this;
   }
 
